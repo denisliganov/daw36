@@ -246,7 +246,7 @@ void KeyHandler::handleKeyOrCharPressed(unsigned key, char character, unsigned f
         if(key == 0x20)
         {
             TogglePlayback();
-        
+
             MCtrllPanel->btPlay->toggle();
         }
         else if(flags & kbd_ctrl)

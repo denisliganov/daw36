@@ -1156,7 +1156,7 @@ void Mixer::mapObjects()
         {
             if((yCh + InstrHeight > 0) && yCh < getH())
             {
-                instr->mixChannel->setXYWH(18, yCh, width - 18, instr->getH());
+                instr->mixChannel->setXYWH(10, yCh, width - 10, instr->getH());
             }
             else if(instr->mixChannel->isShown())
             {

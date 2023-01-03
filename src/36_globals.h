@@ -79,6 +79,8 @@ class ControlPanel;
 class EditHistory;
 class HistoryAction;
 class EnvPoint;
+class ParamBox;
+class TextCursor;
 
 
 struct RenderConfig;
@@ -157,6 +159,7 @@ extern InstrPanel*      MInstrPanel;
 extern HelperPanel*     MHelperPanel;
 extern Browser*         MBrowser;
 extern Pattern*         MPattern;
+extern TextCursor*      MTextCursor;
 
 extern MixChannel*      SoloMixChannel;
 extern Instrument*      SoloInstr;

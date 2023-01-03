@@ -83,6 +83,7 @@ friend  ScrollTimer;
 friend  KeyHandler;
 friend  MainWinObject;
 friend  PlaceHighlight;
+friend  TextCursor;
 
 
 protected:
@@ -179,7 +180,7 @@ public:
 
             Grid(float step_width, int line_height, Pattern* pt, Timeline* tl);
             ~Grid() {}
-
+            void                grabTextCursor();
             Note*               getNoteAt(float tick, int line);
             void                syncToInstruments();
             void                updateBounds();

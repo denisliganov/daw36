@@ -247,8 +247,8 @@ void Instrument::mapObjects()
 
     //volKnob->setXYWH(width - 67, 0, 25, 25);
     //panKnob->setXYWH(width - 23, 0, 22, 22);
-    volBox->setXYWH(width - 75, 10, 62, 13);
-    panBox->setXYWH(width - 140, 10, 60, 13);
+    volBox->setXYWH(width - 75, 9, 62, 13);
+    panBox->setXYWH(width - 140, 9, 60, 13);
 
     int xOffs = 10;
     int yOffs = height - 30;
@@ -260,8 +260,8 @@ void Instrument::mapObjects()
 
     xOffs += 100;
 
-    soloButt->setXYWH(width - 14, 0, 14, 14);
-    muteButt->setXYWH(width - 14, y2 - 14, 14, 14);
+    soloButt->setXYWH(width - 13, 1, 14, 14);
+    muteButt->setXYWH(width - 13, height - 13, 14, 14);
 
     ivu->setXYWH(0, 1, 3, height - 1);
 
@@ -284,18 +284,16 @@ void Instrument::drawSelf(Graphics& g)
 {
     if(MInstrPanel->getCurrInstr() == this)
     {
-        setMonoColor(.35f);
+        setMonoColor(.4f);
         fillMe();
-        setMonoColor(.6f);
+        setMonoColor(.7f);
     }
     else
     {
         setMonoColor(.3f);
         fillMe();
-        setMonoColor(.4f);
+        setMonoColor(.6f);
     }
-
-    setMonoColor(.6f);
 
     gTextFit(g, FontSmall, objTitle, x1 + 5, y1 + 7, width - 16);
 

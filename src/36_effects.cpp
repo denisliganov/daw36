@@ -106,15 +106,15 @@ void Eff::mapObjects()
 
 void Eff::drawSelf(Graphics& g)
 {
-    gSetMonoColor(g, 0.4f);
+    gSetMonoColor(g, 0.3f);
     gFillRect(g, x1, y1, x2, y2);
 
-    gSetMonoColor(g, 0.5f);
+    gSetMonoColor(g, 0.4f);
     gDrawRect(g, x1, y1, x2, y1);
     gDrawRect(g, x1, y1, x1, y2);
 
-    gSetMonoColor(g, .9f);
-    gTextFit(g, FontSmall, objTitle, x1 + 1, y1 + 8, width - 4);
+    gSetMonoColor(g, .6f);
+    gTextFit(g, FontSmall, objTitle, x1 + 1, y2, width);
 }
 
 Eff* Eff::makeClone(Eff* eff)

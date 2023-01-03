@@ -26,6 +26,7 @@
 #include "36_params.h"
 #include "36_slider.h"
 #include "36_knob.h"
+#include "36_numbox.h"
 
 
 
@@ -53,8 +54,8 @@ InstrPanel::InstrPanel(Mixer* mixer)
 
     addObject(scroller = new Scroller(true));
 
-    addParamWithControl(masterVolume = new Parameter("Master Volume", Param_Vol, .7f, 0.f, DAW_VOL_RANGE, Units_dB), 
-                                                                        "sl.vol", masterVolSlider = new Slider36(false));
+    addParamWithControl(masterVolume = new Parameter("Master Vol.", Param_Vol, .7f, 0.f, DAW_VOL_RANGE, Units_dB), 
+                                                                        "sl.vol", masterVolBox = new ParamBox(masterVolume));
 
     addObject(masterFX = new Button36(false), "bt.mfx");
     addObject(send1FX = new Button36(false), "s1.mfx");
@@ -766,8 +767,9 @@ void InstrPanel::mapObjects()
 {
     confine();
 
-    masterVolSlider->setXYWH(width - 90, 6, 80, 16);
+    //masterVolSlider->setXYWH(width - 90, 6, 80, 16);
     //masterVolKnob->setXYWH(width - InstrControlWidth + 2, 2, 24, 24);
+    masterVolBox->setXYWH(width - 120, 6, 100, 16);
 
     int instrListY = MainLineHeight - 1;
     int instrListHeight = (height - instrListY - BottomPadHeight - 1);

@@ -30,6 +30,7 @@
 #include "36_audio_dev.h"
 #include "36_macros.h"
 #include "36_dragndrop.h"
+#include "36_textcursor.h"
 
 
 
@@ -51,11 +52,6 @@ int                 BaseNote;
 bool                metroOn;
 bool                GPlaying;
 bool                GRecOn;
-
-Instrument*         SoloInstr;
-MixChannel*         SoloMixChannel;
-
-Pattern*            MPattern;
 
 XmlElement*         xmlAudioSettings = NULL;
 
@@ -79,6 +75,10 @@ int                 AuxHeight;
 int                 MixChannelPadHeight;
 
 
+Instrument*         SoloInstr;
+MixChannel*         SoloMixChannel;
+
+Pattern*            MPattern;
 ControlPanel*       MCtrllPanel;
 LanePanel*          MLanePanel;
 InstrPanel*         MInstrPanel;
@@ -90,9 +90,9 @@ EditHistory*        _MHistory;
 Transport*          MTransp;
 Grid*               MGrid;
 HelperPanel*        MHelperPanel;
-
 KeyHandler*         MKeys;
 MainWinObject*      MObject;
+TextCursor*         MTextCursor;
 
 bool                InitComplete = false;
 
@@ -132,8 +132,7 @@ MainWinObject::MainWinObject()
     addObject(MEdit = new MainEdit);
     addObject(MHelperPanel = new HelperPanel);
     addObject(MLanePanel = new LanePanel(MEdit->grid));
-    MMixer = new Mixer;
-    addObject(MInstrPanel = new InstrPanel(MMixer));
+    addObject(MInstrPanel = new InstrPanel(MMixer = new Mixer));
     addObject(MBrowser = new Browser(WorkDirectory));
 
     MMixer->setEnable(false);
@@ -142,6 +141,9 @@ MainWinObject::MainWinObject()
     MBrowser->setEnable(false);
     MCtrllPanel->setEnable(true);
     MEdit->setEnable(true);
+
+    MGrid->grabTextCursor();
+    MTextCursor->setPos(100, 10);
 
     MLanePanel->setXYWH(mainX1, height - AuxHeight, mainX2 - mainX1 + 1, AuxHeight);
     MMixer->setXYWH(mainX1, height - MixerHeight, mainX2 - mainX1 + 1, MixerHeight);

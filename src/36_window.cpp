@@ -1414,7 +1414,7 @@ void WinObject::handleMouseUp(InputEvent& ev)
 
     lastEvent = ev;
 
-    jassert(GPlaying == MCtrllPanel->btPlay->isPressed());
+    //jassert(GPlaying == MCtrllPanel->btPlay->isPressed());
 }
 
 void WinObject::handleMouseDrag(InputEvent& ev)

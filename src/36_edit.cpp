@@ -19,7 +19,7 @@
 #include "36_utils.h"
 #include "36_params.h"
 #include "36_snapmenu.h"
-
+#include "36_textcursor.h"
 
 
 
@@ -36,17 +36,16 @@ MainEdit::MainEdit()
     addHighlight(playHead = new Playhead(grid));
 
     MGrid = grid;
-
     MProject.patternList.push_front(MPattern);
-
     MPattern->ptBase = MPattern;
-
     MPattern->setBounds(0, 2147483647);
 
     addObject(verticalGridScroller = new Scroller(true));
 
     grid->setVertScroller(*verticalGridScroller);
     grid->setHorizScroller(MCtrllPanel->getScroller());
+
+    MTextCursor = new TextCursor();
 }
 
 void MainEdit::drawSelf(Graphics& g)

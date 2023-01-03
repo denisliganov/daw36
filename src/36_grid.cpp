@@ -26,7 +26,7 @@
 #include "36_dragndrop.h"
 #include "36_macros.h"
 #include "36_events_triggers.h"
-
+#include "36_textcursor.h"
 
 
 
@@ -67,6 +67,7 @@ class InstrHighlight : public Gobj
 friend  Grid;
 
         Grid*       grid;
+
         bool        isMouseTouching(int mx, int my)  { return false; }
 
         void drawSelf(Graphics& g)
@@ -123,24 +124,6 @@ public:
             tick = newTick;
             line = newLine;
 
-            updPos();
-        }
-
-        void update()
-        {
-            setVisible(false);
-
-            if((grid->isMouseHovering()) && grid->getDisplayMode() == GridDisplayMode_Bars && grid->mode != GridMode_Selecting)
-            {
-                if (grid->cursorLine >= 0)
-                {
-                    setPos(grid->alignTick, grid->alignLine);
-                }
-            }
-        }
-
-        void updPos()
-        {
             if (grid->isMouseHovering())
             {
                 int ly = grid->getYfromLine(line);
@@ -174,6 +157,19 @@ public:
 
                         setVisible(true);
                     }
+                }
+            }
+        }
+
+        void update()
+        {
+            setVisible(false);
+
+            if((grid->isMouseHovering()) && grid->getDisplayMode() == GridDisplayMode_Bars && grid->mode != GridMode_Selecting)
+            {
+                if (grid->cursorLine >= 0)
+                {
+                    setPos(grid->alignTick, grid->alignLine);
                 }
             }
         }
@@ -254,6 +250,11 @@ Grid::Grid(float step_width, int line_height, Pattern* pt, Timeline* tl)
     setMode(GridMode_Default);
 
     lastAction = GridAction_Reset;
+}
+
+void Grid::grabTextCursor()
+{
+    addObject(MTextCursor);
 }
 
 void Grid::drawIntermittentHighlight(Graphics& g, int x, int y, int w, int h, int numBars)
@@ -1145,6 +1146,9 @@ void Grid::updatePosition(InputEvent & ev, bool textCursor)
     {
         cursorTick = alignTick;
         cursorLine = alignLine;
+
+        grabTextCursor();
+        MTextCursor->setPos(cursorTick, cursorLine);
     }
 
     checkActivePosition(ev);

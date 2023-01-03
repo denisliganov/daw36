@@ -23,6 +23,7 @@ public:
             Mixer*          mixr;
 
             Slider36*       masterVolSlider;
+            ParamBox*       masterVolBox;
             Knob*           masterVolKnob;
             Parameter*      masterVolume;
 
