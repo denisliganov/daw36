@@ -1,0 +1,527 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectName>36win</ProjectName>
+    <ProjectGuid>{1F77EFD0-9C2C-4939-9D5F-4674ED2D4D5D}</ProjectGuid>
+    <RootNamespace>36</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.50727.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\Debug\</OutDir>
+    <IntDir>.\Debug\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(ProjectDir)Release\</OutDir>
+    <IntDir>$(ProjectDir)Release\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <TargetName>36</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\Debug/36win.tlb</TypeLibraryName>
+      <HeaderFileName />
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(ProjectDir)\src\3rd party;$(ProjectDir)\src\3rd party\VST3_SDK;$(ProjectDir)\src\3rd party\juce;$(ProjectDir)\src\3rd party\vstsdk3;$(ProjectDir)\src\3rd party\vstsdk3\public.sdk\source\vst2.x;$(ProjectDir)\src\3rd party\vstsdk3\pluginterfaces\vst2.x;$(ProjectDir)\src\3rd party\PortAudio\include;$(ProjectDir)\src\3rd party\PortAudio\common;$(ProjectDir)\src\3rd party\Libsndfile;$(ProjectDir)\src\3rd party\ASIOSDK2\common;$(ProjectDir)\src\3rd party\ASIOSDK2\host\pc;$(ProjectDir)\src\3rd party\ASIOSDK2\host;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;USE_ASIO;VST_FORCE_DEPRECATED=0;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeaderOutputFile>.\Debug/36win.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Debug/</AssemblerListingLocation>
+      <ObjectFileName>.\Debug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug/</ProgramDataBaseFileName>
+      <WarningLevel>Level1</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0419</Culture>
+      <AdditionalIncludeDirectories>C:\Program Files\Microsoft Platform SDK\Include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>.\Debug\36win.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>$(ProjectDir)src\3rd party;$(ProjectDir)src\3rd party\juce\bin;C:\Program Files\Microsoft Platform SDK\Lib;C:\Program Files\DirectX SDK\Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>.\Debug/36win.pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Debug/36win.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\Release/36win.tlb</TypeLibraryName>
+      <HeaderFileName />
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>$(ProjectDir)\src\3rd party\ASIOSDK2\host;$(ProjectDir)\src\3rd party\ASIOSDK2\host\pc;$(ProjectDir)\src\3rd party\ASIOSDK2\common;$(ProjectDir)\src\3rd party\Libsndfile;$(ProjectDir)\src\3rd party\vstsdk3\pluginterfaces\vst2.x;$(ProjectDir)\src\3rd party\vstsdk3\public.sdk\source\vst2.x;$(ProjectDir)\src\3rd party\vstsdk3;$(ProjectDir)\src\3rd party\juce;$(ProjectDir)\src\3rd party\CVSTHost;$(ProjectDir)\src\3rd party;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;USE_ASIO;VST_FORCE_DEPRECATED=0;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeaderOutputFile>.\Release\36win.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Release/</AssemblerListingLocation>
+      <ObjectFileName>.\Release/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0419</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>.\Release/36.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>$(ProjectDir)\src\3rd party;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ProgramDatabaseFile>.\Release/36.pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Release/36.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Image Include="small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\36.cpp" />
+    <ClCompile Include="src\36_alertbox.cpp" />
+    <ClCompile Include="src\36_audiomanager.cpp" />
+    <ClCompile Include="src\36_audio_dev.cpp" />
+    <ClCompile Include="src\36_auxkeys.cpp" />
+    <ClCompile Include="src\36_dropbox.cpp" />
+    <ClCompile Include="src\36_edit.cpp" />
+    <ClCompile Include="src\36_element.cpp" />
+    <ClCompile Include="src\36_helper.cpp" />
+    <ClCompile Include="src\36_blank.cpp" />
+    <ClCompile Include="src\36_browser.cpp" />
+    <ClCompile Include="src\36_brwentry.cpp" />
+    <ClCompile Include="src\36_button.cpp" />
+    <ClCompile Include="src\36_configwin.cpp" />
+    <ClCompile Include="src\36_controls.cpp" />
+    <ClCompile Include="src\36_ctrlpanel.cpp" />
+    <ClCompile Include="src\36_device.cpp" />
+    <ClCompile Include="src\36_dragndrop.cpp" />
+    <ClCompile Include="src\36_draw.cpp" />
+    <ClCompile Include="src\36_effects.cpp" />
+    <ClCompile Include="src\36_env.cpp" />
+    <ClCompile Include="src\36_events_triggers.cpp" />
+    <ClCompile Include="src\36_geninstr.cpp" />
+    <ClCompile Include="src\36_globals.cpp" />
+    <ClCompile Include="src\36_glyphs.cpp" />
+    <ClCompile Include="src\36_grid.cpp" />
+    <ClCompile Include="src\36_history.cpp" />
+    <ClCompile Include="src\36_init.cpp" />
+    <ClCompile Include="src\36_instr.cpp" />
+    <ClCompile Include="src\36_instrpanel.cpp" />
+    <ClCompile Include="src\36_juce_components.cpp" />
+    <ClCompile Include="src\36_juce_windows.cpp" />
+    <ClCompile Include="src\36_keyboard.cpp" />
+    <ClCompile Include="src\36_knob.cpp" />
+    <ClCompile Include="src\36_lane.cpp" />
+    <ClCompile Include="src\36_logger.cpp" />
+    <ClCompile Include="src\36_menu.cpp" />
+    <ClCompile Include="src\36_midi.cpp" />
+    <ClCompile Include="src\36_mixer.cpp" />
+    <ClCompile Include="src\36_note.cpp" />
+    <ClCompile Include="src\36_numbox.cpp" />
+    <ClCompile Include="src\36_objects.cpp" />
+    <ClCompile Include="src\36_params.cpp" />
+    <ClCompile Include="src\36_paramswin.cpp" />
+    <ClCompile Include="src\36_pattern.cpp" />
+    <ClCompile Include="src\36_playhead.cpp" />
+    <ClCompile Include="src\36_project.cpp" />
+    <ClCompile Include="src\36_renderer.cpp" />
+    <ClCompile Include="src\36_sampleinstr.cpp" />
+    <ClCompile Include="src\36_samplewin.cpp" />
+    <ClCompile Include="src\36_scroller.cpp" />
+    <ClCompile Include="src\36_slider.cpp" />
+    <ClCompile Include="src\36_snapmenu.cpp" />
+    <ClCompile Include="src\36_system.cpp" />
+    <ClCompile Include="src\36_text.cpp" />
+    <ClCompile Include="src\36_textinput.cpp" />
+    <ClCompile Include="src\36_timeline.cpp" />
+    <ClCompile Include="src\36_transport.cpp" />
+    <ClCompile Include="src\36_utils.cpp" />
+    <ClCompile Include="src\36_vst.cpp" />
+    <ClCompile Include="src\36_vst3.cpp" />
+    <ClCompile Include="src\36_vsteff.cpp" />
+    <ClCompile Include="src\36_vstinstr.cpp" />
+    <ClCompile Include="src\36_vstwin.cpp" />
+    <ClCompile Include="src\36_vu.cpp" />
+    <ClCompile Include="src\36_window.cpp" />
+    <ClCompile Include="src\3rd party\juce\juce_amalgamated.cpp" />
+    <ClCompile Include="src\3rd party\rosic\analysis\rosic_InstantaneousEnvelopeDetector.cpp" />
+    <ClCompile Include="src\3rd party\rosic\analysis\rosic_LevelDetector.cpp" />
+    <ClCompile Include="src\3rd party\rosic\basics\GlobalDefinitions.cpp" />
+    <ClCompile Include="src\3rd party\rosic\basics\GlobalFunctions.cpp" />
+    <ClCompile Include="src\3rd party\rosic\basics\rosic_ChannelMatrix2x2.cpp" />
+    <ClCompile Include="src\3rd party\rosic\basics\rosic_Constants.cpp" />
+    <ClCompile Include="src\3rd party\rosic\basics\rosic_FunctionTemplates.cpp" />
+    <ClCompile Include="src\3rd party\rosic\basics\rosic_HelperFunctions.cpp" />
+    <ClCompile Include="src\3rd party\rosic\basics\rosic_Interpolator.cpp" />
+    <ClCompile Include="src\3rd party\rosic\basics\rosic_NumberManipulations.cpp" />
+    <ClCompile Include="src\3rd party\rosic\datastructures\rosic_String.cpp" />
+    <ClCompile Include="src\3rd party\rosic\delaylines\rosic_BasicIntegerDelayLine.cpp" />
+    <ClCompile Include="src\3rd party\rosic\delaylines\rosic_DelayLineStereo.cpp" />
+    <ClCompile Include="src\3rd party\rosic\delaylines\rosic_IntegerDelayLine.cpp" />
+    <ClCompile Include="src\3rd party\rosic\delaylines\rosic_PingPongEcho.cpp" />
+    <ClCompile Include="src\3rd party\rosic\dynamics\rosic_BesselFilterForGainSignal.cpp" />
+    <ClCompile Include="src\3rd party\rosic\dynamics\rosic_Compressor.cpp" />
+    <ClCompile Include="src\3rd party\rosic\dynamics\rosic_DynamicsProcessorBase.cpp" />
+    <ClCompile Include="src\3rd party\rosic\effects\rosic_BitCrusher.cpp" />
+    <ClCompile Include="src\3rd party\rosic\effects\rosic_Chorus.cpp" />
+    <ClCompile Include="src\3rd party\rosic\effects\rosic_CombResonatorStereo.cpp" />
+    <ClCompile Include="src\3rd party\rosic\effects\rosic_CombStereoizer.cpp" />
+    <ClCompile Include="src\3rd party\rosic\effects\rosic_Flanger.cpp" />
+    <ClCompile Include="src\3rd party\rosic\effects\rosic_FrequencyShifter.cpp" />
+    <ClCompile Include="src\3rd party\rosic\effects\rosic_ModulationEffect.cpp" />
+    <ClCompile Include="src\3rd party\rosic\effects\rosic_Phaser.cpp" />
+    <ClCompile Include="src\3rd party\rosic\effects\rosic_Reverb.cpp" />
+    <ClCompile Include="src\3rd party\rosic\effects\rosic_StereoPan.cpp" />
+    <ClCompile Include="src\3rd party\rosic\effects\rosic_StereoWidth.cpp" />
+    <ClCompile Include="src\3rd party\rosic\effects\rosic_Tremolo.cpp" />
+    <ClCompile Include="src\3rd party\rosic\effects\rosic_Vibrato.cpp" />
+    <ClCompile Include="src\3rd party\rosic\effects\rosic_WahWah.cpp" />
+    <ClCompile Include="src\3rd party\rosic\effects\rosic_WaveShaper.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_AllpassChain.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_BiquadBase.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_BiquadCascade.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_BiquadDesigner.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_BiquadMonoDF1.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_BiquadStereoDF1.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_BiquadStereoDF2.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_CombFilter.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_CombResonator.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_ConvolverBruteForce.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_ConvolverFFT.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_ConvolverPartitioned.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_CookbookFilter.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_CrossOver.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_DampingFilter.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_DirectFormFilter.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_DualTwoPoleFilter.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_EllipticQuarterBandFilter.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_EllipticSubBandFilter.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_EllipticSubBandFilterDirectForm.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_EngineersFilter.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_Equalizer.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_FilterCoefficientConversions.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_FourPoleFilter.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_HighOrderEqualizerDesigner.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_LadderFilter.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_LeakyIntegrator.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_LowpassHighpass.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_LowpassHighpassStereo.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_LpfHpfApf.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_MultiModeFilter.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_NyquistBlocker.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_OnePoleFilter.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_OnePoleFilterStereo.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_PoleZeroTransformations.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_PrototypeDesigner.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_QuadratureNetwork.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_TeeBeeFilter.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_ToneControl.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_TwoPoleBandpass.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_TwoPoleFilter.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_VowelFilterStereo.cpp" />
+    <ClCompile Include="src\3rd party\rosic\filters\rosic_WhiteToPinkFilter.cpp" />
+    <ClCompile Include="src\3rd party\rosic\generators\rosic_SineOscillator.cpp" />
+    <ClCompile Include="src\3rd party\rosic\generators\rosic_WaveTable.cpp" />
+    <ClCompile Include="src\3rd party\rosic\infrastructure\rosic_MutexLock.cpp" />
+    <ClCompile Include="src\3rd party\rosic\math\rosic_Complex.cpp" />
+    <ClCompile Include="src\3rd party\rosic\math\rosic_ComplexFunctions.cpp" />
+    <ClCompile Include="src\3rd party\rosic\math\rosic_IntegerFunctions.cpp" />
+    <ClCompile Include="src\3rd party\rosic\math\rosic_PrimeNumbers.cpp" />
+    <ClCompile Include="src\3rd party\rosic\math\rosic_RealFunctionEvaluationAlgorithms.cpp" />
+    <ClCompile Include="src\3rd party\rosic\math\rosic_RealFunctions.cpp" />
+    <ClCompile Include="src\3rd party\rosic\modulators\rosic_BreakpointModulator.cpp" />
+    <ClCompile Include="src\3rd party\rosic\modulators\rosic_EnvelopeGenerator.cpp" />
+    <ClCompile Include="src\3rd party\rosic\modulators\rosic_LowFrequencyOscillator.cpp" />
+    <ClCompile Include="src\3rd party\rosic\others\rosic_SlewRateLimiter.cpp" />
+    <ClCompile Include="src\3rd party\rosic\rendering\rosic_AlgorithmicWaveformRenderer.cpp" />
+    <ClCompile Include="src\3rd party\rosic\rendering\rosic_MultiSegmentWaveformRenderer.cpp" />
+    <ClCompile Include="src\3rd party\rosic\rendering\rosic_StandardWaveformRenderer.cpp" />
+    <ClCompile Include="src\3rd party\rosic\rendering\rosic_WaveformBuffer.cpp" />
+    <ClCompile Include="src\3rd party\rosic\rendering\rosic_WaveformRenderer.cpp" />
+    <ClCompile Include="src\3rd party\rosic\transforms\rosic_FourierTransformerRadix2.cpp" />
+    <ClCompile Include="src\Binarysrc\aripix.cpp" />
+    <ClCompile Include="src\Binarysrc\big.cpp" />
+    <ClCompile Include="src\Binarysrc\Bold.cpp" />
+    <ClCompile Include="src\Binarysrc\dpix.cpp" />
+    <ClCompile Include="src\Binarysrc\fixed.cpp" />
+    <ClCompile Include="src\Binarysrc\images.cpp" />
+    <ClCompile Include="src\Binarysrc\instrum.cpp" />
+    <ClCompile Include="src\Binarysrc\metronome_waves.cpp" />
+    <ClCompile Include="src\Binarysrc\mfont.cpp" />
+    <ClCompile Include="src\Binarysrc\projs.cpp" />
+    <ClCompile Include="src\Binarysrc\roxx.cpp" />
+    <ClCompile Include="src\Binarysrc\tahoma.cpp" />
+    <ClCompile Include="src\Binarysrc\tiny.cpp" />
+    <ClCompile Include="src\Binarysrc\tiny1.cpp" />
+    <ClCompile Include="src\Binarysrc\visitor.cpp" />
+    <ClCompile Include="src\StdAfx.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\36.h" />
+    <ClInclude Include="src\36_alertbox.h" />
+    <ClInclude Include="src\36_audiomanager.h" />
+    <ClInclude Include="src\36_audio_dev.h" />
+    <ClInclude Include="src\36_auxkeys.h" />
+    <ClInclude Include="src\36_dropbox.h" />
+    <ClInclude Include="src\36_edit.h" />
+    <ClInclude Include="src\36_element.h" />
+    <ClInclude Include="src\36_helper.h" />
+    <ClInclude Include="src\36_blank.h" />
+    <ClInclude Include="src\36_browser.h" />
+    <ClInclude Include="src\36_brwentry.h" />
+    <ClInclude Include="src\36_button.h" />
+    <ClInclude Include="src\36_config.h" />
+    <ClInclude Include="src\36_configwin.h" />
+    <ClInclude Include="src\36_controls.h" />
+    <ClInclude Include="src\36_ctrlpanel.h" />
+    <ClInclude Include="src\36_device.h" />
+    <ClInclude Include="src\36_dragndrop.h" />
+    <ClInclude Include="src\36_draw.h" />
+    <ClInclude Include="src\36_effects.h" />
+    <ClInclude Include="src\36_env.h" />
+    <ClInclude Include="src\36_events_triggers.h" />
+    <ClInclude Include="src\36_geninstr.h" />
+    <ClInclude Include="src\36_globals.h" />
+    <ClInclude Include="src\36_glyphs.h" />
+    <ClInclude Include="src\36_grid.h" />
+    <ClInclude Include="src\36_history.h" />
+    <ClInclude Include="src\36_init.h" />
+    <ClInclude Include="src\36_instr.h" />
+    <ClInclude Include="src\36_instrpanel.h" />
+    <ClInclude Include="src\36_juce_components.h" />
+    <ClInclude Include="src\36_juce_windows.h" />
+    <ClInclude Include="src\36_keyboard.h" />
+    <ClInclude Include="src\36_knob.h" />
+    <ClInclude Include="src\36_lane.h" />
+    <ClInclude Include="src\36_logger.h" />
+    <ClInclude Include="src\36_macros.h" />
+    <ClInclude Include="src\36_menu.h" />
+    <ClInclude Include="src\36_midi.h" />
+    <ClInclude Include="src\36_midi_def.h" />
+    <ClInclude Include="src\36_mixer.h" />
+    <ClInclude Include="src\36_note.h" />
+    <ClInclude Include="src\36_numbox.h" />
+    <ClInclude Include="src\36_objects.h" />
+    <ClInclude Include="src\36_params.h" />
+    <ClInclude Include="src\36_paramswin.h" />
+    <ClInclude Include="src\36_pattern.h" />
+    <ClInclude Include="src\36_playhead.h" />
+    <ClInclude Include="src\36_project.h" />
+    <ClInclude Include="src\36_renderer.h" />
+    <ClInclude Include="src\36_sampleinstr.h" />
+    <ClInclude Include="src\36_samplewin.h" />
+    <ClInclude Include="src\36_scroller.h" />
+    <ClInclude Include="src\36_slider.h" />
+    <ClInclude Include="src\36_snapmenu.h" />
+    <ClInclude Include="src\36_system.h" />
+    <ClInclude Include="src\36_text.h" />
+    <ClInclude Include="src\36_textinput.h" />
+    <ClInclude Include="src\36_timeline.h" />
+    <ClInclude Include="src\36_transport.h" />
+    <ClInclude Include="src\36_utils.h" />
+    <ClInclude Include="src\36_vst.h" />
+    <ClInclude Include="src\36_vst3.h" />
+    <ClInclude Include="src\36_vsteff.h" />
+    <ClInclude Include="src\36_vstinstr.h" />
+    <ClInclude Include="src\36_vstwin.h" />
+    <ClInclude Include="src\36_vu.h" />
+    <ClInclude Include="src\36_window.h" />
+    <ClInclude Include="src\3rd party\juce\juce_amalgamated.h" />
+    <ClInclude Include="src\3rd party\Libsndfile\sndfile.h" />
+    <ClInclude Include="src\3rd party\Libsndfile\sndfile.hh" />
+    <ClInclude Include="src\3rd party\rosic\analysis\rosic_InstantaneousEnvelopeDetector.h" />
+    <ClInclude Include="src\3rd party\rosic\analysis\rosic_LevelDetector.h" />
+    <ClInclude Include="src\3rd party\rosic\basics\GlobalDefinitions.h" />
+    <ClInclude Include="src\3rd party\rosic\basics\GlobalFunctions.h" />
+    <ClInclude Include="src\3rd party\rosic\basics\rosic_ChannelMatrix2x2.h" />
+    <ClInclude Include="src\3rd party\rosic\basics\rosic_Constants.h" />
+    <ClInclude Include="src\3rd party\rosic\basics\rosic_FunctionTemplates.h" />
+    <ClInclude Include="src\3rd party\rosic\basics\rosic_HelperFunctions.h" />
+    <ClInclude Include="src\3rd party\rosic\basics\rosic_Interpolator.h" />
+    <ClInclude Include="src\3rd party\rosic\basics\rosic_NumberManipulations.h" />
+    <ClInclude Include="src\3rd party\rosic\datastructures\rosic_String.h" />
+    <ClInclude Include="src\3rd party\rosic\delaylines\rosic_BasicIntegerDelayLine.h" />
+    <ClInclude Include="src\3rd party\rosic\delaylines\rosic_DelayLineStereo.h" />
+    <ClInclude Include="src\3rd party\rosic\delaylines\rosic_IntegerDelayLine.h" />
+    <ClInclude Include="src\3rd party\rosic\delaylines\rosic_PingPongEcho.h" />
+    <ClInclude Include="src\3rd party\rosic\dynamics\rosic_BesselFilterForGainSignal.h" />
+    <ClInclude Include="src\3rd party\rosic\dynamics\rosic_Compressor.h" />
+    <ClInclude Include="src\3rd party\rosic\dynamics\rosic_Dynamics.h" />
+    <ClInclude Include="src\3rd party\rosic\dynamics\rosic_DynamicsProcessorBase.h" />
+    <ClInclude Include="src\3rd party\rosic\effects\rosic_BitCrusher.h" />
+    <ClInclude Include="src\3rd party\rosic\effects\rosic_Chorus.h" />
+    <ClInclude Include="src\3rd party\rosic\effects\rosic_CombResonatorStereo.h" />
+    <ClInclude Include="src\3rd party\rosic\effects\rosic_CombStereoizer.h" />
+    <ClInclude Include="src\3rd party\rosic\effects\rosic_Flanger.h" />
+    <ClInclude Include="src\3rd party\rosic\effects\rosic_FrequencyShifter.h" />
+    <ClInclude Include="src\3rd party\rosic\effects\rosic_ModulationEffect.h" />
+    <ClInclude Include="src\3rd party\rosic\effects\rosic_Phaser.h" />
+    <ClInclude Include="src\3rd party\rosic\effects\rosic_Reverb.h" />
+    <ClInclude Include="src\3rd party\rosic\effects\rosic_StereoPan.h" />
+    <ClInclude Include="src\3rd party\rosic\effects\rosic_StereoWidth.h" />
+    <ClInclude Include="src\3rd party\rosic\effects\rosic_Tremolo.h" />
+    <ClInclude Include="src\3rd party\rosic\effects\rosic_Vibrato.h" />
+    <ClInclude Include="src\3rd party\rosic\effects\rosic_WahWah.h" />
+    <ClInclude Include="src\3rd party\rosic\effects\rosic_WaveShaper.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_AllpassChain.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_BiquadBase.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_BiquadCascade.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_BiquadDesigner.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_BiquadMonoDF1.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_BiquadStereoDF1.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_BiquadStereoDF2.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_CombFilter.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_CombResonator.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_ConvolverBruteForce.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_ConvolverFFT.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_ConvolverPartitioned.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_CookbookFilter.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_CrossOver.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_DampingFilter.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_DirectFormFilter.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_DualTwoPoleFilter.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_EllipticQuarterBandFilter.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_EllipticSubBandFilter.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_EllipticSubBandFilterDirectForm.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_EngineersFilter.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_Equalizer.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_FilterCoefficientConversions.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_Filters.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_FourPoleFilter.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_HighOrderEqualizerDesigner.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_LadderFilter.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_LeakyIntegrator.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_LowpassHighpass.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_LowpassHighpassStereo.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_LpfHpfApf.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_MultiModeFilter.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_NyquistBlocker.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_OnePoleFilter.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_OnePoleFilterStereo.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_PoleZeroTransformations.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_PrototypeDesigner.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_QuadratureNetwork.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_TeeBeeFilter.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_ToneControl.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_TwoPoleBandpass.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_TwoPoleFilter.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_VowelFilterStereo.h" />
+    <ClInclude Include="src\3rd party\rosic\filters\rosic_WhiteToPinkFilter.h" />
+    <ClInclude Include="src\3rd party\rosic\generators\rosic_SineOscillator.h" />
+    <ClInclude Include="src\3rd party\rosic\generators\rosic_WaveTable.h" />
+    <ClInclude Include="src\3rd party\rosic\infrastructure\rosic_MutexLock.h" />
+    <ClInclude Include="src\3rd party\rosic\math\rosic_CephesDeclarations.h" />
+    <ClInclude Include="src\3rd party\rosic\math\rosic_Complex.h" />
+    <ClInclude Include="src\3rd party\rosic\math\rosic_ComplexFunctions.h" />
+    <ClInclude Include="src\3rd party\rosic\math\rosic_IntegerFunctions.h" />
+    <ClInclude Include="src\3rd party\rosic\math\rosic_PrimeArray.h" />
+    <ClInclude Include="src\3rd party\rosic\math\rosic_PrimeNumbers.h" />
+    <ClInclude Include="src\3rd party\rosic\math\rosic_RealFunctionEvaluationAlgorithms.h" />
+    <ClInclude Include="src\3rd party\rosic\math\rosic_RealFunctions.h" />
+    <ClInclude Include="src\3rd party\rosic\modulators\rosic_BreakpointModulator.h" />
+    <ClInclude Include="src\3rd party\rosic\modulators\rosic_EnvelopeGenerator.h" />
+    <ClInclude Include="src\3rd party\rosic\modulators\rosic_LowFrequencyOscillator.h" />
+    <ClInclude Include="src\3rd party\rosic\others\rosic_SlewRateLimiter.h" />
+    <ClInclude Include="src\3rd party\rosic\rendering\rosic_AlgorithmicWaveformRenderer.h" />
+    <ClInclude Include="src\3rd party\rosic\rendering\rosic_MultiSegmentWaveformRenderer.h" />
+    <ClInclude Include="src\3rd party\rosic\rendering\rosic_StandardWaveformRenderer.h" />
+    <ClInclude Include="src\3rd party\rosic\rendering\rosic_WaveformBuffer.h" />
+    <ClInclude Include="src\3rd party\rosic\rendering\rosic_WaveformRenderer.h" />
+    <ClInclude Include="src\3rd party\rosic\rosic.h" />
+    <ClInclude Include="src\3rd party\rosic\transforms\rosic_FourierTransformerRadix2.h" />
+    <ClInclude Include="src\Binarysrc\aripix.h" />
+    <ClInclude Include="src\Binarysrc\big.h" />
+    <ClInclude Include="src\Binarysrc\Bold.h" />
+    <ClInclude Include="src\Binarysrc\dpix.h" />
+    <ClInclude Include="src\Binarysrc\fixed.h" />
+    <ClInclude Include="src\Binarysrc\images.h" />
+    <ClInclude Include="src\Binarysrc\instrum.h" />
+    <ClInclude Include="src\Binarysrc\metronome_waves.h" />
+    <ClInclude Include="src\Binarysrc\mfont.h" />
+    <ClInclude Include="src\Binarysrc\projs.h" />
+    <ClInclude Include="src\Binarysrc\roxx.h" />
+    <ClInclude Include="src\Binarysrc\tahoma.h" />
+    <ClInclude Include="src\Binarysrc\tiny.h" />
+    <ClInclude Include="src\Binarysrc\tiny1.h" />
+    <ClInclude Include="src\Binarysrc\visitor.h" />
+    <ClInclude Include="src\StdAfx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="src\3rd party\rosic\EffectsIntegration.txt" />
+    <Text Include="src\3rd party\rosic\infrastructure\ToDo.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="src\3rd party\libsndfile-1.lib" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

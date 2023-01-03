@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<DAW36 Settings BufferSize="2048" Interpolation="1">
+  <RenderSettings Format="0" Quality="3" Q1="2" Q2="5" InBuffSize="2048" OutDir=".\Rendered\"
+                  Interpolation="3"/>
+</DAW36 Settings>
