@@ -141,7 +141,7 @@ MainWinObject::MainWinObject()
     MBrowser->setEnable(false);
     MCtrllPanel->setEnable(true);
     MEdit->setEnable(true);
-    
+
     MGrid->grabTextCursor();
     MTextCursor->setPos(100, 10);
 

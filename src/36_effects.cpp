@@ -106,14 +106,14 @@ void Eff::mapObjects()
 
 void Eff::drawSelf(Graphics& g)
 {
-    gSetMonoColor(g, 0.3f);
+    gSetMonoColor(g, 0.4f);
     gFillRect(g, x1, y1, x2, y2);
 
-    gSetMonoColor(g, 0.4f);
+    gSetMonoColor(g, 0.5f);
     gDrawRect(g, x1, y1, x2, y1);
     gDrawRect(g, x1, y1, x1, y2);
 
-    gSetMonoColor(g, .6f);
+    gSetMonoColor(g, .7f);
     gTextFit(g, FontSmall, objTitle, x1 + 1, y2, width);
 }
 

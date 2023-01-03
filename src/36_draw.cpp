@@ -203,11 +203,11 @@ void gSetPixel(Graphics& g, int x, int y)
 
 void gPanelRect(Graphics& g, int x1, int y1, int x2, int y2)
 {
-    gSetMonoColor(g, 0.29f);
+    gSetMonoColor(g, 0.35f);
 
     gFillRect(g, x1, y1, x2, y2);
 
-    gSetMonoColor(g, 0.35f);
+    gSetMonoColor(g, 0.4f);
 
     g.drawHorizontalLine(y1, (float)x1, (float)x2);
 }

@@ -255,6 +255,7 @@ Grid::Grid(float step_width, int line_height, Pattern* pt, Timeline* tl)
 void Grid::grabTextCursor()
 {
     addObject(MTextCursor);
+    MTextCursor->setPos(cursorTick, cursorLine);
 }
 
 void Grid::drawIntermittentHighlight(Graphics& g, int x, int y, int w, int h, int numBars)
@@ -466,6 +467,12 @@ void Grid::mapElements()
             el->calcCoords(this);
         }
     }
+
+    if (MTextCursor && MTextCursor->getParent() == this)
+    {
+        MTextCursor->updPos();
+    }
+
 
 /*
     for(Element* el : patt->elems)
@@ -1142,15 +1149,6 @@ void Grid::updatePosition(InputEvent & ev, bool textCursor)
 
     currTick = getTickFromX(ev.mouseX);
 
-    if (textCursor)
-    {
-        cursorTick = alignTick;
-        cursorLine = alignLine;
-
-        grabTextCursor();
-        MTextCursor->setPos(cursorTick, cursorLine);
-    }
-
     checkActivePosition(ev);
 }
 
@@ -1220,6 +1218,11 @@ void Grid::handleMouseDown(InputEvent& ev)
                 {
                     if(activeNote == NULL)
                     {
+                        cursorTick = alignTick;
+                        cursorLine = alignLine;
+
+                        grabTextCursor();
+
                         resetSelection(true);
 
                         //activeNote = putNote(alignTick, alignLine, -1);
