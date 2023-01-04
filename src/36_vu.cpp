@@ -192,7 +192,7 @@ void InstrVU::drawSelf(Graphics & g)
     int left = (int)(height*getL());
     int right = (int)(height*getR());
 
-    i->setMyColor(g, .4f);
+    i->setMyColor(g, .2f);
 
     gFillRect(g, x1, y1, x2, y2);
 

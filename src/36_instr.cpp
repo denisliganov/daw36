@@ -94,14 +94,16 @@ protected:
         {
             Instrument* instr = (Instrument*)parent;
 
+            //if(pressed)
+            //    gSetMonoColor(g, .4f);
+            //else
+            //    gSetMonoColor(g, .3f);
+            //gFillRect(g, x1, y1, x2, y2);
+
             if(pressed)
-            {
                 gSetMonoColor(g, .99f);
-            }
             else
-            {
                 gSetMonoColor(g, .8f);
-            }
 
             //int gap = 3;
             //gTriangle(g, x1 + gap,y1 + gap, x2 - gap, y1 + height/2, x1 + gap, y2 - gap, clr1, clr1);
@@ -110,7 +112,7 @@ protected:
             int tw = gGetTextWidth(FontVis, instr->getAlias());
             int th = gGetTextHeight(FontVis);
 
-            gText(g, FontVis, instr->getAlias(), x1 + width/2 - tw/2, y2 - height/2 + th/2);
+            gText(g, FontVis, instr->getAlias(), x1 + 4, y2 - height + th + 1);
         }
 
         void handleMouseDrag(InputEvent & ev)   { parent->handleMouseDrag(ev); }
@@ -250,13 +252,13 @@ void Instrument::mapObjects()
     volBox->setCoords1(width - 75, 9, 62, 13);
     panBox->setCoords1(width - 140, 9, 60, 13);
 
-    int xOffs = 10;
+    int xOffs = 2;
     int yOffs = height - 30;
 
     //guiButt->setCoords1(xOffs, yOffs + 3, 30, 24);
     //xOffs += 28 + 12;
 
-    previewButt->setCoords1(xOffs, 8, 14, 14);
+    previewButt->setCoords1(xOffs, 0, 14, 14);
 
     xOffs += 100;
 
@@ -295,7 +297,7 @@ void Instrument::drawSelf(Graphics& g)
         setMonoColor(.7f);
     }
 
-    gTextFit(g, FontSmall, objTitle, x1 + 5, y1 + 7, width - 16);
+    gTextFit(g, FontSmall, objTitle, x1 + 18, y1 + 7, width - 22);
 
 //    lineH(0, 0, width - 1);
 }

@@ -28,7 +28,9 @@ protected:
             void    handleMouseLeave() { redraw(); };
             void    handleMouseDrag(InputEvent& ev);
             void    handleChildEvent(Gobj * obj, InputEvent& ev);
-
+            void    handleMouseEnter(InputEvent & ev)  { redraw(); }
+            void    handleMouseLeave(InputEvent & ev)  { redraw(); }
+            
 
 public:
 

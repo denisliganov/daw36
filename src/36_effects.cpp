@@ -106,15 +106,30 @@ void Eff::mapObjects()
 
 void Eff::drawSelf(Graphics& g)
 {
-    gSetMonoColor(g, 0.4f);
+    if(mouseHovering)
+        gSetMonoColor(g, .5f);
+    else
+        gSetMonoColor(g, .4f);
+
     gFillRect(g, x1, y1, x2, y2);
 
-    gSetMonoColor(g, 0.5f);
+    if(mouseHovering)
+        gSetMonoColor(g, .6f);
+    else
+        gSetMonoColor(g, .5f);
+
     gDrawRect(g, x1, y1, x2, y1);
     gDrawRect(g, x1, y1, x1, y2);
 
-    gSetMonoColor(g, .8f);
-    gTextFit(g, FontSmall, objTitle, x1 + 1, y2, width);
+
+    if(mouseHovering)
+        gSetMonoColor(g, 1);
+    else
+        gSetMonoColor(g, .9f);
+
+    int th = gGetTextHeight(FontSmall);
+
+    gTextFit(g, FontSmall, objTitle, x1 + 1, y2 - height/2 + th/2 + 2, width);
 }
 
 Eff* Eff::makeClone(Eff* eff)
@@ -357,7 +372,7 @@ void BasicLP::processData(float* in_buff, float* out_buff, int num_frames)
 Filter1::Filter1()
 {
     objId = "eff.filter1";
-    objTitle = "filter1";
+    objTitle = "Filter1";
     uniqueId = MAKE_FOURCC('C','F','L','T');
 
     //dspCoreCFilter3.useTwoStages(false);
@@ -722,7 +737,7 @@ void CPhaser::processData(float* in_buff, float* out_buff, int num_frames)
 EQ1::EQ1()
 {
     objId = "eff.eq1";
-    objTitle = "Eq1";
+    objTitle = "EQ1";
     uniqueId = MAKE_FOURCC('E','Q','0','1');
 
     //frequency = new Parameter(1000.0f, 20.0f, 19980.0f, Param_Default);
@@ -778,7 +793,7 @@ void EQ1::processData(float* in_buff, float* out_buff, int num_frames)
 GraphicEQ::GraphicEQ()
 {
     objId = "eff.grapheq";
-    objTitle = "Greq";
+    objTitle = "GQ";
     uniqueId = MAKE_FOURCC('G','R','E','Q');
 
     f1 = dspCoreEqualizer.addBand(rosic::TwoPoleFilter::HIGH_SHELF, 8000, 0, 1);
@@ -861,7 +876,7 @@ void GraphicEQ::processData(float* in_buff, float* out_buff, int num_frames)
 EQ3::EQ3()
 {
     objId = "eff.eq3";
-    objTitle = "Eq3";
+    objTitle = "EQ3";
     uniqueId = MAKE_FOURCC('E','Q','0','3');
 
     f1 = dspCoreEqualizer.addBand(rosic::TwoPoleFilter::HIGH_SHELF, 4000, 0);
