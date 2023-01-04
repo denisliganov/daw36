@@ -1776,7 +1776,7 @@ void Grid::processVolsPans(InputEvent& ev)
 
                 newVal = param->adjustForEditor(newVal);
 
-                _MHistory->addNewAction(HistAction_ParamChange, (void*)param, param->getValue(), newVal, 0, 0);
+                MHistory->addNewAction(HistAction_ParamChange, (void*)param, param->getValue(), newVal, 0, 0);
 
                 updateList.push_back(note);
             }
@@ -1812,7 +1812,7 @@ void Grid::deleteElementsAcross(int mx1, int my1, int mx2, int my2)
         }
     }
 
-    _MHistory->addNewAction(HistAction_DeleteGroup, elemsDelete);
+    MHistory->addNewAction(HistAction_DeleteGroup, elemsDelete);
 }
 
 void Grid::reassignAfterMove()
@@ -1857,7 +1857,7 @@ void Grid::reassignAfterMove()
         }
     }
 
-    _MHistory->addNewAction(HistAction_DeleteGroup, elems);
+    MHistory->addNewAction(HistAction_DeleteGroup, elems);
 
     if (selected.size() > 0)
     {
@@ -2044,7 +2044,7 @@ void Grid::doAction(GridAction act, float dTick, int dLine)
         {
             updateList = clipboard;
 
-            _MHistory->addNewAction(HistAction_DeleteGroup, clipboard);
+            MHistory->addNewAction(HistAction_DeleteGroup, clipboard);
 
             MInstrPanel->updateInstrNotePositions();
 
@@ -2077,7 +2077,7 @@ void Grid::doAction(GridAction act, float dTick, int dLine)
         {
             updateList = elem;
 
-            _MHistory->addNewAction(HistAction_DeleteGroup, elem);
+            MHistory->addNewAction(HistAction_DeleteGroup, elem);
 
             MInstrPanel->updateInstrNotePositions();
 
@@ -2106,8 +2106,8 @@ void Grid::doAction(GridAction act, float dTick, int dLine)
                 std::list<Element*>  elem;
                 elem.push_back(activeElem);
 
-                //_MHistory->addNewAction(HistAction_Move, (void*)activeElem, dTick, 0, dLine, 0);
-                _MHistory->addNewAction(HistAction_MoveGroup, elem, dTick, dLine);
+                //MHistory->addNewAction(HistAction_Move, (void*)activeElem, dTick, 0, dLine, 0);
+                MHistory->addNewAction(HistAction_MoveGroup, elem, dTick, dLine);
 
                 updateList = elem;
             }
@@ -2143,7 +2143,7 @@ void Grid::doAction(GridAction act, float dTick, int dLine)
             dTick -= ct;
             dLine -= cl;
 
-            _MHistory->addNewAction(HistAction_MoveGroup, selected, dTick, dLine);
+            MHistory->addNewAction(HistAction_MoveGroup, selected, dTick, dLine);
 
             updateList = selected;
 
@@ -2172,7 +2172,7 @@ void Grid::doAction(GridAction act, float dTick, int dLine)
             std::list<Element*> elem;
             elem.push_back(activeElem);
 
-            _MHistory->addNewAction(HistAction_MoveGroup, elem, dTick, dLine);
+            MHistory->addNewAction(HistAction_MoveGroup, elem, dTick, dLine);
 
             if (dLine != 0)
             {
@@ -2210,7 +2210,7 @@ void Grid::doAction(GridAction act, float dTick, int dLine)
                 cloned.clear();
             }
 
-            _MHistory->addNewAction(HistAction_MoveGroup, selected, dTick, dLine);
+            MHistory->addNewAction(HistAction_MoveGroup, selected, dTick, dLine);
 
             if (dLine != 0)
             {
@@ -2237,7 +2237,7 @@ void Grid::doAction(GridAction act, float dTick, int dLine)
 
             float delta = newLen - activeElem->getTickLength();
 
-            _MHistory->addNewAction(HistAction_Resize, (void*)activeElem, activeElem->getTickLength(), newLen, 0, 0);
+            MHistory->addNewAction(HistAction_Resize, (void*)activeElem, activeElem->getTickLength(), newLen, 0, 0);
 
             resized.push_back(activeElem);
 
@@ -2256,7 +2256,7 @@ void Grid::doAction(GridAction act, float dTick, int dLine)
                     {
                         resized.push_back(el);
 
-                        _MHistory->addNewAction(HistAction_Resize, (void*)el, el->getTickLength(), newLen, 0, 0);
+                        MHistory->addNewAction(HistAction_Resize, (void*)el, el->getTickLength(), newLen, 0, 0);
                     }
                 }
             }
@@ -2289,7 +2289,7 @@ void Grid::doAction(GridAction act, float dTick, int dLine)
                 }
             }
 
-            _MHistory->addNewAction(HistAction_Resize2, resized, deltaTick);
+            MHistory->addNewAction(HistAction_Resize2, resized, deltaTick);
 
             updateList.splice(updateList.end(), resized);
 
@@ -2322,8 +2322,8 @@ void Grid::doAction(GridAction act, float dTick, int dLine)
         {
             // If cut, then undelete and move to needed position
 
-            _MHistory->addNewAction(HistAction_AddGroup, clipboard, 0, 0);
-            _MHistory->addNewAction(HistAction_MoveGroup, clipboard, alignTick - firstElemTick, 0);
+            MHistory->addNewAction(HistAction_AddGroup, clipboard, 0, 0);
+            MHistory->addNewAction(HistAction_MoveGroup, clipboard, alignTick - firstElemTick, 0);
 
             for(Element* el : clipboard)
             {
@@ -2354,12 +2354,12 @@ void Grid::doAction(GridAction act, float dTick, int dLine)
 
                     selected.push_back(cl);
 
-                    //_MHistory->addNewAction(HistAction_Add, (void*)cl, 0, 0, 0, 0);
+                    //MHistory->addNewAction(HistAction_Add, (void*)cl, 0, 0, 0, 0);
                 }
             }
 
-            _MHistory->addNewAction(HistAction_AddGroup, selected, 0, 0);
-            _MHistory->addNewAction(HistAction_MoveGroup, selected, alignTick - firstElemTick, 0);
+            MHistory->addNewAction(HistAction_AddGroup, selected, 0, 0);
+            MHistory->addNewAction(HistAction_MoveGroup, selected, alignTick - firstElemTick, 0);
 
             clipboard.clear();
             clipboard = selected;

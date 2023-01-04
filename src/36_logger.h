@@ -5,7 +5,7 @@
 //
 // General Description: Logging utility functions are declared here.
 //
-// Revision _MHistory:
+// Revision MHistory:
 //
 // Author                       Date             Changes
 // ----------------------   ------------      -------------

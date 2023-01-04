@@ -163,7 +163,7 @@ Note* _Create_Note(float tick, int line, Instrument* instr, int note_val, float 
     std::list<Element*> elem;
     elem.push_back(note);
 
-    _MHistory->addNewAction(HistAction_AddGroup, elem);
+    MHistory->addNewAction(HistAction_AddGroup, elem);
 
     return note;
 }

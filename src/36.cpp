@@ -86,7 +86,7 @@ Browser*            MBrowser;
 Mixer*              MMixer;
 MainEdit*           MEdit;
 Audio36*            MAudio;
-EditHistory*        _MHistory;
+EditHistory*        MHistory;
 Transport*          MTransp;
 Grid*               MGrid;
 HelperPanel*        MHelperPanel;
@@ -320,7 +320,7 @@ void MainWinObject::handleMouseUp(InputEvent& ev)
 
     MAudio->releaseAllPreviews();
 
-    _MHistory->newGroup();
+    MHistory->newGroup();
 }
 
 void MainWinObject::handleMouseDrag(InputEvent& ev)

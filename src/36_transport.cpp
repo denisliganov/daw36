@@ -302,6 +302,7 @@ void Transport::updTimeFromFrame()
 
         currBar = int(currTick / (ticksPerBeat * beatsPerBar));
         currBeat = int(currTick / ticksPerBeat) % beatsPerBar;
+
         currTick = float(currTick - int(currTick) / ticksPerBeat * ticksPerBeat);
 
         if (!init)

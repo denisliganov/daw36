@@ -332,7 +332,7 @@ void Lane::process(bool leftbt, int mx, int my, unsigned flags)
 
                     //locvol->SetNormalValue(newVal*locvol->getRange() + locvol->getOffset());
 
-                    _MHistory->addNewAction(HistAction_ParamChange, (void*)locvol, locvol->getValue(), newVal*locvol->getRange() + locvol->getOffset(), 0, 0);
+                    MHistory->addNewAction(HistAction_ParamChange, (void*)locvol, locvol->getValue(), newVal*locvol->getRange() + locvol->getOffset(), 0, 0);
                 }
                 else if (type == Lane_Pan)
                 {
@@ -347,7 +347,7 @@ void Lane::process(bool leftbt, int mx, int my, unsigned flags)
 
                     //locpan->SetNormalValue(1 - newVal*2);
 
-                    _MHistory->addNewAction(HistAction_ParamChange, (void*)locpan, locpan->getValue(), newVal*locpan->getRange() + locpan->getOffset(), 0, 0);
+                    MHistory->addNewAction(HistAction_ParamChange, (void*)locpan, locpan->getValue(), newVal*locpan->getRange() + locpan->getOffset(), 0, 0);
                 }
             }
         }

@@ -144,7 +144,7 @@ extern int              FxPanelMaxWidth;
 extern int              BottomPadHeight;
 
 extern Transport*       MTransp;
-extern EditHistory*     _MHistory;
+extern EditHistory*     MHistory;
 extern KeyHandler*      MKeys;
 extern Project36        MProject;
 extern MainWinObject*   MObject;

@@ -269,13 +269,13 @@ void KeyHandler::handleKeyOrCharPressed(unsigned key, char character, unsigned f
             }
             else if(key == 'Z')
             {
-                _MHistory->undo();
+                MHistory->undo();
 
                 MGrid->redraw(true);
             }
             else if(key == 'Y')
             {
-                _MHistory->redo();
+                MHistory->redo();
 
                 MGrid->redraw(true);
             }
@@ -424,7 +424,7 @@ void KeyHandler::handleKeyOrCharPressed(unsigned key, char character, unsigned f
         MGrid->handleModifierKeys(flags);
     }
 
-    _MHistory->newGroup();
+    MHistory->newGroup();
 
     MGrid->updateChangedElements();
 }

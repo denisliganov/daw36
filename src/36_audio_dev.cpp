@@ -268,7 +268,7 @@ void Audio36::mixMaster(const void* inputBuffer, void* outputBuffer, long totalF
 }
 
 //
-// This general callback does three basic things:
+// This callback does three things:
 //
 // 1. Tick
 // 2. Generate

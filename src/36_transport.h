@@ -48,15 +48,11 @@ public:
         float   getFramesPerPixel(float stepWidth);
         float   getTickFromFrame(long frame);
         long    getFrameFromTick(float tick);
-
         void    adjustTime(int min, int sec, int ms);
-
         void    propagateChanges();
-
         int     getCurrMin() {return currMin;};
         int     getCurrSec() {return currSec;};
         int     getCurrMs()  {return currMs;};
-
         void    updTimeFromFrame();
 
 protected:

@@ -505,7 +505,7 @@ bool Project36::loadProjectData(File chosenFile, LoadThread* thread)
     setName(chosenFile.getFileNameWithoutExtension());
     projectPath = chosenFile.getFullPathName();
 
-    _MHistory->wipeEntireHistory();
+    MHistory->wipeEntireHistory();
 
     loading = false;
 

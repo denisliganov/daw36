@@ -282,7 +282,7 @@ void StartEditor()
     Render_isWorking = false;
     GRecOn = false;
 
-    _MHistory = new EditHistory();
+    MHistory = new EditHistory();
 
     LoadDefaultInstruments();
 

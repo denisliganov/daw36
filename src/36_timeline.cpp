@@ -148,7 +148,7 @@ void Timeline::drawSelf(Graphics & g)
 
                 String str = String::formatted(T("%d"), currentBar);
                 int w = gGetTextWidth(FontSmall, (const char*)str);
-                gText(g, FontSmall, (std::string)str, RoundFloat(xCoord) - w/2, y1 + 16);
+                gText(g, FontSmall, (std::string)str, RoundFloat(xCoord) - w/2, y1 + 17);
             }
 
             stepcnt = step;

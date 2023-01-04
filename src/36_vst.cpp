@@ -1,10 +1,10 @@
 //
-// Revision _MHistory:
+// Revision History:
 //
-// Author               Date                            Major Changes
+// Author               Date                        Major Changes
 //
-// Holy Spirit          07/23/2008                  Initial version
-// DenisL               11/15/2020                  Reworked version
+// Alex V               07/23/2008                  Initial version
+// Denis L              11/15/2020                  Reworked version
 //
 
 #include "36_vst.h"
