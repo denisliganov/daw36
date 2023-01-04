@@ -454,17 +454,65 @@ void Grid::mapElements()
 
     if(MInstrPanel)
     {
+        /*
         for(Instrument* i : MInstrPanel->instrs)
         {
             if(i->isShown())
             {
                 visible.splice(visible.end(), i->getNotesFromRange(tickOffset, lastVisibleTick));
             }
-        }
 
-        for(Element* el : visible)
+            for(Element* el : visible)
+            {
+                el->calcCoords(this);
+            }
+        }
+        */
+
+        for(Element* el : patt->elems)
         {
-            el->calcCoords(this);
+            if ( el->getEndTick() < tickOffset || el->getStartTick() > lastVisibleTick)
+            {
+                // Skip out-of-visible-area elements
+            }
+            else
+            {
+                if (el->isShown())
+                {
+                    if(visible.size() > 0)
+                    {
+                        // Place to the right position, so the list is sorted according to start tick
+    
+                        if(el->getStartTick() >= (*it)->getStartTick())
+                        {
+                            while(it != visible.end() && el->getStartTick() >= (*it)->getStartTick())
+                            {
+                                it++;
+                            }
+                        }
+                        else
+                        {
+                            while(it != visible.begin())
+                            {
+                                --it;
+    
+                                if(el->getStartTick() >= (*it)->getStartTick())
+                                {
+                                    it++;
+    
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    visible.insert(it, el);
+
+                    it--;
+
+                    el->calcCoords(this);
+                }
+            }
         }
     }
 
@@ -472,57 +520,6 @@ void Grid::mapElements()
     {
         MTextCursor->updPos();
     }
-
-
-/*
-    for(Element* el : patt->elems)
-    {
-        if ( el->getEndTick() < tickOffset || el->getStartTick() > lastVisibleTick)
-        {
-            // Skip out-of-visible-area elements
-        }
-        else
-        {
-            Device36* dev = el->dev;
-
-            if (!el->isDeleted() && dev->isShown())
-            {
-                if(visible.size() > 0)
-                {
-                    // Place to the right position, so the list is sorted according to start tick
-
-                    if(el->getStartTick() >= (*it)->getStartTick())
-                    {
-                        while(it != visible.end() && el->getStartTick() >= (*it)->getStartTick())
-                        {
-                            it++;
-                        }
-                    }
-                    else
-                    {
-                        while(it != visible.begin())
-                        {
-                            --it;
-
-                            if(el->getStartTick() >= (*it)->getStartTick())
-                            {
-                                it++;
-
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                visible.insert(it, el);
-
-                it--;
-
-                el->calcCoords(this);
-            }
-        }
-    }
-    */
 }
 
 void Grid::drawElements(Graphics& g)

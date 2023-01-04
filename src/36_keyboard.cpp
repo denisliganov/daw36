@@ -24,7 +24,7 @@
 #include "36_numbox.h"
 #include "36_window.h"
 #include "36_audio_dev.h"
-
+#include "36_textcursor.h"
 
 
 
@@ -270,13 +270,13 @@ void KeyHandler::handleKeyOrCharPressed(unsigned key, char character, unsigned f
             else if(key == 'Z')
             {
                 _MHistory->undo();
-        
+
                 MGrid->redraw(true);
             }
             else if(key == 'Y')
             {
                 _MHistory->redo();
-        
+
                 MGrid->redraw(true);
             }
 
@@ -398,6 +398,8 @@ void KeyHandler::handleKeyOrCharPressed(unsigned key, char character, unsigned f
 
                 default:
                 {
+                    handleChar(character);
+                    /*
                     for (int k = 0; k < KEYNUM; k++)
                     {
                         if (!keyNoteMap[k].pressed && MWindow->isKeyDown(k))
@@ -411,7 +413,7 @@ void KeyHandler::handleKeyOrCharPressed(unsigned key, char character, unsigned f
                                 handleNoteKey(k, noteVal, true);
                             }
                         } 
-                    }
+                    }*/
                 }
                 break;
             }
@@ -448,6 +450,30 @@ void KeyHandler::handleKeyStateChange(bool key_down)
     MGrid->updateChangedElements();
 }
 
+void KeyHandler::handleChar(char c)
+{
+    char al[2] = {};
+
+    al[0] = c;
+
+    Instrument* i = MInstrPanel->getInstrByAlias(al);
+
+    if (i != NULL)
+    {
+        MInstrPanel->setCurrInstr(i);
+
+        Note* note = MGrid->putNote(MTextCursor->getTick(), MTextCursor->getLine(), -1);
+
+        MGrid->setActiveElement(note);
+
+        note->recalculate();
+
+        note->preview(-1, true);
+
+        MGrid->redraw(true);
+    }
+}
+
 void KeyHandler::handleNoteKey(int key, int note_val, bool press)
 {
     if (press)
@@ -461,7 +487,7 @@ void KeyHandler::handleNoteKey(int key, int note_val, bool press)
 
         if(note == NULL)
         {
-            note = grid->putNote(grid->alignTick, grid->alignLine, note_val);
+            note = grid->putNote(MTextCursor->getTick(), MTextCursor->getLine(), note_val);
 
             grid->setActiveElement(note);
         }

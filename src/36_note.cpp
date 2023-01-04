@@ -214,10 +214,10 @@ void Note::drawOnGrid(Graphics& g, Grid* grid)
         {
             //if(x2 > x1)
             {
-                gSetMonoColor(g, .6f, .25f);
+                gSetMonoColor(g, .8f, .25f);
                 gFillRect(g, x1, y1, x2, y2);
 
-                gSetMonoColor(g, .6f, .4f);
+                gSetMonoColor(g, .8f, .4f);
                 gDrawRect(g, x1, y1, x2, y1);
                 //gDrawRect(g, x1, y1, x1, y2);
             }

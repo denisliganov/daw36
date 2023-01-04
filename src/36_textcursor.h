@@ -22,6 +22,8 @@ public:
         void    setPos(float newTick, int newLine);
         void    updPos();
         void    drawSelf(Graphics& g);
+        float   getTick();
+        int     getLine();
 };
 
 

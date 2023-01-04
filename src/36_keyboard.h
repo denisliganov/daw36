@@ -124,6 +124,7 @@ public:
 
         void            initKeymap();
         void            advanceView(float dtick, int dline);
+        void            handleChar(char c);
         void            handleNoteKey(int key, int note_val, bool press);
         void            handleKeyPressed(char key_code, char ch, unsigned flags);
         void            handleKeyOrCharPressed(unsigned key, char character, unsigned flags);

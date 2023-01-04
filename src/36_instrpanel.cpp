@@ -676,7 +676,7 @@ void InstrPanel::placeBefore(Instrument* instr, Instrument* before)
     MMixer->remapAndRedraw();
 }
 
-Instrument* InstrPanel::checkStringForInstrumentAlias(std::string alstr)
+Instrument* InstrPanel::getInstrByAlias(std::string alstr)
 {
     std::string str = alstr;
 

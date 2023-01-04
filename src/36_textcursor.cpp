@@ -51,4 +51,14 @@ void TextCursor::drawSelf(Graphics& g)
     gFillRect(g, x1, y1, x1, y2);
 }
 
+float TextCursor::getTick()
+{
+    return tick;
+}
+
+int TextCursor::getLine()
+{
+    return line;
+}
+
 

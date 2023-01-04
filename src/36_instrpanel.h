@@ -72,7 +72,7 @@ public:
             Instrument*     getCurrInstr();
             void            setCurrInstr(Instrument* instr);
             void            placeBefore(Instrument* instr, Instrument* before);
-            Instrument*     checkStringForInstrumentAlias(std::string alstr);
+            Instrument*     getInstrByAlias(std::string alstr);
             void            updateWaves();
             void            adjustOffset();
             int             getOffset() { return instrOffset; }
