@@ -28,7 +28,7 @@ Gobj::Gobj()
     colorHue = -1;
     colorSat = -1;
 
-    xrel = yrel = 0;
+    xRel = yRel = 0;
     x1 = y1 = x2 = y2 = width = height = 0;
     dx1 = dy1 = dx2 = dy2 = dwidth = dheight = 0;
     bx1 = by1 = bx2 = by2 = -1;
@@ -113,7 +113,7 @@ void Gobj::addObject(Gobj* obj, int xr, int yr, std::string id, ObjectGroup type
     addObject(obj, id, type);
 
     obj->objId = id;
-    obj->setXY(xr, yr);
+    obj->setCoords1(xr, yr);
 
     obj->autoMapped = true;
 }
@@ -123,7 +123,7 @@ void Gobj::addObject(Gobj* obj, int xr, int yr, int ww, int hh, std::string id, 
     addObject(obj, id, type);
 
     obj->objId = id;
-    obj->setXYWH(xr, yr, ww, hh);
+    obj->setCoords1(xr, yr, ww, hh);
 
     obj->autoMapped = true;
 }
@@ -187,7 +187,7 @@ void Gobj::setVisible(bool vis)
     }
 }
 
-void Gobj::setDispArea(int sx1, int sy1, int sx2, int sy2)
+void Gobj::setDrawAreaDirectly(int sx1, int sy1, int sx2, int sy2)
 {
     dx1 = x1;
     dy1 = y1;
@@ -197,74 +197,47 @@ void Gobj::setDispArea(int sx1, int sy1, int sx2, int sy2)
     dwidth = sx2 - sx1 + 1;
     dheight = sy2 - sy1 + 1;
 
-    if(window) 
+    if(window)
     {
         window->addRepaint(dx1, dy1, dwidth, dheight); // window->listen->repaint(dx1, dy1, dwidth, dheight);
     }
 }
 
-void Gobj::setXY(int x,int y)
+// use x, y, width, height
+
+void Gobj::setCoords1(int xnew, int ynew, int wnew, int hnew)
 {
     if(window)
     {
+        // Erase me at the old coords
         window->addRepaint(dx1, dy1, dwidth, dheight);
     }
 
-    xrel = x;
-    yrel = y;
+    xRel = xnew;
+    yRel = ynew;
+
+    if (wnew >= 0)
+        width = wnew;
+
+    if (hnew >= 0)
+        height = hnew;
 
     updCoords();
 }
 
-void Gobj::setXY(int x, int y, int xx, int yy)
+// use x, y, x2, y2
+
+void Gobj::setCoords2(int x, int y, int xx, int yy)
 {
-    if(window)
-    {
-        window->addRepaint(dx1, dy1, dwidth, dheight);
-    }
-
-    xrel = x;
-    yrel = y;
-    width = xx - x + 1;
-    height = yy - y + 1;
-
-    updCoords();
-}
-
-void Gobj::setWH(int wnew, int hnew)
-{
-    if(window)
-    {
-        window->addRepaint(dx1, dy1, dwidth, dheight);
-    }
-
-    width = wnew;
-    height = hnew;
-
-    updCoords();
-}
-
-void Gobj::setXYWH(int xnew, int ynew, int wnew, int hnew)
-{
-    if(window)
-    {
-        window->addRepaint(dx1, dy1, dwidth, dheight);
-    }
-
-    xrel = xnew;
-    yrel = ynew;
-    width = wnew;
-    height = hnew;
-
-    updCoords();
+    setCoords1(x, y, xx - x + 1, yy - y + 1);
 }
 
 void Gobj::updCoords()
 {
     x1 = (relativeToParent && parent != NULL) ? parent->x1 : 0;
     y1 = (relativeToParent && parent != NULL) ? parent->y1 : 0;
-    x1 += xrel; 
-    y1 += yrel;
+    x1 += xRel; 
+    y1 += yRel;
     x2 = x1 + width - 1;
     y2 = y1 + height - 1;
 
@@ -293,7 +266,7 @@ void Gobj::updDrawCoords()
     width = getW();
     height = getH();
 
-    int cx1 = xrel, cx2 = xrel + width - 1, cy1 = yrel, cy2 = yrel + height - 1;
+    int cx1 = xRel, cx2 = xRel + width - 1, cy1 = yRel, cy2 = yRel + height - 1;
 
     if(relativeToParent && parent != NULL)
     {

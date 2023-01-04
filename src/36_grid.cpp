@@ -129,8 +129,8 @@ public:
                 int ly = grid->getYfromLine(line);
                 int lh = grid->getLineHeight();
 
-                instrHighlight->setXYWH(grid->getX1() - 7, ly - lh + 2, 2, lh - 2);
-                //instrHighlight->setXYWH(grid->getX1(), ly - lh + 2, grid->getW(), InstrHeight);
+                instrHighlight->setCoords1(grid->getX1() - 7, ly - lh + 2, 2, lh - 2);
+                //instrHighlight->setCoords1(grid->getX1(), ly - lh + 2, grid->getW(), InstrHeight);
 
                 if (grid->getDisplayMode() == GridDisplayMode_Bars)
                 {
@@ -143,7 +143,7 @@ public:
                             int x = currNote->getX1() - grid->getX1();
                             int y = currNote->getY1() - grid->getY1();
 
-                            setXYWH(x, y, currNote->getW(), currNote->getH());
+                            setCoords1(x, y, currNote->getW(), currNote->getH());
 
                             setVisible(true);
                         }
@@ -153,7 +153,7 @@ public:
                         int x = grid->getXfromTick(tick) - grid->getX1();
                         int y = grid->getYfromLine(line) - int(grid->getLineHeight()) - grid->getY1() + 1;
 
-                        setXY(x, y, x + grid->snapSize*grid->getPixelsPerTick() - 1, y + int(grid->getLineHeight()) - 1);
+                        setCoords2(x, y, x + grid->snapSize*grid->getPixelsPerTick() - 1, y + int(grid->getLineHeight()) - 1);
 
                         setVisible(true);
                     }
@@ -464,7 +464,7 @@ void Grid::mapElements()
 
             for(Element* el : visible)
             {
-                el->calcCoords(this);
+                el->calcCoordsForGrid(this);
             }
         }
         */
@@ -510,7 +510,7 @@ void Grid::mapElements()
 
                     it--;
 
-                    el->calcCoords(this);
+                    el->calcCoordsForGrid(this);
                 }
             }
         }
@@ -583,10 +583,8 @@ void Grid::drawSelf(Graphics& g)
         //gFillRect(g, x1, fullTracksHeight - vertOffset + y1, x2, y2);
     }
 
-    if(elemImage != NULL)
-    {
+    //if(elemImage != NULL)
     //    g.drawImageAt(elemImage, x1, y1);
-    }
 
     drawElements(g);
 
@@ -687,7 +685,7 @@ void Grid::handleTransportUpdate()
         {
             el->recalculate();
 
-            el->calcCoords(this);
+            el->calcCoordsForGrid(this);
         }
     }
 
@@ -1613,9 +1611,9 @@ bool Grid::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
 
         n->setPos(tick, line);
 
-        n->calcCoords(this);
+        n->calcCoordsForGrid(this);
 
-        drag.setXYWH(n->x1, n->y1, n->width, n->height);
+        drag.setCoords1(n->x1, n->y1, n->width, n->height);
 
         return true;
     }
@@ -1692,7 +1690,7 @@ void Grid::resetSelection(bool deselect)
         selectDeselectAll(false);
     }
 
-    sel->setXYWH(0, 0, 1, 1);
+    sel->setCoords1(0, 0, 1, 1);
     sel->setVisible(false);
 }
 
@@ -2382,7 +2380,7 @@ void Grid::doAction(GridAction act, float dTick, int dLine)
             selStartX = newEvent.mouseX - getX1();
             selStartY = newEvent.mouseY - getY1();
 
-            sel->setXYWH(selStartX, selStartY, 0, 0);
+            sel->setCoords1(selStartX, selStartY, 0, 0);
         }
         else
         {
@@ -2410,7 +2408,7 @@ void Grid::doAction(GridAction act, float dTick, int dLine)
                 yN = selStartY;
             }
 
-            sel->setXY(xS, yS, xN, yN);
+            sel->setCoords2(xS, yS, xN, yN);
 
             selTickStart = getSnappedTick(getTickFromX(sel->getDrawX1()));
             selTickEnd = getSnappedTick(getTickFromX(sel->getDrawX2()));
@@ -2420,7 +2418,7 @@ void Grid::doAction(GridAction act, float dTick, int dLine)
 
             // Adjust selection to snap setting
 
-            sel->setXY(getXfromTick(selTickStart) - getX1(), getYfromLine(selLineStart) - getY1() - lineHeight, 
+            sel->setCoords2(getXfromTick(selTickStart) - getX1(), getYfromLine(selLineStart) - getY1() - lineHeight, 
                                         getXfromTick(selTickEnd) - getX1(), getYfromLine(selLineEnd) - getY1());
 
             for(Element* el : visible)

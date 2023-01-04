@@ -161,43 +161,38 @@ void Note::preview(int note, bool update_instr)
     }
 }
 
-void Note::calcCoords(Grid* grid)
+void Note::calcCoordsForGrid(Grid* grid)
 {
-    calcNoteCoords(grid, startTick, trkLine, &x1, &y1, &width, &height);
+     x1 = grid->getXfromTick(startTick);
+     yBase = grid->getYfromLine(trkLine)- 1;
+     float lHeight = float(grid->getLineHeight() - 1);
 
-    y2 = y1 + height - 1;
+     if (grid->getDisplayMode() == GridDisplayMode_Bars)
+     {
+         Parameter* param = getParamByDisplayMode(grid->getDisplayMode());
 
-    x2 = x1 + width - 1;
+         float mul = param == NULL ? DAW_INVERTED_VOL_RANGE : param->getEditorValue();
 
-    setDispArea(x1, y1, x2, y2);
-}
+         height = int(lHeight*mul); 
 
-void Note::calcNoteCoords(Grid* grid, float tick, int line, int* xc, int* yc, int* w, int* h)
-{
-   *xc = grid->getXfromTick(tick);
-    yBase = grid->getYfromLine(line)- 1;
-    float lHeight = float(grid->getLineHeight() - 1);
+         y1 = yBase - height;
+     }
+     else if (grid->getDisplayMode() == GridDisplayMode_Volumes || grid->getDisplayMode() == GridDisplayMode_Pans)
+     {
+         Parameter* param = getParamByDisplayMode(grid->getDisplayMode());
 
-    if (grid->getDisplayMode() == GridDisplayMode_Bars)
-    {
-        Parameter* param = getParamByDisplayMode(grid->getDisplayMode());
+         int start = int(lHeight*((0.f - param->getOffset())/param->getRange()));
 
-        float mul = param == NULL ? DAW_INVERTED_VOL_RANGE : param->getEditorValue();
+         barDraw = int((lHeight - 1)*param->getEditorValue()) - start;
+         barStart = yBase - start;
+     }
 
-       *h = int(lHeight*mul); 
+     width = (int)(tickLength*grid->getPixelsPerTick());
 
-       *yc = yBase - *h;
-    }
-    else if (grid->getDisplayMode() == GridDisplayMode_Volumes || grid->getDisplayMode() == GridDisplayMode_Pans)
-    {
-        Parameter* param = getParamByDisplayMode(grid->getDisplayMode());
+     y2 = y1 + height - 1;
+     x2 = x1 + width - 1;
 
-        int start = int(lHeight*((0.f - param->getOffset())/param->getRange()));
-        barDraw = int((lHeight - 1)*param->getEditorValue()) - start;
-        barStart = yBase - start;
-    }
-
-    *w = (int)(tickLength*grid->getPixelsPerTick());
+    setDrawAreaDirectly(x1, y1, x2, y2);
 }
 
 void Note::drawOnGrid(Graphics& g, Grid* grid)

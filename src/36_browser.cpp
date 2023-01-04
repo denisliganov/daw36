@@ -209,7 +209,7 @@ void Browser::mapObjects()
 
         if(yentry > (cy - BrwEntryHeight) && yentry < y2 && cw > 0)
         {
-            be->setXYWH(cx, yentry, cw, BrwEntryHeight);
+            be->setCoords1(cx, yentry, cw, BrwEntryHeight);
         }
         else
         {
@@ -224,7 +224,7 @@ void Browser::mapObjects()
 
     fullSpan += 64;
 
-    brwScroller->setXYWH(width - BrwScrollerWidth + 1, cy, BrwScrollerWidth - 2, visibleSpan);
+    brwScroller->setCoords1(width - BrwScrollerWidth + 1, cy, BrwScrollerWidth - 2, visibleSpan);
     brwScroller->updateLimits(fullSpan, float(visibleSpan), -(float)scrollOffset);
 
     // dbg file browsing

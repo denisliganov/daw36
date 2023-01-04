@@ -33,8 +33,7 @@ protected:
             void            handleMouseUp(InputEvent& ev);
             void            handleMouseDown(InputEvent& ev);
             void            drawOnGrid(Graphics& g, Grid* grid);
-            void            calcCoords(Grid* grid);
-            void            calcNoteCoords(Grid* grid, float tick, int line, int* xc, int* yc, int* w, int* h);
+            void            calcCoordsForGrid(Grid* grid);
     virtual void            calcNoteFreq();
 
 public:

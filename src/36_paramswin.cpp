@@ -18,7 +18,7 @@ ParamObject::ParamObject()
     slider2->addParam(new Parameter());
     slider3->addParam(new Parameter());
 
-    setWH(300, 300);
+    setWidthHeight(300, 300);
 }
 
 void ParamObject::drawSelf(Graphics& g)

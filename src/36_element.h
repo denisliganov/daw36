@@ -26,8 +26,8 @@ public:
             int             numLines;
             bool            deleted;
             bool            selected;
-            long            endFrame;
             long            startFrame;
+            long            endFrame;
             long            frameLength;
             bool            highlighted;
             bool            calculated;
@@ -55,7 +55,7 @@ public:
     virtual void            recalculate();
     virtual bool            checkVisible(Grid* grid);
             bool            isPointed(int mx, int my, Grid* grid);
-    virtual void            calcCoords(Grid* grid);
+    virtual void            calcCoordsForGrid(Grid* grid);
     virtual void            save(XmlElement* xmlNode);
     virtual void            load(XmlElement* xmlNode);
     virtual void            preview(int key) {}

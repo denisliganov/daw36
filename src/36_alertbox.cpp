@@ -47,7 +47,7 @@ AlertBox::AlertBox( std::string msg, std::string bttxt1, std::string bttxt2, std
     addButton(bttxt2);
     addButton(bttxt3);
 
-    setWH(boxWidth, boxHeight);
+    setWidthHeight(boxWidth, boxHeight);
 }
 
 void AlertBox::addButton( std::string buttext )

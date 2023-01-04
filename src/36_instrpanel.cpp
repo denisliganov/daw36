@@ -706,17 +706,17 @@ bool InstrPanel::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
 
         if(o2 != NULL)
         {
-            drag.dropHighlightHorizontal->setXY(o2->getX1(), o2->getY1() - 2 - 4, o2->getX2() + 1, o2->getY1() - 2 + 4);
+            drag.dropHighlightHorizontal->setCoords2(o2->getX1(), o2->getY1() - 2 - 4, o2->getX2() + 1, o2->getY1() - 2 + 4);
         }
         else if(o1 != NULL)
         {
-            drag.dropHighlightHorizontal->setXY(o1->getX1(), o1->getY2() + 2 - 4, o1->getX2() + 1, o1->getY2() + 2 + 4);
+            drag.dropHighlightHorizontal->setCoords2(o1->getX1(), o1->getY2() + 2 - 4, o1->getX2() + 1, o1->getY2() + 2 + 4);
         }
 
         int tw = gGetTextWidth(FontSmall, obj->getObjTitle());
         int th = gGetTextHeight(FontSmall);
 
-        drag.setXYWH(mx - tw/2, my - th/2, tw, th);
+        drag.setCoords1(mx - tw/2, my - th/2, tw, th);
 
         return true;
     }
@@ -767,9 +767,9 @@ void InstrPanel::mapObjects()
 {
     confine();
 
-    //masterVolSlider->setXYWH(width - 90, 6, 80, 16);
-    //masterVolKnob->setXYWH(width - InstrControlWidth + 2, 2, 24, 24);
-    masterVolBox->setXYWH(width - 120, 6, 100, 16);
+    //masterVolSlider->setCoords1(width - 90, 6, 80, 16);
+    //masterVolKnob->setCoords1(width - InstrControlWidth + 2, 2, 24, 24);
+    masterVolBox->setCoords1(width - 120, 6, 100, 16);
 
     int instrListY = MainLineHeight - 1;
     int instrListHeight = (height - instrListY - BottomPadHeight - 1);
@@ -785,7 +785,7 @@ void InstrPanel::mapObjects()
         {
             if((yoffs + i->getH()) >= 0 && yoffs <= instrListHeight)
             {
-                i->setXYWH(width - InstrControlWidth + 1, instrListY + yoffs, InstrControlWidth - 11, InstrHeight);
+                i->setCoords1(width - InstrControlWidth + 1, instrListY + yoffs, InstrControlWidth - 11, InstrHeight);
             }
             else
             {
@@ -802,25 +802,25 @@ void InstrPanel::mapObjects()
 
     if (fxShowing)
     {
-        btHideFX->setXYWH(FxPanelMaxWidth, 0, 28, 28);
+        btHideFX->setCoords1(FxPanelMaxWidth, 0, 28, 28);
 
         confine(0, instrListY, FxPanelMaxWidth, height);
 
-        mixr->setXYWH(0, instrListY, FxPanelMaxWidth, instrListHeight);
+        mixr->setCoords1(0, instrListY, FxPanelMaxWidth, instrListHeight);
 
         int xOffs = 4;
         int bh = MainLineHeight - 6;
-        masterFX->setXYWH(xOffs, 2, 30, bh);
+        masterFX->setCoords1(xOffs, 2, 30, bh);
         xOffs += 30 + 1;
-        send1FX->setXYWH(xOffs, 2, 30, bh);
+        send1FX->setCoords1(xOffs, 2, 30, bh);
         xOffs += 30 + 1;
-        send2FX->setXYWH(xOffs, 2, 30, bh);
+        send2FX->setCoords1(xOffs, 2, 30, bh);
         xOffs += 30 + 1;
-        send3FX->setXYWH(xOffs, 2, 30, bh);
+        send3FX->setCoords1(xOffs, 2, 30, bh);
     }
     else
     {
-        btShowFX->setXYWH(0, 0, 28, 28);
+        btShowFX->setCoords1(0, 0, 28, 28);
 
         mixr->setVisible(false);
 

@@ -64,7 +64,7 @@ void Playhead::updatePosFromFrame()
 
     MainEdit* me = (MainEdit*)parent;
 
-    setXYWH(posX - 3, 0, 8, me->getH() + 1);
+    setCoords1(posX - 3, 0, 8, me->getH() + 1);
 }
 
 void Playhead::updateFrameFromPos()

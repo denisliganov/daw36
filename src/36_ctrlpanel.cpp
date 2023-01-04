@@ -173,46 +173,46 @@ void ControlPanel::mapObjects()
 
 /*
         int bH = 23;
-        btScale1->setXYWH(xStartCoord, yTop, buttonWidth, bH);
-        btScale2->setXYWH(xStartCoord, yTop + bH - 1, buttonWidth, bH);
-        btScale3->setXYWH(xStartCoord, yTop + bH*2 - 2, buttonWidth, bH);
+        btScale1->setCoords1(xStartCoord, yTop, buttonWidth, bH);
+        btScale2->setCoords1(xStartCoord, yTop + bH - 1, buttonWidth, bH);
+        btScale3->setCoords1(xStartCoord, yTop + bH*2 - 2, buttonWidth, bH);
         xStartCoord += buttonWidth + 6;
 */
 
         int bH = navHeight/2 + 1;
 
-        btZoomOut->setXYWH(xStartCoord, yTop, buttonWidth, bH);
-        btZoomIn->setXYWH(xStartCoord, yTop + bH - 1, buttonWidth, bH);
+        btZoomOut->setCoords1(xStartCoord, yTop, buttonWidth, bH);
+        btZoomIn->setCoords1(xStartCoord, yTop + bH - 1, buttonWidth, bH);
 
         xStartCoord += buttonWidth + 6;
 
-        btScrollBack->setXYWH(xStartCoord, yTop, buttonWidth, navHeight);
-        btScrollForth->setXYWH(width - 30, yTop, buttonWidth, navHeight);
+        btScrollBack->setCoords1(xStartCoord, yTop, buttonWidth, navHeight);
+        btScrollForth->setCoords1(width - 30, yTop, buttonWidth, navHeight);
 
         xStartCoord = xControls + 80;
 
-        gridScroller->setXY(btScrollBack->getX2() + 3, yTop, btScrollForth->getX1() - 3, yTop + navHeight - 1);
+        gridScroller->setCoords2(btScrollBack->getX2() + 3, yTop, btScrollForth->getX1() - 3, yTop + navHeight - 1);
 
         int xEditButtons = 150;
         int yEditButtons = 4;
         int buttonHeight = 30;
 
-        btConfig->setXYWH(xEditButtons, yEditButtons, buttonWidth, buttonHeight); 
+        btConfig->setCoords1(xEditButtons, yEditButtons, buttonWidth, buttonHeight); 
         xEditButtons += buttonWidth + 10;
 
-        btBrowser->setXYWH(xEditButtons, yEditButtons, buttonWidth*2, buttonHeight); 
+        btBrowser->setCoords1(xEditButtons, yEditButtons, buttonWidth*2, buttonHeight); 
         xEditButtons += buttonWidth*2 + 1;
-        //btStepMode->setXYWH(xEditButtons, yEditButtons, buttonWidth, buttonHeight); 
+        //btStepMode->setCoords1(xEditButtons, yEditButtons, buttonWidth, buttonHeight); 
         //xEditButtons += buttonWidth + 1;
-        btBarMode->setXYWH(xEditButtons, yEditButtons, buttonWidth, buttonHeight); 
+        btBarMode->setCoords1(xEditButtons, yEditButtons, buttonWidth, buttonHeight); 
         xEditButtons += buttonWidth + 1;
-        //btWaveMode->setXYWH(xEditButtons, yEditButtons, buttonWidth, buttonHeight); 
+        //btWaveMode->setCoords1(xEditButtons, yEditButtons, buttonWidth, buttonHeight); 
         //xEditButtons += buttonWidth + 1;
-        btVols->setXYWH(xEditButtons, yEditButtons, buttonWidth, buttonHeight); 
+        btVols->setCoords1(xEditButtons, yEditButtons, buttonWidth, buttonHeight); 
         xEditButtons += buttonWidth + 1;
-        btPans->setXYWH(xEditButtons, yEditButtons, buttonWidth, buttonHeight); 
+        btPans->setCoords1(xEditButtons, yEditButtons, buttonWidth, buttonHeight); 
         xEditButtons += buttonWidth + 1;
-        btMouseMode->setXYWH(xEditButtons, yEditButtons, buttonWidth, buttonHeight);
+        btMouseMode->setCoords1(xEditButtons, yEditButtons, buttonWidth, buttonHeight);
     }
     else
     {

@@ -263,7 +263,7 @@ protected:
             void                showMenu(ContextMenu* menu, int x, int y);
             void                dragDrop(int mouse_x, int mouse_y, unsigned int flags);
             void                updateHint(InputEvent& ev);
-            void                setWH(int wnew,int hnew);
+            void                setWidthHeight(int wnew,int hnew);
 
             void                handleMouseEnter(InputEvent& ev);
             void                handleMouseLeave(InputEvent& ev);

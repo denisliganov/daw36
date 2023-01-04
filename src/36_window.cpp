@@ -1242,9 +1242,9 @@ SubWindow* WinObject::addLegacyWindow(Component* comp)
     return MWindow->createChildWindowFromComponent(comp);
 }
 
-void WinObject::setWH(int wnew,int hnew)
+void WinObject::setWidthHeight(int wnew,int hnew)
 {
-    Gobj::setWH(wnew, hnew);
+    Gobj::setCoords1(0, 0, wnew, hnew);
 
     setSize(wnew, hnew);
 }

@@ -99,9 +99,9 @@ Eff::~Eff()
 
 void Eff::mapObjects()
 {
-    //guiButt->setXYWH(width - 23, 12, 22, EffHeaderHeight - 8);
+    //guiButt->setCoords1(width - 23, 12, 22, EffHeaderHeight - 8);
 
-    //sliderAmount->setXY(4, height - 12, 30, height - 4);
+    //sliderAmount->setCoords2(4, height - 12, 30, height - 4);
 }
 
 void Eff::drawSelf(Graphics& g)
@@ -113,7 +113,7 @@ void Eff::drawSelf(Graphics& g)
     gDrawRect(g, x1, y1, x2, y1);
     gDrawRect(g, x1, y1, x1, y2);
 
-    gSetMonoColor(g, .7f);
+    gSetMonoColor(g, .8f);
     gTextFit(g, FontSmall, objTitle, x1 + 1, y2, width);
 }
 

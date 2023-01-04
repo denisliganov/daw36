@@ -347,7 +347,7 @@ Pattern* Element::getBase()
     return patt;
 }
 
-void Element::calcCoords(Grid* grid)
+void Element::calcCoordsForGrid(Grid* grid)
 {
     x1 = grid->getXfromTick(getStartTick());
     y1 = grid->getYfromLine(getLine());

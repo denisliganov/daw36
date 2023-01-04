@@ -107,14 +107,14 @@ void MainEdit::mapObjects()
 
     int yGrid = MainLineHeight - 1;
 
-    timeline->setXY(0, 0, width - GridScrollWidth - 1, yGrid - 2);
+    timeline->setCoords2(0, 0, width - GridScrollWidth - 1, yGrid - 2);
 
-    //keys->setXYWH(LeftGap, MainLineHeight, 100, height - MainLineHeight - 1);
-    //keys1->setXY(LeftGap+100, height - 1 - 100, width - GridScrollWidth - 1, height - 1);
+    //keys->setCoords1(LeftGap, MainLineHeight, 100, height - MainLineHeight - 1);
+    //keys1->setCoords2(LeftGap+100, height - 1 - 100, width - GridScrollWidth - 1, height - 1);
 
-    verticalGridScroller->setXY(width - GridScrollWidth, MainLineHeight, width - 1, height - 1 - BottomPadHeight - 1);
+    verticalGridScroller->setCoords2(width - GridScrollWidth, MainLineHeight, width - 1, height - 1 - BottomPadHeight - 1);
 
-    grid->setXY(0, yGrid, width - GridScrollWidth - 1, height - 1 - BottomPadHeight - 1);
+    grid->setCoords2(0, yGrid, width - GridScrollWidth - 1, height - 1 - BottomPadHeight - 1);
 
     confine(0, 0, width - GridScrollWidth - 1, height - 1 - BottomPadHeight - 1);
 

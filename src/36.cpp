@@ -145,8 +145,8 @@ MainWinObject::MainWinObject()
     MGrid->grabTextCursor();
     MTextCursor->setPos(100, 10);
 
-    MLanePanel->setXYWH(mainX1, height - AuxHeight, mainX2 - mainX1 + 1, AuxHeight);
-    MMixer->setXYWH(mainX1, height - MixerHeight, mainX2 - mainX1 + 1, MixerHeight);
+    MLanePanel->setCoords1(mainX1, height - AuxHeight, mainX2 - mainX1 + 1, AuxHeight);
+    MMixer->setCoords1(mainX1, height - MixerHeight, mainX2 - mainX1 + 1, MixerHeight);
 
     MLanePanel->setEnable(false);
     currAuxPanel = NULL;
@@ -166,7 +166,7 @@ MainWinObject::~MainWinObject()
 
 void MainWinObject::handleWindowResize(int wx, int wh)
 {
-    setXYWH(0, 0, wx, wh);
+    setCoords1(0, 0, wx, wh);
 
     mainX2 = width - AuxCtrlWidth - 1;
 
@@ -189,29 +189,28 @@ void MainWinObject::mapObjects()
         mainY2 = height - 1;
     }
 
-    MCtrllPanel->setXY(0, mainY1 - MainLineHeight - CtrlPanelHeight - 1, mainX2, mainY1 - MainLineHeight - 1);
+    MCtrllPanel->setCoords2(0, mainY1 - MainLineHeight - CtrlPanelHeight - 1, mainX2, mainY1 - MainLineHeight - 1);
 
     if(MLanePanel->isEnabled())
     {
-        MLanePanel->setXY(mainX1 + 1, mainY2, mainX2, height - 1);
+        MLanePanel->setCoords2(mainX1 + 1, mainY2, mainX2, height - 1);
     }
 
-
-    MInstrPanel->setXY(0, mainY1 - MainLineHeight + PanelGap, mainX1 - 1, mainY2 - 1);
+    MInstrPanel->setCoords2(0, mainY1 - MainLineHeight + PanelGap, mainX1 - 1, mainY2 - 1);
 
     if (MEdit->isEnabled())
     {
-        MEdit->setXY(mainX1 + 2, mainY1 - MainLineHeight + PanelGap, mainX2, mainY2 - 1);
+        MEdit->setCoords2(mainX1 + 2, mainY1 - MainLineHeight + PanelGap, mainX2, mainY2 - 1);
     }
     else if (MBrowser->isEnabled())
     {
-        MBrowser->setXY(mainX1 + 2, mainY1 - MainLineHeight + PanelGap, mainX2, mainY2 - 1);
+        MBrowser->setCoords2(mainX1 + 2, mainY1 - MainLineHeight + PanelGap, mainX2, mainY2 - 1);
     }
 
     if(AuxCtrlWidth > 0)
     {
         MHelperPanel->setEnable(true);
-        MHelperPanel->setXYWH(mainX2 + PanelGap + 1, 0, AuxCtrlWidth, height - 1);
+        MHelperPanel->setCoords1(mainX2 + PanelGap + 1, 0, AuxCtrlWidth, height - 1);
     }
     else
     {
@@ -232,7 +231,7 @@ void MainWinObject::mapObjects()
             MInstrPanel->btShowFX->setEnable(true);
         }
 
-        //MCtrllPanel->showFX->setXYWH(MCtrllPanel->xShowHide, MCtrllPanel->yShowHide, 30, 30);
+        //MCtrllPanel->showFX->setCoords1(MCtrllPanel->xShowHide, MCtrllPanel->yShowHide, 30, 30);
     }
     else
     {
@@ -242,7 +241,7 @@ void MainWinObject::mapObjects()
             MInstrPanel->btHideFX->setEnable(true);
         }
 
-        //MCtrllPanel->hideFX->setXYWH(MCtrllPanel->xShowHide, MCtrllPanel->yShowHide, 30, 30);
+        //MCtrllPanel->hideFX->setCoords1(MCtrllPanel->xShowHide, MCtrllPanel->yShowHide, 30, 30);
     }
 
     redraw();
@@ -458,7 +457,7 @@ void MainWinObject::setMainY2(int main_y2)
 
     if(currAuxPanel != NULL)
     {
-        currAuxPanel->setWH(width, height - mainY2);
+        currAuxPanel->setCoords1(-1, -1, width, height - mainY2);
     }
 
     mapObjects();

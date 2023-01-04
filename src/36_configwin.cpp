@@ -27,8 +27,7 @@ ConfigObject::ConfigObject()
     addParam(saturation);
     addParam(brightness);
 
-    //Gobj::setWH(900, 400);
-    WinObject::setWH(500, 400);
+    WinObject::setWidthHeight(500, 400);
 }
 
 void ConfigObject::drawSelf(Graphics& g)

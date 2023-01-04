@@ -58,7 +58,7 @@ void DragAndDrop::reset()
 
     dragObj = targetObj = NULL;
 
-    setXY(0, 0, -1, -1);
+    setCoords2(0, 0, -1, -1);
 
     dropHighlightHorizontal->setVisible(false);
     dropHighlightVertical->setVisible(false);
@@ -89,14 +89,14 @@ void DragAndDrop::start(Gobj * drag_obj,int mx,int my)
 {
     dragObj = drag_obj;
 
-    dropHighlightHorizontal->setXY(-1,-1, 1, 1);
-    dropHighlightVertical->setXY(-1,-1, 1, 1);
+    dropHighlightHorizontal->setCoords2(-1,-1, 1, 1);
+    dropHighlightVertical->setCoords2(-1,-1, 1, 1);
 }
 
 void DragAndDrop::drag(Gobj* target_object, int mx, int my)
 {
-    dropHighlightHorizontal->setXYWH(-1,-1, 1, 1);   // disable by default
-    dropHighlightVertical->setXYWH(-1,-1, 1, 1);   // disable by default
+    dropHighlightHorizontal->setCoords1(-1,-1, 1, 1);   // disable by default
+    dropHighlightVertical->setCoords1(-1,-1, 1, 1);   // disable by default
 
     bool result = target_object->handleObjDrag(*this, dragObj, mx, my);
 
@@ -105,7 +105,7 @@ void DragAndDrop::drag(Gobj* target_object, int mx, int my)
         int tw = gGetTextWidth(FontSmall, dragObj->getObjTitle());
         int th = gGetTextHeight(FontSmall);
 
-        setXYWH(mx - tw/2, my - th/2, tw, th);
+        setCoords1(mx - tw/2, my - th/2, tw, th);
     }
 
     targetObj = target_object;

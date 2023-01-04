@@ -71,24 +71,34 @@ protected:
             bool                relativeToParent;
             bool                autoMapped;
             bool                mouseHovering;
-            int                 xrel;
-            int                 yrel;
+
+            // Relative coords, width, height
+            int                 xRel;
+            int                 yRel;
             int                 width;
             int                 height;
+
+            // Absolute coords
             int                 x1;
             int                 y1;
             int                 x2;
             int                 y2;
+
+            // Absolute drawing coords, width, height
             int                 dx1;
             int                 dy1;
             int                 dx2;
             int                 dy2;
             int                 dwidth;
             int                 dheight;
+
+            // Confinement rectangle coords within object
             int                 bx1;
             int                 by1;
             int                 bx2;
             int                 by2;
+
+            // Graphic context
             Graphics*           gr;
 
 public:
@@ -98,30 +108,30 @@ public:
             Gobj();
     virtual ~Gobj();
 
-      ObjectGroup               getObjGroup()    { return objGroup; };
-    std::string                 getObjId()     { return objId; }
+      ObjectGroup               getObjGroup()       { return objGroup; };
+    std::string                 getObjId()          { return objId; }
     std::string                 getObjTitle()       { return objTitle; }
     virtual std::string         getHint()           { return hint; };
 
-            int                 getX()  { return xrel; };
-            int                 getY()  { return yrel; };
-            int                 getX1() { return x1; };
-            int                 getY1() { return y1; };
-            int                 getX2() { return x2; };
-            int                 getY2() { return y2; };
-    virtual int                 getW()  { return width; };
-    virtual int                 getH()  { return height; };
+            int                 getX()              { return xRel; };
+            int                 getY()              { return yRel; };
+    virtual int                 getW()              { return width; };
+    virtual int                 getH()              { return height; };
+            int                 getX1()             { return x1; };
+            int                 getY1()             { return y1; };
+            int                 getX2()             { return x2; };
+            int                 getY2()             { return y2; };
 
-            int                 getDrawX1()  { return dx1; };
-            int                 getDrawY1()  { return dy1; };
-            int                 getDrawX2()  { return dx2; };
-            int                 getDrawY2()  { return dy2; };
-            int                 getDrawWidth()  { return dwidth; };
-            int                 getDrawHeight()  { return dheight; };
+            int                 getDrawX1()         { return dx1; };
+            int                 getDrawY1()         { return dy1; };
+            int                 getDrawX2()         { return dx2; };
+            int                 getDrawY2()         { return dy2; };
+            int                 getDrawWidth()      { return dwidth; };
+            int                 getDrawHeight()     { return dheight; };
 
-            bool                isChanged()  { return changed; }
-            bool                isEnabled()  {  return enabled; }
-    virtual bool                isShown() { return (enabled && visible); }
+            bool                isChanged()         { return changed; }
+            bool                isEnabled()         {  return enabled; }
+    virtual bool                isShown()           { return (enabled && visible); }
             bool                isMouseHovering()   { return mouseHovering; }
             Gobj*               getParent()         { return parent; }
             WinObject*          getWindow()         { return window; };
@@ -136,22 +146,20 @@ public:
             void                addHighlight(Gobj* obj);
             void                deleteObject(Gobj* o);
             void                setParent(Gobj* parent);
-            void                setHint(std::string h)    { hint = h; };
-            void                setObjTitle(std::string title) { objTitle = title; }
+            void                setHint(std::string h)              { hint = h; };
+            void                setObjTitle(std::string title)      { objTitle = title; }
             void                setWindow(WinObject* w);
             void                setRelative(bool rel);
             void                setVisible(bool vis);
-            void                setMouseHovering(bool hover)     { mouseHovering = hover; }
+            void                setMouseHovering(bool hover)    { mouseHovering = hover; }
             bool                checkMouseHovering(int mx, int my);
             void                removeObject(Gobj* obj);
 
     virtual void                setEnable(bool en);
 
-    virtual void                setXY(int xNew, int yNew);
-    virtual void                setXY(int xNew, int yNew, int x1New, int y1New);
-    virtual void                setWH(int wNew, int hNew);
-    virtual void                setXYWH(int xNew, int yNew, int wNew, int hNew);
-    virtual void                setDispArea(int xabs1, int xabs2, int xabs3, int xabs4);
+    virtual void                setCoords1(int xNew, int yNew, int wNew = -1, int hNew = -1);
+    virtual void                setCoords2(int xNew, int yNew, int x1New, int y1New);
+    virtual void                setDrawAreaDirectly(int xabs1, int xabs2, int xabs3, int xabs4);
 
     virtual void                updCoords();
     virtual void                mapObjects() {}
@@ -174,6 +182,8 @@ public:
     virtual void                handleDraw(Graphics& g);
     virtual void                drawSelf(Graphics& g) {};
     virtual void                drawOverChildren(Graphics& g) {};
+
+            // Drawing methods using relatice coords
             void                fillWithMonoColor(float mono_color);
             void                fillMe();
             void                setMonoColor(float mono_color);

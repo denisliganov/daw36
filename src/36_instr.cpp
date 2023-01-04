@@ -100,7 +100,7 @@ protected:
             }
             else
             {
-                gSetMonoColor(g, .65f);
+                gSetMonoColor(g, .8f);
             }
 
             //int gap = 3;
@@ -242,28 +242,28 @@ Instrument::~Instrument()
 void Instrument::mapObjects()
 {
     //int slW = 50;
-    //mvol->setXYWH(width - slW - 7, height - 24, slW, 10);
-    //mpan->setXYWH(width - slW - 7, height - 11, slW, 10);
+    //mvol->setCoords1(width - slW - 7, height - 24, slW, 10);
+    //mpan->setCoords1(width - slW - 7, height - 11, slW, 10);
 
-    //volKnob->setXYWH(width - 67, 0, 25, 25);
-    //panKnob->setXYWH(width - 23, 0, 22, 22);
-    volBox->setXYWH(width - 75, 9, 62, 13);
-    panBox->setXYWH(width - 140, 9, 60, 13);
+    //volKnob->setCoords1(width - 67, 0, 25, 25);
+    //panKnob->setCoords1(width - 23, 0, 22, 22);
+    volBox->setCoords1(width - 75, 9, 62, 13);
+    panBox->setCoords1(width - 140, 9, 60, 13);
 
     int xOffs = 10;
     int yOffs = height - 30;
 
-    //guiButt->setXYWH(xOffs, yOffs + 3, 30, 24);
+    //guiButt->setCoords1(xOffs, yOffs + 3, 30, 24);
     //xOffs += 28 + 12;
 
-    previewButt->setXYWH(xOffs, 8, 14, 14);
+    previewButt->setCoords1(xOffs, 8, 14, 14);
 
     xOffs += 100;
 
-    soloButt->setXYWH(width - 13, 1, 14, 14);
-    muteButt->setXYWH(width - 13, height - 13, 14, 14);
+    soloButt->setCoords1(width - 13, 1, 14, 14);
+    muteButt->setCoords1(width - 13, height - 13, 14, 14);
 
-    ivu->setXYWH(0, 1, 3, height - 1);
+    ivu->setCoords1(0, 1, 3, height - 1);
 
     if(gGetTextWidth(FontSmall, objTitle) > width - 38 - 50 - 10)
     {
@@ -286,13 +286,13 @@ void Instrument::drawSelf(Graphics& g)
     {
         setMonoColor(.4f);
         fillMe();
-        setMonoColor(.7f);
+        setMonoColor(.8f);
     }
     else
     {
         setMonoColor(.3f);
         fillMe();
-        setMonoColor(.6f);
+        setMonoColor(.7f);
     }
 
     gTextFit(g, FontSmall, objTitle, x1 + 5, y1 + 7, width - 16);

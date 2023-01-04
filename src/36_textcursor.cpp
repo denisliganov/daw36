@@ -37,7 +37,7 @@ void TextCursor::updPos()
                 int x = grid->getXfromTick(tick) - grid->getX1();
                 int y = grid->getYfromLine(line) - int(grid->getLineHeight()) - grid->getY1() + 1;
 
-                setXY(x, y, x, y + int(grid->getLineHeight()) - 1);
+                setCoords2(x, y, x, y + int(grid->getLineHeight()) - 1);
 
                 setVisible(true);
             }

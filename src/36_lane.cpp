@@ -52,12 +52,12 @@ void LanePanel::mapObjects()
 {
     if(laneType == Lane_Vol || laneType == Lane_Pan)
     {
-        lane->setXY(LeftGap, 2, width - GridScrollWidth, height - BottomPadHeight);
+        lane->setCoords2(LeftGap, 2, width - GridScrollWidth, height - BottomPadHeight);
         keys->setEnable(false);
     }
     else if ( laneType == Lane_Keys )
     {
-        keys->setXY(LeftGap, 2, width - GridScrollWidth, height - BottomPadHeight);
+        keys->setCoords2(LeftGap, 2, width - GridScrollWidth, height - BottomPadHeight);
         lane->setEnable(false);
     }
 }

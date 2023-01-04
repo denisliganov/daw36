@@ -243,7 +243,7 @@ void Pattern::handleMouseUp(InputEvent& ev)
 
 void Pattern::drawOnGrid(Graphics& g, Grid * grid)
 {
-    calcCoords(grid);
+    calcCoordsForGrid(grid);
 
     int gx1 = x1;
     int gy1 = y1;
@@ -277,7 +277,7 @@ void Pattern::drawOnGrid(Graphics& g, Grid * grid)
         g.setColour(Colour(0xffFFFFFF));
     }
 
-    setDispArea(gx1, gy2 - grid->getLineHeight() + 1, grid->getXfromTick(endTick) - 1, gy2 - 1);
+    setDrawAreaDirectly(gx1, gy2 - grid->getLineHeight() + 1, grid->getXfromTick(endTick) - 1, gy2 - 1);
 }
 
 

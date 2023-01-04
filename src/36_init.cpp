@@ -96,6 +96,21 @@ void LoadDefaultInstruments()
     MInstrPanel->addSample("Samples\\Long OpnClsd Hat.wav");
     MInstrPanel->addSample("Samples\\Nother Rim.wav");
     MInstrPanel->addSample("Samples\\Rim 2.wav");
+    MInstrPanel->addSample("Samples\\Kicked.wav");
+    MInstrPanel->addSample("Samples\\808.wav");
+    MInstrPanel->addSample("Samples\\Kik 2.wav");
+    MInstrPanel->addSample("Samples\\Clave.wav");
+    MInstrPanel->addSample("Samples\\Timbale 2.wav");
+    MInstrPanel->addSample("Samples\\Closed Hat.wav");
+
+    MInstrPanel->addSample("Samples\\Dark Hat.wav");
+    MInstrPanel->addSample("Samples\\Jazzy Hat.wav");
+    MInstrPanel->addSample("Samples\\snar_04m1.wav");
+    MInstrPanel->addSample("Samples\\Crash 2.wav");
+    MInstrPanel->addSample("Samples\\Rim 2.wav");
+    MInstrPanel->addSample("Samples\\Kicked.wav");
+    MInstrPanel->addSample("Samples\\808.wav");
+    MInstrPanel->addSample("Samples\\Kik 2.wav");
 
 //    _MInstrPanel->addSample("Samples\\Snare Tail.wav");
 //    _MInstrPanel->addSample("Samples\\CircleBrsh 2.wav");

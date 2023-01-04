@@ -181,21 +181,21 @@ void MixChannel::init(Instrument* ins)
 void MixChannel::mapObjects()
 {
     //if(volslider)
-    //    volslider->setXYWH(width - 30, 1, 10, height - 2);
+    //    volslider->setCoords1(width - 30, 1, 10, height - 2);
 
     confine();
 
     //if(volKnob)
-    //    volKnob->setXYWH(width - 30, 0, 22, 22);
+    //    volKnob->setCoords1(width - 30, 0, 22, 22);
     //if(panKnob)
-    //    panKnob->setXYWH(width - 30, 22, 22, 22);
+    //    panKnob->setCoords1(width - 30, 22, 22, 22);
 
     //if(panslider)
-    //    panslider->setXYWH(width - 18, 1, 10, height - 2);
+    //    panslider->setCoords1(width - 18, 1, 10, height - 2);
 
 
     //if(vu)
-    //    vu->setXYWH(1, 1, 10, height - 2);
+    //    vu->setCoords1(1, 1, 10, height - 2);
 
     confine(0, 0, width - 1, height);
 
@@ -203,7 +203,7 @@ void MixChannel::mapObjects()
 
     for(Eff* eff : effs)
     {
-        eff->setXYWH(xeff, 1, 32, height - 2);
+        eff->setCoords1(xeff, 1, 32, height - 2);
 
         xeff += eff->getW() + 3;
     }
@@ -215,7 +215,7 @@ void MixChannel::mapObjects()
 
     for(Eff* eff : effs)
     {
-        eff->setXYWH(1, yeff, MixChanWidth - 2, EffHeaderHeight);
+        eff->setCoords1(1, yeff, MixChanWidth - 2, EffHeaderHeight);
 
         yeff += eff->getH() + 2;
     }
@@ -941,12 +941,12 @@ bool MixChannel::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
         yh2 = o1->getY2();
     }
 
-    drag.dropHighlightVertical->setXY(xh - 4, yh1, xh + 4, yh2);
+    drag.dropHighlightVertical->setCoords2(xh - 4, yh1, xh + 4, yh2);
 
     int tw = gGetTextWidth(FontSmall, obj->getObjTitle());
     int th = gGetTextHeight(FontSmall);
 
-    drag.setXYWH(mx - tw/2, my - th/2, tw, th);
+    drag.setCoords1(mx - tw/2, my - th/2, tw, th);
 
     return true;
 }
@@ -1156,7 +1156,7 @@ void Mixer::mapObjects()
         {
             if((yCh + InstrHeight > 0) && yCh < getH())
             {
-                instr->mixChannel->setXYWH(10, yCh, width - 10, instr->getH());
+                instr->mixChannel->setCoords1(10, yCh, width - 10, instr->getH());
             }
             else if(instr->mixChannel->isShown())
             {
@@ -1182,7 +1182,7 @@ void Mixer::mapObjects()
     {
         if(!instr->previewOnly)
         {
-            instr->mixChannel->setXYWH(chanX - xOffset, 2, MixChanWidth, mchanHeight);
+            instr->mixChannel->setCoords1(chanX - xOffset, 2, MixChanWidth, mchanHeight);
 
             chanX += MixChanWidth + 1;
         }
@@ -1190,7 +1190,7 @@ void Mixer::mapObjects()
 
     confine();     // reset confinement
 
-    scroller->setXYWH(0, getH() - base + 1, width - masterSectionWidth, 30);
+    scroller->setCoords1(0, getH() - base + 1, width - masterSectionWidth, 30);
 
     scroller->updateLimits((float)chanX, (float)(width - masterSectionWidth), (float)xOffset);
 
@@ -1198,14 +1198,14 @@ void Mixer::mapObjects()
 
     for(int sc = 0; sc < NUM_SENDS; sc++)
     {
-        sendChannel[sc]->setXYWH(chanX, 2, MixChanWidth, getH() - 2);
+        sendChannel[sc]->setCoords1(chanX, 2, MixChanWidth, getH() - 2);
 
         chanX += MixChanWidth + 1;
     }
 
     chanX += 10;
 
-    masterChannel->setXYWH(chanX, 2, MixChanWidth, getH() - 2);
+    masterChannel->setCoords1(chanX, 2, MixChanWidth, getH() - 2);
 
     chanX += MixChanWidth + 30;
     */

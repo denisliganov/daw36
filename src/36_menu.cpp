@@ -131,7 +131,7 @@ void ContextMenu::addMenuItem( std::string item_str )
         mHeight += item->getH();
     }
 
-    setXYWH(0, 0, width, mHeight);
+    setCoords1(0, 0, width, mHeight);
 }
 
 void ContextMenu::mapObjects()
@@ -140,7 +140,7 @@ void ContextMenu::mapObjects()
 
     for(ContextMenuItem* item : items)
     {
-        item->setXYWH(1, itemY, getW() - 2, item->getH());
+        item->setCoords1(1, itemY, getW() - 2, item->getH());
 
         itemY += item->getH();
     }
