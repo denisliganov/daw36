@@ -139,14 +139,15 @@ protected:
             }
             else
             {
-                //instr->setDrawColor(g, 0.55f);
-                if (mouseHovering)
-                    gSetMonoColor(g, .7f);
-                else
-                    gSetMonoColor(g, .5f);
+                gSetMonoColor(g, .15f);
             }
 
-            gDrawRect(g, x1, y1, x2, y2);
+            int yc = y1;
+            while (yc < y2)
+            {
+                gDrawRect(g, x1, yc, x2, yc);
+                yc += 2;
+            }
 /*
             if(pressed)
             {
@@ -259,7 +260,7 @@ void Instrument::mapObjects()
     volBox->setCoords1(width - 75, 9, 62, 13);
     panBox->setCoords1(width - 140, 9, 60, 13);
 
-    guiButt->setCoords1(width - 140 - 22, height - 12, 18, 12);
+    guiButt->setCoords1(width - 140 - 24, height - 13, 18, 12);
 
     int xOffs = 3;
     int yOffs = height - 30;
