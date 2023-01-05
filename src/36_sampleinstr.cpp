@@ -47,6 +47,8 @@ Sample::Sample(float* data, char* smp_path, SF_INFO sfinfo)
 
         objTitle = nm;
 
+        objTitle = ToLowerCase(objTitle);
+
         std::string::size_type pos = objTitle.find(".");
 
         objTitle = objTitle.substr(0, pos);  // the part till the space

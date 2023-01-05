@@ -14,7 +14,6 @@
 #include "36_params.h"
 #include "36_audio_dev.h"
 #include "36_transport.h"
-#include "36.h"
 #include "36_browser.h"
 #include "36_utils.h"
 #include "36_button.h"
@@ -25,6 +24,8 @@
 #include "36_instrpanel.h"
 #include "36_slider.h"
 #include "36_macros.h"
+#include "36.h"
+#include "36_paramswin.h"
 
 
 
@@ -255,8 +256,13 @@ void Eff::handleMouseDown(InputEvent& ev)
 
     if (mixChannel->instr)
     {
-        MInstrPanel->setCurrInstr(mixChannel->instr);
+    //    MInstrPanel->setCurrInstr(mixChannel->instr);
     }
+}
+
+void Eff::handleMouseUp(InputEvent& ev)
+{
+    showWindow(!isWindowVisible());
 }
 
 void Eff::handleMouseDrag(InputEvent& ev)
@@ -273,6 +279,11 @@ void Eff::handleChildEvent(Gobj * obj, InputEvent& ev)
     {
         showWindow(guiButt->isPressed());
     }
+}
+
+SubWindow* Eff::createWindow()
+{
+    return window->addWindow(new ParamObject());
 }
 
 

@@ -36,13 +36,13 @@ VstInstr::VstInstr(char* fullpath, VstInstr* vst)
     if (vst2 != NULL)
     {
         uniqueId = vst2->aeff->uniqueID;
-        
+
         if (fullpath)
             filePath = fullpath;
         else
             filePath = vst2->vstpath;
 
-        objTitle = vst2->objTitle;
+        objTitle = ToLowerCase(vst2->objTitle);
 
         vst2->extractParams();
 

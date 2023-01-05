@@ -23,6 +23,7 @@ protected:
     virtual Eff*    makeClone(Eff* eff);
             void    drawSelf(Graphics& g);
             void    mapObjects();
+            void    handleMouseUp(InputEvent& ev);
             void    handleMouseDown(InputEvent& ev);
             void    handleMouseEnter() { redraw(); };
             void    handleMouseLeave() { redraw(); };
@@ -30,7 +31,7 @@ protected:
             void    handleChildEvent(Gobj * obj, InputEvent& ev);
             void    handleMouseEnter(InputEvent & ev)  { redraw(); }
             void    handleMouseLeave(InputEvent & ev)  { redraw(); }
-            
+            SubWindow*  createWindow();
 
 public:
 

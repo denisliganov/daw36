@@ -42,7 +42,7 @@ protected:
                 instr->setMyColor(g, .6f);
             }
 
-            gText(g, FontBold, "M", x1 + 4, y1 + 10);
+            gText(g, FontInst, "M", x1, y1 + gGetTextHeight(FontInst));
         }
 
         void handleMouseDrag(InputEvent & ev)   { parent->handleMouseDrag(ev); }
@@ -70,7 +70,7 @@ protected:
                 instr->setMyColor(g, .6f);
             }
 
-            gText(g, FontBold, "S", x1 + 5, y1 + 10);
+            gText(g, FontInst, "S", x1, y1 + gGetTextHeight(FontInst));
         }
 
         void handleMouseDrag(InputEvent & ev)   { parent->handleMouseDrag(ev); }
@@ -257,20 +257,20 @@ void Instrument::mapObjects()
 
     //volKnob->setCoords1(width - 67, 0, 25, 25);
     //panKnob->setCoords1(width - 23, 0, 22, 22);
-    volBox->setCoords1(width - 75, 9, 62, 13);
-    panBox->setCoords1(width - 140, 9, 60, 13);
+    volBox->setCoords1(width - 75, 1, 62, 13);
+    panBox->setCoords1(width - 140, 1, 60, 13);
 
-    guiButt->setCoords1(width - 140 - 24, height - 13, 18, 12);
+    guiButt->setCoords1(width - 140 - 24, 1, 18, 12);
 
     int xOffs = 3;
     int yOffs = height - 30;
 
-    previewButt->setCoords1(xOffs, 3, 14, 14);
+    previewButt->setCoords1(xOffs, 1, 14, 14);
 
     xOffs += 100;
 
-    soloButt->setCoords1(width - 13, 1, 14, 14);
-    muteButt->setCoords1(width - 13, height - 13, 14, 14);
+    soloButt->setCoords1(width - 11, 0, 11, height/2);
+    muteButt->setCoords1(width - 11, height - height/2, 11, height/2);
 
     ivu->setCoords1(0, 1, 3, height - 1);
 
@@ -295,16 +295,16 @@ void Instrument::drawSelf(Graphics& g)
     {
         setMonoColor(.4f);
         fillMe();
-        setMonoColor(.8f);
     }
     else
     {
         setMonoColor(.3f);
         fillMe();
-        setMonoColor(.7f);
     }
 
-    gTextFit(g, FontSmall, objTitle, x1 + 18, y1 + 7, width - 22);
+    setMonoColor(.6f);
+
+    gTextFit(g, FontSmall, objTitle, x1 + 6, y2 - 1, width - 22);
 
 //    lineH(0, 0, width - 1);
 }

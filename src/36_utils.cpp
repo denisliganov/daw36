@@ -49,6 +49,23 @@ void ToLowerCase(char* data)
     }
 }
 
+std::string ToLowerCase(std::string str)
+{
+    std::string newstr = str;
+
+    for(unsigned int ic = 0; ic < str.size(); ic++)
+    {
+        uint8 code = (uint8)newstr[ic];
+        if(code >= 0x41 && code <= 0x5A)
+        {
+            code += 0x20;
+            newstr[ic] = code;
+        }
+    }
+
+    return newstr;
+}
+
 std::string ToUpperCase(std::string str)
 {
     std::string newstr = str;
@@ -60,7 +77,6 @@ std::string ToUpperCase(std::string str)
         if(code >= 0x61 && code <= 0x7A)
         {
             code -= 0x20;
-
             newstr[ic] = code;
         }
     }

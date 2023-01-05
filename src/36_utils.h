@@ -31,6 +31,7 @@ extern inline float Interpolate_Line(double x1, float y1, double x2, float y2, d
 void        InitWavetables();
 float       NoteToFreq(int note);
 void        ToLowerCase(char* data);
+std::string ToLowerCase(std::string str);
 std::string ToUpperCase(std::string str);
 void        Num2String(long num, char* string);
 void        ParamNum2String(long num, char* string);
