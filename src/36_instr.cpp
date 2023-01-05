@@ -100,6 +100,12 @@ protected:
             //    gSetMonoColor(g, .3f);
             //gFillRect(g, x1, y1, x2, y2);
 
+            int tw = gGetTextWidth(FontVis, instr->getAlias());
+            int th = gGetTextHeight(FontVis);
+
+            gSetMonoColor(g, .1f);
+            gText(g, FontVis, instr->getAlias(), x1 + 4, y2 - height + th + 2);
+
             if(pressed)
                 gSetMonoColor(g, .99f);
             else
@@ -109,10 +115,8 @@ protected:
             //gTriangle(g, x1 + gap,y1 + gap, x2 - gap, y1 + height/2, x1 + gap, y2 - gap, clr1, clr1);
 
             //gTriangle(g, x1,y1, x2, y1 + height/2, x1, y2);
-            int tw = gGetTextWidth(FontVis, instr->getAlias());
-            int th = gGetTextHeight(FontVis);
 
-            gText(g, FontVis, instr->getAlias(), x1 + 4, y2 - height + th + 1);
+            gText(g, FontVis, instr->getAlias(), x1 + 5, y2 - height + th + 1);
         }
 
         void handleMouseDrag(InputEvent & ev)   { parent->handleMouseDrag(ev); }
@@ -136,10 +140,13 @@ protected:
             else
             {
                 //instr->setDrawColor(g, 0.55f);
-                gSetMonoColor(g, .4f);
+                if (mouseHovering)
+                    gSetMonoColor(g, .7f);
+                else
+                    gSetMonoColor(g, .5f);
             }
 
-            gFillRect(g, x1, y1, x2, y2);
+            gDrawRect(g, x1, y1, x2, y2);
 /*
             if(pressed)
             {
@@ -252,13 +259,12 @@ void Instrument::mapObjects()
     volBox->setCoords1(width - 75, 9, 62, 13);
     panBox->setCoords1(width - 140, 9, 60, 13);
 
-    int xOffs = 2;
+    guiButt->setCoords1(width - 140 - 22, height - 12, 18, 12);
+
+    int xOffs = 3;
     int yOffs = height - 30;
 
-    //guiButt->setCoords1(xOffs, yOffs + 3, 30, 24);
-    //xOffs += 28 + 12;
-
-    previewButt->setCoords1(xOffs, 0, 14, 14);
+    previewButt->setCoords1(xOffs, 3, 14, 14);
 
     xOffs += 100;
 

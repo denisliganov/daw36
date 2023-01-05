@@ -99,7 +99,7 @@ Eff::~Eff()
 
 void Eff::mapObjects()
 {
-    //guiButt->setCoords1(width - 23, 12, 22, EffHeaderHeight - 8);
+    //guiButt->setCoords1(width - 13, 0, 12, 12);
 
     //sliderAmount->setCoords2(4, height - 12, 30, height - 4);
 }
@@ -118,9 +118,8 @@ void Eff::drawSelf(Graphics& g)
     else
         gSetMonoColor(g, .5f);
 
-    gDrawRect(g, x1, y1, x2, y1);
-    gDrawRect(g, x1, y1, x1, y2);
-
+    gDrawRect(g, x1, y1, x2, y2);
+    //gDrawRect(g, x1, y1, x1, y2);
 
     if(mouseHovering)
         gSetMonoColor(g, 1);
@@ -129,7 +128,7 @@ void Eff::drawSelf(Graphics& g)
 
     int th = gGetTextHeight(FontSmall);
 
-    gTextFit(g, FontSmall, objTitle, x1 + 1, y2 - height/2 + th/2 + 2, width);
+    gTextFit(g, FontSmall, objTitle, x1 + 2, y2 - height/2 + th/2 + 2, width - 2);
 }
 
 Eff* Eff::makeClone(Eff* eff)

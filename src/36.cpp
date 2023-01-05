@@ -33,7 +33,6 @@
 #include "36_textcursor.h"
 
 
-
 #include <list>
 
 

@@ -904,7 +904,7 @@ void MixChannel::placeEffectBefore(Eff* eff, Eff* before)
 
     if(instr)
     {
-        MInstrPanel->setCurrInstr(instr);
+        // MInstrPanel->setCurrInstr(instr);
     }
 
     ReleaseMutex(MixerMutex);
