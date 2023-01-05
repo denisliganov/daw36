@@ -5,9 +5,11 @@
 
 
 
-class ParamObject : public WinObject
+class EffParamObject : public WinObject
 {
 protected:
+
+        
 
         Slider36*   slider1;
         Slider36*   slider2;
@@ -18,7 +20,7 @@ protected:
 
 public:
 
-        ParamObject();
+        EffParamObject();
 };
 
 
