@@ -42,7 +42,7 @@ protected:
                 instr->setMyColor(g, .6f);
             }
 
-            gText(g, FontInst, "M", x1, y1 + gGetTextHeight(FontInst));
+            gText(g, FontInst, "M", x1 + 1, y1 + gGetTextHeight(FontInst) - 1);
         }
 
         void handleMouseDrag(InputEvent & ev)   { parent->handleMouseDrag(ev); }
@@ -70,7 +70,7 @@ protected:
                 instr->setMyColor(g, .6f);
             }
 
-            gText(g, FontInst, "S", x1, y1 + gGetTextHeight(FontInst));
+            gText(g, FontInst, "S", x1 + 2, y1 + gGetTextHeight(FontInst) - 1);
         }
 
         void handleMouseDrag(InputEvent & ev)   { parent->handleMouseDrag(ev); }
@@ -260,6 +260,9 @@ void Instrument::mapObjects()
     volBox->setCoords1(width - 75, 1, 62, 13);
     panBox->setCoords1(width - 140, 1, 60, 13);
 
+    soloButt->setCoords1(width - 11, 0, 11, height/2);
+    muteButt->setCoords1(width - 11, height - height/2, 11, height/2);
+
     guiButt->setCoords1(width - 140 - 24, 1, 18, 12);
 
     int xOffs = 3;
@@ -269,8 +272,6 @@ void Instrument::mapObjects()
 
     xOffs += 100;
 
-    soloButt->setCoords1(width - 11, 0, 11, height/2);
-    muteButt->setCoords1(width - 11, height - height/2, 11, height/2);
 
     ivu->setCoords1(0, 1, 3, height - 1);
 

@@ -15,6 +15,9 @@ class Device36 : public Gobj
 friend InstrPanel;
 
 public:
+    
+            std::list<BrwEntry*>        presets;
+            std::list<Parameter*>       params;
 
             DevClass            devClass;
             std::string         filePath;
@@ -29,9 +32,6 @@ public:
             bool                isLoading;
             Trigger*            envelopes;
             BrwEntry*           currPreset;
-
-            std::list<BrwEntry*>        presets;
-            std::list<Parameter*>       params;
 
 
             Device36();

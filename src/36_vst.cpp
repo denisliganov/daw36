@@ -684,7 +684,7 @@ void Vst2Plugin::reset()
 
 void Vst2Plugin::updatePresets()
 {
-    long            CurrentProgram          = getProgram();
+    long            currentProgram          = getProgram();
     BrwEntry*       preset                 = NULL;
     long            num_presets             = getNumPresets();
     char            bzName[MAX_NAME_LENGTH] = {0};
@@ -704,7 +704,8 @@ void Vst2Plugin::updatePresets()
             preset->prindex = idx;
             preset->setObjTitle(bzName);
 
-            if(idx == CurrentProgram)  currPreset = preset;
+            if(idx == currentProgram)  
+                currPreset = preset;
 
             presets.push_back(preset);
         }

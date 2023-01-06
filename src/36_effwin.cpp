@@ -1,24 +1,24 @@
 
-#include "36_configwin.h"
-#include "36_slider.h"
 #include "36_params.h"
-#include "36_paramswin.h"
+#include "36_effwin.h"
 #include "36_draw.h"
+#include "36_numbox.h"
 
 
 
-
-EffParamObject::EffParamObject()
+EffParamObject::EffParamObject(Eff* eff)
 {
-    addObject(slider1 = new Slider36(false), 10, 10, 60, 10);
-    addObject(slider2 = new Slider36(false), 10, 25, 60, 10);
-    addObject(slider3 = new Slider36(false), 10, 40, 60, 10);
+    int x = 0;
+    int y = 4;
+    ParamBox* box = NULL;
 
-    slider1->addParam(new Parameter());
-    slider2->addParam(new Parameter());
-    slider3->addParam(new Parameter());
+    for(Parameter* param : eff->params)
+    {
+        addObject(box = new ParamBox(param), x, y, 100, 14);
+        y += 16;
+    }
 
-    setWidthHeight(300, 300);
+    setWidthHeight(140, y);
 }
 
 void EffParamObject::drawSelf(Graphics& g)

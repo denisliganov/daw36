@@ -17,21 +17,21 @@ protected:
             Button36*       wndToggle;
             Slider36*       sliderAmount;
 
-            ContextMenu*  createContextMenu();
-            void    activateContextMenuItem(std::string item);
-    virtual void    processData(float* in_buff, float* out_buff, int num_frames) {};
-    virtual Eff*    makeClone(Eff* eff);
-            void    drawSelf(Graphics& g);
-            void    mapObjects();
-            void    handleMouseUp(InputEvent& ev);
-            void    handleMouseDown(InputEvent& ev);
-            void    handleMouseEnter() { redraw(); };
-            void    handleMouseLeave() { redraw(); };
-            void    handleMouseDrag(InputEvent& ev);
-            void    handleChildEvent(Gobj * obj, InputEvent& ev);
-            void    handleMouseEnter(InputEvent & ev)  { redraw(); }
-            void    handleMouseLeave(InputEvent & ev)  { redraw(); }
-            SubWindow*  createWindow();
+            ContextMenu*    createContextMenu();
+            void            activateContextMenuItem(std::string item);
+    virtual void            processData(float* in_buff, float* out_buff, int num_frames) {};
+    virtual Eff*            makeClone(Eff* eff);
+            void            drawSelf(Graphics& g);
+            void            mapObjects();
+            void            handleMouseUp(InputEvent& ev);
+            void            handleMouseDown(InputEvent& ev);
+            void            handleMouseEnter() { redraw(); };
+            void            handleMouseLeave() { redraw(); };
+            void            handleMouseDrag(InputEvent& ev);
+            void            handleChildEvent(Gobj * obj, InputEvent& ev);
+            void            handleMouseEnter(InputEvent & ev)  { redraw(); }
+            void            handleMouseLeave(InputEvent & ev)  { redraw(); }
+            SubWindow*      createWindow();
 
 public:
 

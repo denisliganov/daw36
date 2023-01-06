@@ -2,25 +2,22 @@
 #pragma once
 
 #include "36_globals.h"
-
+#include "36_effects.h"
+#include "36_window.h"
 
 
 class EffParamObject : public WinObject
 {
 protected:
 
-        
+        Eff*        eff;
 
-        Slider36*   slider1;
-        Slider36*   slider2;
-        Slider36*   slider3;
-
-        void    drawSelf(Graphics& g);
-        void    handleChildEvent(Gobj * obj,InputEvent & ev);
+        void        drawSelf(Graphics& g);
+        void        handleChildEvent(Gobj * obj,InputEvent & ev);
 
 public:
 
-        EffParamObject();
+        EffParamObject(Eff* eff);
 };
 
 

@@ -26,7 +26,6 @@ Device36::Device36()
     internal = true;
     previewOnly = false;
 
-    lastParamIdx = 0;
     uniqueId = -1;
 
     currPreset = NULL;
@@ -157,7 +156,6 @@ void Device36::scanForPresets()
 
 void Device36::addParam(Parameter* param)
 {
-    param->index = lastParamIdx++;
     param->module = this;
     param->setEnvDirect(false);
 

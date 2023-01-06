@@ -25,7 +25,7 @@
 #include "36_slider.h"
 #include "36_macros.h"
 #include "36.h"
-#include "36_paramswin.h"
+#include "36_effwin.h"
 
 
 
@@ -221,7 +221,6 @@ void Eff::process(float* in_buff, float* out_buff, int num_frames)
 void Eff::save(XmlElement * xmlEff)
 {
     xmlEff->setAttribute(T("EffIndex"), devIdx);
-    //xmlEff->setAttribute(T("DevClass"), int(devClass));
     xmlEff->setAttribute(T("EffName"), String(objTitle.data()));
     xmlEff->setAttribute(T("EffPath"), String(filePath.data()));
     xmlEff->setAttribute(T("Folded"), folded ? 1 : 0);
@@ -283,7 +282,7 @@ void Eff::handleChildEvent(Gobj * obj, InputEvent& ev)
 
 SubWindow* Eff::createWindow()
 {
-    return window->addWindow(new ParamObject());
+    return window->addWindow(new EffParamObject(this));
 }
 
 
