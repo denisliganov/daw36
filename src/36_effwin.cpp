@@ -8,8 +8,9 @@
 
 EffParamObject::EffParamObject(Eff* eff)
 {
-    int x = 0;
-    int y = 4;
+    int x = 6;
+    int y = 8;
+
     ParamBox* box = NULL;
 
     for(Parameter* param : eff->params)
@@ -18,7 +19,7 @@ EffParamObject::EffParamObject(Eff* eff)
         y += 16;
     }
 
-    setWidthHeight(140, y);
+    setWidthHeight(140, y + 6);
 }
 
 void EffParamObject::drawSelf(Graphics& g)
