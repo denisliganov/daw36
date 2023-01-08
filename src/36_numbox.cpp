@@ -354,7 +354,7 @@ void ParamBox::calcTextCoords()
     tx3 = tx2 + 6;
     tx4 = tx3 + tw3 + 4;
 
-    width = tx4 + tw4 + 2;
+    width = tx4 + tw4 + 4;
 }
 
 void ParamBox::getTextCoords(int* txp1, int* txp2, int* txp3, int* txp4)
@@ -376,7 +376,7 @@ void ParamBox::setTextCoords(int txs1, int txs2, int txs3, int txs4)
     if (txs3 > tx3) tx3 = txs3;
     if (txs4 > tx4) tx4 = txs4;
 
-    width = tx4 + tw4 + 2;
+    width = tx4 + tw4 + 4;
 }
 
 void ParamBox::adjustTx2(int txmin2)
@@ -386,7 +386,7 @@ void ParamBox::adjustTx2(int txmin2)
     tx3 = tx2 + 6;
     tx4 = tx3 + tw3 + 4;
 
-    width = tx4 + tw4 + 2;
+    width = tx4 + tw4 + 4;
 }
 
 void ParamBox::adjustTx3(int txmin3)
@@ -394,14 +394,14 @@ void ParamBox::adjustTx3(int txmin3)
     tx3 = txmin3;
     tx4 = tx3 + tw3 + 4;
 
-    width = tx4 + tw4 + 2;
+    width = tx4 + tw4 + 4;
 }
 
 void ParamBox::adjustTx4(int txmin4)
 {
     tx4 = txmin4;
 
-    width = tx4 + tw4 + 2;
+    width = tx4 + tw4 + 4;
 }
 
 void ParamBox::drawSelf(Graphics& g)

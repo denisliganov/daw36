@@ -542,28 +542,28 @@ float Parameter::calcOutputValue(float val)
 {
     if(type == Param_Vol)
     {
-        return GetVolOutput(value);
+        return GetVolOutput(val);
     }
     else if(type == Param_Freq)
     {
         if(reversed == false)
         {
-            return (float)(20.0*pow(1000.0, (double)value));
+            return (float)(20.0*pow(1000.0, (double)val));
         }
         else
         {
-            return (float)(20.0*pow(1000.0, (double)(1 - value)));
+            return (float)(20.0*pow(1000.0, (double)(1 - val)));
         }
     }
     else if(type == Param_Log)
     {
         if(reversed == false)
         {
-            return (float)((double)logoffset*pow((double)logRange, (double)value));
+            return (float)((double)logoffset*pow((double)logRange, (double)val));
         }
         else
         {
-            return (float)((double)logoffset*pow((double)logRange, (double)(1 - value)));
+            return (float)((double)logoffset*pow((double)logRange, (double)(1 - val)));
         }
     }
     else
