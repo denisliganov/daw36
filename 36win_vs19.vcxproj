@@ -152,6 +152,7 @@
     <ClCompile Include="src\36_auxkeys.cpp" />
     <ClCompile Include="src\36_dropbox.cpp" />
     <ClCompile Include="src\36_edit.cpp" />
+    <ClCompile Include="src\36_effwin.cpp" />
     <ClCompile Include="src\36_element.cpp" />
     <ClCompile Include="src\36_helper.cpp" />
     <ClCompile Include="src\36_blank.cpp" />
@@ -333,6 +334,7 @@
     <ClInclude Include="src\36_auxkeys.h" />
     <ClInclude Include="src\36_dropbox.h" />
     <ClInclude Include="src\36_edit.h" />
+    <ClInclude Include="src\36_effwin.h" />
     <ClInclude Include="src\36_element.h" />
     <ClInclude Include="src\36_helper.h" />
     <ClInclude Include="src\36_blank.h" />

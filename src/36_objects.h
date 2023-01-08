@@ -112,6 +112,8 @@ public:
     std::string                 getObjId()          { return objId; }
     std::string                 getObjTitle()       { return objTitle; }
     virtual std::string         getHint()           { return hint; };
+            void                setHint(std::string h)              { hint = h; };
+            void                setObjTitle(std::string title)      { objTitle = title; }
 
             int                 getX()              { return xRel; };
             int                 getY()              { return yRel; };
@@ -146,8 +148,6 @@ public:
             void                addHighlight(Gobj* obj);
             void                deleteObject(Gobj* o);
             void                setParent(Gobj* parent);
-            void                setHint(std::string h)              { hint = h; };
-            void                setObjTitle(std::string title)      { objTitle = title; }
             void                setWindow(WinObject* w);
             void                setRelative(bool rel);
             void                setVisible(bool vis);

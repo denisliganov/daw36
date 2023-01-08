@@ -783,10 +783,11 @@ void Vst2Plugin::extractParams()
             char label[MAX_NAME_LENGTH] = {};
             strncpy(label, dispVal, min(MAX_NAME_LENGTH - strlen(paramLabel), strlen(dispVal)));
             strcat(label, paramLabel);
+
             param->setValString(label);
-            param->updUnitStr(fVal);
 
             param->index = index; // for VST purpose
+
             addParamWithControl(param);
 
             if (NULL != paramName)
@@ -824,11 +825,10 @@ void Vst2Plugin::handleParamUpdate(Parameter* param)
             getDisplayValue(param->index,&dispVal);
             getParamLabel(param->index, &paramLabel);
 
-            param->updUnitStr(param->value);
-
             char label[MAX_NAME_LENGTH] = {};
             strncpy(label, dispVal, min(MAX_NAME_LENGTH-strlen(paramLabel),strlen(dispVal)));
             strcat(label, paramLabel);
+
             param->setValString(label);
 
             if (NULL != dispVal)

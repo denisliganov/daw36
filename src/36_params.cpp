@@ -98,13 +98,6 @@ Parameter::~Parameter()
     params.remove(this);
 }
 
-
-std::string Parameter::getOutString()
-{
-    return getSignStr() + getValString();
-}
-
-
 std::string Parameter::getUnitStr()
 {
     switch(unitsType)
@@ -159,23 +152,38 @@ std::string Parameter::getSignStr()
             return outVal == 1 ? "" : outVal > 1 ? "+" : "-";
             break;
         default:
-            return outVal == 0 ? "" : outVal > 0 ? "+" : "-";
+            return outVal == 0 ? "" : outVal > 0 ? "" : "-";
             break;
     }
 
     return "";
 }
 
-void Parameter::updUnitStr(float uv)
+void  Parameter::setValString(std::string str) 
 {
-    sign = uv > 0 ? 1 : uv < 0 ? -1 : 0;
+    prmValString = str;
+}
+
+std::string  Parameter::getValString() 
+{
+    return prmValString;
+}
+
+std::string  Parameter::getMaxValString() 
+{
+    return calcValStr(calcOutputValue(offset + range)); 
+}
+
+std::string Parameter::calcValStr(float val)
+{
+    sign = val > 0 ? 1 : val < 0 ? -1 : 0;
 
     if(unitsType != Units_String)
     {
         char str[100] = {};
         std::string stdstr;
 
-        float absVal = abs(uv);
+        float absVal = abs(val);
 
         switch(unitsType)
         {
@@ -198,7 +206,7 @@ void Parameter::updUnitStr(float uv)
             {
                 if(type == Param_Pan)
                 {
-                    int pval = abs(int(value*100));
+                    int pval = abs(int(absVal*100));
 
                     stdstr += String(pval);
                 }
@@ -217,9 +225,8 @@ void Parameter::updUnitStr(float uv)
                     }
                     else
                     {
-                        double pval = abs(amp2dB(outVal));
+                        double pval = abs(amp2dB(val));
 
-                        char str[100] = {};
                         sprintf(str, "%.2f", pval);
 
                         stdstr = str;
@@ -232,7 +239,7 @@ void Parameter::updUnitStr(float uv)
             }break;
             case Units_dBGain:
             {
-                if(uv <= 0)
+                if(val <= 0)
                 {
                     sprintf(str, "%.1f", absVal);
                 }
@@ -275,8 +282,10 @@ void Parameter::updUnitStr(float uv)
             stdstr = str;
         }
 
-        setValString(stdstr);
+        return stdstr;
     }
+
+    return "";
 }
 
 void Parameter::finishRecording()
@@ -529,6 +538,40 @@ float Parameter::adjustForEditor(float val)
     }
 }
 
+float Parameter::calcOutputValue(float val)
+{
+    if(type == Param_Vol)
+    {
+        return GetVolOutput(value);
+    }
+    else if(type == Param_Freq)
+    {
+        if(reversed == false)
+        {
+            return (float)(20.0*pow(1000.0, (double)value));
+        }
+        else
+        {
+            return (float)(20.0*pow(1000.0, (double)(1 - value)));
+        }
+    }
+    else if(type == Param_Log)
+    {
+        if(reversed == false)
+        {
+            return (float)((double)logoffset*pow((double)logRange, (double)value));
+        }
+        else
+        {
+            return (float)((double)logoffset*pow((double)logRange, (double)(1 - value)));
+        }
+    }
+    else
+    {
+        return val;
+    }
+}
+
 void Parameter::setValue(float val)
 {
     value = val;
@@ -538,38 +581,9 @@ void Parameter::setValue(float val)
         value = float(RoundFloat(value/interval))*interval;
     }
 
-    if(type == Param_Vol)
-    {
-        outVal = GetVolOutput(value);
-    }
-    else if(type == Param_Freq)
-    {
-        if(reversed == false)
-        {
-            outVal = (float)(20.0*pow(1000.0, (double)value));
-        }
-        else
-        {
-            outVal = (float)(20.0*pow(1000.0, (double)(1 - value)));
-        }
-    }
-    else if(type == Param_Log)
-    {
-        if(reversed == false)
-        {
-            outVal = (float)((double)logoffset*pow((double)logRange, (double)value));
-        }
-        else
-        {
-            outVal = (float)((double)logoffset*pow((double)logRange, (double)(1 - value)));
-        }
-    }
-    else
-    {
-        outVal = value;
-    }
+    outVal = calcOutputValue(value);
 
-    updUnitStr(outVal);
+    setValString(calcValStr(outVal));
 
     updateControls();
 }

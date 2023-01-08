@@ -54,9 +54,10 @@ InstrPanel::InstrPanel(Mixer* mixer)
 
     addObject(scroller = new Scroller(true));
 
+    masterVolume = new Parameter("Master Volume", Param_Vol, 1.f, 0.f, DAW_VOL_RANGE, Units_dB);
+
     addParamWithControl(masterVolume = new Parameter("Master Vol.", Param_Vol, .7f, 0.f, DAW_VOL_RANGE, Units_dB), 
                                                                         "sl.vol", masterVolBox = new ParamBox(masterVolume));
-
     addObject(masterFX = new Button36(false), "bt.mfx");
     addObject(send1FX = new Button36(false), "s1.mfx");
     addObject(send2FX = new Button36(false), "s2.mfx");
@@ -66,8 +67,6 @@ InstrPanel::InstrPanel(Mixer* mixer)
     addObject(btHideFX = new Button36(false), "bt.hidebrw");
 
     addObject(mixr = mixer);
-
-    //masterVolume = new Parameter("Master Volume", Param_Vol, 1.f, 0.f, DAW_VOL_RANGE, Units_dB);
 
     addObject(masterVolKnob = new Knob(masterVolume));
 

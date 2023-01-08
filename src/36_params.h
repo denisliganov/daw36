@@ -102,20 +102,31 @@ public:
 
     virtual ~Parameter();
 
-            void                setName(std::string name) { prmName = name; };
-            std::string         getOutString();
-            std::string         getName() { return prmName; };
-            void                setValString(std::string str) { prmValString = str; };
-            std::string         getValString() { return prmValString; };
+            void                setName(std::string name)   { prmName = name; };
+            std::string         getName()                   { return prmName; };
+            void                setValString(std::string str);
+            std::string         getValString();
+            std::string         getMaxValString();
             std::string         getUnitStr();
             std::string         getSignStr();
+            std::string         calcValStr(float uv);
     virtual void                reset();
     virtual void                resetToInitial();
     virtual void                updateControls();
-            float               getRange() { return range; }
-            float               getOffset() { return offset; }
+            float               getRange() { return range; };
+            float               getOffset() { return offset; };
+
+    virtual float               calcOutputValue(float val);
+    virtual void                setValue(float val);
+    virtual void                setValueFromControl(Control* ctrl, float ctrlval);
+    virtual void                setDirectValueFromControl(float ctrlval);
+    virtual void                setValueFromEnvelope(float envval, Envelope* env);
+            void                adjustValue(float deltaValue);
+            void                setInitialValue(float initial);
+            void                setInterval(float newint) { interval = newint; }
+            float               getInterval() { return interval; } 
+
             void                paramInit(std::string name, ParamType ptype, float def_val, float offs, float rng, UnitsType vt);
-            void                updUnitStr(float uv);
             void                addControl(Control* ct);
             void                removeControl(Control* ct);
 
@@ -133,14 +144,6 @@ public:
             float               getNormalizedValue();
             float               getEditorValue();
             float               adjustForEditor(float val);
-    virtual void                setValue(float norm_val);
-    virtual void                setValueFromControl(Control* ctrl, float ctrlval);
-    virtual void                setDirectValueFromControl(float ctrlval);
-    virtual void                setValueFromEnvelope(float envval, Envelope* env);
-            void                adjustValue(float deltaValue);
-            void                setInitialValue(float initial);
-            void                setInterval(float newint) { interval = newint; }
-            float               getInterval() { return interval; } 
             void                setReversed(bool rev) { reversed = rev; }
             bool                getReversed() { return reversed; }
             void                setEnvDirect(bool envdir);

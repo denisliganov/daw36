@@ -305,6 +305,10 @@ void TimeScreen::handleMouseWheel(InputEvent & ev)
 ParamBox::ParamBox(Parameter* param)
 {
     addParam(param);
+
+    th = gGetTextHeight(FontSmall);
+
+    calcTextCoords();
 }
 
 void ParamBox::updValue()
@@ -339,9 +343,65 @@ void ParamBox::handleMouseWheel(InputEvent & ev)
     redraw();
 }
 
-void ParamBox::mapObjects()
+void ParamBox::calcTextCoords()
 {
+    tw1 = gGetTextWidth(FontSmall, param->getName());
+    tw3 = gGetTextWidth(FontSmall, param->getMaxValString());
+    tw4 = gGetTextWidth(FontSmall, param->getUnitStr());
 
+    tx1 = 2;
+    tx2 = tx1 + tw1 + 6;
+    tx3 = tx2 + 6;
+    tx4 = tx3 + tw3 + 4;
+
+    width = tx4 + tw4 + 2;
+}
+
+void ParamBox::getTextCoords(int* txp1, int* txp2, int* txp3, int* txp4)
+{
+   *txp1 = tx1;
+   *txp2 = tx2;
+   *txp3 = tx3;
+   *txp4 = tx4;
+}
+
+void ParamBox::setTextCoords(int txs1, int txs2, int txs3, int txs4)
+{
+    tx1 = txs1;
+    tx2 = txs2;
+    tx3 = txs3;
+    tx4 = txs4;
+
+    if (txs2 > tx2) tx2 = txs2;
+    if (txs3 > tx3) tx3 = txs3;
+    if (txs4 > tx4) tx4 = txs4;
+
+    width = tx4 + tw4 + 2;
+}
+
+void ParamBox::adjustTx2(int txmin2)
+{
+    tx2 = txmin2;
+
+    tx3 = tx2 + 6;
+    tx4 = tx3 + tw3 + 4;
+
+    width = tx4 + tw4 + 2;
+}
+
+void ParamBox::adjustTx3(int txmin3)
+{
+    tx3 = txmin3;
+    tx4 = tx3 + tw3 + 4;
+
+    width = tx4 + tw4 + 2;
+}
+
+void ParamBox::adjustTx4(int txmin4)
+{
+    tx4 = txmin4;
+
+    width = tx4 + tw4 + 2;
 }
 
 void ParamBox::drawSelf(Graphics& g)
@@ -352,27 +412,17 @@ void ParamBox::drawSelf(Graphics& g)
     //gSetMonoColor(g, 0.4f);
     //gDrawRect(g, x1, y1, x2, y2);
 
-
-    std::string strOut = param->getName().data();
-
-    int th = gGetTextHeight(FontSmall);
-
-    strOut += "." + param->getUnitStr();
-
-    int tw = gGetTextWidth(FontSmall, strOut);
+    int txy = y2 - height/2 + th/2 - 2;
 
     gSetMonoColor(g, 0.6f);
-    gText(g, FontSmall, strOut, x1 + 2, y2 - height/2 + th/2 - 2);
+    gText(g, FontSmall, param->getName(), x1 + tx1, txy);
 
+    gSetMonoColor(g, 0.99f);
+    gText(g, FontSmall, param->getSignStr(), x1 + tx2, txy);
+    gText(g, FontSmall, param->getValString(), x1 + tx3, txy);
 
-    strOut = param->getOutString();
-
-    int tw1 = gGetTextWidth(FontSmall, strOut);
-
-    gSetMonoColor(g, 0.9f);
-    gText(g, FontSmall, strOut, x1 + tw + (width - tw)/2 - tw1/2, y2 - height/2 + th/2 - 2);
-
-    //gText(g, FontSmall, param->getUnitStr(), x2 - gGetTextWidth(FontSmall, param->getUnitStr()) - 1, y2 - height/2 + th/2 - 2);
+    gSetMonoColor(g, 0.6f);
+    gText(g, FontSmall, param->getUnitStr(), x1 + tx4, txy);
 }
 
 

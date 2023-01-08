@@ -98,7 +98,9 @@ void Gobj::addObject(Gobj* obj, std::string id, ObjectGroup type)
     obj->setParent(this);
 
     if(id.size() > 0)
+    {
         obj->objId = id;
+    }
 
     obj->setEnable(enabled);
 }
@@ -183,7 +185,10 @@ void Gobj::setVisible(bool vis)
     {
         // Force all child objs invisible
 
-        for(Gobj* obj : objs) obj->setVisible(false);
+        for(Gobj* obj : objs)
+        {
+            obj->setVisible(false);
+        }
     }
 }
 

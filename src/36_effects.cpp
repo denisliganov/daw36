@@ -127,9 +127,9 @@ void Eff::drawSelf(Graphics& g)
     else
         gSetMonoColor(g, .9f);
 
-    int th = gGetTextHeight(FontSmall);
+    int th = gGetTextHeight(FontVis);
 
-    gTextFit(g, FontSmall, objTitle, x1 + 2, y2 - height/2 + th/2 + 2, width - 2);
+    gTextFit(g, FontVis, objTitle, x1 + 2, y2 - height/2 + th/2 + 2, width - 2);
 }
 
 Eff* Eff::makeClone(Eff* eff)
@@ -304,8 +304,8 @@ BasicLP::BasicLP()
 
 void BasicLP::handleParamUpdate(Parameter* param)
 {
-    cutoff->updUnitStr((float)(cutoff->outVal/1000.0f));
-    resonance->updUnitStr(((resonance->outVal - 1.0f)/10.0f*100));
+    cutoff->setValString(cutoff->calcValStr((float)(cutoff->outVal/1000.0f)));
+    resonance->setValString(resonance->calcValStr(((resonance->outVal - 1.0f)/10.0f*100)));
 
     reset();
 }
@@ -450,7 +450,7 @@ void Filter1::handleParamUpdate(Parameter* param)
     {
         dspCoreCFilter3.setResonance((double)resonance->outVal);
 
-        resonance->updUnitStr((resonance->outVal/0.97f*100.0f)); // /66.0f*100.0f
+        resonance->setValString(resonance->calcValStr((resonance->outVal/0.97f*100.0f))); // /66.0f*100.0f
     }
     else if(param->prmName == "Bandwidth")
     {
@@ -522,7 +522,7 @@ void Filter1::processData(float* in_buff, float* out_buff, int num_frames)
 CChorus::CChorus()
 {
     objId = "eff.chorus";
-    objTitle = "Chorus";
+    objTitle = "CHO";
     uniqueId = MAKE_FOURCC('C','H','O','R');
 
     dspCoreChorus = new rosic::Chorus(65535);
@@ -580,7 +580,7 @@ void CChorus::processData(float* in_buff, float* out_buff, int num_frames)
 CFlanger::CFlanger()
 {
     objId = "eff.flanger";
-    objTitle = "Flanger";
+    objTitle = "FL1";
     uniqueId = MAKE_FOURCC('F','L','N','G');
 
     dspCoreFlanger.setTempoSync(false);
@@ -617,7 +617,7 @@ void CFlanger::handleParamUpdate(Parameter* param)
     {
         dspCoreFlanger.setFrequency(frequency->outVal);
 
-        frequency->updUnitStr(1.f/frequency->outVal*1000);
+        frequency->setValString(frequency->calcValStr(1.f/frequency->outVal*1000));
     }
     else if(param == modfreq)
     {
@@ -661,7 +661,7 @@ void CFlanger::processData(float* in_buff, float* out_buff, int num_frames)
 CPhaser::CPhaser()
 {
     objId = "eff.phaser";
-    objTitle = "Phaser";
+    objTitle = "PH1";
     uniqueId = MAKE_FOURCC('P','H','A','S');
 
     dspCorePhaser.setTempoSync(false);
@@ -696,7 +696,7 @@ void CPhaser::handleParamUpdate(Parameter* param)
     {
         dspCorePhaser.setFrequency(frequency->outVal);
 
-        frequency->updUnitStr(1.f/frequency->outVal*1000);
+        frequency->setValString(frequency->calcValStr(1.f/frequency->outVal*1000));
     }
     else if(param == modfreq)
     {
@@ -713,8 +713,6 @@ void CPhaser::handleParamUpdate(Parameter* param)
     else if(param == numstages)
     {
         dspCorePhaser.setNumStages(int(numstages->outVal));
-
-        numstages->updUnitStr((numstages->outVal));
     }
     else if(param == stereo)
     {
@@ -802,7 +800,7 @@ void EQ1::processData(float* in_buff, float* out_buff, int num_frames)
 GraphicEQ::GraphicEQ()
 {
     objId = "eff.grapheq";
-    objTitle = "GQ";
+    objTitle = "GQ1";
     uniqueId = MAKE_FOURCC('G','R','E','Q');
 
     f1 = dspCoreEqualizer.addBand(rosic::TwoPoleFilter::HIGH_SHELF, 8000, 0, 1);
@@ -970,7 +968,7 @@ void EQ3::processData(float* in_buff, float* out_buff, int num_frames)
 CTremolo::CTremolo()
 {
     objId = "eff.tremolo";
-    objTitle = "Tremolo";
+    objTitle = "TR1";
     uniqueId = MAKE_FOURCC('T','R','E','M');
 
     addParamWithControl(speed = new Parameter("Speed", 1.f, 0.1f, 2.25f));
@@ -1020,7 +1018,7 @@ void CTremolo::processData(float* in_buff, float* out_buff, int num_frames)
 XDelay::XDelay() : dspCorePingPongDelay()
 {
     objId = "eff.delay";
-    objTitle = "Delay";
+    objTitle = "DL1";
     uniqueId = MAKE_FOURCC('P','P','D','L');
 
     dspCorePingPongDelay.setTrueStereoMode(true);
@@ -1072,12 +1070,11 @@ void XDelay::handleParamUpdate(Parameter* param)
     else if( param->prmName == "Dry/wet" )
     {
         dspCorePingPongDelay.setDryWetRatio((float)(0.01*param->outVal));
-        param->updUnitStr((float)(0.01*param->outVal));
+        param->setValString(param->calcValStr((float)(0.01*param->outVal)));
     }
     else if( param->prmName == "Feedback" )
     {
         dspCorePingPongDelay.setFeedbackInPercent(param->outVal);
-        param->updUnitStr(param->outVal);
     }
     else if( param->prmName == "Pan" )
     {
@@ -1116,7 +1113,7 @@ void XDelay::processData(float* in_buff, float* out_buff, int num_frames)
 Compressor::Compressor()
 {
     objId = "eff.comp";
-    objTitle = "Comp";
+    objTitle = "CMP";
     uniqueId = MAKE_FOURCC('C','O','M','P');
 
 
@@ -1208,7 +1205,7 @@ void Compressor::processData(float* in_buff, float* out_buff, int num_frames)
 CWahWah::CWahWah()
 {
     objId = "eff.wah";
-    objTitle = "Wah";
+    objTitle = "WAH";
     uniqueId = MAKE_FOURCC('W','A','H','W');
 
     addParamWithControl(new Parameter("Mod.freq.", 1.25f, 0.1f, 4.9f, Units_Hz1));
@@ -1234,8 +1231,6 @@ void CWahWah::handleParamUpdate(Parameter* param)
     if(param->prmName == "Mod.freq.")
     {
         dspCoreWah.setCycleLength(1.f/param->outVal);
-
-        param->updUnitStr(param->outVal);
     }
     else if(param->prmName == "Depth")
     {
@@ -1268,7 +1263,7 @@ void CWahWah::processData(float* in_buff, float* out_buff, int num_frames)
 CDistort::CDistort()
 {
     objId = "eff.dist";
-    objTitle = "Distrt";
+    objTitle = "DIS";
     uniqueId = MAKE_FOURCC('D','I','S','T');
 
     addParamWithControl(new Parameter("Drive", 32.0f, 0.0f, 48.f, Units_dB));
@@ -1323,7 +1318,7 @@ void CDistort::processData(float* in_buff, float* out_buff, int num_frames)
 CBitCrusher::CBitCrusher()
 {
     objId = "eff.bitcrush";
-    objTitle = "BitCrusher";
+    objTitle = "BC";
     uniqueId = MAKE_FOURCC('B','I','T','C');
 
     addParamWithControl(decimation = new Parameter("decimation", 1.0f, 1.0f, 127.f, Units_Integer));
@@ -1340,7 +1335,6 @@ void CBitCrusher::handleParamUpdate(Parameter* param)
     if(param == decimation)
     {
         dspCoreBC.setDecimationFactor(int(decimation->outVal));
-        decimation->updUnitStr((decimation->outVal));
     }
     else if(param == quantization)
     {
@@ -1371,7 +1365,7 @@ void CBitCrusher::processData(float* in_buff, float* out_buff, int num_frames)
 CStereo::CStereo()
 {
     objId = "eff.stereo";
-    objTitle = "Stereo";
+    objTitle = "STR";
     uniqueId = MAKE_FOURCC('S','T','E','R');
 
     addParamWithControl(offset = new Parameter("OFFSET", 10.0f, 1.0f, 99.f, Units_Integer));
@@ -1384,8 +1378,6 @@ void CStereo::handleParamUpdate(Parameter* param)
     if(param == offset)
     {
         dspCoreStereo.delayLine.setDelayInMilliseconds(offset->outVal);
-
-        offset->updUnitStr((offset->outVal));
     }
 }
 
@@ -1414,7 +1406,7 @@ void CStereo::processData(float* in_buff, float* out_buff, int num_frames)
 CReverb::CReverb() : dspCoreReverb()
 {
     objId = "eff.reverb";
-    objTitle = "Reverb";
+    objTitle = "RV1";
     uniqueId = MAKE_FOURCC('R','E','V','R');
 
     addParamWithControl(preDelay  = new Parameter("Predelay", 0.0f, 0.0f, 200.0f, Units_ms));
@@ -1434,7 +1426,6 @@ void CReverb::handleParamUpdate(Parameter* param)
     if(param == roomsize)
     {
         dspCoreReverb.setReferenceDelayTime(roomsize->outVal);
-        roomsize->updUnitStr((roomsize->outVal));
     }
     else if(param == preDelay)
     {
@@ -1443,7 +1434,7 @@ void CReverb::handleParamUpdate(Parameter* param)
     else if(param == drywet)
     {
         dspCoreReverb.setDryWetRatio((float)(0.01*drywet->outVal));
-        drywet->updUnitStr((float)(0.01*drywet->outVal));
+        drywet->setValString(drywet->calcValStr((float)(0.01*drywet->outVal)));
     }
     else if(param == decay)
     {

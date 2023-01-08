@@ -88,8 +88,8 @@ void gSetColorIndex(Graphics& g, int color_index)
     g.setColour(*(colors[color_index]));
 }
 
-float   globalHue = 0.5f;
-float   globalSaturation = 0.19f;
+float   globalHue = 0.25f;
+float   globalSaturation = 0.35f;
 float   brightnessCoeff = 1.f;
 
 void gSetMonoColor(Graphics& g, float clr, float alpha)
