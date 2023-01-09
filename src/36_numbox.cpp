@@ -19,7 +19,7 @@
 
 void NumBox::drawSelf(Graphics& g)
 {
-    gSetMonoColor(g, 0.4f);
+    gSetMonoColor(g, 0.3f);
     gFillRect(g, x1, y1, x2, y2);
 
     gSetMonoColor(g, 0.22f);
@@ -406,7 +406,7 @@ void ParamBox::adjustTx4(int txmin4)
 
 void ParamBox::drawSelf(Graphics& g)
 {
-    gSetMonoColor(g, 0.22f);
+    gSetMonoColor(g, 0.16f);
     gFillRect(g, x1, y1, x2, y2);
 
     //gSetMonoColor(g, 0.4f);

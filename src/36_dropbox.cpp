@@ -15,7 +15,7 @@ DropBox::DropBox(int menu_id, std::string name)
 
     setObjTitle(name);
 
-    fontId = FontBold;
+    fontId = FontInst;
 
     menu = NULL;
 
