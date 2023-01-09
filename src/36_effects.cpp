@@ -1051,13 +1051,13 @@ void XDelay::handleParamUpdate(Parameter* param)
         dspCorePingPongDelay.setStereoSwap(ppmode->getOutVal());
         dspCorePingPongDelay.setPan((ppmode->getOutVal() ? -1 : 1)*param->getOutVal());
     }
-    /*
-    else if( param == ggain )
+    else if(param->prmName == "Amount")
     {
         //dspCorePingPongDelay.setGlobalGainFactor(ggain->outval); // old, obsolete
-        dspCorePingPongDelay.setWetLevel(amp2dB(ggain->outval));
-        ggain->SetUnitsVal(int(100*ggain->outval));
+        dspCorePingPongDelay.setWetLevel(amp2dB(param->getOutVal()));
+        param->setValString(param->calcValStr(int(100*param->getOutVal())));
     }
+    /*
     else if( param->prmName == "High.cut" )
     {
         dspCorePingPongDelay.setLowDamp(param->outval);

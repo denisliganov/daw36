@@ -183,7 +183,7 @@ std::string Parameter::calcValStr(float val)
         char str[100] = {};
         std::string stdstr;
 
-        float absVal = abs(val);
+        float absVal = (val);
 
         switch(unitsType)
         {
@@ -208,7 +208,16 @@ std::string Parameter::calcValStr(float val)
                 {
                     int pval = abs(int(absVal*100));
 
-                    stdstr += String(pval);
+                    stdstr = String(pval);
+
+                    if(value < 0)
+                    {
+                        stdstr = "L" + stdstr;
+                    }
+                    else if(value > 0)
+                    {
+                        stdstr = stdstr + "R";
+                    }
                 }
                 else
                 {
@@ -225,7 +234,7 @@ std::string Parameter::calcValStr(float val)
                     }
                     else
                     {
-                        double pval = abs(amp2dB(val));
+                        double pval = (amp2dB(val));
 
                         sprintf(str, "%.2f", pval);
 
