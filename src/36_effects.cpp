@@ -90,7 +90,7 @@ Eff::Eff()
 
     addObject(guiButt = new EffGuiButton(), MixChanWidth - 21, 0, 20, 15);
 
-    addParamWithControl(new Parameter(1, 0, 1), "", sliderAmount = new Slider36(false));
+    //addParamWithControl(new Parameter(1, 0, 1), "", sliderAmount = new Slider36(false));
 }
 
 Eff::~Eff()

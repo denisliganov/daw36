@@ -20,7 +20,6 @@ EffParamObject::EffParamObject(Eff* eff)
     {
         if (param->type != Param_Bool)
         {
-
             addObject(box = new ParamBox(param), x, y, 100, 14, "eff.param");
 
             box->getTextCoords(&tx1,&tx2,&tx3,&tx4);
