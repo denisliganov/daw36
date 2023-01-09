@@ -54,10 +54,10 @@ InstrPanel::InstrPanel(Mixer* mixer)
 
     addObject(scroller = new Scroller(true));
 
-    masterVolume = new Parameter("Master Volume", Param_Vol, 1.f, 0.f, DAW_VOL_RANGE, Units_dB);
+    masterVolume = new Parameter("Master", Param_Vol, 1.f, 0.f, DAW_VOL_RANGE, Units_dB);
 
-    addParamWithControl(masterVolume = new Parameter("Master Vol.", Param_Vol, .7f, 0.f, DAW_VOL_RANGE, Units_dB), 
-                                                                        "sl.vol", masterVolBox = new ParamBox(masterVolume));
+    addParamWithControl(masterVolume, "sl.vol", masterVolBox = new ParamBox(masterVolume));
+
     addObject(masterFX = new Button36(false), "bt.mfx");
     addObject(send1FX = new Button36(false), "s1.mfx");
     addObject(send2FX = new Button36(false), "s2.mfx");
@@ -768,7 +768,7 @@ void InstrPanel::mapObjects()
 
     //masterVolSlider->setCoords1(width - 90, 6, 80, 16);
     //masterVolKnob->setCoords1(width - InstrControlWidth + 2, 2, 24, 24);
-    masterVolBox->setCoords1(width - 120, 6, 100, 16);
+    masterVolBox->setCoords1(width - 120, 6, -1, 16);
 
     int instrListY = MainLineHeight - 1;
     int instrListHeight = (height - instrListY - BottomPadHeight - 1);

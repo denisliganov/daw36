@@ -19,8 +19,7 @@
 
 void NumBox::drawSelf(Graphics& g)
 {
-    gSetMonoColor(g, 0.3f);
-    gFillRect(g, x1, y1, x2, y2);
+    fillWithMonoColor(.3f);
 
     gSetMonoColor(g, 0.22f);
     gDrawRect(g, x1, y1, x2, y2);

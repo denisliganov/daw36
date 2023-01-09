@@ -101,7 +101,7 @@ void SnapMenu::handleMouseUp(InputEvent& ev)
 
 void SnapMenu::drawSelf(Graphics& g)
 {
-    fillWithMonoColor(.4f);
+    fillWithMonoColor(.3f);
 
     //gSetMonoColor(g, 0.45f);
     gSetMonoColor(g, 0.22f);

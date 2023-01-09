@@ -163,10 +163,10 @@ void Button36::drawButtonBase(Graphics& g)
         }
         else
         {
-            gSetColor2(g, 0xffFFB040, .6f);
+            gSetColor2(g, 0xffFFFF40, .6f);
             gFillRect(g, x1, y1, x2, y2);
 
-            gSetColor2(g, 0xffFFB040, .7f);
+            gSetColor2(g, 0xffFFFF40, .7f);
             gDrawRect(g, x1, y1, x2, y2);
         }
     }
@@ -181,7 +181,7 @@ void Button36::drawSelf(Graphics& g)
         if (isLedType)
             gSetMonoColor(g, 1.f);
         else
-            gSetColor2(g, 0xffFFB040, 1.f);
+            gSetColor2(g, 0xffFFFF40, 1.f);
      }
     else
     {
