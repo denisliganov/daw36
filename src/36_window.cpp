@@ -35,9 +35,9 @@ SubWindow*      MsgBox = NULL;
 void WinButton::paintButton(Graphics& g, bool isMouseOverButton, bool isButtonDown)
 {
     if(!isButtonDown)
-        gSetMonoColor(g, 0.7f);
+        gSetMonoColor(g, 0.4f);
     else
-        gSetMonoColor(g, 0.9f);
+        gSetMonoColor(g, 0.6f);
 
     g.fillRect(0, 0, getWidth(), getHeight());
 
@@ -420,12 +420,12 @@ void MainWindow::paint(Graphics& g)
     g.drawRect(2, 2, w - 4, h - 4);
 
     // Title bar
-    gSetMonoColor(g, 0.3f);
+    gSetMonoColor(g, 0.2f);
     g.fillRect(1, 1, w - 2, titleHeight + getBorderThickness().getTop());
     //g.fillRect(3, titleHeight, w - 6, 3);
 
     // Bright border line
-    gSetMonoColor(g, 0.5f);
+    gSetMonoColor(g, 0.1f);
     g.drawRect (1, 1, w - 2, h - 2);
 
     // Black divider betwen titlebar and window
@@ -547,7 +547,7 @@ SubWindow::~SubWindow()
     //removeChildComponent(cc);
     //removeChildComponent(closeButton);
 
-    if(winObject) 
+    if(winObject)
         delete winObject;
     else if(cc)
         delete cc;
@@ -574,8 +574,12 @@ void SubWindow::resized()
 
         setBounds(getX(), getY(), cc->getWidth() + 2, ycoffs + cc->getHeight() + 1);
 
+        int btSize = 20;
+
         if(titleBarButtons[2])
-            titleBarButtons[2]->setBounds(getWidth() - 30, 2, 28, 20);
+        {
+            titleBarButtons[2]->setBounds(getWidth() - 22, 2, btSize, btSize);
+        }
     }
 }
 
@@ -612,7 +616,7 @@ void SubWindow::paint(Graphics& g)
 {
     if(color == 0x0)
     {
-        gSetMonoColor(g, 0.55f);
+        gSetMonoColor(g, 0.2f);
     }
     else
     {
