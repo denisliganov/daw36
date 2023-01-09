@@ -145,17 +145,5 @@ virtual Instrument*             clone();
 
 };
 
-
-class InstrMaster : public Instrument
-{
-protected:
-
-            void                drawSelf(Graphics& g);
-
-public:
-
-            InstrMaster();
-};
-
 //}
 

@@ -47,7 +47,7 @@ void TextCursor::updPos()
 
 void TextCursor::drawSelf(Graphics& g)
 {
-    gSetMonoColor(g, 1, .7f);
+    gSetMonoColor(g, 1);
     gFillRect(g, x1, y1, x1, y2);
 }
 

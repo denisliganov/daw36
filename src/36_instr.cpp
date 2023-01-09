@@ -107,9 +107,9 @@ protected:
             gText(g, FontVis, instr->getAlias(), x1 + 4, y2 - height + th + 2);
 
             if(pressed)
-                gSetMonoColor(g, .99f);
+                gSetMonoColor(g, 1);
             else
-                gSetMonoColor(g, .8f);
+                gSetMonoColor(g, .9f);
 
             //int gap = 3;
             //gTriangle(g, x1 + gap,y1 + gap, x2 - gap, y1 + height/2, x1 + gap, y2 - gap, clr1, clr1);
@@ -303,7 +303,7 @@ void Instrument::drawSelf(Graphics& g)
         fillMe();
     }
 
-    setMonoColor(.6f);
+    setMonoColor(.7f);
 
     gTextFit(g, FontSmall, objTitle, x1 + 6, y2 - 1, width - 22);
 
@@ -1254,15 +1254,6 @@ void Instrument::handleChildEvent(Gobj * obj, InputEvent& ev)
     redraw();
 }
 
-
-InstrMaster::InstrMaster()
-{
-}
-
-void InstrMaster::drawSelf(Graphics & g)
-{
-    
-}
 
 
 //}

@@ -143,44 +143,32 @@ void Button36::updPosition()
 
 void Button36::drawButtonBase(Graphics& g)
 {
-    if(!isLedType)
+    if (!pressed)
     {
-        if (!pressed)
-        {
-            gSetMonoColor(g, 0.37f);
-            gFillRect(g, x1 + 1, y1 + 1, x2 - 1, y2 - 1);
+        gSetMonoColor(g, 0.25f);
+        gFillRect(g, x1 + 1, y1 + 1, x2 - 1, y2 - 1);
 
-            gSetMonoColor(g, 0.18f);
+        gSetMonoColor(g, 0.1f);
+        gDrawRect(g, x1, y1, x2, y2);
+    }
+    else
+    {
+        if(isLedType)
+        {
+            gSetMonoColor(g, .6f);
+            gFillRect(g, x1, y1, x2, y2);
+
+            gSetMonoColor(g, .7f);
             gDrawRect(g, x1, y1, x2, y2);
         }
         else
         {
-            gSetColor2(g, 0xffFFF060, .6f);
+            gSetColor2(g, 0xffFFB040, .6f);
             gFillRect(g, x1, y1, x2, y2);
 
-            gSetColor2(g, 0xffFFF060, .7f);
+            gSetColor2(g, 0xffFFB040, .7f);
             gDrawRect(g, x1, y1, x2, y2);
         }
-    }
-    else
-    {
-        gSetMonoColor(g, 0.18f);
-        gDrawRect(g, x1, y1, x2, y2);
-
-    /*
-        gSetMonoColor(g, .3f);
-        gFillRect(g, x1, y1, x2, y2);
-
-        if (pressed)
-        {
-            gSetColor2(g, MenuColor,.4f, .3f);
-        }
-
-        gFillRect(g, x1, y1, x2, y2);
-
-        gSetMonoColor(g, 0.2f);
-        gDrawRect(g, x1, y1, x2, y2);
-        */
     }
 }
 
@@ -188,27 +176,16 @@ void Button36::drawSelf(Graphics& g)
 {
     drawButtonBase(g);
 
-    if(isLedType)
+    if (pressed)
     {
-        if (pressed)
-        {
-            gSetColor2(g, 0xffFFF010, 1.f);
-        }
+        if (isLedType)
+            gSetMonoColor(g, 1.f);
         else
-        {
-            gSetMonoColor(g, .6f);
-        }
-    }
+            gSetColor2(g, 0xffFFB040, 1.f);
+     }
     else
     {
-        if (pressed)
-        {
-            gSetColor2(g, 0xffFFF010, 1.f);
-        }
-        else
-        {
-            gSetMonoColor(g, .7f);
-        }
+        gSetMonoColor(g, .7f);
     }
 
     DrawButtonGlyph(g, this);
