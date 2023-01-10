@@ -30,7 +30,7 @@ Button36* GetButton(Gobj* parent, std::string id)
 
 Button36::Button36(bool stick, std::string title)
 {
-    objTitle = title;
+    objName = title;
     sticking = stick;
 
     pressed = false;
@@ -190,11 +190,11 @@ void Button36::drawSelf(Graphics& g)
 
     DrawButtonGlyph(g, this);
 
-    if(objTitle.size() > 0)
+    if(objName.size() > 0)
     {
         gSetMonoColor(g, .9f);
 
-        gText(g, FontInst, objTitle, x1 + width / 2 - gGetTextWidth(FontInst, objTitle) / 2, y1 + height / 2 + gGetTextHeight(FontInst)/2 - 1);
+        gText(g, FontInst, objName, x1 + width / 2 - gGetTextWidth(FontInst, objName) / 2, y1 + height / 2 + gGetTextHeight(FontInst)/2 - 1);
     }
 }
 

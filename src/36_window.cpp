@@ -624,6 +624,13 @@ void SubWindow::paint(Graphics& g)
     }
 
     g.fillRect(0, 0, getWidth(), getHeight());
+
+    gSetMonoColor(g, 0.05f);
+    g.drawRect(0, 0, getWidth(), getHeight());
+
+    gSetMonoColor(g, 1.f);
+    g.setFont(*bld);
+    g.drawSingleLineText(winObject->getName(), 7, 16);
 }
 
 void SubWindow::lookAndFeelChanged()

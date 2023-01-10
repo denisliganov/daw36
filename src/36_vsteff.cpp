@@ -49,7 +49,7 @@ VstEffect::VstEffect(char* path)
         else
             filePath = vst2->vstpath;
 
-        objTitle = vst2->objTitle;
+        objName = vst2->objName;
 
         guibutt = new Button36(true);
 
@@ -88,7 +88,7 @@ void VstEffect::drawSelf(Graphics & g)
     g.setColour(Colour(0xffCFEFFF));
     //gSetColor((0xff46FFB4));
 
-    gTextFit(g, FontBold, vst2->objTitle, x1 + 2, y1 + 10, 91);
+    gTextFit(g, FontBold, vst2->objName, x1 + 2, y1 + 10, 91);
 }
 
 VstEffect* VstEffect::clone(MixChannel* mc)

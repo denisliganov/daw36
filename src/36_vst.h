@@ -135,7 +135,7 @@ public:
 ////
             void                    setIndex(int nNewIndex) { vstindex = nNewIndex; }
             long                    getIndex() { return vstindex; }
-            bool                    loadBank(char *objTitle);
+            bool                    loadBank(char *objName);
             void*                   onGetDirectory();
             void                    onSizeEditorWindow(long width, long height) {}
             bool                    onUpdateDisplay();

@@ -35,12 +35,12 @@ FileType GetFileTypeByExtension(std::string extension)
 
 BrwEntry::BrwEntry(FileType ft, long s, unsigned a, std::string nm, std::string pth) : ftype(ft), size(s), attrs(a), path(pth) 
 { 
-    objTitle = nm; 
+    objName = nm; 
 }
 
 BrwEntry::BrwEntry(DevClass dclass, std::string nm, std::string pth, std::string al) : devClass(dclass), alias(al), path(pth) 
 { 
-    objTitle = nm; 
+    objName = nm; 
 }
 
 BrwEntry::BrwEntry(Device36* preset_dev) : dev(preset_dev) 
@@ -94,7 +94,7 @@ void BrwEntry::drawDevEntry(Graphics& g, int x, int y, int w)
 
     gSetMonoColor(g, 0.9f);
 
-    gTextFit(g, FontSmall, objTitle, x + 15, y + BrwEntryHeight - 3, w - 20);
+    gTextFit(g, FontSmall, objName, x + 15, y + BrwEntryHeight - 3, w - 20);
 }
 
 void BrwEntry::drawFileEntry(Graphics& g, int x, int y, int w)
@@ -107,7 +107,7 @@ void BrwEntry::drawFileEntry(Graphics& g, int x, int y, int w)
 
         gSetMonoColor(g, 0.9f);
 
-        fname = objTitle;
+        fname = objName;
 
         FontId fid = FontSmall;
 

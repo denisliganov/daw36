@@ -134,12 +134,12 @@ void Device36::scanForPresets()
                     {
                         String Str1 = xmlHeader->getStringAttribute(T("PresetEntry"));
                         
-                        preset->setObjTitle((const char*)Str1);
+                        preset->setObjName((const char*)Str1);
                         //Str1.copyToBuffer((const char*)preset->name.data(), min(Str1.length(), 255));
                         
                         preset->path = filename;
 
-                        if(preset->getObjTitle() == currPresetName)
+                        if(preset->getObjName() == currPresetName)
                         {
                             currPreset = preset;
                         }
@@ -225,7 +225,7 @@ void Device36::saveStateData(XmlElement & xmlParentNode, char* preset_name, bool
 {
     XmlElement  *xmlStateNode = new XmlElement(T("Module"));
 
-    xmlStateNode->setAttribute(T("Name"), objTitle.data());
+    xmlStateNode->setAttribute(T("Name"), objName.data());
     xmlStateNode->setAttribute(T("ID"), uniqueId);
 
     //xmlEffectHeader->setAttribute(T("Type"), this->devType);
@@ -236,7 +236,7 @@ void Device36::saveStateData(XmlElement & xmlParentNode, char* preset_name, bool
     }
     else if (currPreset != NULL)
     {
-        xmlStateNode->setAttribute(T("PresetEntry"), currPreset->getObjTitle().data());
+        xmlStateNode->setAttribute(T("PresetEntry"), currPreset->getObjName().data());
     }
     else
     {
@@ -387,20 +387,20 @@ void Device36::savePresetAs(char * preset_name)
 
     preset->prindex = presets.size();
     preset->path = path;
-    preset->setObjTitle(preset_name);
+    preset->setObjName(preset_name);
 
     presets.push_back(preset);
 
     currPreset = preset;
 
-    currPresetName = preset->getObjTitle();
+    currPresetName = preset->getObjName();
 }
 
 long Device36::getPresetIndex(char* name)
 {
     for(BrwEntry* pe : presets)
     {
-        if(pe->getObjTitle() == name)
+        if(pe->getObjName() == name)
         {
             return pe->prindex;
         }
@@ -413,7 +413,7 @@ bool Device36::setPresetByName(char * name)
 {
     for(BrwEntry* pe : presets)
     {
-        if(pe->getObjTitle() == name)
+        if(pe->getObjName() == name)
         {
             return setPresetByName(pe);
         }
@@ -460,7 +460,7 @@ bool Device36::setPresetByName(BrwEntry* preset)
                     //Start recursive traversing of XML tree and loading of the preset
                     restoreStateData(*xmlMasterHeader);
 
-                    currPresetName = preset->getObjTitle();
+                    currPresetName = preset->getObjName();
 
                     return true;
                 }
@@ -553,7 +553,7 @@ void Device36::getPresetName(long index, char *name)
         {
             if (pe->prindex == index)
             {
-                strcpy(name, pe->getObjTitle().data());
+                strcpy(name, pe->getObjName().data());
                 break;
             }
         }
@@ -571,7 +571,7 @@ BrwEntry* Device36::getPreset(long index)
 BrwEntry* Device36::getPreset(char* name)
 {
     for(BrwEntry* pe : presets)
-        if (pe->getObjTitle() == name)  
+        if (pe->getObjName() == name)  
             return pe;
 
     return NULL;

@@ -42,7 +42,7 @@ VstInstr::VstInstr(char* fullpath, VstInstr* vst)
         else
             filePath = vst2->vstpath;
 
-        objTitle = ToLowerCase(vst2->objTitle);
+        objName = ToLowerCase(vst2->objName);
 
         vst2->extractParams();
 

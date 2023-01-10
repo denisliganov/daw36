@@ -92,7 +92,7 @@ std::string AlertBox::getChoice()
 {
     if(buttPressed)
     {
-        return buttPressed->getObjTitle();
+        return buttPressed->getObjName();
     }
 
     return "";

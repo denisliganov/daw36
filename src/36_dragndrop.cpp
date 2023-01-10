@@ -102,7 +102,7 @@ void DragAndDrop::drag(Gobj* target_object, int mx, int my)
 
     if(!result)
     {
-        int tw = gGetTextWidth(FontSmall, dragObj->getObjTitle());
+        int tw = gGetTextWidth(FontSmall, dragObj->getObjName());
         int th = gGetTextHeight(FontSmall);
 
         setCoords1(mx - tw/2, my - th/2, tw, th);
@@ -133,7 +133,7 @@ void DragAndDrop::drawSelf(Graphics & g)
             
             if(i)
             {
-                int tw = gGetTextWidth(FontSmall, i->getObjTitle());
+                int tw = gGetTextWidth(FontSmall, i->getObjName());
 
                 int th = gGetTextHeight(FontSmall);
 
@@ -143,7 +143,7 @@ void DragAndDrop::drawSelf(Graphics & g)
 
                 i->setMyColor(g, 1);
 
-                gText(g, FontSmall, i->getObjTitle(), dx1, dy2 - 2);
+                gText(g, FontSmall, i->getObjName(), dx1, dy2 - 2);
             }
             else
             {
@@ -153,7 +153,7 @@ void DragAndDrop::drawSelf(Graphics & g)
 
                 gSetMonoColor(g, 0.99f);
 
-                gText(g, FontSmall, dragObj->getObjTitle(), dx1, dy2 - 2);
+                gText(g, FontSmall, dragObj->getObjName(), dx1, dy2 - 2);
             }
         }
     }

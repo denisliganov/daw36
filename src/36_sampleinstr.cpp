@@ -45,13 +45,13 @@ Sample::Sample(float* data, char* smp_path, SF_INFO sfinfo)
             nm = strchr(nm, '\\') + 1;
         }
 
-        objTitle = nm;
+        objName = nm;
 
-        objTitle = ToLowerCase(objTitle);
+        objName = ToLowerCase(objName);
 
-        std::string::size_type pos = objTitle.find(".");
+        std::string::size_type pos = objName.find(".");
 
-        objTitle = objTitle.substr(0, pos);  // the part till the space
+        objName = objName.substr(0, pos);  // the part till the space
 
         //str1 = str3.substr(pos + 1); // the part after the space
     }

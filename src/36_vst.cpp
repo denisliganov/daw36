@@ -230,7 +230,7 @@ Vst2Plugin::Vst2Plugin(const char* path, Vst2Host* host, void* ParentWindow)
 
     getDisplayName(tmpname, 30);
 
-    objTitle = tmpname;
+    objName = tmpname;
 }
 
 Vst2Plugin::~Vst2Plugin()
@@ -702,9 +702,9 @@ void Vst2Plugin::updatePresets()
         {
             preset = new BrwEntry((Device36*)this);
             preset->prindex = idx;
-            preset->setObjTitle(bzName);
+            preset->setObjName(bzName);
 
-            if(idx == currentProgram)  
+            if(idx == currentProgram)
                 currPreset = preset;
 
             presets.push_back(preset);
@@ -893,7 +893,7 @@ bool Vst2Plugin::setPresetByName(char* name)
     {
         for(BrwEntry* pe : presets)
         {
-            if(pe->getObjTitle() == name)
+            if(pe->getObjName() == name)
             {
                 setProgram(pe->prindex);
                 currPreset = pe;

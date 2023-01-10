@@ -64,11 +64,11 @@ protected:
 
     // preset handling
     virtual void                savePreset();
-    virtual BrwEntry*           getPreset(char* objTitle);
+    virtual BrwEntry*           getPreset(char* objName);
     virtual BrwEntry*           getPreset(long devIdx);
     virtual long                getNumPresets();
     virtual void                getPresetName(long devIdx, char *name);
-    virtual long                getPresetIndex(char* objTitle);
+    virtual long                getPresetIndex(char* objName);
     virtual bool                setPresetByName(BrwEntry* preset);
     virtual bool                setPresetByIndex(long index) { return true; };
     virtual void                savePresetAs(char *preset_name);
@@ -79,7 +79,7 @@ protected:
     virtual void                saveCustomStateData(XmlElement & xmlParentNode) {};
     virtual void                restoreCustomStateData(XmlElement & xmlStateNode) {};
     virtual void                deletePresets();
-    virtual bool                setPresetByName(char* objTitle);
+    virtual bool                setPresetByName(char* objName);
             void                removeElements();
 
     virtual void                setIndex(int idx)  { devIdx = idx; }

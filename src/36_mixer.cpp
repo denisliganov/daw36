@@ -232,7 +232,9 @@ void MixChannel::drawSelf(Graphics& g)
     fillWithMonoColor(.25f);
 
     setMonoColor(1);
-    gTextFit(g, FontSmall, instr->getObjTitle(), 0, 5, width);
+
+    gTextFit(g, FontSmall, instr->getObjName(), 0, 5, width);
+
     gText(g, FontSmall, "123", 0, 5);
 
     if(instr != NULL)
@@ -260,7 +262,7 @@ void MixChannel::drawSelf(Graphics& g)
 
         std::string str = instr->instrAlias;
 
-        gTextFit(g, FontSmall, instr->getObjTitle(), x1 + 4, y1 + MixerTopHeight - 4, width - 4);*/
+        gTextFit(g, FontSmall, instr->getName(), x1 + 4, y1 + MixerTopHeight - 4, width - 4);*/
     }
     else
     {
@@ -943,7 +945,7 @@ bool MixChannel::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
 
     drag.dropHighlightVertical->setCoords2(xh - 4, yh1, xh + 4, yh2);
 
-    int tw = gGetTextWidth(FontSmall, obj->getObjTitle());
+    int tw = gGetTextWidth(FontSmall, obj->getObjName());
     int th = gGetTextHeight(FontSmall);
 
     drag.setCoords1(mx - tw/2, my - th/2, tw, th);

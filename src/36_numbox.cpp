@@ -400,7 +400,7 @@ void ParamBox::adjustTx4(int txmin4)
 {
     tx4 = txmin4;
 
-    width = tx4 + tw4 + 4;
+    width = tx4 + tw4 + 2;
 }
 
 void ParamBox::drawSelf(Graphics& g)
@@ -416,11 +416,11 @@ void ParamBox::drawSelf(Graphics& g)
     gSetMonoColor(g, 0.6f);
     gText(g, FontSmall, param->getName(), x1 + tx1, txy);
 
-    gSetMonoColor(g, 0.7f);
+    gSetMonoColor(g, 1.f);
     //gText(g, FontSmall, param->getSignStr(), x1 + tx2, txy);
     gText(g, FontSmall, param->getValString(), x1 + tx3, txy);
 
-    gSetMonoColor(g, 0.6f);
+    gSetMonoColor(g, 0.8f);
     gText(g, FontSmall, param->getUnitStr(), x1 + tx4, txy);
 }
 

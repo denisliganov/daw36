@@ -266,7 +266,7 @@ void Note::drawOnGrid(Graphics& g, Grid* grid)
     }
 
     //g.setColour(Colour(instr->color).withAlpha(0.8f));
-    //gTextFit(g, FontSmall, instr->objTitle.data(), x1, y2 - 1, width);
+    //gTextFit(g, FontSmall, instr->objName.data(), x1, y2 - 1, width);
 }
 
 void Note::setNoteValue(int note_value)

@@ -465,7 +465,7 @@ void Browser::scanDirForFiles(std::string scan_path, std::string extension, bool
                         {
                             BrwEntry* fileEntry = new BrwEntry;
 
-                            fileEntry->setObjTitle(fname);
+                            fileEntry->setObjName(fname);
                             fileEntry->path = scan_path + fname;
                             fileEntry->size = (founddata.nFileSizeHigh * (MAXDWORD)) + founddata.nFileSizeLow;
                             fileEntry->attrs = founddata.dwFileAttributes;

@@ -56,7 +56,7 @@ protected:
             ObjectGroup         objGroup;
 
             std::string         objId;
-            std::string         objTitle;
+            std::string         objName;
             std::string         hint;
 
             float               monoLevel;
@@ -108,12 +108,12 @@ public:
             Gobj();
     virtual ~Gobj();
 
-      ObjectGroup               getObjGroup()       { return objGroup; };
-    std::string                 getObjId()          { return objId; }
-    std::string                 getObjTitle()       { return objTitle; }
+      ObjectGroup               getObjGroup()                   { return objGroup; };
+    std::string                 getObjId()                      { return objId; }
+    std::string                 getObjName()                       { return objName; }
+    void                        setObjName(std::string title)      { objName = title; }
     virtual std::string         getHint()           { return hint; };
             void                setHint(std::string h)              { hint = h; };
-            void                setObjTitle(std::string title)      { objTitle = title; }
 
             int                 getX()              { return xRel; };
             int                 getY()              { return yRel; };

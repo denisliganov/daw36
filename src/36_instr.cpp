@@ -275,9 +275,9 @@ void Instrument::mapObjects()
 
     ivu->setCoords1(0, 1, 3, height - 1);
 
-    if(gGetTextWidth(FontSmall, objTitle) > width - 38 - 50 - 10)
+    if(gGetTextWidth(FontSmall, objName) > width - 38 - 50 - 10)
     {
-        setHint(objTitle);
+        setHint(objName);
     }
     else
     {
@@ -305,7 +305,7 @@ void Instrument::drawSelf(Graphics& g)
 
     setMonoColor(.7f);
 
-    gTextFit(g, FontSmall, objTitle, x1 + 6, y2 - 1, width - 22);
+    gTextFit(g, FontSmall, objName, x1 + 6, y2 - 1, width - 22);
 
 //    lineH(0, 0, width - 1);
 }
@@ -1100,7 +1100,7 @@ void Instrument::save(XmlElement * instrNode)
 {
     instrNode->setAttribute(T("InstrIndex"), devIdx);
     instrNode->setAttribute(T("InstrType"), int(type));
-    instrNode->setAttribute(T("InstrName"), String(objTitle.data()));
+    instrNode->setAttribute(T("InstrName"), String(objName.data()));
     instrNode->setAttribute(T("InstrPath"), String(filePath.data()));
 
     instrNode->addChildElement(vol->save());

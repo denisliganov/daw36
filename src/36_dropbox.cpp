@@ -13,13 +13,13 @@ DropBox::DropBox(int menu_id, std::string name)
 {
     menuId = menu_id;
 
-    setObjTitle(name);
+    setObjName(name);
 
     fontId = FontInst;
 
     menu = NULL;
 
-    width = gGetTextWidth(fontId, objTitle) + 20;
+    width = gGetTextWidth(fontId, objName) + 20;
     height = gGetTextHeight(fontId) + 19;
 }
 
@@ -116,7 +116,7 @@ void DropBox::drawSelf(Graphics& g)
 
     gSetMonoColor(g, 1);
 
-    gText(g, fontId, objTitle, x1 + width/2 - gGetTextWidth(fontId, objTitle)/2, y2 - height/2 + gGetTextHeight(fontId)/2 - 1);
+    gText(g, fontId, objName, x1 + width/2 - gGetTextWidth(fontId, objName)/2, y2 - height/2 + gGetTextHeight(fontId)/2 - 1);
 }
 
 

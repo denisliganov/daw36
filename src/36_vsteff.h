@@ -34,7 +34,7 @@ public:
             void        load(XmlElement* xmlEff);
             void        reset();
             void        handleMouseDown(InputEvent& ev);
-            bool        setPresetByName(char* objTitle);
+            bool        setPresetByName(char* objName);
             bool        setPresetByIndex(long devIdx);
 
             SubWindow*   VstEffect::createWindow();

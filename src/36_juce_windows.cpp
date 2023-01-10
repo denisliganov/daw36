@@ -24,7 +24,7 @@
 
 JuceVstParamWindow::JuceVstParamWindow(Vst2Plugin* vst)
 {
-    setName(vst->getObjTitle().data());
+    setName(vst->getName().data());
 
     //loadpresetbt->setBounds(getWidth() - 57, 2, 20, 19);
 
@@ -268,7 +268,7 @@ ParamComponent::ParamComponent(Device36* dev)
 {
     mdev = dev;
 
-    setName(mdev->getObjTitle().data());
+    setName(mdev->getName().data());
 
     if(mdev->params.size() > 0)
     {
@@ -711,7 +711,7 @@ void SampleWindow::SetSample(Sample* smp)
 
     if(smp != NULL)
     {
-        setName(String(smp->getObjTitle().data()));
+        setName(String(smp->getName().data()));
     }
     else
     {

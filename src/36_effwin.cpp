@@ -70,6 +70,8 @@ EffParamObject::EffParamObject(Eff* eff)
         }
     }
 
+    int maxW = 0;
+
     for(Gobj* obj : objs)
     {
         if(obj->getObjId() == "eff.param")
@@ -77,17 +79,25 @@ EffParamObject::EffParamObject(Eff* eff)
             box = (ParamBox*)obj;
             box->adjustTx4(txs4);
 
-            if(tx4 > txs4)
-                txs4 = tx4;
+            if (box->getW() > maxW)
+                maxW = box->getW();
         }
     }
 
-    int w = 150;
+    for(Gobj* obj : objs)
+    {
+        if(obj->getObjId() == "eff.param")
+        {
+            box = (ParamBox*)obj;
+            box->setCoords1(box->getX(), box->getY(), maxW, -1);
+        }
+    }
 
-    if (txs4 + 40 > w)
-        w = txs4 + 40;
+    int w = maxW + 20;
 
     setWidthHeight(w, y + 6);
+
+    WinObject::setName(String(eff->getObjName().data()));
 }
 
 void EffParamObject::drawSelf(Graphics& g)

@@ -712,7 +712,7 @@ bool InstrPanel::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
             drag.dropHighlightHorizontal->setCoords2(o1->getX1(), o1->getY2() + 2 - 4, o1->getX2() + 1, o1->getY2() + 2 + 4);
         }
 
-        int tw = gGetTextWidth(FontSmall, obj->getObjTitle());
+        int tw = gGetTextWidth(FontSmall, obj->getObjName());
         int th = gGetTextHeight(FontSmall);
 
         drag.setCoords1(mx - tw/2, my - th/2, tw, th);
