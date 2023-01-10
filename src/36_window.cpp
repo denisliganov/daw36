@@ -433,6 +433,7 @@ void MainWindow::paint(Graphics& g)
     g.fillRect(0, titleHeight + getBorderThickness().getTop() - 1, w, 1);
 
     gSetMonoColor(g, 1.f);
+
     g.setFont(*bld);
     g.drawSingleLineText(getName(), 6, 13);
 }
