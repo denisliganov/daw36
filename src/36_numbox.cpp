@@ -348,12 +348,9 @@ void ParamBox::calcTextCoords()
     tw3 = gGetTextWidth(FontSmall, param->getMaxValString());
     tw4 = gGetTextWidth(FontSmall, param->getUnitStr());
 
-    tx1 = 2;
-    tx2 = tx1 + tw1 + 6;
-    tx3 = tx2 + 6;
-    tx4 = tx3 + tw3 + 4;
+    tx1 = 4;
 
-    width = tx4 + tw4 + 4;
+    adjustTx2(tx1 + tw1 + 6);
 }
 
 void ParamBox::getTextCoords(int* txp1, int* txp2, int* txp3, int* txp4)
@@ -382,25 +379,21 @@ void ParamBox::adjustTx2(int txmin2)
 {
     tx2 = txmin2;
 
-    tx3 = tx2 + 6;
-    tx4 = tx3 + tw3 + 4;
-
-    width = tx4 + tw4 + 4;
+    adjustTx3(tx2 + 6);
 }
 
 void ParamBox::adjustTx3(int txmin3)
 {
     tx3 = txmin3;
-    tx4 = tx3 + tw3 + 4;
 
-    width = tx4 + tw4 + 4;
+    adjustTx4(tx3 + tw3 + 4);
 }
 
 void ParamBox::adjustTx4(int txmin4)
 {
     tx4 = txmin4;
 
-    width = tx4 + tw4 + 2;
+    width = tx4 + tw4 + 4;
 }
 
 void ParamBox::drawSelf(Graphics& g)

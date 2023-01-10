@@ -425,7 +425,7 @@ void MainWindow::paint(Graphics& g)
     //g.fillRect(3, titleHeight, w - 6, 3);
 
     // Bright border line
-    gSetMonoColor(g, 0.1f);
+    gSetMonoColor(g, 0.3f);
     g.drawRect (1, 1, w - 2, h - 2);
 
     // Black divider betwen titlebar and window
