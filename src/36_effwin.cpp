@@ -93,9 +93,7 @@ EffParamObject::EffParamObject(Eff* eff)
         }
     }
 
-    int w = maxW + 20;
-
-    setWidthHeight(w, y + 6);
+    setWidthHeight(x + maxW + 20, y + 10);
 
     WinObject::setName(String(eff->getObjName().data()));
 }
