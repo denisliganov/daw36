@@ -203,8 +203,8 @@ Instrument::Instrument()
     //addParamWithControl(vol = new Parameter("Pregain", Param_Vol, 1.f, 0.f, DAW_VOL_RANGE, Units_dB), "sl.vol", mvol = new Slider36(false));
     //addParamWithControl(pan = new Parameter("Prepan", Param_Pan, 0.f, -1.f, 2.f, Units_Percent), "sl.pan", mpan = new Slider36(false));
 
-    addParam(vol = new Parameter("Vol", Param_Vol, 1.f, 0.f, DAW_VOL_RANGE, Units_dB));
-    addParam(pan = new Parameter("Pan", Param_Pan, 0.f, -1.f, 2.f, Units_Percent));
+    addParam(vol = new Parameter("VOL", Param_Vol, 1.f, 0.f, DAW_VOL_RANGE, Units_dB));
+    addParam(pan = new Parameter("PAN", Param_Pan, 0.f, -1.f, 2.f, Units_Percent));
     
     //addObject(volKnob = new Knob(vol));
     //addObject(panKnob = new Knob(pan));

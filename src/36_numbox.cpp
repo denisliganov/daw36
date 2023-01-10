@@ -420,7 +420,7 @@ void ParamBox::drawSelf(Graphics& g)
     //gText(g, FontSmall, param->getSignStr(), x1 + tx2, txy);
     gText(g, FontSmall, param->getValString(), x1 + tx3, txy);
 
-    gSetMonoColor(g, 0.8f);
+    gSetMonoColor(g, 0.7f);
     gText(g, FontSmall, param->getUnitStr(), x1 + tx4, txy);
 }
 

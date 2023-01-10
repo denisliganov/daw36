@@ -212,11 +212,11 @@ std::string Parameter::calcValStr(float val)
 
                     if(value < 0)
                     {
-                        stdstr = "L" + stdstr;
+                        stdstr = "<" + stdstr;
                     }
                     else if(value > 0)
                     {
-                        stdstr = stdstr + "R";
+                        stdstr = stdstr + ">";
                     }
                 }
                 else

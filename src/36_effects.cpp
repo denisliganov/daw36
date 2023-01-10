@@ -590,7 +590,7 @@ CFlanger::CFlanger()
 
     reset();
 
-    addParamWithControl(frequency = new Parameter("Delay", Param_Freq, 0.5f, 0.f, 1.f, Units_ms2));
+    addParamWithControl(frequency = new Parameter("DELAY", Param_Freq, 0.5f, 0.f, 1.f, Units_ms2));
 
     frequency->setReversed(true);
 
