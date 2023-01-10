@@ -348,7 +348,7 @@ void ParamBox::calcTextCoords()
     tw3 = gGetTextWidth(FontSmall, param->getMaxValString());
     tw4 = gGetTextWidth(FontSmall, param->getUnitStr());
 
-    tx1 = 4;
+    tx1 = 3;
 
     adjustTx2(tx1 + tw1 + 6);
 }
