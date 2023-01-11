@@ -1468,7 +1468,12 @@ void WinObject::handleMouseDown(InputEvent& ev)
 
 void WinObject::setMousePosition(int x, int y)
 {
-    Desktop::setMousePosition(x, y);
+    int cx = JuceComponent::getX();
+    int cy = JuceComponent::getY();
+    int wx = holderWindow->getX();
+    int wy = holderWindow->getY();
+    
+    Desktop::setMousePosition(wx + cx + x, wy + cy + y);
 }
 
 Image* WinObject::createSnapshot(int x, int y, int width, int height)

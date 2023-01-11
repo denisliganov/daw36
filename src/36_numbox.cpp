@@ -43,20 +43,18 @@ void NumBox::handleMouseDrag(InputEvent& ev)
 
     int yDelta = ev.mouseY - ySet;
 
-    ySet += yDelta;
-
-    if(ev.mouseY < 11)
+    if(ev.mouseY < 0)
     {
-        ySet = CtrlPanelHeight + 20;
-
-        window->setMousePosition(ev.mouseX, DAW_MAINWINDOW_TITLEBAR_HEIGHT + ySet);
+        ev.mouseY = window->getH() - 1;
+        window->setMousePosition(ev.mouseX, ev.mouseY);
     }
-    else if(ev.mouseY > CtrlPanelHeight + 20)
+    else if(ev.mouseY >= window->getH())
     {
-        ySet = 11;
-
-        window->setMousePosition(ev.mouseX, DAW_MAINWINDOW_TITLEBAR_HEIGHT + ySet);
+        ev.mouseY = 0;
+        window->setMousePosition(ev.mouseX, ev.mouseY);
     }
+
+    ySet = ev.mouseY;
 
     count += abs(yDelta);
 
@@ -70,7 +68,7 @@ void NumBox::handleMouseDrag(InputEvent& ev)
 
 void NumBox::handleMouseUp(InputEvent& ev)
 {
-    window->setMousePosition(xOld, DAW_MAINWINDOW_TITLEBAR_HEIGHT + yOld);
+    window->setMousePosition(xOld, yOld);
 
     window->setCursor(Cursor_Arrow);
 
@@ -394,7 +392,7 @@ void ParamBox::adjustTx4(int txmin4)
 {
     tx4 = txmin4;
 
-    width = tx4 + tw4 + 4;
+    width = tx4 + tw4 + 3;
 }
 
 void ParamBox::drawSelf(Graphics& g)

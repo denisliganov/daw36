@@ -257,13 +257,13 @@ void Instrument::mapObjects()
 
     //volKnob->setCoords1(width - 67, 0, 25, 25);
     //panKnob->setCoords1(width - 23, 0, 22, 22);
-    volBox->setCoords1(width - 77, 1, -1, 13);
-    panBox->setCoords1(width - 140, 1, -1, 13);
+    guiButt->setCoords1(width - 171, 1, 18, 12);
+
+    volBox->setCoords1(width - 74, 1, -1, 13);
+    panBox->setCoords1(width - 141, 1, -1, 13);
 
     soloButt->setCoords1(width - 11, 0, 11, height/2);
     muteButt->setCoords1(width - 11, height - height/2, 11, height/2);
-
-    guiButt->setCoords1(width - 140 - 24, 1, 18, 12);
 
     int xOffs = 3;
     int yOffs = height - 30;
