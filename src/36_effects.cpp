@@ -452,7 +452,7 @@ void Filter1::handleParamUpdate(Parameter* param)
     else if(param->prmName == "RES")
     {
         dspCoreCFilter3.setResonance((double)resonance->outVal);
-        resonance->setValString(resonance->calcValStr((resonance->outVal/0.48f*100.0f))); // /66.0f*100.0f
+        resonance->setValString(resonance->calcValStr((resonance->outVal/48.f*100.0f))); // /66.0f*100.0f
     }
     else if(param->prmName == "BW")
     {

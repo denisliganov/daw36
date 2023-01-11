@@ -48867,11 +48867,12 @@ protected:
 
 #endif
 
+    Rectangle lastNonFullScreenPos;
+
 private:
     Component* contentComponent;
     bool resizeToFitContent, fullscreen;
     ComponentDragger dragger;
-    Rectangle lastNonFullScreenPos;
     ComponentBoundsConstrainer defaultConstrainer;
     ComponentBoundsConstrainer* constrainer;
     #ifdef JUCE_DEBUG

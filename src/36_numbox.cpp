@@ -408,7 +408,7 @@ void ParamBox::drawSelf(Graphics& g)
     gSetMonoColor(g, 0.6f);
     gText(g, FontSmall, param->getName(), x1 + tx1, txy);
 
-    gSetMonoColor(g, .8f);
+    gSetMonoColor(g, .9f);
     //gText(g, FontSmall, param->getSignStr(), x1 + tx2, txy);
     gText(g, FontVis, param->getValString(), x1 + tx3, txy - 1);
 

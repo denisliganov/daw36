@@ -259,8 +259,8 @@ void Instrument::mapObjects()
     //panKnob->setCoords1(width - 23, 0, 22, 22);
     guiButt->setCoords1(width - 171, 1, 18, 12);
 
-    volBox->setCoords1(width - 74, 1, -1, 13);
-    panBox->setCoords1(width - 141, 1, -1, 13);
+    volBox->setCoords1(width - 78, 1, -1, 13);
+    panBox->setCoords1(width - 145, 1, -1, 13);
 
     soloButt->setCoords1(width - 11, 0, 11, height/2);
     muteButt->setCoords1(width - 11, height - height/2, 11, height/2);

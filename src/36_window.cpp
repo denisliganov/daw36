@@ -83,6 +83,10 @@ MainWindow::MainWindow(JuceComponent* winComp)
     //setWantsKeyboardFocus(true);
     //setTitleBarHeight(0);
 
+    const Rectangle main = Desktop::getInstance().getMainMonitorArea();
+
+    lastNonFullScreenPos.setBounds(50, 50, main.getWidth()*0.8f, main.getHeight()*0.8f);
+
     getPeer()->grabFocus();
 }
 
@@ -615,18 +619,10 @@ void SubWindow::closeButtonPressed()
 
 void SubWindow::paint(Graphics& g)
 {
-    if(color == 0x0)
-    {
-        gSetMonoColor(g, 0.2f);
-    }
-    else
-    {
-        g.setColour(Colour(color));
-    }
-
+    gSetMonoColor(g, 0.2f);
     g.fillRect(0, 0, getWidth(), getHeight());
 
-    gSetMonoColor(g, 0.05f);
+    gSetMonoColor(g, 0.25f);
     g.drawRect(0, 0, getWidth(), getHeight());
 
     gSetMonoColor(g, 1.f);
