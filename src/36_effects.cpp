@@ -261,7 +261,10 @@ void Eff::handleMouseDown(InputEvent& ev)
 
 void Eff::handleMouseUp(InputEvent& ev)
 {
-    showWindow(!isWindowVisible());
+    if (ev.leftClick)
+    {
+        showWindow(!isWindowVisible());
+    }
 }
 
 void Eff::handleMouseDrag(InputEvent& ev)
@@ -598,13 +601,10 @@ CFlanger::CFlanger()
     addParamWithControl(feedback = new Parameter("FEEDBACK", 0, -1.f, 2.f));
     addParamWithControl(depth = new Parameter("DEPTH", 24.f, 2.f, 46.f, Units_Semitones));
 
-/*
-    invert = new BoolParam("Invert wet signal", false, "Invert wet signal");
-    AddParamWithParamcell(invert);
-*/
+    //    invert = new BoolParam("Invert wet signal", false, "Invert wet signal");
+    //    AddParamWithParamcell(invert);
 
-    drywet = new Parameter("DRY/WET", 0.5f, 0.0f, 0.5f, Units_DryWet);
-    addParamWithControl(drywet);
+    addParamWithControl(drywet = new Parameter("DRY/WET", 0.5f, 0.0f, 0.5f, Units_DryWet));
 }
 
 void CFlanger::handleParamUpdate(Parameter* param)
@@ -1011,105 +1011,6 @@ void CTremolo::processData(float* in_buff, float* out_buff, int num_frames)
     }
 }
 
-//
-//  XDelay Class Implementation
-//
-
-XDelay::XDelay() : dspCorePingPongDelay()
-{
-    objId = "eff.delay";
-    objName = "DL1";
-    uniqueId = MAKE_FOURCC('P','P','D','L');
-
-    dspCorePingPongDelay.setTrueStereoMode(true);
-    dspCorePingPongDelay.setPingPongMode(true);
-    dspCorePingPongDelay.setStereoSwap(true);
-
-    ppmode = new BoolParam("Mode", true, "Ping-pong");
-
-    addParamWithControl(new Parameter("DELAY", 3, 0.5f, 19.5f, Units_Ticks));
-    addParamWithControl(new Parameter("AMOUNT", 1.f, 0.f, 1.f, Units_Percent));
-    addParamWithControl(new Parameter("FEEDBACK", 55.f, 0.0f, 100.f, Units_Percent));
-    addParamWithControl(new Parameter("PAN", 0.0f, -1.0f, 2.f));
-
-    //highCut = new FrequencyParameter(0.2f);
-    //highCut->SetName("HighCut");
-    //highCut->AddValueString(Units_Hz);
-    //AddParamWithParamcell(highCut);
-
-    addParamWithControl(new Parameter("LOWCUT", Param_Freq, 0.9f, 0.f, 1.f, Units_Hz));
-    addParamWithControl(new Parameter("DRY/WET", 40.f, 0.0f, 100.f, Units_DryWet));
-
-    reset();
-}
-
-void XDelay::handleParamUpdate(Parameter* param)
-{
-    if(param == ppmode)
-    {
-        dspCorePingPongDelay.setPingPongMode(ppmode->getOutVal());
-        dspCorePingPongDelay.setStereoSwap(ppmode->getOutVal());
-        dspCorePingPongDelay.setPan((ppmode->getOutVal() ? -1 : 1)*param->getOutVal());
-    }
-    else if(param->prmName == "AMOUNT")
-    {
-        //dspCorePingPongDelay.setGlobalGainFactor(ggain->outval); // old, obsolete
-        dspCorePingPongDelay.setWetLevel(amp2dB(param->getOutVal()));
-        param->setValString(param->calcValStr(int(100*param->getOutVal())));
-    }
-    /*
-    else if( param->prmName == "High.cut" )
-    {
-        dspCorePingPongDelay.setLowDamp(param->outval);
-    }
-    */
-    else if(param->prmName == "DELAY")
-    {
-        dspCorePingPongDelay.setDelayTime(param->outVal/MTransp->getTicksPerBeat());
-    }
-    else if( param->prmName == "DRY/WET" )
-    {
-        dspCorePingPongDelay.setDryWetRatio((float)(0.01*param->outVal));
-        param->setValString(param->calcValStr((float)(0.01*param->outVal)));
-    }
-    else if( param->prmName == "FEEDBACK" )
-    {
-        dspCorePingPongDelay.setFeedbackInPercent(param->outVal);
-    }
-    else if( param->prmName == "PAN" )
-    {
-        dspCorePingPongDelay.setPan((ppmode->outval == true ? -1 : 1)*param->outVal);
-    }
-    else if( param->prmName == "LOWCUT" )
-    {
-        dspCorePingPongDelay.setHighDamp(param->outVal);
-    }
-}
-
-void XDelay::reset()
-{
-    dspCorePingPongDelay.reset();
-}
-
-void XDelay::processData(float* in_buff, float* out_buff, int num_frames)
-{
-    dspCorePingPongDelay.setTempoInBPM(MTransp->getBeatsPerMinute());
-
-    double inOutL;
-    double inOutR;
-
-    for(int i=0; i<2*num_frames; i+=2)
-    {
-        inOutL = (double) in_buff[i];
-        inOutR = (double) in_buff[i+1];
-
-        dspCorePingPongDelay.getSampleFrameStereo(&inOutL, &inOutR);
-
-        out_buff[i]    = (float) inOutL;
-        out_buff[i+1]  = (float) inOutR;
-    }
-}
-
 Compressor::Compressor()
 {
     objId = "eff.comp";
@@ -1403,6 +1304,100 @@ void CStereo::processData(float* in_buff, float* out_buff, int num_frames)
     }
 }
 
+XDelay::XDelay() : dspCorePingPongDelay()
+{
+    objId = "eff.delay";
+    objName = "DL1";
+    uniqueId = MAKE_FOURCC('P','P','D','L');
+
+    dspCorePingPongDelay.setTrueStereoMode(true);
+    dspCorePingPongDelay.setPingPongMode(true);
+    dspCorePingPongDelay.setStereoSwap(true);
+
+    ppmode = new BoolParam("Mode", true, "Ping-pong");
+
+    addParamWithControl(new Parameter("DELAY", 3, 0.5f, 19.5f, Units_Ticks));
+    addParamWithControl(new Parameter("AMOUNT", 1.f, 0.f, 1.f, Units_Percent));
+    addParamWithControl(new Parameter("FEEDBACK", 55.f, 0.0f, 100.f, Units_Percent));
+    addParamWithControl(new Parameter("PAN", 0.0f, -1.0f, 2.f));
+
+    //highCut = new FrequencyParameter(0.2f);
+    //highCut->SetName("HighCut");
+    //highCut->AddValueString(Units_Hz);
+    //AddParamWithParamcell(highCut);
+
+    addParamWithControl(new Parameter("LOWCUT", Param_Freq, 0.9f, 0.f, 1.f, Units_Hz));
+    addParamWithControl(new Parameter("DRY/WET", .4f, 0.0f, 1.f, Units_DryWet));
+
+    reset();
+}
+
+void XDelay::handleParamUpdate(Parameter* param)
+{
+    if(param == ppmode)
+    {
+        dspCorePingPongDelay.setPingPongMode(ppmode->getOutVal());
+        dspCorePingPongDelay.setStereoSwap(ppmode->getOutVal());
+        dspCorePingPongDelay.setPan((ppmode->getOutVal() ? -1 : 1)*param->getOutVal());
+    }
+    else if(param->prmName == "AMOUNT")
+    {
+        //dspCorePingPongDelay.setGlobalGainFactor(ggain->outval); // old, obsolete
+        dspCorePingPongDelay.setWetLevel(amp2dB(param->getOutVal()));
+        param->setValString(param->calcValStr(int(100*param->getOutVal())));
+    }
+    /*
+    else if( param->prmName == "High.cut" )
+    {
+        dspCorePingPongDelay.setLowDamp(param->outval);
+    }
+    */
+    else if(param->prmName == "DELAY")
+    {
+        dspCorePingPongDelay.setDelayTime(param->outVal/MTransp->getTicksPerBeat());
+    }
+    else if( param->prmName == "DRY/WET" )
+    {
+        dspCorePingPongDelay.setDryWetRatio((float)(param->outVal));
+    }
+    else if( param->prmName == "FEEDBACK" )
+    {
+        dspCorePingPongDelay.setFeedbackInPercent(param->outVal);
+    }
+    else if( param->prmName == "PAN" )
+    {
+        dspCorePingPongDelay.setPan((ppmode->outval == true ? -1 : 1)*param->outVal);
+    }
+    else if( param->prmName == "LOWCUT" )
+    {
+        dspCorePingPongDelay.setHighDamp(param->outVal);
+    }
+}
+
+void XDelay::reset()
+{
+    dspCorePingPongDelay.reset();
+}
+
+void XDelay::processData(float* in_buff, float* out_buff, int num_frames)
+{
+    dspCorePingPongDelay.setTempoInBPM(MTransp->getBeatsPerMinute());
+
+    double inOutL;
+    double inOutR;
+
+    for(int i=0; i<2*num_frames; i+=2)
+    {
+        inOutL = (double) in_buff[i];
+        inOutR = (double) in_buff[i+1];
+
+        dspCorePingPongDelay.getSampleFrameStereo(&inOutL, &inOutR);
+
+        out_buff[i]    = (float) inOutL;
+        out_buff[i+1]  = (float) inOutR;
+    }
+}
+
 CReverb::CReverb() : dspCoreReverb()
 {
     objId = "eff.reverb";
@@ -1414,9 +1409,9 @@ CReverb::CReverb() : dspCoreReverb()
     addParamWithControl(decay = new Parameter("DECAY", 6.f, 1.0f, 14.f, Units_Seconds));
     addParamWithControl(highCut = new Parameter("HIGHCUT", Param_Freq, 0.2f, 0.f, 1.f, Units_Hz));
     addParamWithControl(lowCut = new Parameter("LOWCUT", Param_Freq, 1.0f, 0.f, 1.f, Units_Hz));
-    addParamWithControl(drywet = new Parameter("DRY/WET", 50.f, 0.0f, 100.f, Units_DryWet));
     addParamWithControl(lowscale = new Parameter("LOW.SCALE", Param_Log, 0.5f, 0.1f, 100));
     addParamWithControl(highscale = new Parameter("HIGH.SCALE", Param_Log, 0.24f, 0.1f, 100));
+    addParamWithControl(drywet = new Parameter("DRY/WET", .5f, 0.0f, 1.f, Units_DryWet));
 
     reset();
 }
@@ -1433,8 +1428,7 @@ void CReverb::handleParamUpdate(Parameter* param)
     }
     else if(param == drywet)
     {
-        dspCoreReverb.setDryWetRatio((float)(0.01*drywet->outVal));
-        drywet->setValString(drywet->calcValStr((float)(0.01*drywet->outVal)));
+        dspCoreReverb.setDryWetRatio((float)(drywet->outVal));
     }
     else if(param == decay)
     {

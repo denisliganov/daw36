@@ -258,7 +258,7 @@ std::string Parameter::calcValStr(float val)
                 }
             }break;
             case Units_ms:
-                sprintf(str, "%.1f", absVal);
+                sprintf(str, "%.f", absVal);
                 break;
             case Units_ms2:
                 sprintf(str, "%.2f", absVal);

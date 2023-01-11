@@ -9,7 +9,7 @@
 EffParamObject::EffParamObject(Eff* eff)
 {
     int x = 6;
-    int y = 8;
+    int y = 20;
 
     ParamBox* box = NULL;
 
@@ -93,7 +93,7 @@ EffParamObject::EffParamObject(Eff* eff)
         }
     }
 
-    setWidthHeight(x + maxW + 20, y + 10);
+    setWidthHeight(x + maxW + 24, y + 5);
 
     WinObject::setName(String(eff->getObjName().data()));
 }

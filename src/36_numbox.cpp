@@ -345,7 +345,8 @@ void ParamBox::handleMouseWheel(InputEvent & ev)
 void ParamBox::calcTextCoords()
 {
     tw1 = gGetTextWidth(FontSmall, param->getName());
-    tw3 = gGetTextWidth(FontSmall, param->getMaxValString());
+    std::string maxValStr = param->getMaxValString();
+    tw3 = gGetTextWidth(FontVis, maxValStr);
     tw4 = gGetTextWidth(FontSmall, param->getUnitStr());
 
     tx1 = 3;
@@ -386,7 +387,7 @@ void ParamBox::adjustTx3(int txmin3)
 {
     tx3 = txmin3;
 
-    adjustTx4(tx3 + tw3 + 4);
+    adjustTx4(tx3 + tw3 + 6);
 }
 
 void ParamBox::adjustTx4(int txmin4)
@@ -409,11 +410,11 @@ void ParamBox::drawSelf(Graphics& g)
     gSetMonoColor(g, 0.6f);
     gText(g, FontSmall, param->getName(), x1 + tx1, txy);
 
-    gSetMonoColor(g, 1.f);
+    gSetMonoColor(g, .8f);
     //gText(g, FontSmall, param->getSignStr(), x1 + tx2, txy);
-    gText(g, FontSmall, param->getValString(), x1 + tx3, txy);
+    gText(g, FontVis, param->getValString(), x1 + tx3, txy - 1);
 
-    gSetMonoColor(g, 0.7f);
+    gSetMonoColor(g, .7f);
     gText(g, FontSmall, param->getUnitStr(), x1 + tx4, txy);
 }
 

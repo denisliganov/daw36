@@ -89,7 +89,7 @@ void gSetColorIndex(Graphics& g, int color_index)
 }
 
 float   globalHue = 0.25f;
-float   globalSaturation = 0.35f;
+float   globalSaturation = 0.f;
 float   brightnessCoeff = 1.f;
 
 void gSetMonoColor(Graphics& g, float clr, float alpha)
