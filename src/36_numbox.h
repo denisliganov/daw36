@@ -127,7 +127,6 @@ protected:
     virtual void    updValue();
             void    handleMouseWheel(InputEvent& ev);
             void    handleNumDrag(int dragCount);
-            void    calcTextCoords();
             void    drawSelf(Graphics& g);
 
 public:

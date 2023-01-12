@@ -306,7 +306,7 @@ ParamBox::ParamBox(Parameter* param)
     th = gGetTextHeight(FontSmall);
 
     tw1 = gGetTextWidth(FontSmall, param->getName());
-    tw2 = gGetTextWidth(FontVis, param->getMaxValString());
+    tw2 = gGetTextWidth(FontInst, param->getMaxValString());
     tw3 = gGetTextWidth(FontSmall, param->getUnitStr());
 
     height = th + 2;
@@ -346,13 +346,6 @@ void ParamBox::handleMouseWheel(InputEvent & ev)
     redraw();
 }
 
-void ParamBox::calcTextCoords()
-{
-    tw1 = gGetTextWidth(FontSmall, param->getName());
-    tw2 = gGetTextWidth(FontVis, param->getMaxValString());
-    tw3 = gGetTextWidth(FontSmall, param->getUnitStr());
-}
-
 void ParamBox::drawSelf(Graphics& g)
 {
     gSetMonoColor(g, 0.16f);
@@ -363,20 +356,20 @@ void ParamBox::drawSelf(Graphics& g)
 
     int txy = y2 - height/2;
 
-    gSetMonoColor(g, 0.6f);
-    gText(g, FontSmall, param->getName(), x1 + 2, txy + 2);
+    gSetMonoColor(g, 0.7f);
+    gTextFit(g, FontSmall, param->getName(), x1 + 2, txy + 2, width/2);
 
     std::string valstr = param->getValString();
     int offs = 0;
     if(valstr.data()[0] == '-' || 
        valstr.data()[0] == '+' ||
        valstr.data()[0] == '<')
-        offs = gGetTextWidth(FontVis, valstr.substr(0, 1));
+        offs = gGetTextWidth(FontInst, valstr.substr(0, 1));
 
     gSetMonoColor(g, .9f);
     //gText(g, FontSmall, param->getSignStr(), x1 + tx2, txy);
     //gText(g, FontVis, param->getValString(), x1 + tx2 - offs, txy - 3);
-    gText(g, FontVis, param->getValString(), x1 + width/2 - offs, txy);
+    gText(g, FontInst, param->getValString(), x1 + width/2 - offs, txy + 2);
 
     gSetMonoColor(g, .7f);
     //gText(g, FontSmall, param->getUnitStr(), x1 + tx3, txy - 2);
