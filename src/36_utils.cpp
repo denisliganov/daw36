@@ -16,6 +16,19 @@
 
 
 
+bool IsCharNumeric(char c)
+{
+    return (c == '0' ||
+            c == '1' ||
+            c == '2' ||
+            c == '3' ||
+            c == '4' ||
+            c == '5' ||
+            c == '6' ||
+            c == '7' ||
+            c == '8' ||
+            c == '9');
+}
 
 String GetPercentString(float value)
 {
@@ -27,12 +40,6 @@ String GetPercentString(float value)
 }
 
 
-//
-////
-///////////
-////////////////////////// / / /
-// Function ToLowerCase(char* data) - transforms all big letters into small ones
-//
 void ToLowerCase(char* data)
 {
     int ic, len, code;

@@ -340,59 +340,48 @@ void ParamBox::handleMouseWheel(InputEvent & ev)
     redraw();
 }
 
-void ParamBox::calcTextCoords()
-{
-    tw1 = gGetTextWidth(FontSmall, param->getName());
-    std::string maxValStr = param->getMaxValString();
-    tw3 = gGetTextWidth(FontVis, maxValStr);
-    tw4 = gGetTextWidth(FontSmall, param->getUnitStr());
-
-    tx1 = 2;
-
-    adjustTx2(tx1 + tw1 + 6);
-}
-
-void ParamBox::getTextCoords(int* txp1, int* txp2, int* txp3, int* txp4)
+void ParamBox::getTextCoords(int* txp1, int* txp2, int* txp3)
 {
    *txp1 = tx1;
    *txp2 = tx2;
    *txp3 = tx3;
-   *txp4 = tx4;
 }
 
-void ParamBox::setTextCoords(int txs1, int txs2, int txs3, int txs4)
+void ParamBox::setTextCoords(int txs1, int txs2, int txs3)
 {
     tx1 = txs1;
     tx2 = txs2;
     tx3 = txs3;
-    tx4 = txs4;
 
     if (txs2 > tx2) tx2 = txs2;
     if (txs3 > tx3) tx3 = txs3;
-    if (txs4 > tx4) tx4 = txs4;
 
-    width = tx4 + tw4 + 4;
+    width = tx3 + tw3 + 4;
+}
+
+void ParamBox::calcTextCoords()
+{
+    tw1 = gGetTextWidth(FontSmall, param->getName());
+    tw2 = gGetTextWidth(FontVis, param->getMaxValString());
+    tw3 = gGetTextWidth(FontSmall, param->getUnitStr());
+
+    tx1 = 2;
+
+    adjustTx2(tx1 + tw1 + 12);
 }
 
 void ParamBox::adjustTx2(int txmin2)
 {
     tx2 = txmin2;
 
-    adjustTx3(tx2 + 6);
+    adjustTx3(tx2 + tw2 + 6);
 }
 
 void ParamBox::adjustTx3(int txmin3)
 {
     tx3 = txmin3;
 
-    adjustTx4(tx3 + tw3 + 6);
-}
-
-void ParamBox::adjustTx4(int txmin4)
-{
-    tx4 = txmin4;
-
-    width = tx4 + tw4 + 2;
+    width = tx3 + tw3 + 2;
 }
 
 void ParamBox::drawSelf(Graphics& g)
@@ -408,12 +397,21 @@ void ParamBox::drawSelf(Graphics& g)
     gSetMonoColor(g, 0.6f);
     gText(g, FontSmall, param->getName(), x1 + tx1, txy - 2);
 
+    std::string valstr = param->getValString();
+
+    int offs = 0;
+    if(!IsCharNumeric(valstr.data()[0]))
+    {
+        std::string cs = valstr.substr(0, 1);
+        offs = gGetTextWidth(FontVis, cs);
+    }
+
     gSetMonoColor(g, .9f);
     //gText(g, FontSmall, param->getSignStr(), x1 + tx2, txy);
-    gText(g, FontVis, param->getValString(), x1 + tx3, txy - 3);
+    gText(g, FontVis, param->getValString(), x1 + tx2 - offs, txy - 3);
 
     gSetMonoColor(g, .7f);
-    gText(g, FontSmall, param->getUnitStr(), x1 + tx4, txy - 2);
+    gText(g, FontSmall, param->getUnitStr(), x1 + tx3, txy - 2);
 }
 
 

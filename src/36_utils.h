@@ -49,5 +49,6 @@ String      GetPercentString(float value);
 int         RoundFloat(float val);
 float       CalcFreqRatio(int semitones);
 void        Num2String(long num, char* string);
+bool        IsCharNumeric(char c);
 
 

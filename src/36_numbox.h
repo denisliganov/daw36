@@ -116,13 +116,13 @@ class ParamBox : public NumBox
 friend Parameter;
 
 protected:
-            int th, tw1;
-            int tw3;
-            int tw4;
+            int th;
             int tx1;
             int tx2;
             int tx3;
-            int tx4;
+            int tw1;
+            int tw2;
+            int tw3;
 
     virtual void    updValue();
             void    handleMouseWheel(InputEvent& ev);
@@ -133,11 +133,10 @@ protected:
 public:
 
             ParamBox(Parameter* param);
-            void getTextCoords(int* txp1, int* txp2, int* txp3, int* txp4);
-            void setTextCoords(int txs1, int txs2, int txs3, int txs4);
+            void getTextCoords(int* txp1, int* txp2, int* txp3);
+            void setTextCoords(int txs1, int txs2, int txs3);
             void adjustTx2(int txmin2);
             void adjustTx3(int txmin3);
-            void adjustTx4(int txmin4);
 };
 
 
