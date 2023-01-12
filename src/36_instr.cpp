@@ -263,15 +263,9 @@ void Instrument::mapObjects()
     panBox->setCoords1(width - 145, 1, -1, 13);
 
     soloButt->setCoords1(width - 11, 0, 11, height/2);
-    muteButt->setCoords1(width - 11, height - height/2, 11, height/2);
+    muteButt->setCoords1(width - 11, height/2, 11, height/2);
 
-    int xOffs = 3;
-    int yOffs = height - 30;
-
-    previewButt->setCoords1(xOffs, 1, 14, 14);
-
-    xOffs += 100;
-
+    previewButt->setCoords1(3, 0, 14, 14);
 
     ivu->setCoords1(0, 1, 3, height - 1);
 

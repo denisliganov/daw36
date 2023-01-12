@@ -392,7 +392,7 @@ Filter1::Filter1()
     f_next = NULL;
 
     addParamWithControl(cutoff = new Parameter("CUT", Param_Freq, 0.6f, 0.f, 1.f, Units_Hz));
-    addParamWithControl(resonance = new Parameter("RES", 0.f, 0.0f, 48.0f, Units_Percent));
+    addParamWithControl(resonance = new Parameter("RES", 0.f, 0.0f, .97f, Units_Percent));
     addParamWithControl(bandwidth = new Parameter("BW", 1.f, 0.25f, 3.75f, Units_Octave));
 
     //Q = new Parameter(0.f, 0.f, 50.f, Param_Default);
@@ -452,7 +452,7 @@ void Filter1::handleParamUpdate(Parameter* param)
     else if(param->prmName == "RES")
     {
         dspCoreCFilter3.setResonance((double)resonance->outVal);
-        resonance->setValString(resonance->calcValStr((resonance->outVal/48.f*100.0f))); // /66.0f*100.0f
+        resonance->setValString(resonance->calcValStr((resonance->outVal/.97f*100.0f))); // /66.0f*100.0f
     }
     else if(param->prmName == "BW")
     {
@@ -592,13 +592,13 @@ GraphicEQ::GraphicEQ()
     f4 = dspCoreEqualizer.addBand(rosic::TwoPoleFilter::PEAK, 150, 0, 1);
     f9 = dspCoreEqualizer.addBand(rosic::TwoPoleFilter::LOW_SHELF, 70, 0, 1);
 
-    addParamWithControl(gain1 = new Parameter("8   KHz", 0.f, -24.0f, 48.0f, Units_dBGain));
+    addParamWithControl(gain1 = new Parameter("8 KHz", 0.f, -24.0f, 48.0f, Units_dBGain));
     addParamWithControl(gain6 = new Parameter("6.5 KHz", 0.f, -24.0f, 48.0f, Units_dBGain));
-    addParamWithControl(gain5 = new Parameter("3   KHz", 0.f, -24.0f, 48.0f, Units_dBGain));
+    addParamWithControl(gain5 = new Parameter("3 KHz", 0.f, -24.0f, 48.0f, Units_dBGain));
     addParamWithControl(gain2 = new Parameter("900 Hz", 0.f, -24.0f, 48.0f, Units_dBGain));
     addParamWithControl(gain3 = new Parameter("500 Hz", 0.f, -24.0f, 48.0f, Units_dBGain));
     addParamWithControl(gain4 = new Parameter("150 Hz", 0.f, -24.0f, 48.0f, Units_dBGain));
-    addParamWithControl(gain9 = new Parameter("70  Hz", 0.f, -24.0f, 48.0f, Units_dBGain));
+    addParamWithControl(gain9 = new Parameter("70 Hz", 0.f, -24.0f, 48.0f, Units_dBGain));
 
     reset();
 }

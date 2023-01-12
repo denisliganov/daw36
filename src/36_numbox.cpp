@@ -347,7 +347,7 @@ void ParamBox::calcTextCoords()
     tw3 = gGetTextWidth(FontVis, maxValStr);
     tw4 = gGetTextWidth(FontSmall, param->getUnitStr());
 
-    tx1 = 3;
+    tx1 = 2;
 
     adjustTx2(tx1 + tw1 + 6);
 }
@@ -392,7 +392,7 @@ void ParamBox::adjustTx4(int txmin4)
 {
     tx4 = txmin4;
 
-    width = tx4 + tw4 + 3;
+    width = tx4 + tw4 + 2;
 }
 
 void ParamBox::drawSelf(Graphics& g)
@@ -406,14 +406,14 @@ void ParamBox::drawSelf(Graphics& g)
     int txy = y2 - height/2 + th/2 - 2;
 
     gSetMonoColor(g, 0.6f);
-    gText(g, FontSmall, param->getName(), x1 + tx1, txy);
+    gText(g, FontSmall, param->getName(), x1 + tx1, txy - 2);
 
     gSetMonoColor(g, .9f);
     //gText(g, FontSmall, param->getSignStr(), x1 + tx2, txy);
-    gText(g, FontVis, param->getValString(), x1 + tx3, txy - 1);
+    gText(g, FontVis, param->getValString(), x1 + tx3, txy - 3);
 
     gSetMonoColor(g, .7f);
-    gText(g, FontSmall, param->getUnitStr(), x1 + tx4, txy);
+    gText(g, FontSmall, param->getUnitStr(), x1 + tx4, txy - 2);
 }
 
 
