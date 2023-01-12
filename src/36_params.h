@@ -17,11 +17,6 @@ typedef enum ParamType
     Param_Freq,
     Param_Log,
     Param_Bool,
-    Param_Pitch,
-    Param_Len,
-    Param_Note,
-    Param_Semitones,
-    Param_TString,
     Param_Default
 }ParamType;
 
