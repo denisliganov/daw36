@@ -8,8 +8,8 @@
 
 EffParamObject::EffParamObject(Eff* eff)
 {
-    int border = 20;
-    int boxWidth = 150;
+    int border = 14;
+    int boxWidth = 120;
     int boxHeight = border;
 
     int x = border;

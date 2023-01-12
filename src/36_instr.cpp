@@ -259,7 +259,7 @@ void Instrument::mapObjects()
     //panKnob->setCoords1(width - 23, 0, 22, 22);
     guiButt->setCoords1(width - 171, 1, 18, 12);
 
-    volBox->setCoords1(width - 78, 1, 70, 13);
+    volBox->setCoords1(width - 82, 1, 70, 13);
     panBox->setCoords1(width - 149, 1, -1, 13);
 
     soloButt->setCoords1(width - 11, 0, 11, height/2);

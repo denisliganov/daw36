@@ -364,7 +364,7 @@ void ParamBox::drawSelf(Graphics& g)
     int txy = y2 - height/2;
 
     gSetMonoColor(g, 0.6f);
-    gText(g, FontSmall, param->getName(), x1 + 2, txy + 3);
+    gText(g, FontSmall, param->getName(), x1 + 2, txy + 2);
 
     std::string valstr = param->getValString();
     int offs = 0;
@@ -376,11 +376,11 @@ void ParamBox::drawSelf(Graphics& g)
     gSetMonoColor(g, .9f);
     //gText(g, FontSmall, param->getSignStr(), x1 + tx2, txy);
     //gText(g, FontVis, param->getValString(), x1 + tx2 - offs, txy - 3);
-    gText(g, FontVis, param->getValString(), x1 + width/2 - offs, txy + 1);
+    gText(g, FontVis, param->getValString(), x1 + width/2 - offs, txy);
 
     gSetMonoColor(g, .7f);
     //gText(g, FontSmall, param->getUnitStr(), x1 + tx3, txy - 2);
-    gText(g, FontSmall, param->getUnitStr(), x2 - tw3 - 1, txy + 3);
+    gText(g, FontSmall, param->getUnitStr(), x2 - tw3 - 1, txy + 2);
 
     //gSetMonoColor(g, 0.6f);
     gSetColor(g, 0xff14FF00);

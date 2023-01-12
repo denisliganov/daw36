@@ -115,11 +115,11 @@ void Eff::drawSelf(Graphics& g)
     gFillRect(g, x1, y1, x2, y2);
 
     if(mouseHovering)
-        gSetMonoColor(g, .6f);
+        gSetMonoColor(g, .3f);
     else
-        gSetMonoColor(g, .5f);
+        gSetMonoColor(g, .2f);
 
-    gDrawRect(g, x1, y1, x2, y2);
+    gDrawRect(g, x1, y2, x2, y2);
     //gDrawRect(g, x1, y1, x1, y2);
 
     if(mouseHovering)

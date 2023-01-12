@@ -611,6 +611,7 @@ void Device36::showWindow(bool show)
     if(guiWindow == NULL)
     {
         guiWindow = createWindow();
+        guiWindow->setBounds(window->getLastEvent().mouseX + 20, window->getLastEvent().mouseY + 20, guiWindow->getWidth(), guiWindow->getHeight());
     }
 
     if(guiWindow != NULL)
