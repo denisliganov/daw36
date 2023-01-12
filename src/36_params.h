@@ -113,8 +113,14 @@ public:
     virtual void                reset();
     virtual void                resetToInitial();
     virtual void                updateControls();
-            float               getRange() { return range; };
-            float               getOffset() { return offset; };
+            float               getRange()      { return range; };
+            float               getOffset()     { return offset; };
+            float               getOutVal()     { return outVal; }
+            float               getValue()      { return value; }
+            float               getDefaultVal() { return defaultValue; }
+            float               getNormalizedValue();
+            float               getEditorValue();
+            float               adjustForEditor(float val);
 
     virtual float               calcOutputValue(float val);
     virtual void                setValue(float val);
@@ -138,12 +144,6 @@ public:
             void                blockEnvAffect() { envaffect = false; }
             void                unblockEnvAffect() { envaffect = true;}
             bool                isRecording() { return recording; }
-            float               getOutVal() { return outVal; }
-            float               getValue() { return value; }
-            float               getDefaultVal() { return defaultValue; }
-            float               getNormalizedValue();
-            float               getEditorValue();
-            float               adjustForEditor(float val);
             void                setReversed(bool rev) { reversed = rev; }
             bool                getReversed() { return reversed; }
             void                setEnvDirect(bool envdir);

@@ -622,7 +622,7 @@ void SubWindow::paint(Graphics& g)
     gSetMonoColor(g, 0.2f);
     g.fillRect(0, 0, getWidth(), getHeight());
 
-    gSetMonoColor(g, 0.25f);
+    gSetMonoColor(g, 0.5f);
     g.drawRect(0, 0, getWidth(), getHeight());
 
     gSetMonoColor(g, 1.f);

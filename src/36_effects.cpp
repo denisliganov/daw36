@@ -393,7 +393,7 @@ Filter1::Filter1()
 
     addParamWithControl(cutoff = new Parameter("CUT", Param_Freq, 0.6f, 0.f, 1.f, Units_Hz));
     addParamWithControl(resonance = new Parameter("RES", 0.f, 0.0f, .97f, Units_Percent));
-    addParamWithControl(bandwidth = new Parameter("BW", 1.f, 0.25f, 3.75f, Units_Octave));
+    //addParamWithControl(bandwidth = new Parameter("BW", 1.f, 0.25f, 3.75f, Units_Octave));
 
     //Q = new Parameter(0.f, 0.f, 50.f, Param_Default);
     //Q->SetName("Q");

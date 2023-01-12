@@ -133,10 +133,6 @@ protected:
 public:
 
             ParamBox(Parameter* param);
-            void getTextCoords(int* txp1, int* txp2, int* txp3);
-            void setTextCoords(int txs1, int txs2, int txs3);
-            void adjustTx2(int txmin2);
-            void adjustTx3(int txmin3);
 };
 
 
