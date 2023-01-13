@@ -376,7 +376,7 @@ void ParamBox::drawSelf(Graphics& g)
     gText(g, FontSmall, param->getUnitStr(), x2 - tw3 - 1, txy + 2);
 
     //gSetMonoColor(g, 0.6f);
-    gSetColor(g, 0xff14FF00);
+    gSetColor(g, 0xff10EF00);
     float val = param->getNormalizedValue();
     gFillRectWH(g, x1 + 1, y2 - 1, int((width - 2)*val), 1);
 }
