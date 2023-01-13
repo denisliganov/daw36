@@ -229,9 +229,9 @@ void MixChannel::drawSelf(Graphics& g)
     //gSetMonoColor(g, 0.2f);
     //gFillRect(g, x1, y1, x2, y2);
 
-    if (instr != NULL && MInstrPanel->getCurrInstr() == instr)
-        fillWithMonoColor(.3f);
-    else
+    //if (instr != NULL && MInstrPanel->getCurrInstr() == instr)
+    //    fillWithMonoColor(.3f);
+    //else
         fillWithMonoColor(.25f);
 
     setMonoColor(1);

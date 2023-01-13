@@ -94,28 +94,36 @@ protected:
         {
             Instrument* instr = (Instrument*)parent;
 
-            //if(pressed)
-            //    gSetMonoColor(g, .4f);
-            //else
-            //    gSetMonoColor(g, .3f);
-            //gFillRect(g, x1, y1, x2, y2);
+            if(instr==MInstrPanel->getCurrInstr())
+            {
+                //gSetColor2(g, 0xffFFFF40, .4f);
+                //gFillRect(g, x1, y1, x2, y2);
+                fill(g, 0xffFFFF40, .4f, 1);
+
+                //gSetColor2(g, 0xffFFFF40, .8f);
+                //gDrawRect(g, x1, y1, x2, y2);
+                rect(g, 0xffFFFF40, .8f, 1);
+            }
+            else
+            {
+                if(pressed)
+                    fill(g, .4f);
+                else
+                    fill(g, .35f);
+            }
 
             int tw = gGetTextWidth(FontVis, instr->getAlias());
             int th = gGetTextHeight(FontVis);
 
             gSetMonoColor(g, .1f);
-            gText(g, FontVis, instr->getAlias(), x1 + 4, y2 - height + th + 2);
-
-            if(pressed)
-                gSetMonoColor(g, 1);
-            else
-                gSetMonoColor(g, .9f);
+            gText(g, FontVis, instr->getAlias(), x1 + 3, y2 - height/2 + th/2);
 
             //int gap = 3;
             //gTriangle(g, x1 + gap,y1 + gap, x2 - gap, y1 + height/2, x1 + gap, y2 - gap, clr1, clr1);
             //gTriangle(g, x1,y1, x2, y1 + height/2, x1, y2);
 
-            gText(g, FontVis, instr->getAlias(), x1 + 5, y2 - height + th + 1);
+            gSetMonoColor(g, 1.f);
+            gText(g, FontVis, instr->getAlias(), x1 + 4, y2 - height/2 + th/2 - 1);
         }
 
         void handleMouseDrag(InputEvent & ev)   { parent->handleMouseDrag(ev); }
@@ -256,7 +264,7 @@ void Instrument::mapObjects()
 
     //volKnob->setCoords1(width - 67, 0, 25, 25);
     //panKnob->setCoords1(width - 23, 0, 22, 22);
-    guiButt->setCoords1(width - 171, 1, 18, 12);
+    guiButt->setCoords1(width - 180, 1, 26, 12);
 
     volBox->setCoords1(width - 82, 1, 70, 13);
     panBox->setCoords1(width - 149, 1, -1, 13);
@@ -264,7 +272,7 @@ void Instrument::mapObjects()
     soloButt->setCoords1(width - 11, 0, 11, height/2);
     muteButt->setCoords1(width - 11, height/2, 11, height/2);
 
-    previewButt->setCoords1(1, 4, 14, 14);
+    previewButt->setCoords1(3, 0, 14, height);
 
     ivu->setCoords1(0, 1, 3, height - 1);
 
@@ -285,21 +293,13 @@ void Instrument::mapObjects()
 
 void Instrument::drawSelf(Graphics& g)
 {
-    if(MInstrPanel->getCurrInstr() == this)
-    {
-        setMonoColor(.4f);
-        fillMe();
-    }
-    else
-    {
-        setMonoColor(.3f);
-        fillMe();
-    }
+    fillWithMonoColor(.3f);
 
     setMonoColor(.1f);
-    gTextFit(g, FontSmall, objName, x1 + 9, y2, width - 22);
+    gTextFit(g, FontSmall, objName, x1 + 19, y2, width - 26);
+
     setMonoColor(.7f);
-    gTextFit(g, FontSmall, objName, x1 + 10, y2 - 1, width - 22);
+    gTextFit(g, FontSmall, objName, x1 + 20, y2 - 1, width - 27);
 
 //    lineH(0, 0, width - 1);
 }

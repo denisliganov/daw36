@@ -97,6 +97,11 @@ void gSetMonoColor(Graphics& g, float clr, float alpha)
     g.setColour(Colour(globalHue, globalSaturation, pow(clr, brightnessCoeff), alpha));
 }
 
+void gSetColor(Graphics& g, uint8 red, uint8 green, uint8 blue, uint8 alpha)
+{
+    g.setColour(Colour(red, green, blue).withAlpha(alpha));
+}
+
 void gSetColor(Graphics& g, uint32 color)
 {
     g.setColour(Colour(color));
@@ -151,11 +156,6 @@ void gLine(Graphics& g, float x1, float y1, float x2, float y2)
 void gLine(Graphics& g, int x1, int y1, int x2, int y2)
 {
     g.drawLine((float)x1, (float)y1, (float)x2, (float)y2);
-}
-
-void gSetColor(Graphics& g, uint8 red, uint8 green, uint8 blue, uint8 alpha)
-{
-    g.setColour(Colour(red, green, blue).withAlpha(alpha));
 }
 
 void gDrawImageRegion(Graphics& g, Image* img, int x, int y, int w, int h)

@@ -348,8 +348,9 @@ void ParamBox::handleMouseWheel(InputEvent & ev)
 
 void ParamBox::drawSelf(Graphics& g)
 {
-    gSetMonoColor(g, 0.16f);
-    gFillRect(g, x1, y1, x2, y2);
+    //gSetMonoColor(g, 0.16f);
+    //gFillRect(g, x1, y1, x2, y2);
+    fill(g, 0.16f);
 
     //gSetMonoColor(g, 0.4f);
     //gDrawRect(g, x1, y1, x2, y2);
@@ -357,7 +358,7 @@ void ParamBox::drawSelf(Graphics& g)
     int txy = y2 - height/2;
 
     gSetMonoColor(g, 0.7f);
-    gTextFit(g, FontSmall, param->getName(), x1 + 2, txy + 2, width/2);
+    gTextFit(g, FontSmall, param->getName(), x1 + 2, txy + 3, width/2);
 
     std::string valstr = param->getValString();
     int offs = 0;
@@ -369,16 +370,17 @@ void ParamBox::drawSelf(Graphics& g)
     gSetMonoColor(g, .9f);
     //gText(g, FontSmall, param->getSignStr(), x1 + tx2, txy);
     //gText(g, FontVis, param->getValString(), x1 + tx2 - offs, txy - 3);
-    gText(g, FontInst, param->getValString(), x1 + width/2 - offs, txy + 2);
+    gText(g, FontInst, param->getValString(), x1 + width/2 - offs, txy + 3);
 
     gSetMonoColor(g, .7f);
     //gText(g, FontSmall, param->getUnitStr(), x1 + tx3, txy - 2);
-    gText(g, FontSmall, param->getUnitStr(), x2 - tw3 - 1, txy + 2);
+    gText(g, FontSmall, param->getUnitStr(), x2 - tw3 - 1, txy + 3);
 
-    //gSetMonoColor(g, 0.6f);
-    gSetColor(g, 0xff10DF00);
     float val = param->getNormalizedValue();
-    gFillRectWH(g, x1 + 1, y2 - 1, int((width - 2)*val), 1);
+    gSetColor(g, 0xff10BF00);
+    gFillRectWH(g, x1, y2, 1 + int((width - 1)*val), 1);
+    gSetColor(g, 0xff086000);
+    gFillRectWH(g, x1, y2 - 1, 1 + int((width - 1)*val), 1);
 }
 
 

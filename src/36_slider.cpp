@@ -120,17 +120,9 @@ void Slider36::drawSelf(Graphics& g)
     Instrument* instr = dynamic_cast<Instrument*>(parent);
     MixChannel* mc = dynamic_cast<MixChannel*>(parent);
 
-    if(instr)
-        instr->setMyColor(g, .4f);
-    else
-        setMonoColor(.4f);
+    fillWithMonoColor(.4f);
 
-    fillMe();
-
-    if(instr)
-        instr->setMyColor(g, .4f);
-    else
-        setMonoColor(.32f);
+    setMonoColor(.32f);
 
     drawRect(0, 0, width, height);
 

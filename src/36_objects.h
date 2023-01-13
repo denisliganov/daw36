@@ -183,10 +183,16 @@ public:
     virtual void                drawSelf(Graphics& g) {};
     virtual void                drawOverChildren(Graphics& g) {};
 
-            // Drawing methods using relatice coords
+            // Drawing methods using relative coords
             void                fillWithMonoColor(float mono_color);
-            void                fillMe();
             void                setMonoColor(float mono_color);
+            void                fill(Graphics& g, float clr, float alpha=1);
+            void                rect(Graphics& g, float clr, float alpha=1);
+            void                fill(Graphics& g, uint32 clr, float b=1, float a=1);
+            void                rect(Graphics& g, uint32 clr, float b=1, float a=1);
+            void                fill(Graphics& g, uint32 clr);
+            void                rect(Graphics& g, uint32 clr);
+
             void                drawRect(int x, int y, int w, int h);
             void                fillRect(int x, int y, int w, int h);
             void                line(int lx, int ly, int lx2, int ly2);

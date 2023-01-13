@@ -109,27 +109,20 @@ void Eff::drawSelf(Graphics& g)
 {
     if(mouseHovering)
     {
-        gSetMonoColor(g, .4f);
-        gFillRect(g, x1, y1, x2, y2);
-        gSetMonoColor(g, .1f);
-        gFillRect(g, x1+1, y1+1, x2-1, y2-1);
+        fill(g, .4f);
+        rect(g, .8f);
     }
     else
     {
-        gSetMonoColor(g, .2f);
-        gFillRect(g, x1, y1, x2, y2);
-        gSetMonoColor(g, .0f);
-        gFillRect(g, x1+1, y1+1, x2-1, y2-1);
+        fill(g, .2f);
+        rect(g, .4f);
     }
 
-    //gSetMonoColor(g, .2f);
-    //gDrawRect(g, x1, y2, x2, y2);
+    gSetMonoColor(g, .8f);
 
-    gSetMonoColor(g, 1);
+    int th = gGetTextHeight(FontBold);
 
-    int th = gGetTextHeight(FontSmall);
-
-    gTextFit(g, FontSmall, objName, x1 + 2, y2 - height/2 + th/2 + 2, width - 2);
+    gTextFit(g, FontBold, objName, x1 + 3, y1 + th + 1, width - 2);
 }
 
 Eff* Eff::makeClone(Eff* eff)
