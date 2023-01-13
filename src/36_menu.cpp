@@ -155,14 +155,7 @@ void ContextMenu::activateContextMenuItem(std::string item)
 
 void ContextMenu::drawSelf(Graphics & g)
 {
-    gSetMonoColor(g, 0.5f);
-    //g.setColour(Colour(MenuColor).withBrightness(.6f));
-
-    gFillRect(g, x1, y1, x2, y2);
-
-    //gSetMonoColor(g, 0.55f);
-    //g.setColour(Colour(MenuColor).withBrightness(.65f));
-    //gDrawRect(g, x1, y1, x2, y2);
+    fill(g, .5f);
 }
 
 

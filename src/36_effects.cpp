@@ -107,21 +107,13 @@ void Eff::mapObjects()
 
 void Eff::drawSelf(Graphics& g)
 {
-    if(mouseHovering)
-    {
-        fill(g, .4f);
-        rect(g, .8f);
-    }
-    else
-    {
-        fill(g, .2f);
-        rect(g, .4f);
-    }
-
-    gSetMonoColor(g, .8f);
+    fill(g, .2f);
+    rect(g, .5f);
+    setc(g, .2f);
+    lineH(g, height-1, 0, width-1);
 
     int th = gGetTextHeight(FontBold);
-
+    setc(g, 1.f);
     gTextFit(g, FontBold, objName, x1 + 3, y1 + th + 1, width - 2);
 }
 

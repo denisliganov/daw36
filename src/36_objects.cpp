@@ -503,15 +503,30 @@ bool Gobj::handleObjDrop(Gobj* obj, int mx, int my, unsigned flags)
     }
 }
 
+void Gobj::setc(Graphics& g, float c, float a)
+{
+    gSetMonoColor(g, c, a);
+}
+
+void Gobj::setc(Graphics& g, uint32 c)
+{
+    gSetColor(g, c);
+}
+
+void Gobj::setc(Graphics& g, uint32 c, float b, float a)
+{
+    gSetColor2(g, c, b, a);
+}
+
 void Gobj::fill(Graphics& g, float clr, float alpha) 
 {
-    gSetMonoColor(g, clr);
+    gSetMonoColor(g, clr, alpha);
     gFillRect(g, x1, y1, x2, y2);
 }
 
 void Gobj::rect(Graphics& g, float clr, float alpha) 
 {
-    gSetMonoColor(g, clr);
+    gSetMonoColor(g, clr, alpha);
     gDrawRect(g, x1, y1, x2, y2);
 }
 
@@ -539,6 +554,16 @@ void Gobj::rect(Graphics& g, uint32 clr)
     gDrawRect(g, x1, y1, x2, y2);
 }
 
+void Gobj::lineH(Graphics& g, int ly,int lx1,int lx2)
+{
+    gLineHorizontal(g, y1 + ly, x1 + lx1, x1 + lx2);
+}
+
+void Gobj::lineV(Graphics& g, int lx,int ly1,int ly2)
+{
+    gLineVertical(g, x1 + lx, y1 + ly1, y1 + ly2);
+}
+
 void Gobj::fillWithMonoColor(float mono_color)
 {
     gSetMonoColor(*gr, mono_color);
@@ -548,16 +573,6 @@ void Gobj::fillWithMonoColor(float mono_color)
 void Gobj::setMonoColor(float mono_color)
 {
     gSetMonoColor(*gr, mono_color);
-}
-
-void Gobj::lineH(int ly,int lx1,int lx2)
-{
-    gLineHorizontal(*gr, y1 + ly, x1 + lx1, x1 + lx2);
-}
-
-void Gobj::lineV(int lx,int ly1,int ly2)
-{
-    gLineVertical(*gr, x1 + lx, y1 + ly1, y1 + ly2);
 }
 
 void Gobj::drawRect(int x, int y, int w, int h)

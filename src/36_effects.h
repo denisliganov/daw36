@@ -25,12 +25,8 @@ protected:
             void            mapObjects();
             void            handleMouseUp(InputEvent& ev);
             void            handleMouseDown(InputEvent& ev);
-            void            handleMouseEnter() { redraw(); };
-            void            handleMouseLeave() { redraw(); };
             void            handleMouseDrag(InputEvent& ev);
             void            handleChildEvent(Gobj * obj, InputEvent& ev);
-            void            handleMouseEnter(InputEvent & ev)  { redraw(); }
-            void            handleMouseLeave(InputEvent & ev)  { redraw(); }
             SubWindow*      createWindow();
 
 public:

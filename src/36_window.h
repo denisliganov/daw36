@@ -244,7 +244,7 @@ friend  ScrollTimer;
 
 protected:
 
-            HANDLE              guiMutex;
+            HANDLE                  guiMutex;
             std::list<Gobj*>        changedObjects;
             std::list<Gobj*>        highlights;
             std::list<Rect*>        repaints;
@@ -291,6 +291,7 @@ public:
             Image*              createSnapshot(int x, int y, int width, int height);
             void                registerObject(Gobj* obj);
             void                unregisterObject(Gobj* obj);
+            bool                isDragging();
 };
 
 

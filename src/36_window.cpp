@@ -1529,3 +1529,8 @@ void WinObject::unregisterObject(Gobj * obj)
 }
 
 
+bool WinObject::isDragging()
+{
+    return drag->isActive();
+}
+

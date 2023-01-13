@@ -185,9 +185,7 @@ void Lane::drawSelf(Graphics& g)
 {
     // Draw backdrop with vertical bars
 
-    gSetMonoColor(g, 0.25f);
-
-    gFillRect(g, x1, y1, x2, y2);
+    fill(g, 0.25f);
 
     // Horizontal mark
     gSetMonoColor(g, 0.15f);

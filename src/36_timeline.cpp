@@ -97,12 +97,11 @@ void Timeline::drawIntermittentHighlight(Graphics& g, int x, int y, int w, int h
 
 void Timeline::drawSelf(Graphics & g)
 {
-    fillWithMonoColor(.25f);
+    fill(g, .25f);
 
     setMonoColor(0.2f);
-
-    lineH(0, 0, width - 1);
-    lineH(height - 1, 0, width - 1);
+    lineH(g, 0, 0, width - 1);
+    lineH(g, height - 1, 0, width - 1);
 
     int barLenTicks = MTransp->getTicksPerBar();
     float barLenPixels = grid->getPixelsPerTick()*barLenTicks;

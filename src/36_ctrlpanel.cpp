@@ -228,7 +228,7 @@ void ControlPanel::drawSelf(Graphics& g)
 
     setMonoColor(.25f);
 
-    lineH(0, 0, width - 1);
+    lineH(g, 0, 0, width - 1);
 
     for(int i = 1; i < 40; i++)
     {
