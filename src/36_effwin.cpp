@@ -12,7 +12,7 @@ EffParamObject::EffParamObject(Eff* eff)
     int boxWidth = 130;
     int boxHeight = border;
 
-    int x = border;
+    int x = 4;
     int y = border;
 
     ParamBox* box = NULL;

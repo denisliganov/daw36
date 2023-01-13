@@ -108,28 +108,28 @@ void Eff::mapObjects()
 void Eff::drawSelf(Graphics& g)
 {
     if(mouseHovering)
-        gSetMonoColor(g, .5f);
-    else
+    {
         gSetMonoColor(g, .4f);
-
-    gFillRect(g, x1, y1, x2, y2);
-
-    if(mouseHovering)
-        gSetMonoColor(g, .3f);
+        gFillRect(g, x1, y1, x2, y2);
+        gSetMonoColor(g, .1f);
+        gFillRect(g, x1+1, y1+1, x2-1, y2-1);
+    }
     else
+    {
         gSetMonoColor(g, .2f);
+        gFillRect(g, x1, y1, x2, y2);
+        gSetMonoColor(g, .0f);
+        gFillRect(g, x1+1, y1+1, x2-1, y2-1);
+    }
 
-    gDrawRect(g, x1, y2, x2, y2);
-    //gDrawRect(g, x1, y1, x1, y2);
+    //gSetMonoColor(g, .2f);
+    //gDrawRect(g, x1, y2, x2, y2);
 
-    if(mouseHovering)
-        gSetMonoColor(g, 1);
-    else
-        gSetMonoColor(g, .9f);
+    gSetMonoColor(g, 1);
 
-    int th = gGetTextHeight(FontVis);
+    int th = gGetTextHeight(FontSmall);
 
-    gTextFit(g, FontVis, objName, x1 + 2, y2 - height/2 + th/2 + 2, width - 2);
+    gTextFit(g, FontSmall, objName, x1 + 2, y2 - height/2 + th/2 + 2, width - 2);
 }
 
 Eff* Eff::makeClone(Eff* eff)

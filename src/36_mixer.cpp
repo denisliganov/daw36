@@ -205,7 +205,7 @@ void MixChannel::mapObjects()
     {
         eff->setCoords1(xeff, 1, 32, height - 2);
 
-        xeff += eff->getW() + 3;
+        xeff += eff->getW() + 1;
     }
 
 /*
@@ -229,7 +229,10 @@ void MixChannel::drawSelf(Graphics& g)
     //gSetMonoColor(g, 0.2f);
     //gFillRect(g, x1, y1, x2, y2);
 
-    fillWithMonoColor(.25f);
+    if (instr != NULL && MInstrPanel->getCurrInstr() == instr)
+        fillWithMonoColor(.3f);
+    else
+        fillWithMonoColor(.25f);
 
     setMonoColor(1);
 
@@ -817,21 +820,7 @@ Eff* MixChannel::addEffectFromBrowser(BrwEntry * de)
 
 void MixChannel::handleMouseWheel(InputEvent& ev)
 {
-    if(contentheight > 0 && ev.mouseY > y1 && ev.mouseY < y2)
-    {
-        voffs -= ev.wheelDelta*22;
-
-        if(voffs < 0)
-        {
-            voffs = 0;
-        }
-        else if(voffs > contentheight - 4)
-        {
-            voffs = contentheight - 4;
-        }
-
-        redraw();
-    }
+    MInstrPanel->setOffset((int)(MInstrPanel->getOffset() - ev.wheelDelta*int(InstrHeight*1.1f)));
 }
 
 void MixChannel::handleMouseDown(InputEvent& ev)
@@ -840,8 +829,7 @@ void MixChannel::handleMouseDown(InputEvent& ev)
     {
         MInstrPanel->setCurrInstr(instr);
 
-        if(ev.keyFlags & kbd_ctrl && 
-                        ev.mouseY < y1 + MixerTopHeight)
+        if(ev.keyFlags & kbd_ctrl && ev.mouseY < y1 + MixerTopHeight)
         {
             instr->preview();
         }

@@ -113,7 +113,6 @@ protected:
 
             //int gap = 3;
             //gTriangle(g, x1 + gap,y1 + gap, x2 - gap, y1 + height/2, x1 + gap, y2 - gap, clr1, clr1);
-
             //gTriangle(g, x1,y1, x2, y1 + height/2, x1, y2);
 
             gText(g, FontVis, instr->getAlias(), x1 + 5, y2 - height + th + 1);
@@ -265,7 +264,7 @@ void Instrument::mapObjects()
     soloButt->setCoords1(width - 11, 0, 11, height/2);
     muteButt->setCoords1(width - 11, height/2, 11, height/2);
 
-    previewButt->setCoords1(3, 0, 14, 14);
+    previewButt->setCoords1(1, 4, 14, 14);
 
     ivu->setCoords1(0, 1, 3, height - 1);
 
@@ -297,9 +296,10 @@ void Instrument::drawSelf(Graphics& g)
         fillMe();
     }
 
+    setMonoColor(.1f);
+    gTextFit(g, FontSmall, objName, x1 + 9, y2, width - 22);
     setMonoColor(.7f);
-
-    gTextFit(g, FontSmall, objName, x1 + 6, y2 - 1, width - 22);
+    gTextFit(g, FontSmall, objName, x1 + 10, y2 - 1, width - 22);
 
 //    lineH(0, 0, width - 1);
 }

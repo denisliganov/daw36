@@ -1498,10 +1498,8 @@ void Grid::handleMouseWheel(InputEvent& ev)
         }
         else
         {
-            float ofsDelta = ev.wheelDelta*(visibleTickSpan*0.03f);
-
+            //float ofsDelta = ev.wheelDelta*(visibleTickSpan*0.03f);
             //setTickOffset(getTickOffset() - ofsDelta);
-
             //setVerticalOffset(vertOffset - ev.wheelDelta*(lineHeight*.5f));
 
             MInstrPanel->setOffset((int)(MInstrPanel->getOffset() - ev.wheelDelta*int(InstrHeight*1.1f)));
