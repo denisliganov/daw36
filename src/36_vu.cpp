@@ -194,7 +194,7 @@ void InstrVU::drawSelf(Graphics & g)
 
     fill(g, .2f);
 
-    setc(g, 0xffFFB040, 1);
+    setc(g, 0xffFFB040);
 
     int yc = 0;
 
@@ -203,13 +203,13 @@ void InstrVU::drawSelf(Graphics & g)
         if(yc < left)
         {
             // gSetPixel(g, x1, y2 - yc); 
-            gFillRect(g, x1, y2 - yc, x1+1, y2 - yc);
+            fillx(g, 0, yc, 2, 1);
         }
 
         if(yc < right)
         {
             // gSetPixel(g, x2, y2 - yc); 
-            gFillRect(g, x1, y2 - yc, x1+1, y2 - yc);
+            fillx(g, 0, yc, 2, 1);
         }
 
         yc += 2;

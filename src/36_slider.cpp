@@ -148,7 +148,7 @@ void Slider36::drawSelf(Graphics& g)
 
         setc(g, .4f);
 
-        fillRect(1, ysl - y1, width - 2, ysl2 - y1 - 1);
+        fillx(g, 1, ysl - y1, width - 2, ysl2 - y1 - 1);
 
         // Draw thumb for signed params
 
@@ -175,11 +175,11 @@ void Slider36::drawSelf(Graphics& g)
         {
             setc(g, .5f);
 
-            fillRect(xfrom, 0, xwidth, height);
+            fillx(g, xfrom, 0, xwidth, height);
 
             setc(g, .7f);
 
-            drawRect(xfrom, 0, xwidth, height);
+            rectx(g, xfrom, 0, xwidth, height);
         }
 
         // Draw thumb for signed params

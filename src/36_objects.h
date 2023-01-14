@@ -190,14 +190,14 @@ public:
             void                rect(Graphics& g, uint32 clr, float b=1, float a=1);
             void                fill(Graphics& g, uint32 clr);
             void                rect(Graphics& g, uint32 clr);
+            void                fillx(Graphics& g,int x, int y, int w, int h);
+            void                rectx(Graphics& g, int x, int y, int w, int h);
             void                lineH(Graphics& g, int ly, int lx1, int lx2);
             void                lineV(Graphics& g, int lx, int ly1, int ly2);
             void                setc(Graphics& g, float c, float a=1.f);
             void                setc(Graphics& g, uint32 clr, float b, float);
             void                setc(Graphics& g, uint32 clr);
 
-            void                drawRect(int x, int y, int w, int h);
-            void                fillRect(int x, int y, int w, int h);
             void                line(int lx, int ly, int lx2, int ly2);
 
     virtual ContextMenu*        createContextMenu() {return NULL;};

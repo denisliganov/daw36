@@ -139,7 +139,7 @@ void DragAndDrop::drawSelf(Graphics & g)
 
                 setc(g, .6f);
 
-                gFillRect(g, dx1, dy1, dx2, dy2);
+                fillx(g, 0, 0, width, height);
 
                 setc(g, 1.f);
 
@@ -149,7 +149,7 @@ void DragAndDrop::drawSelf(Graphics & g)
             {
                 setc(g, 0.5f);
 
-                gFillRect(g, dx1, dy1, dx2, dy2);
+                fillx(g, 0, 0, width, height);
 
                 setc(g, 0.99f);
 

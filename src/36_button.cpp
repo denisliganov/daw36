@@ -172,7 +172,7 @@ void Button36::drawSelf(Graphics& g)
         if (isLedType)
             setc(g, 1.f);
         else
-            setc(g, 0xffFFFF40, 1.f);
+            setc(g, 0xffFFFF40);
      }
     else
     {

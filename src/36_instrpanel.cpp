@@ -841,7 +841,7 @@ void InstrPanel::drawSelf(Graphics& g)
     fill(g, 0.1f);
 
     setc(g, .25f);
-    fillRect(0, 0, width, MainLineHeight - 2);
+    fillx(g, 0, 0, width, MainLineHeight - 2);
 
     setc(g, 0.1f);
     gLineHorizontal(g, y1 + MainLineHeight - 2, x1, x2 + 1);

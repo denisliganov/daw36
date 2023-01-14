@@ -103,9 +103,7 @@ void AuxKeys::drawVerticalKey(Graphics& g, bool vert, int coord1, int coord2, in
 
 void AuxKeys::drawVerticalKeys(Graphics& g, int x, int y, int w, int h)
 {
-    gSetMonoColor(g, .6f);
-
-    g.fillRect(x, y, w, h);
+    fill(g, .6f);
 
     int key = isVertical ? 119 : 0;
 
@@ -131,7 +129,7 @@ void AuxKeys::drawVerticalKeys(Graphics& g, int x, int y, int w, int h)
 
         if(pianoKey == 0) // draw note name
         {
-            gSetMonoColor(g, .1f);
+            setc(g, .1f);
 
             //gNoteString(g, x + w - 16, yc - 2, coord + keyWidth - 1, false);
         }
@@ -155,7 +153,7 @@ void AuxKeys::drawHorizontalKeys(Graphics& g, int x, int y, int w, int h)
 
     g.saveState();
 
-    gSetMonoColor(g, .1f);
+    setc(g, .1f);
 
     int xKey = x;
 
@@ -208,7 +206,8 @@ void AuxKeys::drawHorizontalKeys(Graphics& g, int x, int y, int w, int h)
 
                 gFillRect(g, xCoord + 1, y, xCoord + keyWidth - 1, y + h - 1);
 
-                gSetMonoColor(g, .4f);
+                setc(g, .4f);
+
                 gNoteString(g, xCoord + 5, y + h - 4, key, false);
             }
             else if(pianoKey == 2)
@@ -281,7 +280,11 @@ AuxKeys::AuxKeys(Grid * gr, int key_width,bool vert)
 
 void AuxKeys::drawSelf(Graphics& g)
 {
-    gPanelRect(g, x1, y1, x2, y2);
+    fill(g, 0.35f);
+
+    setc(g, 0.4f);
+
+    lineH(g, 0, 0, width - 1);
 
     if(isVertical)
         drawVerticalKeys(g, x1, y1, width, height);

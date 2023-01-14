@@ -96,12 +96,8 @@ protected:
 
             if(instr==MInstrPanel->getCurrInstr())
             {
-                //gSetColor2(g, 0xffFFFF40, .4f);
-                //gFillRect(g, x1, y1, x2, y2);
                 fill(g, 0xffFFFF40, .4f, 1);
 
-                //gSetColor2(g, 0xffFFFF40, .8f);
-                //gDrawRect(g, x1, y1, x2, y2);
                 rect(g, 0xffFFFF40, .8f, 1);
             }
             else
@@ -149,25 +145,12 @@ protected:
                 setc(g, .15f);
             }
 
-            int yc = y1;
-            while (yc < y2)
+            int yc = 0;
+            while (yc < height)
             {
-                gDrawRect(g, x1, yc, x2, yc);
+                rectx(g, 0, yc, width, 1);
                 yc += 2;
             }
-/*
-            if(pressed)
-            {
-                //instr->setDrawColor(g, 0.9f);
-                gSetMonoColor(g, 1);
-            }
-            else
-            {
-                instr->setDrawColor(g, 0.3f);
-                //gSetMonoColor(g, .35f);
-            }
-
-            gDrawRect(g, x1, y1, x2, y2);*/
 
             //if(instr == _MInstrPanel->getCurrInstr())
             //    gSetColor(g, 0xffFFDD60);
@@ -266,7 +249,7 @@ void Instrument::mapObjects()
     //panKnob->setCoords1(width - 23, 0, 22, 22);
     guiButt->setCoords1(width - 180, 1, 26, 12);
 
-    volBox->setCoords1(width - 82, 1, 70, 13);
+    volBox->setCoords1(width - 84, 1, 70, 13);
     panBox->setCoords1(width - 149, 1, -1, 13);
 
     soloButt->setCoords1(width - 11, 0, 11, height/2);

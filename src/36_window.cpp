@@ -1163,8 +1163,10 @@ void Hintbox::paint(Graphics& g)
 {
     gSetColor2(g, 0xffFFE0D0, 0.55f, 1);
     gFillRect(g, 0, 0, getWidth() - 1, getHeight() - 1);
+
     gSetColor2(g, 0xffFFE0C0, 0.58f, 1);
     gDrawRect(g, 0, 0, getWidth() - 1, getHeight() - 1);
+
     gSetColor2(g, 0xffFFF0E0, .9f, 1);
     gText(g, font, (std::string)text, tx, ty);
 }

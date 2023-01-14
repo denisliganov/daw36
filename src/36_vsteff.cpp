@@ -79,13 +79,13 @@ VstEffect::~VstEffect()
 
 void VstEffect::drawSelf(Graphics & g)
 {
-    g.setColour(Colour(0xff508080));
-    gFillRect(g, x1, y1, x2, y1 + EffHeaderHeight - 1);
-    
-    g.setColour(Colour(0x30FFFFFF));
-    gDrawRect(g, x1, y1, x2, y1 + EffHeaderHeight - 1);
+    setc(g, 0xff508080);
+    fillx(g, 0, 0, width, height);
 
-    g.setColour(Colour(0xffCFEFFF));
+    setc(g, (uint32)0x30FFFFFF);
+    rectx(g, 0, 0, width, height);
+
+    setc(g, 0xffCFEFFF);
     //gSetColor((0xff46FFB4));
 
     gTextFit(g, FontBold, vst2->objName, x1 + 2, y1 + 10, 91);

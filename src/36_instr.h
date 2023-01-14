@@ -110,8 +110,8 @@ virtual Instrument*             clone();
             void                handleMouseWheel(InputEvent& ev);
             void                handleMouseDrag(InputEvent& ev);
             void                handleChildEvent(Gobj * obj, InputEvent& ev);
-            void                handleMouseEnter(InputEvent & ev)  { redraw(); }
-            void                handleMouseLeave(InputEvent & ev)  { redraw(); }
+//            void                handleMouseEnter(InputEvent & ev)  { redraw(); }
+//            void                handleMouseLeave(InputEvent & ev)  { redraw(); }
             void                drawSelf(Graphics& g);
             void                drawOverChildren(Graphics & g);
             void                forceStop();

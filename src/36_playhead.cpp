@@ -161,9 +161,9 @@ void Playhead::drawSelf(Graphics & g)
     gLineHorizontal(g, y1 + 5, x - 1, x + 2);
     gLineHorizontal(g, y1 + 2, x, x + 1);
 
-    gFillRect(g, x - 3, y1, x + 3, y1 + 3);
+    fillx(g, 0, 0, 7, 4);
+    fillx(g, 1, 1, 6, 4);
 
-    gFillRect(g, x - 2, y1 + 1, x + 2, y1 + 3);
     gLineHorizontal(g, y1 + 4, x - 1, x + 2);
     gLineVertical(g, x, y1 + 4, y1 + 6);
 

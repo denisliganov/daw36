@@ -153,7 +153,7 @@ void Scroller::drawSelf(Graphics & g)
 
     setc(g, .12f);
 
-    drawRect(0, 0, width, height);
+    rectx(g, 0, 0, width, height);
 
     if(active)
     {
@@ -161,22 +161,22 @@ void Scroller::drawSelf(Graphics & g)
 
         if(vertical)
         {
-            gFillRect(g, x1 + 3, y1 + 1 + offsetPix, x1 + width - 4, y1 + 1 + offsetPix + barPixLen);
+            fillx(g, 3, 1 + offsetPix, width - 4, 1 + offsetPix + barPixLen);
         }
         else
         {
-            gFillRect(g, x1 + 1 + offsetPix, y1 + 1, x1 + 1 + offsetPix + barPixLen, y2 - 1);
+            fillx(g, 1 + offsetPix, y1 + 1, 1 + offsetPix + barPixLen, height - 2);
         }
 
         setc(g, 0.4f);
 
         if(vertical)
         {
-            gDrawRect(g, x1 + 3, y1 + 1 + offsetPix, x1 + width - 4, y1 + 1 + offsetPix + barPixLen);
+            rectx(g, 3, 1 + offsetPix, width - 4, 1 + offsetPix + barPixLen);
         }
         else
         {
-            gDrawRect(g, x1 + 1 + offsetPix, y1 + 2, x1 + 1 + offsetPix + barPixLen, y2 - 2);
+            rectx(g, 1 + offsetPix, 2, 1 + offsetPix + barPixLen, height - 3);
 
             if(this == MCtrllPanel->gridScroller)
             {

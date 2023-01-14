@@ -108,7 +108,7 @@ void DropBox::drawSelf(Graphics& g)
         fill(g, 0.3f);
     }
 
-    fill(g, 0.2f);
+    rect(g, 0.2f);
 
     setc(g, 1.f);
 

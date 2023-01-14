@@ -128,6 +128,7 @@ protected:
             void    handleMouseWheel(InputEvent& ev);
             void    handleNumDrag(int dragCount);
             void    drawSelf(Graphics& g);
+            void    redraw();
 
 public:
 

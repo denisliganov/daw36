@@ -542,10 +542,20 @@ void Gobj::rect(Graphics& g, uint32 clr, float b, float a)
     gDrawRect(g, x1, y1, x2, y2);
 }
 
+void Gobj::rectx(Graphics& g, int x, int y, int w, int h) 
+{
+    gDrawRect(*gr, x1 + x, y1 + y, x1 + x + w - 1, y1 + y + h - 1);
+}
+
 void Gobj::fill(Graphics& g, uint32 clr) 
 {
     gSetColor(g, clr);
     gFillRect(g, x1, y1, x2, y2);
+}
+
+void Gobj::fillx(Graphics& g,int x, int y, int w, int h)
+{
+    gFillRect(*gr, x1 + x, y1 + y, x1 + x + w - 1, y1 + y + h - 1);
 }
 
 void Gobj::rect(Graphics& g, uint32 clr) 
@@ -562,16 +572,6 @@ void Gobj::lineH(Graphics& g, int ly,int lx1,int lx2)
 void Gobj::lineV(Graphics& g, int lx,int ly1,int ly2)
 {
     gLineVertical(g, x1 + lx, y1 + ly1, y1 + ly2);
-}
-
-void Gobj::drawRect(int x, int y, int w, int h)
-{
-    gDrawRect(*gr, x1 + x, y1 + y, x1 + x + w - 1, y1 + y + h - 1);
-}
-
-void Gobj::fillRect(int x, int y, int w, int h)
-{
-    gFillRect(*gr, x1 + x, y1 + y, x1 + x + w - 1, y1 + y + h - 1);
 }
 
 void Gobj::line(int lx,int ly,int lx2,int ly2)

@@ -205,11 +205,7 @@ void Note::drawOnGrid(Graphics& g, Grid* grid)
 
             setc(g, .8f, .4f);
             lineH(g, 0, 0, width);
-            //gDrawRect(g, x1, y1, x1, y2);
         }
-
-        //instr->setMyColor(g, .9f);
-        //gFillRect(g, x1, y1, x1, y2);
 
         setc(g, .99f, .7f);
         int th = gGetTextHeight(FontVis);

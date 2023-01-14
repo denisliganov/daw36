@@ -303,7 +303,7 @@ ParamBox::ParamBox(Parameter* param)
     th = gGetTextHeight(FontSmall);
 
     tw1 = gGetTextWidth(FontSmall, param->getName());
-    tw2 = gGetTextWidth(FontInst, param->getMaxValString());
+    tw2 = gGetTextWidth(FontSmall, param->getMaxValString());
     tw3 = gGetTextWidth(FontSmall, param->getUnitStr());
 
     height = th + 2;
@@ -343,42 +343,77 @@ void ParamBox::handleMouseWheel(InputEvent & ev)
     redraw();
 }
 
+void ParamBox::redraw()
+{
+    int a = 1;
+    Gobj::redraw();
+}
+
 void ParamBox::drawSelf(Graphics& g)
 {
-    //gSetMonoColor(g, 0.16f);
-    //gFillRect(g, x1, y1, x2, y2);
     fill(g, 0.16f);
-
-    //gSetMonoColor(g, 0.4f);
-    //gDrawRect(g, x1, y1, x2, y2);
 
     int txy = y2 - height/2;
 
     setc(g, 0.7f);
-    gTextFit(g, FontSmall, param->getName(), x1 + 2, txy + 3, width/2);
+
+    gTextFit(g, FontSmall, param->getName(), x1 + 2, txy + 2, width/2);
 
     std::string valstr = param->getValString();
-    int offs = 0;
+
+    int sub = 0;
+
     if(valstr.data()[0] == '-' || 
        valstr.data()[0] == '+' ||
        valstr.data()[0] == '<')
-        offs = gGetTextWidth(FontInst, valstr.substr(0, 1));
+    {
+        int poffs = gGetTextWidth(FontSmall, valstr.substr(0, 1));
+        gText(g, FontSmall, param->getValString().substr(0, 1), x1 + width/2 - poffs, txy + 2);
+        sub = 1;
+    }
 
     setc(g, .9f);
+
     //gText(g, FontSmall, param->getSignStr(), x1 + tx2, txy);
     //gText(g, FontVis, param->getValString(), x1 + tx2 - offs, txy - 3);
-    gText(g, FontInst, param->getValString(), x1 + width/2 - offs, txy + 3);
+    gText(g, FontSmall, param->getValString().substr(sub), x1 + width/2, txy + 2);
 
     setc(g, .7f);
+
     //gText(g, FontSmall, param->getUnitStr(), x1 + tx3, txy - 2);
     gText(g, FontSmall, param->getUnitStr(), x2 - tw3 - 1, txy + 3);
 
-    float val = param->getNormalizedValue();
-    setc(g, 0xff10BF00);
-    gFillRectWH(g, x1, y2, 1 + int((width - 1)*val), 1);
-    setc(g, 0xff086000);
-    gFillRectWH(g, x1, y2 - 1, 1 + int((width - 1)*val), 1);
-}
+    float offs = param->getOffset();
+    float range = param->getRange();
+    float val = param->getValue();
 
+    int xoffs = int(float(width)*((0.f - offs)/range));
+    int xval = int(float(width)*(val - offs)/range);
+
+    int xstart = xoffs;
+    int xend = xval;
+
+    if(xval < xoffs)
+    {
+        xstart = xval;
+        xend = xoffs;
+    }
+
+    int w = xend - xstart;
+
+    //float nval = param->getNormalizedValue();
+    //int w = 1 + int((width - 1)*nval);
+
+    setc(g, 0xffC0C000);
+    fillx(g, xoffs, height - 3, 1, 3);
+
+    fillx(g, xstart, height - 1, w, 1);
+
+    setc(g, 0xff606000);
+    fillx(g, xstart, height - 2, w, 1);
+
+    setc(g, 0xff303000);
+    fillx(g, xstart, height - 3, w, 1);
+}
 
 
