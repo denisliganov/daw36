@@ -47,8 +47,7 @@ void TextCursor::updPos()
 
 void TextCursor::drawSelf(Graphics& g)
 {
-    gSetMonoColor(g, 1);
-    gFillRect(g, x1, y1, x1, y2);
+    fill(g, 1.f);
 }
 
 float TextCursor::getTick()

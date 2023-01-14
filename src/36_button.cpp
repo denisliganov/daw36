@@ -145,29 +145,20 @@ void Button36::drawButtonBase(Graphics& g)
 {
     if (!pressed)
     {
-        gSetMonoColor(g, 0.25f);
-        gFillRect(g, x1 + 1, y1 + 1, x2 - 1, y2 - 1);
-
-        gSetMonoColor(g, 0.1f);
-        gDrawRect(g, x1, y1, x2, y2);
+        fill(g, 0.25f);
+        rect(g, 0.1f);
     }
     else
     {
         if(isLedType)
         {
-            gSetMonoColor(g, .6f);
-            gFillRect(g, x1, y1, x2, y2);
-
-            gSetMonoColor(g, .7f);
-            gDrawRect(g, x1, y1, x2, y2);
+            fill(g, 0.6f);
+            rect(g, 0.7f);
         }
         else
         {
-            gSetColor2(g, 0xffFFFF40, .6f);
-            gFillRect(g, x1, y1, x2, y2);
-
-            gSetColor2(g, 0xffFFFF40, .7f);
-            gDrawRect(g, x1, y1, x2, y2);
+            fill(g, 0xffFFFF40, .6f);
+            rect(g, 0xffFFFF40, .7f);
         }
     }
 }
@@ -179,20 +170,20 @@ void Button36::drawSelf(Graphics& g)
     if (pressed)
     {
         if (isLedType)
-            gSetMonoColor(g, 1.f);
+            setc(g, 1.f);
         else
-            gSetColor2(g, 0xffFFFF40, 1.f);
+            setc(g, 0xffFFFF40, 1.f);
      }
     else
     {
-        gSetMonoColor(g, .7f);
+        setc(g, .7f);
     }
 
     DrawButtonGlyph(g, this);
 
     if(objName.size() > 0)
     {
-        gSetMonoColor(g, .9f);
+        setc(g, .9f);
 
         gText(g, FontInst, objName, x1 + width / 2 - gGetTextWidth(FontInst, objName) / 2, y1 + height / 2 + gGetTextHeight(FontInst)/2 - 1);
     }

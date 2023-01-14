@@ -36,7 +36,7 @@ EffParamObject::EffParamObject(Eff* eff)
 
 void EffParamObject::drawSelf(Graphics& g)
 {
-    fillWithMonoColor(0.35f);
+    fill(g, 0.35f);
 }
 
 void EffParamObject::handleChildEvent(Gobj * obj,InputEvent & ev)

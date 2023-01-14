@@ -45,11 +45,9 @@ protected:
             g.saveState();
             //g.reduceClipRegion(x1, y1, width, height);
 
-            gSetMonoColor(g, 1, .1f);
-            gFillRect(g, x1, y1, x2, y2);
+            fill(g, 1.f, .1f);
 
-            gSetMonoColor(g, 1, .3f);
-            gDrawRect(g, x1, y1, x2, y2);
+            rect(g, 1.f, .3f);
 
             g.restoreState();
         }
@@ -78,9 +76,7 @@ friend  Grid;
             //gSetMonoColor(g, 1, 0.7f);
             //gSetColor2(g, 0xffFFC030, 1, .5f);
 
-            gSetMonoColor(g, 1, .09f);
-
-            gFillRect(g, x1, y1, x2, y2);
+            fill(g, 1.f, .09f);
 
             g.restoreState();
         }
@@ -184,13 +180,11 @@ public:
                     //gLineVertical(g, x1, y1, y2);
                     //gLineHorizontal(g, y2, x1, x2);
 
-                    currNote->getInstr()->setMyColor(g, 1, -1, .2f);
+                    fill(g, 1.f, .2f);
                     //gTriangle(g, x1, y1 + 1, x2, y2, x1, y2);
-                    gFillRect(g, x1, y1, x2, y2);
 
-                    currNote->getInstr()->setMyColor(g, .9f);
                     //gDrawTriangle(g, x1, y1 + 1, x2, y2, x1, y2);
-                    gDrawRect(g, x1, y1, x2, y2);
+                    rect(g, .9f);
 
                     //gSetMonoColor(g, 1, .1f);
                     //gTriangle(g, x1, y2 - height, x2, y2, x1, y2);

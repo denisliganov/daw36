@@ -199,40 +199,28 @@ void Note::drawOnGrid(Graphics& g, Grid* grid)
 {
     if (grid->getDisplayMode() == GridDisplayMode_Bars)
     {
-        if (0)
+        //if(x2 > x1)
         {
-            gFillRect(g, x1, y1, x2, y2);
+            fill(g, .8f, .25f);
 
-            gDrawRect(g, x1, y1, x2, y2);
+            setc(g, .8f, .4f);
+            lineH(g, 0, 0, width);
+            //gDrawRect(g, x1, y1, x1, y2);
         }
-        else
-        {
-            //if(x2 > x1)
-            {
-                gSetMonoColor(g, .8f, .25f);
-                gFillRect(g, x1, y1, x2, y2);
 
-                gSetMonoColor(g, .8f, .4f);
-                gDrawRect(g, x1, y1, x2, y1);
-                //gDrawRect(g, x1, y1, x1, y2);
-            }
+        //instr->setMyColor(g, .9f);
+        //gFillRect(g, x1, y1, x1, y2);
 
-            //instr->setMyColor(g, .9f);
-            //gFillRect(g, x1, y1, x1, y2);
-
-            gSetMonoColor(g, .99f, .7f);
-            int th = gGetTextHeight(FontVis);
-            int yt = th >= height ? y2 : y2 - height/2 + th/2;
-            gText(g,FontVis, instr->getAlias(), x1, yt);
-        }
+        setc(g, .99f, .7f);
+        int th = gGetTextHeight(FontVis);
+        int yt = th >= height ? y2 : y2 - height/2 + th/2;
+        gText(g,FontVis, instr->getAlias(), x1, yt);
 
         if(isSelected())
         {
-            instr->setMyColor(g, 1, -1, .2f);
-            gFillRect(g, x1, y1, x2, y2);
+            fill(g, 1.f, .2f);
 
-            instr->setMyColor(g, 1, -1, .9f);
-            gDrawRect(g, x1, y1, x2, y2);
+            rect(g, 1.f, .9f);
         }
     }
     else if (grid->getDisplayMode() == GridDisplayMode_Volumes || grid->getDisplayMode() == GridDisplayMode_Pans)

@@ -101,20 +101,16 @@ void DropBox::drawSelf(Graphics& g)
 {
     if (mouseHovering)
     {
-        gSetMonoColor(g, 0.6f);
+        fill(g, 0.6f);
     }
     else
     {
-        gSetMonoColor(g, 0.3f);
+        fill(g, 0.3f);
     }
 
-    gFillRect(g, x1, y1, x2, y2);
+    fill(g, 0.2f);
 
-    gSetMonoColor(g, 0.2f);
-
-    gDrawRect(g, x1, y1, x2, y2);
-
-    gSetMonoColor(g, 1);
+    setc(g, 1.f);
 
     gText(g, fontId, objName, x1 + width/2 - gGetTextWidth(fontId, objName)/2, y2 - height/2 + gGetTextHeight(fontId)/2 - 1);
 }

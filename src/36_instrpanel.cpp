@@ -838,12 +838,12 @@ void InstrPanel::mapObjects()
 
 void InstrPanel::drawSelf(Graphics& g)
 {
-    fillWithMonoColor(0.1f);
+    fill(g, 0.1f);
 
-    setMonoColor(.25f);
+    setc(g, .25f);
     fillRect(0, 0, width, MainLineHeight - 2);
 
-    gSetMonoColor(g, 0.1f);
+    setc(g, 0.1f);
     gLineHorizontal(g, y1 + MainLineHeight - 2, x1, x2 + 1);
 
     gPanelRect(g, 0, y2 - BottomPadHeight + 1, x2, y2);

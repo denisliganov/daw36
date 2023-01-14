@@ -19,10 +19,9 @@
 
 void NumBox::drawSelf(Graphics& g)
 {
-    fillWithMonoColor(.2f);
+    fill(g, .2f);
 
-    gSetMonoColor(g, 0.22f);
-    gDrawRect(g, x1, y1, x2, y2);
+    rect(g, 0.22f);
 }
 
 void NumBox::handleMouseDown(InputEvent& ev)
@@ -87,7 +86,7 @@ void BpmBox::drawSelf(Graphics& g)
 {
     NumBox::drawSelf(g);
 
-    gSetMonoColor(g, 1);
+    setc(g, 1.f);
 
     std::string str;
 
@@ -156,7 +155,7 @@ void MeterBox::drawSelf(Graphics& g)
 {
     NumBox::drawSelf(g);
 
-    gSetMonoColor(g, 1);
+    setc(g, 1.f);
 
     std::string str = String::formatted(T("%d / %d"), tpbVal, bpbVal);
 
@@ -238,7 +237,7 @@ void OctaveBox::drawSelf(Graphics& g)
 {
     NumBox::drawSelf(g);
 
-    gSetMonoColor(g, 1);
+    setc(g, 1.f);
 
     std::string str = String::formatted(T("%d"), value);
 
@@ -256,13 +255,11 @@ TimeScreen::TimeScreen()
 
 void TimeScreen::drawSelf(Graphics& g)
 {
-    gSetMonoColor(g, 0.44f);
-    gFillRect(g, x1, y1, x2, y2);
+    fill(g, 0.44f);
 
-    gSetMonoColor(g, 0.22f);
-    gDrawRect(g, x1, y1, x2, y2);
+    rect(g, 0.22f);
 
-    gSetMonoColor(g, 1);
+    setc(g, 1.f);
 
     std::string str = String::formatted(T("%2d:%02d"), MTransp->getCurrMin(), MTransp->getCurrSec());
 
@@ -357,7 +354,7 @@ void ParamBox::drawSelf(Graphics& g)
 
     int txy = y2 - height/2;
 
-    gSetMonoColor(g, 0.7f);
+    setc(g, 0.7f);
     gTextFit(g, FontSmall, param->getName(), x1 + 2, txy + 3, width/2);
 
     std::string valstr = param->getValString();
@@ -367,19 +364,19 @@ void ParamBox::drawSelf(Graphics& g)
        valstr.data()[0] == '<')
         offs = gGetTextWidth(FontInst, valstr.substr(0, 1));
 
-    gSetMonoColor(g, .9f);
+    setc(g, .9f);
     //gText(g, FontSmall, param->getSignStr(), x1 + tx2, txy);
     //gText(g, FontVis, param->getValString(), x1 + tx2 - offs, txy - 3);
     gText(g, FontInst, param->getValString(), x1 + width/2 - offs, txy + 3);
 
-    gSetMonoColor(g, .7f);
+    setc(g, .7f);
     //gText(g, FontSmall, param->getUnitStr(), x1 + tx3, txy - 2);
     gText(g, FontSmall, param->getUnitStr(), x2 - tw3 - 1, txy + 3);
 
     float val = param->getNormalizedValue();
-    gSetColor(g, 0xff10BF00);
+    setc(g, 0xff10BF00);
     gFillRectWH(g, x1, y2, 1 + int((width - 1)*val), 1);
-    gSetColor(g, 0xff086000);
+    setc(g, 0xff086000);
     gFillRectWH(g, x1, y2 - 1, 1 + int((width - 1)*val), 1);
 }
 

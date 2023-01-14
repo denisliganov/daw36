@@ -69,16 +69,14 @@ public:
             {
                 if(mouseHovering)
                 {
-                    gSetMonoColor(g, 0.6f);
+                    fill(g, 0.6f);
                 }
                 else
                 {
-                    gSetMonoColor(g, 0.5f);
+                    fill(g, 0.5f);
                 }
 
-                gFillRect(g, x1, y1, x2, y2);
-
-                gSetMonoColor(g, 1.f);
+                setc(g, 1.f);
 
                 gText(g, fontId, itemstr, x1 + MenuItemIndent, y1 + height/2 + th/2 - 2);
             }

@@ -148,15 +148,15 @@ void Browser::handleChildEvent(Gobj * obj, InputEvent& ev)
 
 void Browser::drawSelf(Graphics& g)
 {
-    gSetMonoColor(g, 0.2f);
+    setc(g, 0.2f);
 
     gFillRect(g, x1, y1 + MainLineHeight + 8, x2, y2);
 
-    gSetMonoColor(g, 0.25f);
+    setc(g, 0.25f);
 
     gFillRect(g, x1, y1, x2, y1 + MainLineHeight - 2);
 
-    gSetMonoColor(g, 0.28f);
+    setc(g, 0.28f);
 
     g.drawHorizontalLine(y1, (float)x1, (float)x2);
 

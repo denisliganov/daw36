@@ -50,7 +50,7 @@ MainEdit::MainEdit()
 
 void MainEdit::drawSelf(Graphics& g)
 {
-    fillWithMonoColor(0.f);
+    fill(g, 0.f);
 
     // Gap on the right
 

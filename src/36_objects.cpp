@@ -564,17 +564,6 @@ void Gobj::lineV(Graphics& g, int lx,int ly1,int ly2)
     gLineVertical(g, x1 + lx, y1 + ly1, y1 + ly2);
 }
 
-void Gobj::fillWithMonoColor(float mono_color)
-{
-    gSetMonoColor(*gr, mono_color);
-    gFillRect(*gr, x1, y1, x2, y2);
-}
-
-void Gobj::setMonoColor(float mono_color)
-{
-    gSetMonoColor(*gr, mono_color);
-}
-
 void Gobj::drawRect(int x, int y, int w, int h)
 {
     gDrawRect(*gr, x1 + x, y1 + y, x1 + x + w - 1, y1 + y + h - 1);

@@ -184,8 +184,6 @@ public:
     virtual void                drawOverChildren(Graphics& g) {};
 
             // Drawing methods using relative coords
-            void                fillWithMonoColor(float mono_color);
-            void                setMonoColor(float mono_color);
             void                fill(Graphics& g, float clr, float alpha=1);
             void                rect(Graphics& g, float clr, float alpha=1);
             void                fill(Graphics& g, uint32 clr, float b=1, float a=1);
@@ -195,7 +193,7 @@ public:
             void                lineH(Graphics& g, int ly, int lx1, int lx2);
             void                lineV(Graphics& g, int lx, int ly1, int ly2);
             void                setc(Graphics& g, float c, float a=1.f);
-            void                setc(Graphics& g, uint32 clr, float b, float a);
+            void                setc(Graphics& g, uint32 clr, float b, float);
             void                setc(Graphics& g, uint32 clr);
 
             void                drawRect(int x, int y, int w, int h);

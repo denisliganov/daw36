@@ -38,19 +38,9 @@ protected:
         {
             Instrument* instr = (Instrument*)parent;
 
-           // if(pressed)
-           //     gSetMonoColor(g, 0.7f);
-            //else
-                gSetMonoColor(g, 0.45f);
+           fill(g, 0.45f);
 
-            gFillRect(g, x1 + 1, y1 + 1, x2 - 1, y2 - 1);
-
-           // if(pressed)
-           //     gSetMonoColor(g, 0.9f);
-           // else
-                gSetMonoColor(g, 0.35f);
-
-            gDrawRect(g, x1, y1, x2, y2);
+           rect(g, 0.35f);
         }
 
         void handleMouseEnter(InputEvent & ev)  { redraw(); }
@@ -114,7 +104,7 @@ void Eff::drawSelf(Graphics& g)
 
     int th = gGetTextHeight(FontBold);
     setc(g, 1.f);
-    gTextFit(g, FontBold, objName, x1 + 3, y1 + th + 1, width - 2);
+    gTextFit(g, FontSmall, objName, x1 + 3, y2, width - 2);
 }
 
 Eff* Eff::makeClone(Eff* eff)
@@ -270,7 +260,14 @@ void Eff::handleChildEvent(Gobj * obj, InputEvent& ev)
 
 SubWindow* Eff::createWindow()
 {
-    return window->addWindow(new EffParamObject(this));
+    SubWindow* win =  window->addWindow(new EffParamObject(this));
+
+    //int xb = window->getLastEvent().mouseX + 20;
+    //int yb = window->getLastEvent().mouseY - guiWindow->getHeight()/2;
+
+    win->setBounds(window->getLastEvent().mouseX + 40, win->getY(), win->getWidth(), win->getHeight());
+
+    return win;
 }
 
 

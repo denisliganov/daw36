@@ -98,7 +98,7 @@ void ChanVU::drawSelf(Graphics & g)
         int right = (int)(height*getR());
         int both = (int)(height*((getL() + getR())/2.f));
 
-        fillWithMonoColor(.4f);
+        fill(g, .4f);
 
         if(i)
         {
@@ -192,11 +192,9 @@ void InstrVU::drawSelf(Graphics & g)
     int left = (int)(height*getL());
     int right = (int)(height*getR());
 
-    i->setMyColor(g, .2f);
+    fill(g, .2f);
 
-    gFillRect(g, x1, y1, x2, y2);
-
-    gSetColor2(g, 0xffFFB040, 1);
+    setc(g, 0xffFFB040, 1);
 
     int yc = 0;
 

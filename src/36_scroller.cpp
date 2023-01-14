@@ -149,15 +149,15 @@ void Scroller::updateLimits(float full_span, float visible_span, float offs)
 
 void Scroller::drawSelf(Graphics & g)
 {
-    fillWithMonoColor(.22f);
+    fill(g, .22f);
 
-    setMonoColor(.12f);
+    setc(g, .12f);
 
     drawRect(0, 0, width, height);
 
     if(active)
     {
-        gSetMonoColor(g, 0.35f);
+        setc(g, 0.35f);
 
         if(vertical)
         {
@@ -168,7 +168,7 @@ void Scroller::drawSelf(Graphics & g)
             gFillRect(g, x1 + 1 + offsetPix, y1 + 1, x1 + 1 + offsetPix + barPixLen, y2 - 1);
         }
 
-        gSetMonoColor(g, 0.4f);
+        setc(g, 0.4f);
 
         if(vertical)
         {

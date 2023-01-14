@@ -120,11 +120,9 @@ void Slider36::drawSelf(Graphics& g)
     Instrument* instr = dynamic_cast<Instrument*>(parent);
     MixChannel* mc = dynamic_cast<MixChannel*>(parent);
 
-    fillWithMonoColor(.4f);
+    fill(g, .4f);
 
-    setMonoColor(.32f);
-
-    drawRect(0, 0, width, height);
+    rect(g, .32f);
 
     if (vertical)
     {
@@ -148,10 +146,7 @@ void Slider36::drawSelf(Graphics& g)
             }
         }
 
-        if(instr)
-            instr->setMyColor(g, .58f);
-        else
-            setMonoColor(.4f);
+        setc(g, .4f);
 
         fillRect(1, ysl - y1, width - 2, ysl2 - y1 - 1);
 
@@ -159,14 +154,7 @@ void Slider36::drawSelf(Graphics& g)
 
         if (abs(param->offset) > (abs(param->range) / 10.f))
         {
-            if(instr)
-            {
-                instr->setMyColor(g, 1);
-            }
-            else
-            {
-                setMonoColor(.8f);
-            }
+            setc(g, .8f);
         }
     }
     else
@@ -185,17 +173,11 @@ void Slider36::drawSelf(Graphics& g)
 
         if (xwidth > 0)
         {
-            if(instr)
-                instr->setMyColor(g, .5f);
-            else
-                setMonoColor(.5f);
+            setc(g, .5f);
 
             fillRect(xfrom, 0, xwidth, height);
 
-            if(instr)
-                instr->setMyColor(g, .7f);
-            else
-                setMonoColor(.7f);
+            setc(g, .7f);
 
             drawRect(xfrom, 0, xwidth, height);
         }

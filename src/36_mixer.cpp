@@ -226,15 +226,9 @@ void MixChannel::drawSelf(Graphics& g)
 {
     int baseheight = MixChannelPadHeight;
 
-    //gSetMonoColor(g, 0.2f);
-    //gFillRect(g, x1, y1, x2, y2);
+    fill(g, .25f);
 
-    //if (instr != NULL && MInstrPanel->getCurrInstr() == instr)
-    //    fillWithMonoColor(.3f);
-    //else
-        fillWithMonoColor(.25f);
-
-    setMonoColor(1);
+    setc(g, 1.f);
 
     gTextFit(g, FontSmall, instr->getObjName(), 0, 5, width);
 
@@ -1203,7 +1197,7 @@ void Mixer::mapObjects()
 
 void Mixer::drawSelf(Graphics& g)
 {
-    fillWithMonoColor(.1f);
+    fill(g, .1f);
 /*
     gSetMonoColor(g, 0.35f);
     gLineHorizontal(g, y1, x1, x2);

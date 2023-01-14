@@ -64,18 +64,11 @@ void AlertBox::addButton( std::string buttext )
 
 void AlertBox::drawSelf(Graphics & g)
 {
-    gSetMonoColor(g, 0.5f);
-    //gSetColor2(g, MenuColor, .5f);
+    fill(g, .5f);
 
-    gFillRect(g, x1, y1, x2, y2);
+    rect(g, 0.55f);
 
-    gSetMonoColor(g, 0.55f);
-    //gSetColor2(g, MenuColor, .55f);
-
-    gDrawRect(g, x1, y1, x2, y2);
-
-    gSetMonoColor(g, 0.99f);
-    //gSetColor2(g, MenuColor, .99f);
+    setc(g, 0.99f);
 
     gText(g, fontId, message, width/2 - gGetTextWidth(fontId, message)/2, outerGap);
 }

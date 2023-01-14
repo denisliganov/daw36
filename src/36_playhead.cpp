@@ -147,7 +147,7 @@ void Playhead::drawSelf(Graphics & g)
     g.saveState();
     g.reduceClipRegion(dx1, dy1, dwidth, dheight);
 
-    gSetColor2(g, 0xffFFB040, 1);
+    setc(g, 0xffFFB040);
 
     //g.setColour(Colour(0xffB08050));
     //g.setColour(Colour(0xffC09050));
@@ -167,7 +167,7 @@ void Playhead::drawSelf(Graphics & g)
     gLineHorizontal(g, y1 + 4, x - 1, x + 2);
     gLineVertical(g, x, y1 + 4, y1 + 6);
 
-    gSetColor2(g, 0xffFFB040, 1, 0.6f);
+    setc(g, 0xffFFB040, 1, 0.6f);
 
     gLineVertical(g, x, y1 + 6, y2);
 

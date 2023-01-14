@@ -224,9 +224,9 @@ void ControlPanel::mapObjects()
 
 void ControlPanel::drawSelf(Graphics& g)
 {
-    fillWithMonoColor(0.35f);
+    fill(g, 0.35f);
 
-    setMonoColor(.25f);
+    setc(g, .25f);
 
     lineH(g, 0, 0, width - 1);
 

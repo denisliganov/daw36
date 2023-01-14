@@ -137,21 +137,21 @@ void DragAndDrop::drawSelf(Graphics & g)
 
                 int th = gGetTextHeight(FontSmall);
 
-                i->setMyColor(g, .6f);
+                setc(g, .6f);
 
                 gFillRect(g, dx1, dy1, dx2, dy2);
 
-                i->setMyColor(g, 1);
+                setc(g, 1.f);
 
                 gText(g, FontSmall, i->getObjName(), dx1, dy2 - 2);
             }
             else
             {
-                gSetMonoColor(g, 0.5f);
+                setc(g, 0.5f);
 
                 gFillRect(g, dx1, dy1, dx2, dy2);
 
-                gSetMonoColor(g, 0.99f);
+                setc(g, 0.99f);
 
                 gText(g, FontSmall, dragObj->getObjName(), dx1, dy2 - 2);
             }

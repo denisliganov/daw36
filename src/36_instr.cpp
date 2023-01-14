@@ -142,11 +142,11 @@ protected:
             {
                 //instr->setDrawColor(g, 0.6f);
                 //gSetMonoColor(g, .6f);
-                gSetMonoColor(g, .8f);
+                setc(g, 1.f);
             }
             else
             {
-                gSetMonoColor(g, .15f);
+                setc(g, .15f);
             }
 
             int yc = y1;
@@ -293,12 +293,14 @@ void Instrument::mapObjects()
 
 void Instrument::drawSelf(Graphics& g)
 {
-    fillWithMonoColor(.3f);
+    Gobj::fill(g, .3f);
 
-    setMonoColor(.1f);
+    Gobj::setc(g, .1f);
+
     gTextFit(g, FontSmall, objName, x1 + 19, y2, width - 26);
 
-    setMonoColor(.7f);
+    setc(g, .7f);
+
     gTextFit(g, FontSmall, objName, x1 + 20, y2 - 1, width - 27);
 
 //    lineH(0, 0, width - 1);

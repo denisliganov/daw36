@@ -36,9 +36,7 @@ LanePanel::LanePanel(Grid* grid)
 
 void LanePanel::drawSelf(Graphics& g)
 {
-    gSetMonoColor(g, 0.32f);
-
-    gFillRect(g, x1, y1, x2, y2);
+    fill(g, 0.32f);
 
     //gFillRect(g, x2 - LeftGap + 1, y1 + 2, x2, y2);
 

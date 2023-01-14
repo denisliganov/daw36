@@ -33,11 +33,11 @@ void AuxKeys::drawVerticalKey(Graphics& g, bool vert, int coord1, int coord2, in
     {
         // black key
 
-        gSetMonoColor(g, .2f);
+        setc(g, .2f);
 
         if(pressed)
         {
-            gSetMonoColor(g, .2f);
+            setc(g, .2f);
         }
 
         if(vert)
@@ -57,10 +57,10 @@ void AuxKeys::drawVerticalKey(Graphics& g, bool vert, int coord1, int coord2, in
     {
         // white key
 
-        gSetMonoColor(g, .95f);
+        setc(g, .95f);
 
         if(pressed)
-            gSetMonoColor(g, .8f);
+            setc(g, .8f);
 
         if((key == 0 || key == 2 || key == 5 || key == 7 || key == 9))
         {
@@ -151,9 +151,7 @@ void AuxKeys::drawVerticalKeys(Graphics& g, int x, int y, int w, int h)
 
 void AuxKeys::drawHorizontalKeys(Graphics& g, int x, int y, int w, int h)
 {
-    gSetMonoColor(g, .8f);
-
-    gFillRect(g, x, y, x + w - 1, y + h - 1);
+    fill(g, .8f);
 
     g.saveState();
 
@@ -182,11 +180,11 @@ void AuxKeys::drawHorizontalKeys(Graphics& g, int x, int y, int w, int h)
         {
             if(key == playNote)
             {
-                gSetMonoColor(g, .91f);
+                setc(g, .91f);
             }
             else
             {
-                gSetMonoColor(g, .4f);
+                setc(g, .4f);
             }
 
             gFillRect(g, xKey, y, xKey + bkKeyWidth, int(y + h*0.618f - 1));
@@ -201,11 +199,11 @@ void AuxKeys::drawHorizontalKeys(Graphics& g, int x, int y, int w, int h)
 
                 if(key == 60)
                 {
-                    gSetMonoColor(g, .95f);
+                    setc(g, .95f);
                 }
                 else
                 {
-                    gSetMonoColor(g, .81f);
+                    setc(g, .81f);
                 }
 
                 gFillRect(g, xCoord + 1, y, xCoord + keyWidth - 1, y + h - 1);
@@ -236,14 +234,15 @@ void AuxKeys::drawHorizontalKeys(Graphics& g, int x, int y, int w, int h)
 
             if(key == playNote)
             {
-                gSetMonoColor(g, .91f);
+                setc(g, .91f);
 
                 gFillRect(g, xCoord + 1, y, xCoord + keyWidth - 1, y + h - 1);
             }
 
             if(pianoKey == 0)
             {
-                gSetMonoColor(g, .4f);
+                setc(g, .4f);
+
                 gNoteString(g, xCoord + 5, y + h - 4, key, false);
             }
 
@@ -258,7 +257,7 @@ void AuxKeys::drawHorizontalKeys(Graphics& g, int x, int y, int w, int h)
         }
     }
 
-    gSetMonoColor(g, .3f);
+    setc(g, .3f);
 
     gFillRect(g, xCoord, y, x + w - 1, y + h - 1);
 
