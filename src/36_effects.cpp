@@ -1091,6 +1091,7 @@ CWahWah::CWahWah()
 
     addParamWithControl(new Parameter("MODFREQ", 1.25f, 0.1f, 4.9f, Units_Hz1));
     addParamWithControl(new Parameter("DEPTH", 48.f, 2.f, 46.f, Units_Semitones));
+
     //addParamWithControl(frequency = new Parameter("FREQ.", Param_Freq, 0.5f, 0.f, 1.f, Units_Hz));
     //addParamWithControl(drywet = new Parameter("DRY/WET", 0.75f, 0.0f, 1.f, Units_DryWet));
 

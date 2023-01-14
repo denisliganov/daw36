@@ -387,8 +387,10 @@ void ParamBox::drawSelf(Graphics& g)
     float range = param->getRange();
     float val = param->getValue();
 
-    int xoffs = int(float(width)*((0.f - offs)/range));
-    int xval = int(float(width)*(val - offs)/range);
+    float defval = (offs <= 0 ? 0 : offs);
+
+    int xoffs = int(float(width-1)*((defval - offs)/range));
+    int xval = int(float(width-1)*((val - offs)/range));
 
     int xstart = xoffs;
     int xend = xval;
@@ -404,16 +406,20 @@ void ParamBox::drawSelf(Graphics& g)
     //float nval = param->getNormalizedValue();
     //int w = 1 + int((width - 1)*nval);
 
-    setc(g, 0xffC0C000);
-    fillx(g, xoffs, height - 3, 1, 3);
 
+    //setc(g, 0xff303000);
+    //fillx(g, xstart, height - 1, w, 1);
+
+    setc(g, 0xffB0B000);
+    fillx(g, xstart, height - 2, w, 1);
+    setc(g, 0xff606000);
     fillx(g, xstart, height - 1, w, 1);
 
-    setc(g, 0xff606000);
-    fillx(g, xstart, height - 2, w, 1);
+    setc(g, 0xffA0A000);
+    fillx(g, xoffs, height - 2, 1, 3);
 
-    setc(g, 0xff303000);
-    fillx(g, xstart, height - 3, w, 1);
+    setc(g, 0xffFFFF00);
+    fillx(g, xval, height - 2, 1, 3);
 }
 
 

@@ -504,6 +504,8 @@ SubWindow::SubWindow(bool title_bar)
 
     if(title_bar)
     {
+        //setTitleBarButtonsRequired(allButtons, false);
+
         buttonListener.owner = this;
 
         Component::addAndMakeVisible(closeButton = new WinButton("close"));
@@ -520,7 +522,7 @@ SubWindow::SubWindow(bool title_bar)
 
     setDropShadowEnabled(false);
 
-    setResizable(false, false);
+    setResizable(true, true);
 
     setVisibility(false);
 
