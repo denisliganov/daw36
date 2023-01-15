@@ -282,7 +282,7 @@ std::string Parameter::calcValStr(float val)
                 sprintf(str, "%.2f", absVal);
                 break;
             case Units_Ticks:
-                sprintf(str, "%.1f", absVal);
+                sprintf(str, "%.2f", absVal);
                 break;
         }
 
@@ -505,15 +505,26 @@ void Parameter::setValueFromControl(Control* ctrl, float ctrl_val)
     MProject.setChange();
 }
 
-void Parameter::adjustValue(float deltaValue)
+void Parameter::adjustValue(float deltaValue, int step)
 {
     float v = getNormalizedValue();
 
-    v += deltaValue;
+    if (interval == 0)
+    {
+        v += deltaValue;
 
-    LIMIT(v, 0, 1);
+        LIMIT(v, 0, 1);
 
-    setValueFromControl(NULL, v);
+        setValueFromControl(NULL, v);
+    }
+    else
+    {
+        value += (float)step*interval;
+
+        LIMIT(value, offset, offset+range);
+
+        setValueFromControl(NULL, v);
+    }
 }
 
 // Normalize to 0-1 range

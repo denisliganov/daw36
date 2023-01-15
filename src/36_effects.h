@@ -206,6 +206,7 @@ public:
             XDelay();
 
             BoolParam*      ppmode;
+            Parameter*      delay;
 
             void    processData(float* in_buff, float* out_buff, int num_frames);
             void    reset();

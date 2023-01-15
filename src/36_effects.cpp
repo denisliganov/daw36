@@ -725,226 +725,6 @@ void EQ3::processData(float* in_buff, float* out_buff, int num_frames)
 }
 
 
-CChorus::CChorus()
-{
-    objId = "eff.chorus";
-    objName = "CHO";
-    uniqueId = MAKE_FOURCC('C','H','O','R');
-
-    dspCoreChorus = new rosic::Chorus(65535);
-    dspCoreChorus->setTempoSync(false);
-
-    addParamWithControl(delay = new Parameter("DELAY", 5.f, 1.f, 49.0f, Units_ms));
-    addParamWithControl(freq = new Parameter("MODFREQ", 2.f, 0.1f, 4.9f, Units_Hz2));
-    addParamWithControl(depth = new Parameter("DEPTH", 0.25f, 0, 1.5f, Units_Semitones));
-    addParamWithControl(drywet = new Parameter("DRY/WET", 0.5f, 0.0f, 1.f, Units_DryWet));
-}
-
-void CChorus::handleParamUpdate(Parameter* param)
-{
-    if(param == drywet)
-    {
-        dspCoreChorus->setDryWetRatio(drywet->outVal);
-    }
-    else if(param == delay)
-    {
-        dspCoreChorus->setAverageDelayTime(delay->outVal);
-    }
-    else if(param == freq)
-    {
-        dspCoreChorus->setCycleLength(1.f/freq->outVal);
-    }
-    else if(param == depth)
-    {
-        dspCoreChorus->setDepth(depth->outVal);
-    }
-}
-
-void CChorus::reset()
-{
-    //dspCoreChorus.reset();
-}
-
-void CChorus::processData(float* in_buff, float* out_buff, int num_frames)
-{
-    double inOutL;
-    double inOutR;
-
-    for(int i = 0; i < 2*num_frames; i += 2)
-    {
-        inOutL = (double) in_buff[i];
-        inOutR = (double) in_buff[i+1];
-
-        dspCoreChorus->getSampleFrameStereo(&inOutL, &inOutR);
-
-        out_buff[i]    = (float) inOutL;
-        out_buff[i+1]  = (float) inOutR;
-    }
-}
-
-
-CFlanger::CFlanger()
-{
-    objId = "eff.flanger";
-    objName = "FL1";
-    uniqueId = MAKE_FOURCC('F','L','N','G');
-
-    dspCoreFlanger.setTempoSync(false);
-
-    //fmemory = (float*)malloc(65535);
-    //dspCoreFlanger.setSharedMemoryAreaToUse(fmemory, 65535); -> not needed anymore - Flanger allocates its own memory now
-
-    reset();
-
-    addParamWithControl(frequency = new Parameter("DELAY", Param_Freq, 0.5f, 0.f, 1.f, Units_ms2));
-
-    frequency->setReversed(true);
-
-    addParamWithControl(modfreq = new Parameter("MODFREQ", 3.f, 0.1f, 9.9f, Units_Seconds));
-    addParamWithControl(feedback = new Parameter("FEEDBACK", 0, -1.f, 2.f));
-    addParamWithControl(depth = new Parameter("DEPTH", 24.f, 2.f, 46.f, Units_Semitones));
-
-    //    invert = new BoolParam("Invert wet signal", false, "Invert wet signal");
-    //    AddParamWithParamcell(invert);
-
-    addParamWithControl(drywet = new Parameter("DRY/WET", 0.5f, 0.0f, 0.5f, Units_DryWet));
-}
-
-void CFlanger::handleParamUpdate(Parameter* param)
-{
-    if(param == drywet)
-    {
-        dspCoreFlanger.setDryWetRatio(drywet->outVal);
-    }
-    else if(param == frequency)
-    {
-        dspCoreFlanger.setFrequency(frequency->outVal);
-
-        frequency->setValString(frequency->calcValStr(1.f/frequency->outVal*1000));
-    }
-    else if(param == modfreq)
-    {
-        dspCoreFlanger.setCycleLength(modfreq->outVal);
-    }
-    else if(param == depth)
-    {
-        dspCoreFlanger.setDepth(depth->outVal);
-    }
-    else if(param == feedback)
-    {
-        dspCoreFlanger.setFeedbackFactor(feedback->outVal);
-    }
-    else if(param == invert)
-    {
-        dspCoreFlanger.setNegativePolarity(invert->outval);
-    }
-}
-
-void CFlanger::reset()
-{
-    dspCoreFlanger.reset();
-}
-
-void CFlanger::processData(float* in_buff, float* out_buff, int num_frames)
-{
-    double inOutL;
-    double inOutR;
-
-    for(int i = 0; i < 2*num_frames; i += 2)
-    {
-        inOutL = (double) in_buff[i];
-        inOutR = (double) in_buff[i+1];
-        dspCoreFlanger.getSampleFrameStereo(&inOutL, &inOutR);
-        out_buff[i]    = (float) inOutL;
-        out_buff[i+1]  = (float) inOutR;
-    }
-}
-
-
-CPhaser::CPhaser()
-{
-    objId = "eff.phaser";
-    objName = "PH1";
-    uniqueId = MAKE_FOURCC('P','H','A','S');
-
-    dspCorePhaser.setTempoSync(false);
-
-    //fmemory = (float*)malloc(65535);
-    //dspCorePhaser.setSharedMemoryAreaToUse(fmemory, 65535);
-
-    reset();
-
-    addParamWithControl(frequency = new Parameter("DELAY", Param_Freq, 0.5f, 0.f, 1.f, Units_ms2));
-    frequency->setReversed(true);
-    addParamWithControl(modfreq = new Parameter("MODFREQ", 3.f, 0.1f, 9.9f, Units_Seconds));
-    addParamWithControl(feedback = new Parameter("FEEDBACK", 0, -1.f, 2.f));
-    addParamWithControl(depth = new Parameter("DEPTH", 24.f, 2.f, 46.f, Units_Semitones));
-    addParamWithControl(numstages = new Parameter("STAGES", 4, 1, 23, Units_Integer));
-    numstages->setInterval(1);
-    addParamWithControl(stereo = new Parameter("STEREO", 0, 0, 180));
-    stereo->setInterval(1);
-
-    addParamWithControl(drywet = new Parameter("DRY/WET", 0.5f, 0.0f, 0.5f, Units_DryWet));
-
-    dspCorePhaser.setFilterMode(rosic::AllpassChain::FIRST_ORDER_ALLPASS);
-}
-
-void CPhaser::handleParamUpdate(Parameter* param)
-{
-    if(param == drywet)
-    {
-        dspCorePhaser.setDryWetRatio(drywet->outVal);
-    }
-    else if(param == frequency)
-    {
-        dspCorePhaser.setFrequency(frequency->outVal);
-
-        frequency->setValString(frequency->calcValStr(1.f/frequency->outVal*1000));
-    }
-    else if(param == modfreq)
-    {
-        dspCorePhaser.setCycleLength(modfreq->outVal);
-    }
-    else if(param == depth)
-    {
-        dspCorePhaser.setDepth(depth->outVal);
-    }
-    else if(param == feedback)
-    {
-        dspCorePhaser.setFeedbackFactor(feedback->outVal);
-    }
-    else if(param == numstages)
-    {
-        dspCorePhaser.setNumStages(int(numstages->outVal));
-    }
-    else if(param == stereo)
-    {
-        dspCorePhaser.setStereoPhaseOffsetInDegrees((stereo->outVal));
-        dspCorePhaser.resetOscillatorPhases();
-    }
-}
-
-void CPhaser::reset()
-{
-    dspCorePhaser.reset();
-}
-
-void CPhaser::processData(float* in_buff, float* out_buff, int num_frames)
-{
-    double inOutL;
-    double inOutR;
-
-    for(int i = 0; i < 2*num_frames; i += 2)
-    {
-        inOutL = (double) in_buff[i];
-        inOutR = (double) in_buff[i+1];
-        dspCorePhaser.getSampleFrameStereo(&inOutL, &inOutR);
-        out_buff[i]    = (float) inOutL;
-        out_buff[i+1]  = (float) inOutR;
-    }
-}
-
-
 CTremolo::CTremolo()
 {
     objId = "eff.tremolo";
@@ -1297,10 +1077,12 @@ XDelay::XDelay() : dspCorePingPongDelay()
 
     ppmode = new BoolParam("Mode", true, "Ping-pong");
 
-    addParamWithControl(new Parameter("DELAY", 3, 0.5f, 19.5f, Units_Ticks));
+    addParamWithControl(delay = new Parameter("DELAY", 3, 0.5f, 19.5f, Units_Ticks));
     addParamWithControl(new Parameter("AMOUNT", 1.f, 0.f, 1.f, Units_Percent));
     addParamWithControl(new Parameter("FEEDBACK", 55.f, 0.0f, 100.f, Units_Percent));
     addParamWithControl(new Parameter("PAN", 0.0f, -1.0f, 2.f));
+
+    delay->setInterval(0.25f);
 
     //highCut = new FrequencyParameter(0.2f);
     //highCut->SetName("HighCut");
@@ -1454,4 +1236,224 @@ void CReverb::processData(float* in_buff, float* out_buff, int num_frames)
         out_buff[i+1]  = (float) inOutR;
     }
 }
+
+CChorus::CChorus()
+{
+    objId = "eff.chorus";
+    objName = "CHO";
+    uniqueId = MAKE_FOURCC('C','H','O','R');
+
+    dspCoreChorus = new rosic::Chorus(65535);
+    dspCoreChorus->setTempoSync(false);
+
+    addParamWithControl(delay = new Parameter("DELAY", 5.f, 1.f, 49.0f, Units_ms));
+    addParamWithControl(freq = new Parameter("MODFREQ", 2.f, 0.1f, 4.9f, Units_Hz2));
+    addParamWithControl(depth = new Parameter("DEPTH", 0.25f, 0, 1.5f, Units_Semitones));
+    addParamWithControl(drywet = new Parameter("DRY/WET", 0.5f, 0.0f, 1.f, Units_DryWet));
+}
+
+void CChorus::handleParamUpdate(Parameter* param)
+{
+    if(param == drywet)
+    {
+        dspCoreChorus->setDryWetRatio(drywet->outVal);
+    }
+    else if(param == delay)
+    {
+        dspCoreChorus->setAverageDelayTime(delay->outVal);
+    }
+    else if(param == freq)
+    {
+        dspCoreChorus->setCycleLength(1.f/freq->outVal);
+    }
+    else if(param == depth)
+    {
+        dspCoreChorus->setDepth(depth->outVal);
+    }
+}
+
+void CChorus::reset()
+{
+    //dspCoreChorus.reset();
+}
+
+void CChorus::processData(float* in_buff, float* out_buff, int num_frames)
+{
+    double inOutL;
+    double inOutR;
+
+    for(int i = 0; i < 2*num_frames; i += 2)
+    {
+        inOutL = (double) in_buff[i];
+        inOutR = (double) in_buff[i+1];
+
+        dspCoreChorus->getSampleFrameStereo(&inOutL, &inOutR);
+
+        out_buff[i]    = (float) inOutL;
+        out_buff[i+1]  = (float) inOutR;
+    }
+}
+
+
+CFlanger::CFlanger()
+{
+    objId = "eff.flanger";
+    objName = "FL1";
+    uniqueId = MAKE_FOURCC('F','L','N','G');
+
+    dspCoreFlanger.setTempoSync(false);
+
+    //fmemory = (float*)malloc(65535);
+    //dspCoreFlanger.setSharedMemoryAreaToUse(fmemory, 65535); -> not needed anymore - Flanger allocates its own memory now
+
+    reset();
+
+    addParamWithControl(frequency = new Parameter("DELAY", Param_Freq, 0.5f, 0.f, 1.f, Units_ms2));
+
+    frequency->setReversed(true);
+
+    addParamWithControl(modfreq = new Parameter("MODFREQ", 3.f, 0.1f, 9.9f, Units_Seconds));
+    addParamWithControl(feedback = new Parameter("FEEDBACK", 0, -1.f, 2.f));
+    addParamWithControl(depth = new Parameter("DEPTH", 24.f, 2.f, 46.f, Units_Semitones));
+
+    //    invert = new BoolParam("Invert wet signal", false, "Invert wet signal");
+    //    AddParamWithParamcell(invert);
+
+    addParamWithControl(drywet = new Parameter("DRY/WET", 0.5f, 0.0f, 0.5f, Units_DryWet));
+}
+
+void CFlanger::handleParamUpdate(Parameter* param)
+{
+    if(param == drywet)
+    {
+        dspCoreFlanger.setDryWetRatio(drywet->outVal);
+    }
+    else if(param == frequency)
+    {
+        dspCoreFlanger.setFrequency(frequency->outVal);
+
+        frequency->setValString(frequency->calcValStr(1.f/frequency->outVal*1000));
+    }
+    else if(param == modfreq)
+    {
+        dspCoreFlanger.setCycleLength(modfreq->outVal);
+    }
+    else if(param == depth)
+    {
+        dspCoreFlanger.setDepth(depth->outVal);
+    }
+    else if(param == feedback)
+    {
+        dspCoreFlanger.setFeedbackFactor(feedback->outVal);
+    }
+    else if(param == invert)
+    {
+        dspCoreFlanger.setNegativePolarity(invert->outval);
+    }
+}
+
+void CFlanger::reset()
+{
+    dspCoreFlanger.reset();
+}
+
+void CFlanger::processData(float* in_buff, float* out_buff, int num_frames)
+{
+    double inOutL;
+    double inOutR;
+
+    for(int i = 0; i < 2*num_frames; i += 2)
+    {
+        inOutL = (double) in_buff[i];
+        inOutR = (double) in_buff[i+1];
+        dspCoreFlanger.getSampleFrameStereo(&inOutL, &inOutR);
+        out_buff[i]    = (float) inOutL;
+        out_buff[i+1]  = (float) inOutR;
+    }
+}
+
+
+CPhaser::CPhaser()
+{
+    objId = "eff.phaser";
+    objName = "PH1";
+    uniqueId = MAKE_FOURCC('P','H','A','S');
+
+    dspCorePhaser.setTempoSync(false);
+
+    //fmemory = (float*)malloc(65535);
+    //dspCorePhaser.setSharedMemoryAreaToUse(fmemory, 65535);
+
+    reset();
+
+    addParamWithControl(frequency = new Parameter("DELAY", Param_Freq, 0.5f, 0.f, 1.f, Units_ms2));
+    frequency->setReversed(true);
+    addParamWithControl(modfreq = new Parameter("MODFREQ", 3.f, 0.1f, 9.9f, Units_Seconds));
+    addParamWithControl(feedback = new Parameter("FEEDBACK", 0, -1.f, 2.f));
+    addParamWithControl(depth = new Parameter("DEPTH", 24.f, 2.f, 46.f, Units_Semitones));
+    addParamWithControl(numstages = new Parameter("STAGES", 4, 1, 23, Units_Integer));
+    numstages->setInterval(1);
+    addParamWithControl(stereo = new Parameter("STEREO", 0, 0, 180));
+    stereo->setInterval(1);
+
+    addParamWithControl(drywet = new Parameter("DRY/WET", 0.5f, 0.0f, 0.5f, Units_DryWet));
+
+    dspCorePhaser.setFilterMode(rosic::AllpassChain::FIRST_ORDER_ALLPASS);
+}
+
+void CPhaser::handleParamUpdate(Parameter* param)
+{
+    if(param == drywet)
+    {
+        dspCorePhaser.setDryWetRatio(drywet->outVal);
+    }
+    else if(param == frequency)
+    {
+        dspCorePhaser.setFrequency(frequency->outVal);
+
+        frequency->setValString(frequency->calcValStr(1.f/frequency->outVal*1000));
+    }
+    else if(param == modfreq)
+    {
+        dspCorePhaser.setCycleLength(modfreq->outVal);
+    }
+    else if(param == depth)
+    {
+        dspCorePhaser.setDepth(depth->outVal);
+    }
+    else if(param == feedback)
+    {
+        dspCorePhaser.setFeedbackFactor(feedback->outVal);
+    }
+    else if(param == numstages)
+    {
+        dspCorePhaser.setNumStages(int(numstages->outVal));
+    }
+    else if(param == stereo)
+    {
+        dspCorePhaser.setStereoPhaseOffsetInDegrees((stereo->outVal));
+        dspCorePhaser.resetOscillatorPhases();
+    }
+}
+
+void CPhaser::reset()
+{
+    dspCorePhaser.reset();
+}
+
+void CPhaser::processData(float* in_buff, float* out_buff, int num_frames)
+{
+    double inOutL;
+    double inOutR;
+
+    for(int i = 0; i < 2*num_frames; i += 2)
+    {
+        inOutL = (double) in_buff[i];
+        inOutR = (double) in_buff[i+1];
+        dspCorePhaser.getSampleFrameStereo(&inOutL, &inOutR);
+        out_buff[i]    = (float) inOutL;
+        out_buff[i+1]  = (float) inOutR;
+    }
+}
+
 

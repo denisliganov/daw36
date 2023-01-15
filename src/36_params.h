@@ -122,7 +122,7 @@ public:
     virtual void                setValueFromControl(Control* ctrl, float ctrlval);
     virtual void                setDirectValueFromControl(float ctrlval);
     virtual void                setValueFromEnvelope(float envval, Envelope* env);
-            void                adjustValue(float deltaValue);
+            void                adjustValue(float deltaValue, int step=0);
             void                setInitialValue(float initial);
             void                setInterval(float newint) { interval = newint; }
             float               getInterval() { return interval; } 

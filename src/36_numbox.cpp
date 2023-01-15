@@ -321,7 +321,7 @@ void ParamBox::updValue()
 
 void ParamBox::handleNumDrag(int dragCount)
 {
-    param->adjustValue(-(float)dragCount/50);
+    param->adjustValue(-(float)dragCount/width);
 
     redraw();
 }
@@ -338,7 +338,7 @@ void ParamBox::handleMouseWheel(InputEvent & ev)
         value += float(ev.wheelDelta*0.01f);
     }*/
 
-    param->adjustValue((float)ev.wheelDelta/50);
+    param->adjustValue((float)ev.wheelDelta/width);
 
     redraw();
 }
