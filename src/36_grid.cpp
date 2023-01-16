@@ -224,6 +224,7 @@ Grid::Grid(float step_width, int line_height, Pattern* pt, Timeline* tl)
     cursorLine = 0;
     lastElementEndTick = 0;
     fullTickSpan = visibleTickSpan = 0;
+    visibleLineSpan = 0;
     fullTracksHeight = 0;
     verticalScroller = gridScroller = NULL;
     mouseIsDown = false;
@@ -644,6 +645,7 @@ void Grid::updateBounds()
     }
 
     visibleTickSpan = (float)(width)/getPixelsPerTick();
+    visibleLineSpan = (float)(height)/getLineHeight();
 
     fullTickSpan = lastElementEndTick + (visibleTickSpan*0.9f);
 
@@ -1523,19 +1525,17 @@ void Grid::adjustVisibleArea(InputEvent& ev)
         setTickOffset(tickOffset - area);
     }
 
-    float yDelta = .1f;
+    float yDelta = 0.1f;
 
-/*
-    int line = alignLine - vertOffset;
+    int line = alignLine - ((float)vertOffset/getLineHeight());
     int varea = RoundFloat(visibleLineSpan*yDelta);
     int vdiff = visibleLineSpan - line;
 
     if(vdiff < varea)
-        setVerticalOffset(vertOffset + varea);
+        setVerticalOffset(vertOffset + varea*getLineHeight());
 
     if(line < varea)
-        setVerticalOffset(vertOffset - varea);
-*/
+        setVerticalOffset(vertOffset - varea*getLineHeight());
 
     handleMouseMove(ev);
 }

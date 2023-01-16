@@ -241,12 +241,6 @@ Instrument::~Instrument()
 
 void Instrument::mapObjects()
 {
-    //int slW = 50;
-    //mvol->setCoords1(width - slW - 7, height - 24, slW, 10);
-    //mpan->setCoords1(width - slW - 7, height - 11, slW, 10);
-
-    //volKnob->setCoords1(width - 67, 0, 25, 25);
-    //panKnob->setCoords1(width - 23, 0, 22, 22);
     guiButt->setCoords1(width - 180, 1, 26, 12);
 
     volBox->setCoords1(width - 84, 1, 70, 13);
@@ -266,11 +260,6 @@ void Instrument::mapObjects()
     else
     {
         setHint("");
-    }
-
-    if (width > InstrControlWidth)
-    {
-        //
     }
 }
 

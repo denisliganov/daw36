@@ -104,7 +104,7 @@ void Eff::drawSelf(Graphics& g)
 
     int th = gGetTextHeight(FontBold);
     setc(g, 1.f);
-    gTextFit(g, FontSmall, objName, x1 + 3, y2, width - 2);
+    gTextFit(g, FontSmall, objName, x1, y2, width - 2);
 }
 
 Eff* Eff::makeClone(Eff* eff)

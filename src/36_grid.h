@@ -133,6 +133,7 @@ protected:
             float               lastElementStartTick;
             float               fullTickSpan;
             float               visibleTickSpan;
+            float               visibleLineSpan;
 
             int                 selStartX;
             int                 selStartY;

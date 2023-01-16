@@ -309,6 +309,16 @@ ParamBox::ParamBox(Parameter* param)
     height = th + 2;
     width = tw1 + tw2 + tw3;
     width += 20;
+
+}
+
+void ParamBox::mapObjects()
+{
+    float offs = param->getOffset();
+    float range = param->getRange();
+    float val = param->getValue();
+
+    defPos = int(float(width-1)*((val - offs)/range));
 }
 
 void ParamBox::updValue()
@@ -328,7 +338,30 @@ void ParamBox::handleNumDrag(int dragCount)
 
 void ParamBox::handleMouseDown(InputEvent & ev)
 {
-    param->adjustFromControl(this, 0, float(ev.mouseX - x1)/width);
+    if (abs(defPos - (ev.mouseX - x1)) < 2)
+    {
+        param->setValue(param->getDefaultVal());
+    }
+    else
+    {
+        param->adjustFromControl(this, 0, float(ev.mouseX - x1)/width);
+    }
+
+    redraw();
+}
+
+void ParamBox::handleMouseDrag(InputEvent & ev)
+{
+    if (abs(defPos - (ev.mouseX - x1)) < 2)
+    {
+        param->setValue(param->getDefaultVal());
+    }
+    else
+    {
+        param->adjustFromControl(this, 0, float(ev.mouseX - x1)/width);
+    }
+
+    redraw();
 }
 
 void ParamBox::handleMouseUp(InputEvent & ev)
@@ -336,23 +369,8 @@ void ParamBox::handleMouseUp(InputEvent & ev)
     
 }
 
-void ParamBox::handleMouseDrag(InputEvent & ev)
-{
-    param->adjustFromControl(this, 0, float(ev.mouseX - x1)/width);
-}
-
 void ParamBox::handleMouseWheel(InputEvent & ev)
 {
-/*
-    if(ev.mouseX - x1 < width*0.55f)
-    {
-        value += ev.wheelDelta;
-    }
-    else
-    {
-        value += float(ev.wheelDelta*0.01f);
-    }*/
-
     param->adjustFromControl(this, (float)ev.wheelDelta);
 
     redraw();

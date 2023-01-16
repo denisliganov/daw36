@@ -123,6 +123,7 @@ protected:
             int tw1;
             int tw2;
             int tw3;
+            int defPos;
 
     virtual void    updValue();
             void    handleMouseWheel(InputEvent& ev);
@@ -131,6 +132,7 @@ protected:
             void    handleMouseDrag(InputEvent & ev);
             void    handleMouseUp(InputEvent& ev);
             void    drawSelf(Graphics& g);
+            void    mapObjects();
             void    redraw();
 
 public:

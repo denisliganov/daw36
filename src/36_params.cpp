@@ -437,7 +437,7 @@ void Parameter::load4Preset(XmlElement* xmlNode)
         float fval = (float)xmlNode->getDoubleAttribute(T("value"), defaultValue);
 
         setValue(fval);
-        setInitialValue(fval);
+        setDefValue(fval);
     }
 }
 
@@ -485,7 +485,7 @@ void Parameter::load(XmlElement* xmlNode)
             float fval = (float)xmlNode->getDoubleAttribute(T("value"), defaultValue);
 
             //setValue(fval);
-            //setInitialValue(fval);
+            //setDefValue(fval);
         }
     }
 }
@@ -511,23 +511,32 @@ void Parameter::adjustFromControl(Control* ctrl, int step, float nval)
         }
         else
         {
-            float nv = getNormalizedValue();
+            float prevV = getNormalizedValue();
+            float newV = prevV;
 
-            nv += step*ctrl->getMinStep();
+            newV += step*ctrl->getMinStep();
 
-            LIMIT(nv, 0, 1);
+            LIMIT(newV, 0, 1);
 
-            setNormalizedValue(nv);
+            float defNorm = float(defaultValue - offset)/range;
+
+            if (defNorm < prevV && defNorm > newV ||
+                defNorm > prevV && defNorm < newV)
+            {
+                newV = defNorm;
+            }
+
+            setNormalizedValue(newV);
         }
     }
-    else if (nval >= 0)
+    else
     {
         LIMIT(nval, 0, 1);
 
         setNormalizedValue(nval);
     }
 
-    setInitialValue(value);
+    //setDefValue(value);
 
     blockEnvAffect();  // Block this param update from currently working envelopes
 
@@ -651,7 +660,7 @@ void Parameter::resetToInitial()
     setValue(defaultValue);
 }
 
-void Parameter::setInitialValue(float initial)
+void Parameter::setDefValue(float initial)
 {
     defaultValue = initial;
 
@@ -665,7 +674,7 @@ void Parameter::setDirectValueFromControl(float ctrlval)
 {
     setValue(ctrlval);
 
-    setInitialValue(ctrlval);
+    setDefValue(ctrlval);
 
     blockEnvAffect();  // Block this param update from currently working envelopes
 

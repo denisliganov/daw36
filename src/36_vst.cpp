@@ -881,7 +881,7 @@ void Vst2Plugin::updParamsFromPlugin()
         }
 
         param->setValue(fVal);
-        param->setInitialValue(fVal);
+        //param->setInitialValue(fVal);
     }
 
     setParamLock(false);
