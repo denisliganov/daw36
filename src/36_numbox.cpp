@@ -315,15 +315,30 @@ void ParamBox::updValue()
 {
     if (param != NULL)
     {
-        param->setValueFromControl(this, value);
+        param->adjustFromControl(this, 0, param->getNormalizedValue());
     }
 }
 
 void ParamBox::handleNumDrag(int dragCount)
 {
-    param->adjustValue(-(float)dragCount/width);
+    param->adjustFromControl(this, -(float)dragCount);
 
     redraw();
+}
+
+void ParamBox::handleMouseDown(InputEvent & ev)
+{
+    param->adjustFromControl(this, 0, float(ev.mouseX - x1)/width);
+}
+
+void ParamBox::handleMouseUp(InputEvent & ev)
+{
+    
+}
+
+void ParamBox::handleMouseDrag(InputEvent & ev)
+{
+    param->adjustFromControl(this, 0, float(ev.mouseX - x1)/width);
 }
 
 void ParamBox::handleMouseWheel(InputEvent & ev)
@@ -338,14 +353,13 @@ void ParamBox::handleMouseWheel(InputEvent & ev)
         value += float(ev.wheelDelta*0.01f);
     }*/
 
-    param->adjustValue((float)ev.wheelDelta/width);
+    param->adjustFromControl(this, (float)ev.wheelDelta);
 
     redraw();
 }
 
 void ParamBox::redraw()
 {
-    int a = 1;
     Gobj::redraw();
 }
 
@@ -422,4 +436,7 @@ void ParamBox::drawSelf(Graphics& g)
     fillx(g, xval, height - 2, 1, 3);
 }
 
-
+float ParamBox::getMinStep()
+{
+    return 1.f/width;
+}

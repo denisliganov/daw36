@@ -22,9 +22,9 @@ protected:
 
             float       value;
 
-            void    handleMouseDown(InputEvent& ev);
-            void    handleMouseUp(InputEvent& ev);
-            void    handleMouseDrag(InputEvent& ev);
+    virtual void    handleMouseDown(InputEvent& ev);
+    virtual void    handleMouseUp(InputEvent& ev);
+    virtual void    handleMouseDrag(InputEvent& ev);
             void    drawSelf(Graphics& g);
 
     virtual void    handleNumDrag(int count) {}
@@ -127,12 +127,16 @@ protected:
     virtual void    updValue();
             void    handleMouseWheel(InputEvent& ev);
             void    handleNumDrag(int dragCount);
+            void    handleMouseDown(InputEvent & ev);
+            void    handleMouseDrag(InputEvent & ev);
+            void    handleMouseUp(InputEvent& ev);
             void    drawSelf(Graphics& g);
             void    redraw();
 
 public:
 
             ParamBox(Parameter* param);
+            float   getMinStep();
 };
 
 

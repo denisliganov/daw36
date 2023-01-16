@@ -24,5 +24,6 @@ public:
             virtual void        addParam(Parameter* p);
             virtual void        updPosition() {};
             virtual void        updValue() {};
+            virtual float       getMinStep() {return 0;};
 };
 

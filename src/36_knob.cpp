@@ -26,7 +26,7 @@ void Knob::updValue()
 {
     if (param != NULL)
     {
-        param->setValueFromControl(this, (1 - positionAngle/angleRange));
+        param->adjustFromControl(this, 0, (1 - positionAngle/angleRange));
     }
 
     redraw();

@@ -23,7 +23,7 @@ void Slider36::updValue()
 {
     if (param != NULL && length != 0)
     {
-        param->setValueFromControl(this, (float)slLen / length);
+        param->adjustFromControl(this, 0, (float)slLen/length);
     }
 }
 

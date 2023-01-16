@@ -159,21 +159,6 @@ std::string Parameter::getSignStr()
     return "";
 }
 
-void  Parameter::setValString(std::string str) 
-{
-    prmValString = str;
-}
-
-std::string  Parameter::getValString() 
-{
-    return prmValString;
-}
-
-std::string  Parameter::getMaxValString() 
-{
-    return calcValStr(calcOutputValue(offset + range)); 
-}
-
 std::string Parameter::calcValStr(float val)
 {
     sign = val > 0 ? 1 : val < 0 ? -1 : 0;
@@ -295,6 +280,21 @@ std::string Parameter::calcValStr(float val)
     }
 
     return "";
+}
+
+void  Parameter::setValString(std::string str) 
+{
+    prmValString = str;
+}
+
+std::string  Parameter::getValString() 
+{
+    return prmValString;
+}
+
+std::string  Parameter::getMaxValString() 
+{
+    return calcValStr(calcOutputValue(offset + range)); 
 }
 
 void Parameter::finishRecording()
@@ -490,42 +490,52 @@ void Parameter::load(XmlElement* xmlNode)
     }
 }
 
-void Parameter::setValueFromControl(Control* ctrl, float ctrl_val)
+void Parameter::setNormalizedValue(float nval)
+{
+    setValue(nval*range + offset);
+}
+
+void Parameter::adjustFromControl(Control* ctrl, int step, float nval)
 {
     ctrlUpdatingFrom = ctrl;
 
-    setValue(ctrl_val*range + offset);
+    if (step != 0)
+    {
+        if (interval > 0)
+        {
+            value += step*interval;
+
+            LIMIT(value, offset, offset+range);
+
+            setValue(value);
+        }
+        else
+        {
+            float nv = getNormalizedValue();
+
+            nv += step*ctrl->getMinStep();
+
+            LIMIT(nv, 0, 1);
+
+            setNormalizedValue(nv);
+        }
+    }
+    else if (nval >= 0)
+    {
+        LIMIT(nval, 0, 1);
+
+        setNormalizedValue(nval);
+    }
 
     setInitialValue(value);
 
     blockEnvAffect();  // Block this param update from currently working envelopes
 
-    handleRecordingFromControl(ctrl_val);
+    handleRecordingFromControl(getNormalizedValue());
 
     MProject.setChange();
 }
 
-void Parameter::adjustValue(float deltaValue, int step)
-{
-    float v = getNormalizedValue();
-
-    if (interval == 0)
-    {
-        v += deltaValue;
-
-        LIMIT(v, 0, 1);
-
-        setValueFromControl(NULL, v);
-    }
-    else
-    {
-        value += (float)step*interval;
-
-        LIMIT(value, offset, offset+range);
-
-        setValueFromControl(NULL, v);
-    }
-}
 
 // Normalize to 0-1 range
 
