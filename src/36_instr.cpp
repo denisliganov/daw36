@@ -140,6 +140,10 @@ protected:
                 //gSetMonoColor(g, .6f);
                 setc(g, 1.f);
             }
+            else if (mouseHovering)
+            {
+                setc(g, .6f);
+            }
             else
             {
                 setc(g, .15f);
@@ -190,14 +194,9 @@ Instrument::Instrument()
     lastNotePan = 0;
     lastNoteVal = BaseNote;
 
-    //addParamWithControl(vol = new Parameter("Pregain", Param_Vol, 1.f, 0.f, DAW_VOL_RANGE, Units_dB), "sl.vol", mvol = new Slider36(false));
-    //addParamWithControl(pan = new Parameter("Prepan", Param_Pan, 0.f, -1.f, 2.f, Units_Percent), "sl.pan", mpan = new Slider36(false));
-
     addParam(vol = new Parameter("VOL", Param_Vol, 1.f, 0.f, DAW_VOL_RANGE, Units_dB));
     addParam(pan = new Parameter("PAN", Param_Pan, 0.f, -1.f, 2.f, Units_Percent));
     
-    //addObject(volKnob = new Knob(vol));
-    //addObject(panKnob = new Knob(pan));
     addObject(volBox = new ParamBox(vol));
     addObject(panBox = new ParamBox(pan));
 
@@ -241,7 +240,7 @@ Instrument::~Instrument()
 
 void Instrument::mapObjects()
 {
-    guiButt->setCoords1(width - 180, 1, 26, 12);
+    //guiButt->setCoords1(width - 180, 1, 26, 12);
 
     volBox->setCoords1(width - 84, 1, 70, 13);
     panBox->setCoords1(width - 149, 1, -1, 13);
@@ -1147,6 +1146,10 @@ void Instrument::handleMouseUp(InputEvent& ev)
     MInstrPanel->adjustOffset();
 
     MAudio->releaseAllPreviews();
+
+    MInstrPanel->setCurrInstr(this);
+
+    showWindow(!isWindowVisible());
 }
 
 void Instrument::handleMouseDrag(InputEvent& ev)
@@ -1205,8 +1208,9 @@ void Instrument::handleChildEvent(Gobj * obj, InputEvent& ev)
 {
     //MInstrPanel->setCurrInstr(this);
 
-    if(obj == guiButt)
+    if(obj == guiButt && !ev.clickDown)
     {
+        MInstrPanel->setCurrInstr(this);
         showWindow(guiButt->isPressed());
     }
     else if (obj == previewButt)

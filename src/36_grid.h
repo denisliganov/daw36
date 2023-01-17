@@ -10,12 +10,6 @@
 
 
 
-typedef enum BrushMode
-{
-    Brush_Default,
-    Brush_Pattern,
-    Brush_Envelope
-}BrushMode;
 
 typedef enum ResizeEdge
 {
@@ -95,7 +89,6 @@ protected:
             bool                wasSelecting;
             Selection*          sel;
             PlaceHighlight*     place;
-            BrushMode           brushMode;
             ResizeEdge          resizeEdge;
             Image*              mainImage;
             Image*              elemImage;
@@ -112,19 +105,17 @@ protected:
             bool                mouseIsDown;
             int                 lineHeight;
             int                 actionLine;
-            int                 prevX;
-            int                 prevY;
             int                 alignLine;
+            int                 dragLineStart;
+            int                 vertOffset;
+            int                 fullTracksHeight;
+            int                 cursorLine;
             float               prevTick;
             float               alignTick;
             float               currTick;
-            int                 dragLineStart;
             float               dragTickStart;
             float               tickOffset;
-            int                 vertOffset;
-            int                 fullTracksHeight;
             float               cursorTick;
-            int                 cursorLine;
             float               snapSize;
             float               pixelsPerTick;
             float               framesPerPixel;
@@ -141,6 +132,8 @@ protected:
             float               selTickEnd;
             int                 selLineStart;
             int                 selLineEnd;
+            int                 prevX;
+            int                 prevY;
 
             std::list<Element*>     visible;
             std::list<Element*>     selected;
@@ -182,7 +175,6 @@ public:
             Grid(float step_width, int line_height, Pattern* pt, Timeline* tl);
             ~Grid() {}
             void                grabTextCursor();
-            Note*               getNoteAt(float tick, int line);
             void                syncToInstruments();
             void                updateBounds();
             void                removeElementFromLists(Element* el);

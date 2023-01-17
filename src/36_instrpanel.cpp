@@ -144,7 +144,7 @@ void InstrPanel::deleteInstrument(Instrument* i)
 
         remapAndRedraw();
 
-        MGrid->syncToInstruments();
+        //MGrid->syncToInstruments();
 
         MEdit->remapAndRedraw();
 
@@ -306,7 +306,7 @@ void InstrPanel::addInstrument(Instrument * i, Instrument * objAfter)
             MMixer->remapAndRedraw();
         }
 
-        MGrid->syncToInstruments();
+        //MGrid->syncToInstruments();
 
         MEdit->remapAndRedraw();
     }
@@ -380,7 +380,7 @@ void InstrPanel::setOffset(int offs)
 
     remapAndRedraw();
 
-    MGrid->setVerticalOffset(instrOffset);
+    //MGrid->setVerticalOffset(instrOffset);
 }
 
 Instrument* InstrPanel::getCurrInstr()
@@ -754,7 +754,7 @@ bool InstrPanel::handleObjDrop(Gobj * obj, int mx, int my, unsigned int flags)
     {
         placeBefore(i, (Instrument*)dropObj);
 
-        MGrid->syncToInstruments();
+        //MGrid->syncToInstruments();
 
         return true;
     }
@@ -833,7 +833,7 @@ void InstrPanel::mapObjects()
     fullSpan += InstrHeight*3;
     visibleSpan = float(height);// - MainLineHeight);
 
-    MEdit->verticalGridScroller->updateLimits(fullSpan, visibleSpan, (float)instrOffset);
+    //MEdit->verticalGridScroller->updateLimits(fullSpan, visibleSpan, (float)instrOffset);
 }
 
 void InstrPanel::drawSelf(Graphics& g)

@@ -125,9 +125,9 @@ void MainEdit::handleChildEvent(Gobj * obj, InputEvent& ev)
 {
     if(obj == verticalGridScroller)
     {
-        //grid->setVertOffset(int(verticalGridScroller->getOffset()));
+        grid->setVerticalOffset(int(verticalGridScroller->getOffset()));
 
-        MInstrPanel->setOffset(int(verticalGridScroller->getOffset()));
+        //MInstrPanel->setOffset(int(verticalGridScroller->getOffset()));
     }
 }
 

@@ -233,8 +233,6 @@ Grid::Grid(float step_width, int line_height, Pattern* pt, Timeline* tl)
 
     displayMode = GridDisplayMode_Bars;
 
-    brushMode = Brush_Default;
-
     addHighlight(sel = new Selection(this));
     addHighlight(place = new PlaceHighlight(this));
 
@@ -616,8 +614,10 @@ void Grid::updateScrollers()
         gridScroller->updateLimits(fullTickSpan, visibleTickSpan, getTickOffset());
     }
 
-    //if(verticalScroller)
-    //    verticalScroller->updateLimits(fullTracksHeight + 10*lineHeight, height, (float)vertOffset);
+    if(verticalScroller)
+    {
+        verticalScroller->updateLimits(fullTracksHeight + 10*lineHeight, height, (float)vertOffset);
+    }
 }
 
 void Grid::updateBounds()
@@ -746,18 +746,14 @@ void Grid::setPixelsPerTick(float ppt, int mouseRefX)
     setTickOffset(tickOffset);
 }
 
-void Grid::setVerticalOffset(int line_offs)
+void Grid::setVerticalOffset(int vert_offs)
 {
-    vertOffset = line_offs;
+    vertOffset = vert_offs;
 
     if(vertOffset < 0)
     {
         vertOffset = 0;
     }
-
-    getAlignedPosFromCoords(lastEvent.mouseX, lastEvent.mouseY, &alignTick, &alignLine);
-
-    /*
     else if(fullTracksHeight > height)
     {
         if(vertOffset + height > fullTracksHeight)
@@ -765,39 +761,13 @@ void Grid::setVerticalOffset(int line_offs)
             vertOffset = int(fullTracksHeight - height);
         }
     }
-    */
 
-    /*
-    if(line_offs != vertOffset && (patt != NULL))
-    {
-        int oldOffset = vertOffset;
+//        if(mode == GridMode_Selecting)
+//            selection->yStart -= (vertOffset - oldOffset)*lineHeight;
 
-        vertOffset = line_offs;
-
-        if(vertOffset < 0)
-        {
-            vertOffset = 0;
-        }
-        else if(fullTracksHeight > height)
-        {
-            if(vertOffset + height > fullTracksHeight)
-            {
-                vertOffset = int(fullTracksHeight - height);
-            }
-        }
-        else
-        {
-            vertOffset = 0;
-        }
-
-        if(mode == GridMode_Selecting)
-        {
-            selection->yStart -= (vertOffset - oldOffset)*lineHeight;
-        }
-    }
+    getAlignedPosFromCoords(lastEvent.mouseX, lastEvent.mouseY, &alignTick, &alignLine);
 
     updateScrollers();
-    */
 
     redraw(true, true);
 }
@@ -916,26 +886,6 @@ int Grid::getYfromLine(int line)
 int Grid::getLineFromY(int y)
 {
     return (y - getY1() + vertOffset)/lineHeight;
-}
-
-Note* Grid::getNoteAt(float tick, int line)
-{
-    Note* note = NULL;
-
-    for (Element* el : visible)
-    {
-        if(el->getStartTick() == tick && el->getLine() == line)
-        {
-            note = dynamic_cast<Note*>(el);
-
-            if (note)
-            {
-                break;
-            }
-        }
-    }
-
-    return note;
 }
 
 void Grid::checkActivePosition(InputEvent & ev)
@@ -1494,11 +1444,14 @@ void Grid::handleMouseWheel(InputEvent& ev)
         }
         else
         {
+            // Horizontal
             //float ofsDelta = ev.wheelDelta*(visibleTickSpan*0.03f);
             //setTickOffset(getTickOffset() - ofsDelta);
-            //setVerticalOffset(vertOffset - ev.wheelDelta*(lineHeight*.5f));
+            
+            // Vertical
+            setVerticalOffset(vertOffset - ev.wheelDelta*(lineHeight*.5f));
 
-            MInstrPanel->setOffset((int)(MInstrPanel->getOffset() - ev.wheelDelta*int(InstrHeight*1.1f)));
+            //MInstrPanel->setOffset((int)(MInstrPanel->getOffset() - ev.wheelDelta*int(InstrHeight*1.1f)));
 
             //MInstrPanel->setOffset(int(verticalGridScroller->getOffset()));
         }
