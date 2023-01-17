@@ -607,6 +607,37 @@ void Grid::redraw(bool remap_objects, bool refresh_image)
     Gobj::redraw();
 }
 
+void Grid::setTickOffset(float offs, bool from_nav_bar)
+{
+    if(offs != tickOffset)
+    {
+        float oldOffset = tickOffset;
+
+        float widthInTicks = (float)(width)/getPixelsPerTick();
+
+        tickOffset = offs;
+
+        //if(tickOffset > (fullTickSpan - widthInTicks))
+        //    tickOffset = fullTickSpan - widthInTicks;
+
+        if(tickOffset < 0)
+        {
+            tickOffset = 0;
+        }
+
+        if(mode == GridMode_Selecting)
+        {
+            selStartX -= (tickOffset - oldOffset)*pixelsPerTick;
+        }
+    }
+
+    redraw(true, true);
+
+    //updateScrollers();
+
+    MEdit->playHead->updatePosFromFrame();
+}
+
 void Grid::updateScrollers()
 {
     if(gridScroller)
@@ -770,37 +801,6 @@ void Grid::setVerticalOffset(int vert_offs)
     updateScrollers();
 
     redraw(true, true);
-}
-
-void Grid::setTickOffset(float offs, bool from_nav_bar)
-{
-    if(offs != tickOffset)
-    {
-        float oldOffset = tickOffset;
-
-        float widthInTicks = (float)(width)/getPixelsPerTick();
-
-        tickOffset = offs;
-
-        //if(tickOffset > (fullTickSpan - widthInTicks))
-        //    tickOffset = fullTickSpan - widthInTicks;
-
-        if(tickOffset < 0)
-        {
-            tickOffset = 0;
-        }
-
-        if(mode == GridMode_Selecting)
-        {
-            selStartX -= (tickOffset - oldOffset)*pixelsPerTick;
-        }
-    }
-
-    redraw(true, true);
-
-    updateScrollers();
-
-    MEdit->playHead->updatePosFromFrame();
 }
 
 void Grid::changeScale(int delta, int mouseRefX)
@@ -1462,7 +1462,7 @@ void Grid::handleMouseWheel(InputEvent& ev)
 
 void Grid::adjustVisibleArea(InputEvent& ev)
 {
-    float xDelta = 0.1f;
+    float xDelta = 0.05f;
 
     float tick = alignTick - tickOffset;
     float area = visibleTickSpan*xDelta;
@@ -1478,7 +1478,7 @@ void Grid::adjustVisibleArea(InputEvent& ev)
         setTickOffset(tickOffset - area);
     }
 
-    float yDelta = 0.1f;
+    float yDelta = xDelta;
 
     int line = alignLine - ((float)vertOffset/getLineHeight());
     int varea = RoundFloat(visibleLineSpan*yDelta);

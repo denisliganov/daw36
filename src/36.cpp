@@ -72,6 +72,7 @@ int                 AuxCtrlWidth;
 int                 BottomPadHeight;
 int                 AuxHeight;
 int                 MixChannelPadHeight;
+int                 LineNumWidth;
 
 
 Instrument*         SoloInstr;
@@ -121,6 +122,7 @@ MainWinObject::MainWinObject()
     InstrControlWidth =     220;
     //InstrWidth =            185;
     InstrScrollerWidth =    16;
+    LineNumWidth =          12;
 
     mainX1 = InstrControlWidth;
     mainX2 = width - 1;

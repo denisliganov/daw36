@@ -199,18 +199,23 @@ void Note::drawOnGrid(Graphics& g, Grid* grid)
 {
     if (grid->getDisplayMode() == GridDisplayMode_Bars)
     {
-        //if(x2 > x1)
-        {
-            fill(g, .8f, .25f);
+        FontId fnt = FontSmall;
 
-            setc(g, .8f, .4f);
-            lineH(g, 0, 0, width);
-        }
+        fill(g, .8f, .25f);
+        setc(g, .8f);
+        lineH(g, 0, 0, width);
 
-        setc(g, .99f, .7f);
-        int th = gGetTextHeight(FontVis);
-        int yt = th >= height ? y2 : y2 - height/2 + th/2;
-        gText(g,FontVis, instr->getAlias(), x1, yt);
+        //setc(g, .0f, .25f);
+        //fillx(g, 0, 1, 7, 8);
+
+        int th = gGetTextHeight(fnt);
+        //int yt = th >= height ? y2 : y2 - height/2 + th/2;
+        int yt = y1 + th - 1;
+
+        setc(g, 0.f);
+        gText(g,fnt, instr->getAlias(), x1+1, yt+1);
+        setc(g, 1.f);
+        gText(g,fnt, instr->getAlias(), x1, yt);
 
         if(isSelected())
         {
@@ -561,7 +566,7 @@ void SampleNote::drawOnGrid(Graphics& g, Grid* grid)
 
     if (grid->getDisplayMode() == GridDisplayMode_Bars && MCtrllPanel->wavesAreVisible() && sample->waveImage != NULL)
     {
-        gSetMonoColor(g, 1.f, 0.4f);
+        setc(g, 1.f, 0.4f);
 
         g.saveState();
         g.reduceClipRegion(x1, y1, width - 1, height - 1);

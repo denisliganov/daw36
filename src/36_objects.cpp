@@ -544,7 +544,7 @@ void Gobj::rect(Graphics& g, uint32 clr, float b, float a)
 
 void Gobj::rectx(Graphics& g, int x, int y, int w, int h) 
 {
-    gDrawRectWH(*gr, x1 + x, y1 + y, w, h);
+    gDrawRectWH(g, x1 + x, y1 + y, w, h);
 }
 
 void Gobj::fill(Graphics& g, uint32 clr) 
@@ -555,7 +555,7 @@ void Gobj::fill(Graphics& g, uint32 clr)
 
 void Gobj::fillx(Graphics& g,int x, int y, int w, int h)
 {
-    gFillRectWH(*gr, x1 + x, y1 + y, w, h);
+    gFillRectWH(g, x1 + x, y1 + y, w, h);
 }
 
 void Gobj::rect(Graphics& g, uint32 clr) 

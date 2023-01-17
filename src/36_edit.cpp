@@ -50,7 +50,8 @@ MainEdit::MainEdit()
 
 void MainEdit::drawSelf(Graphics& g)
 {
-    fill(g, 0.f);
+    setc(g, 0.2f);
+    fillx(g, 0, 0, LineNumWidth, height);
 
     // Gap on the right
 
@@ -107,16 +108,16 @@ void MainEdit::mapObjects()
 
     int yGrid = MainLineHeight - 1;
 
-    timeline->setCoords2(0, 0, width - GridScrollWidth - 1, yGrid - 2);
+    timeline->setCoords2(LineNumWidth, 0, width - GridScrollWidth - 1, yGrid - 2);
 
     //keys->setCoords1(LeftGap, MainLineHeight, 100, height - MainLineHeight - 1);
     //keys1->setCoords2(LeftGap+100, height - 1 - 100, width - GridScrollWidth - 1, height - 1);
 
     verticalGridScroller->setCoords2(width - GridScrollWidth, MainLineHeight, width - 1, height - 1 - BottomPadHeight - 1);
 
-    grid->setCoords2(0, yGrid, width - GridScrollWidth - 1, height - 1 - BottomPadHeight - 1);
+    grid->setCoords2(LineNumWidth, yGrid, width - GridScrollWidth - 1, height - 1 - BottomPadHeight - 1);
 
-    confine(0, 0, width - GridScrollWidth - 1, height - 1 - BottomPadHeight - 1);
+    confine(LineNumWidth, 0, width - GridScrollWidth - 1, height - 1 - BottomPadHeight - 1);
 
     playHead->updatePosFromFrame();
 }

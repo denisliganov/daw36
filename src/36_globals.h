@@ -142,6 +142,7 @@ extern int              InstrControlWidth;
 extern int              PanelGap;
 extern int              FxPanelMaxWidth;
 extern int              BottomPadHeight;
+extern int              LineNumWidth;
 
 extern Transport*       MTransp;
 extern EditHistory*     MHistory;
