@@ -123,14 +123,36 @@ public:
         KeyHandler();
 
         void            initKeymap();
-        void            advanceView(float dtick, int dline);
         void            handleChar(char c);
         void            handleNoteKey(int key, int note_val, bool press);
         void            handleKeyPressed(char key_code, char ch, unsigned flags);
-        void            handleKeyOrCharPressed(unsigned key, char character, unsigned flags);
         int             mapKeyToNote(int key);
         void            handleKeyStateChange(bool key_down);
 };
 
+
+class TextCursor : public Gobj
+{
+friend  Grid;
+
+protected:
+
+        float       tick;
+        int         line;
+        Grid*       grid;
+
+public:
+
+        TextCursor();
+        void    setPos(float newTick, int newLine);
+        void    updPos();
+        void    drawSelf(Graphics& g);
+        float   getTick();
+        int     getLine();
+        void    handleKey(int key);
+        void    advanceView(float dtick, int dline);
+        void    handleKeyOrCharPressed(unsigned key, char character, unsigned flags);
+        void    handleChar(char c);
+};
 
 

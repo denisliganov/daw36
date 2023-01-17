@@ -24,7 +24,7 @@
 #include "36_numbox.h"
 #include "36_window.h"
 #include "36_audio_dev.h"
-#include "36_textcursor.h"
+#include "36_snapmenu.h"
 
 
 
@@ -93,23 +93,6 @@ void KeyHandler::initKeymap()
         keyNoteMap[k].noteValue = 0;
         keyNoteMap[k].pressed = false;
     }
-}
-
-void KeyHandler::advanceView(float dtick, int dline)
-{
-    Grid* grid = MGrid;
-
-    if(dtick != 0)
-    {
-        grid->setTickOffset(grid->getTickOffset() + dtick);
-    }
-
-    if(dline != 0)
-    {
-        grid->setVerticalOffset(grid->getVertOffset() + dline*grid->getLineHeight());
-    }
-
-    grid->redraw(false);
 }
 
 int KeyHandler::mapKeyToNote(int key)
@@ -236,10 +219,126 @@ void KeyHandler::handleKeyPressed(char key_code, char c, unsigned flags)
 {
     unsigned k = (key_code > 255) ? 0 : keyMap[key_code];
 
-    handleKeyOrCharPressed(k != 0 ? k : key_code, c, flags);
+    MTextCursor->handleKeyOrCharPressed(k != 0 ? k : key_code, c, flags);
 }
 
-void KeyHandler::handleKeyOrCharPressed(unsigned key, char character, unsigned flags)
+void KeyHandler::handleKeyStateChange(bool key_down)
+{
+    if (!key_down)
+    {
+        for (int k = 0; k < KEYNUM; k++)
+        {
+            if (keyNoteMap[k].pressed && !MWindow->isKeyDown(k))
+            {
+                keyNoteMap[k].pressed = false;
+
+                if (keyNoteMap[k].noteValue > 0)
+                {
+                    handleNoteKey(k, keyNoteMap[k].noteValue, false);
+                }
+            }
+        }
+    }
+
+    MGrid->updateChangedElements();
+}
+
+void KeyHandler::handleNoteKey(int key, int note_val, bool press)
+{
+    if (press)
+    {
+        keyNoteMap[key].pressed = true;
+        keyNoteMap[key].noteValue = note_val;
+
+        Note* note = MGrid->activeNote;
+
+        if(note == NULL)
+        {
+            note = MGrid->putNote(MTextCursor->getTick(), MTextCursor->getLine(), note_val);
+
+            MGrid->setActiveElement(note);
+        }
+        else
+        {
+            note->setNoteValue(note_val);
+        }
+
+        note->recalculate();
+
+        note->preview(-1, true);
+
+        MGrid->redraw(true);
+
+    }
+    else
+    {
+        keyNoteMap[key].pressed = false;
+
+        MAudio->releasePreviewByNote(keyNoteMap[key].noteValue);
+
+        keyNoteMap[key].noteValue = 0;
+    }
+}
+
+
+
+TextCursor::TextCursor()
+{
+    grid = NULL;
+
+    tick = 0;
+    line = 0;
+}
+
+void TextCursor::setPos(float newTick, int newLine)
+{
+    setVisible(false);
+
+    tick = newTick;
+    line = newLine;
+
+    updPos();
+
+    redraw();
+}
+
+void TextCursor::updPos()
+{
+    grid = (Grid*)parent;
+
+    if (grid)
+    {
+        if (grid->getDisplayMode() == GridDisplayMode_Bars)
+        {
+            if (grid->mode == GridMode_Default)
+            {
+                int x = grid->getXfromTick(tick) - grid->getX1();
+                int y = grid->getYfromLine(line) - int(grid->getLineHeight()) - grid->getY1() + 1;
+
+                setCoords2(x, y, x, y + int(grid->getLineHeight()) - 1);
+
+                setVisible(true);
+            }
+        }
+    }
+}
+
+void TextCursor::drawSelf(Graphics& g)
+{
+    fill(g, 1.f);
+}
+
+float TextCursor::getTick()
+{
+    return tick;
+}
+
+int TextCursor::getLine()
+{
+    return line;
+}
+
+void TextCursor::handleKeyOrCharPressed(unsigned key, char character, unsigned flags)
 {
     if (key != 0)
     {
@@ -253,31 +352,31 @@ void KeyHandler::handleKeyOrCharPressed(unsigned key, char character, unsigned f
         {
             if(key == 'A')
             {
-                MGrid->selectDeselectAll(true);
+                grid->selectDeselectAll(true);
             }
             else if(key == 'C')
             {
-                MGrid->doAction(GridAction_Copy);
+                grid->doAction(GridAction_Copy);
             }
             else if(key == 'X')
             {
-                MGrid->doAction(GridAction_Cut);
+                grid->doAction(GridAction_Cut);
             }
             else if(key == 'V')
             {
-                MGrid->doAction(GridAction_Paste);
+                grid->doAction(GridAction_Paste);
             }
             else if(key == 'Z')
             {
                 MHistory->undo();
 
-                MGrid->redraw(true);
+                grid->redraw(true);
             }
             else if(key == 'Y')
             {
                 MHistory->redo();
 
-                MGrid->redraw(true);
+                grid->redraw(true);
             }
 
             if(key == 'O')
@@ -305,97 +404,113 @@ void KeyHandler::handleKeyOrCharPressed(unsigned key, char character, unsigned f
                     // 
                 }
                 break;
-
+            
                 case key_left:
                 {
                     if(flags && kbd_shift)
                     {
                         advanceView(-float(MTransp->getTicksPerBeat()), 0);
                     }
+                    else
+                    {
+                        setPos(tick - MCtrllPanel->getSnapMenu().getSnapSize(), line);
+                    }
                 }
                 break;
-
+            
                 case key_right:
                 {
                     if(flags && kbd_shift)
                     {
                         advanceView(float(MTransp->getTicksPerBeat()), 0);
                     }
+                    else
+                    {
+                        setPos(tick + MCtrllPanel->getSnapMenu().getSnapSize(), line);
+                    }
                 }
                 break;
-
+            
                 case key_up:
                 {
                     if(flags && kbd_shift)
                     {
                         advanceView(0, -2);
                     }
+                    else
+                    {
+                        setPos(tick, line - 1);
+                    }
                 }
                 break;
-
+            
                 case key_down:
                 {
                     if(flags && kbd_shift)
                     {
                         advanceView(0, 2);
                     }
+                    else
+                    {
+                        setPos(tick, line + 1);
+                    }
                 }break;
-
+            
                 case key_f1:
                 {
                     //
                 }
                 break;
-
+            
                 case key_tab:
                 {
-                    if (MGrid->getDisplayMode() == GridDisplayMode_Steps)
+                    if (grid->getDisplayMode() == GridDisplayMode_Steps)
                     {
-                        MGrid->setDisplayMode(GridDisplayMode_Bars);
+                        grid->setDisplayMode(GridDisplayMode_Bars);
                     }
-                    else if (MGrid->getDisplayMode() == GridDisplayMode_Bars)
+                    else if (grid->getDisplayMode() == GridDisplayMode_Bars)
                     {
-                        MGrid->setDisplayMode(GridDisplayMode_Steps);
+                        grid->setDisplayMode(GridDisplayMode_Steps);
                     }
-
-                    MGrid->redraw(true);
+            
+                    grid->redraw(true);
                 }
                 break;
-
+            
                 case key_f2:
                 {
                     SubWindow* wc = MObject->addWindow(new ConfigObject());
-
+            
                     wc->setVisibility(true);
-
+            
                     wc = MObject->addLegacyWindow(new ConfigComponent());
-
+            
                     wc->setVisibility(true);
-
+            
                     wc = MObject->addLegacyWindow(new RenderComponent());
-
+            
                     wc->setVisibility(true);
-
+            
                     wc = MObject->addLegacyWindow(new AboutComponent());
-
+            
                     wc->setVisibility(true);
-
+            
                     wc = MObject->addLegacyWindow(new HelpComponent());
-
+            
                     wc->setVisibility(true);
-
+            
                     wc = MObject->addLegacyWindow(new SampleComponent());
-
+            
                     wc->setVisibility(true);
                 }
                 break;
-
+            
                 case key_delete:
                 {
-                    MGrid->doAction(GridAction_Delete);
+                    grid->doAction(GridAction_Delete);
                 }
                 break;
-
+            
                 default:
                 {
                     handleChar(character);
@@ -405,9 +520,9 @@ void KeyHandler::handleKeyOrCharPressed(unsigned key, char character, unsigned f
                         if (!keyNoteMap[k].pressed && MWindow->isKeyDown(k))
                         {
                             keyNoteMap[k].pressed = true;
-
+            
                             int noteVal = mapKeyToNote(k);
-
+            
                             if (noteVal > 0)
                             {
                                 handleNoteKey(k, noteVal, true);
@@ -421,36 +536,30 @@ void KeyHandler::handleKeyOrCharPressed(unsigned key, char character, unsigned f
     }
     else
     {
-        MGrid->handleModifierKeys(flags);
+        grid->handleModifierKeys(flags);
     }
 
     MHistory->newGroup();
 
-    MGrid->updateChangedElements();
+    grid->updateChangedElements();
 }
 
-void KeyHandler::handleKeyStateChange(bool key_down)
+void TextCursor::advanceView(float dtick, int dline)
 {
-    if (!key_down)
+    if(dtick != 0)
     {
-        for (int k = 0; k < KEYNUM; k++)
-        {
-            if (keyNoteMap[k].pressed && !MWindow->isKeyDown(k))
-            {
-                keyNoteMap[k].pressed = false;
-
-                if (keyNoteMap[k].noteValue > 0)
-                {
-                    handleNoteKey(k, keyNoteMap[k].noteValue, false);
-                }
-            }
-        }
+        grid->setTickOffset(grid->getTickOffset() + dtick);
     }
 
-    MGrid->updateChangedElements();
+    if(dline != 0)
+    {
+        grid->setVerticalOffset(grid->getVertOffset() + dline*grid->getLineHeight());
+    }
+
+    grid->redraw(false);
 }
 
-void KeyHandler::handleChar(char c)
+void TextCursor::handleChar(char c)
 {
     char al[2] = {};
 
@@ -462,54 +571,16 @@ void KeyHandler::handleChar(char c)
     {
         MInstrPanel->setCurrInstr(i);
 
-        Note* note = MGrid->putNote(MTextCursor->getTick(), MTextCursor->getLine(), -1);
+        Note* note = grid->putNote(getTick(), getLine(), -1);
 
-        MGrid->setActiveElement(note);
-
-        note->recalculate();
-
-        note->preview(-1, true);
-
-        MGrid->redraw(true);
-    }
-}
-
-void KeyHandler::handleNoteKey(int key, int note_val, bool press)
-{
-    if (press)
-    {
-        keyNoteMap[key].pressed = true;
-        keyNoteMap[key].noteValue = note_val;
-
-        Grid* grid = MGrid;
-
-        Note* note = grid->activeNote;
-
-        if(note == NULL)
-        {
-            note = grid->putNote(MTextCursor->getTick(), MTextCursor->getLine(), note_val);
-
-            grid->setActiveElement(note);
-        }
-        else
-        {
-            note->setNoteValue(note_val);
-        }
+        grid->setActiveElement(note);
 
         note->recalculate();
 
         note->preview(-1, true);
 
         grid->redraw(true);
-
-    }
-    else
-    {
-        keyNoteMap[key].pressed = false;
-
-        MAudio->releasePreviewByNote(keyNoteMap[key].noteValue);
-
-        keyNoteMap[key].noteValue = 0;
     }
 }
+
 

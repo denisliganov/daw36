@@ -26,7 +26,6 @@
 #include "36_dragndrop.h"
 #include "36_macros.h"
 #include "36_events_triggers.h"
-#include "36_textcursor.h"
 
 
 
@@ -247,7 +246,8 @@ Grid::Grid(float step_width, int line_height, Pattern* pt, Timeline* tl)
 
 void Grid::grabTextCursor()
 {
-    addObject(MTextCursor);
+    addHighlight(MTextCursor);
+
     MTextCursor->setPos(cursorTick, cursorLine);
 }
 
@@ -428,8 +428,6 @@ void Grid::mapObjects()
     refreshImageBuffer();
 
     updateBounds();
-
-    updateScrollers();
 
     mapElements();
 
@@ -683,25 +681,6 @@ void Grid::updateBounds()
     updateScrollers();
 }
 
-void Grid::syncToInstruments()
-{
-    int numDisplayed = 0;
-
-    for (auto i : MInstrPanel->instrs)
-    {
-        if(i->previewOnly == false)
-        {
-            i->setLine(numDisplayed);
-
-            numDisplayed++;
-        }
-    }
-
-    fullTracksHeight = numDisplayed*lineHeight;
-
-    redraw(true, true);
-}
-
 void Grid::handleTransportUpdate()
 {
     updateScale();
@@ -724,8 +703,6 @@ void Grid::handleTransportUpdate()
 void Grid::updateScale()
 {
     framesPerPixel = MTransp != NULL ? MTransp->getFramesPerTick()/pixelsPerTick : 0;
-
-    updateScrollers();
 
     MInstrPanel->updateWaves();
 
@@ -797,8 +774,6 @@ void Grid::setVerticalOffset(int vert_offs)
 //            selection->yStart -= (vertOffset - oldOffset)*lineHeight;
 
     getAlignedPosFromCoords(lastEvent.mouseX, lastEvent.mouseY, &alignTick, &alignLine);
-
-    updateScrollers();
 
     redraw(true, true);
 }

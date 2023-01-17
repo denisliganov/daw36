@@ -15,7 +15,6 @@
 #include "36_vst.h"
 #include "36_configwin.h"
 #include "36_renderer.h"
-#include "36_textcursor.h"
 #include "36_grid.h"
 
 

@@ -19,7 +19,7 @@
 #include "36_utils.h"
 #include "36_params.h"
 #include "36_snapmenu.h"
-#include "36_textcursor.h"
+#include "36_keyboard.h"
 
 
 
@@ -36,6 +36,7 @@ MainEdit::MainEdit()
     addHighlight(playHead = new Playhead(grid));
 
     MGrid = grid;
+
     MProject.patternList.push_front(MPattern);
     MPattern->ptBase = MPattern;
     MPattern->setBounds(0, 2147483647);
@@ -55,17 +56,16 @@ void MainEdit::drawSelf(Graphics& g)
 
     // Gap on the right
 
-    gSetMonoColor(g, 0.3f);
+    setc(g, 0.3f);
     g.fillRect(x2 - GridScrollWidth + 1, y1, GridScrollWidth - 1, MainLineHeight - 1);
 
-    gSetMonoColor(g, 0.4f);
+    setc(g, 0.4f);
     g.drawRect(x2 - GridScrollWidth + 1, y1, GridScrollWidth - 1, MainLineHeight - 1);
 
 
-/*
-    int lines = grid->getVisibleLineSpan();
-    int offs = grid->getLineOffset();
-    int lH = grid->getLineHeight();
+    int lines = grid->visibleLineSpan;
+    int offs = grid->vertOffset;
+    int lH = grid->lineHeight;
     int maxLines = grid->getPattern()->getNumLines() - 1;
 
     for(int line = 0; line < lines + 1; line++)
@@ -76,28 +76,27 @@ void MainEdit::drawSelf(Graphics& g)
 
             int y = y1 + MainLineHeight + lH*line;
 
-            if(line + offs <= grid->lastLine)
+            if(line <= grid->visibleLineSpan)
             {
                 // gSetMonoColor(g, 0.3f);
                 // gFillRect(g, x1, y + 1, x1 + LeftGap - 2, y + lH - 1);
 
-                gSetMonoColor(g, 0.5f);
+                setc(g, 0.5f);
             }
             else
             {
-                gSetMonoColor(g, 0.35f);
+                setc(g, 0.35f);
             }
 
-            gText(g, FontVis, (std::string)str, x1 + 7, y + 13);
+            gText(g, FontSmall, (std::string)str, x1 + 1, y + 13);
         }
 
         if(line + offs == maxLines)
         {
-            gSetMonoColor(g, 0.6f);
-            gLineHorizontal(g, y1 + MainLineHeight + lH * line + lH + 1, x1, x1 + LeftGap - 2);
+            setc(g, 0.6f);
+            lineH(g, MainLineHeight + lH * line + lH + 1, 0, LineNumWidth - 2);
         }
     }
-    */
 
     gPanelRect(g, x1, y2 - BottomPadHeight + 1, x2, y2);
 }

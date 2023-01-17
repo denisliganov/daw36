@@ -175,7 +175,6 @@ public:
             Grid(float step_width, int line_height, Pattern* pt, Timeline* tl);
             ~Grid() {}
             void                grabTextCursor();
-            void                syncToInstruments();
             void                updateBounds();
             void                removeElementFromLists(Element* el);
             void                setActiveElement(Element* el);

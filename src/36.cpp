@@ -30,7 +30,6 @@
 #include "36_audio_dev.h"
 #include "36_macros.h"
 #include "36_dragndrop.h"
-#include "36_textcursor.h"
 
 
 #include <list>
@@ -122,7 +121,7 @@ MainWinObject::MainWinObject()
     InstrControlWidth =     220;
     //InstrWidth =            185;
     InstrScrollerWidth =    16;
-    LineNumWidth =          12;
+    LineNumWidth =          18;
 
     mainX1 = InstrControlWidth;
     mainX2 = width - 1;
