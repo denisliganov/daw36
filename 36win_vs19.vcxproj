@@ -201,7 +201,6 @@
     <ClCompile Include="src\36_snapmenu.cpp" />
     <ClCompile Include="src\36_system.cpp" />
     <ClCompile Include="src\36_text.cpp" />
-    <ClCompile Include="src\36_textcursor.cpp" />
     <ClCompile Include="src\36_textinput.cpp" />
     <ClCompile Include="src\36_timeline.cpp" />
     <ClCompile Include="src\36_transport.cpp" />
@@ -386,7 +385,6 @@
     <ClInclude Include="src\36_snapmenu.h" />
     <ClInclude Include="src\36_system.h" />
     <ClInclude Include="src\36_text.h" />
-    <ClInclude Include="src\36_textcursor.h" />
     <ClInclude Include="src\36_textinput.h" />
     <ClInclude Include="src\36_timeline.h" />
     <ClInclude Include="src\36_transport.h" />
