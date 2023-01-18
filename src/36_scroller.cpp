@@ -12,6 +12,8 @@ Scroller::Scroller(bool is_vertical)
 {
     vertical = is_vertical;
 
+    event = {};
+
     wheelMult = 1;
     ratio = 0;
 
@@ -29,10 +31,9 @@ void Scroller::handleMouseDrag(InputEvent& ev)
 
     if(currPos == 0)
     {
+        event = ev;
         setOffset(float(mouseRef - barPos - (*coordRef + 1))/ratio);
     }
-
-    parent->handleChildEvent(this, ev);
 }
 
 void Scroller::handleMouseDown(InputEvent& ev)
@@ -44,14 +45,13 @@ void Scroller::handleMouseDown(InputEvent& ev)
         int mouseRef = vertical ? ev.mouseY : ev.mouseX;
         int ref = mouseRef - (*coordRef + 1);
 
+        event = ev;
         //setOffset(offset + (visibleSpan*0.9f)*currPos);
         setOffset(float(ref)/ratio - float(barPixLen*0.5f)/ratio);
 
         int barRef = (*coordRef + 1 + offsetPix);
         barPos = mouseRef - barRef;
         currPos = 0;
-
-        parent->handleChildEvent(this, ev);
     }
 }
 
@@ -98,15 +98,17 @@ void Scroller::setOffset(float offs)
     offsetPix = int(fullPixLen*(offset/fullSpan));
 
     redraw();
+
+    parent->handleChildEvent(this, event);
 }
 
 void Scroller::handleMouseWheel(InputEvent& ev)
 {
     float ofsDelta = ev.wheelDelta*(visibleSpan*0.1f)*wheelMult;
 
-    setOffset(offset - ofsDelta);
+    event = ev;
 
-    parent->handleChildEvent(this, ev);
+    setOffset(offset - ofsDelta);
 }
 
 void Scroller::updateLimits(float full_span, float visible_span, float offs)
@@ -157,51 +159,29 @@ void Scroller::drawSelf(Graphics & g)
 
     if(active)
     {
-        setc(g, 0.35f);
+        setc(g, 0.45f);
 
         if(vertical)
         {
-            fillx(g, 3, 1 + offsetPix, width - 4, 1 + offsetPix + barPixLen);
+            fillx(g, 3, 1 + offsetPix, width - 4, barPixLen);
         }
         else
         {
-            fillx(g, 1 + offsetPix, y1 + 1, 1 + offsetPix + barPixLen, height - 2);
-        }
-
-        setc(g, 0.4f);
-
-        if(vertical)
-        {
-            rectx(g, 3, 1 + offsetPix, width - 4, 1 + offsetPix + barPixLen);
-        }
-        else
-        {
-            rectx(g, 1 + offsetPix, 2, 1 + offsetPix + barPixLen, height - 3);
-
-            if(this == MCtrllPanel->gridScroller)
-            {
-                
-            }
+            fillx(g, 1 + offsetPix, y1 + 1, barPixLen, height - 2);
         }
     }
 }
 
 void Scroller::goToStart()
 {
+    event = {};
     setOffset(0);
-
-    InputEvent ev = {};
-
-    parent->handleChildEvent(this, ev);
 }
 
 void Scroller::goToEnd()
 {
+    event = {};
     setOffset(fullSpan - visibleSpan);
-
-    InputEvent ev = {};
-
-    parent->handleChildEvent(this, ev);
 }
 
 

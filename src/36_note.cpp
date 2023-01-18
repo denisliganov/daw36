@@ -213,9 +213,9 @@ void Note::drawOnGrid(Graphics& g, Grid* grid)
         int yt = y1 + th - 1;
 
         setc(g, 0.f);
-        gText(g,fnt, instr->getAlias(), x1+1, yt+1);
+        gText(g,fnt, instr->getAlias(), x1+1, y2);
         setc(g, 1.f);
-        gText(g,fnt, instr->getAlias(), x1, yt);
+        gText(g,fnt, instr->getAlias(), x1, y2-1);
 
         if(isSelected())
         {

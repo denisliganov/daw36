@@ -51,54 +51,34 @@ MainEdit::MainEdit()
 
 void MainEdit::drawSelf(Graphics& g)
 {
-    setc(g, 0.2f);
-    fillx(g, 0, 0, LineNumWidth, height);
+    //setc(g, 0.2f);
+    //fillx(g, 0, 0, LineNumWidth, height);
 
     // Gap on the right
-
     setc(g, 0.3f);
-    g.fillRect(x2 - GridScrollWidth + 1, y1, GridScrollWidth - 1, MainLineHeight - 1);
-
+    fillx(g, width - GridScrollWidth, 0, width, MainLineHeight - 1);
     setc(g, 0.4f);
-    g.drawRect(x2 - GridScrollWidth + 1, y1, GridScrollWidth - 1, MainLineHeight - 1);
+    rectx(g, width - GridScrollWidth, 0, width, MainLineHeight - 1);
 
 
+/*
     int lines = grid->visibleLineSpan;
     int offs = grid->vertOffset;
     int lH = grid->lineHeight;
-    int maxLines = grid->getPattern()->getNumLines() - 1;
-
+    int max = grid->getPattern()->getNumLines() - 1;
     for(int line = 0; line < lines + 1; line++)
     {
-        if(line + offs <= maxLines)
-        {
-            String str = String::formatted(T("%03d"), line + offs);
+        //String str = String::formatted(T("%03d"), line + offs);
+        //gText(g, FontSmall, (std::string)str, x1 + 1, y + 13);
 
-            int y = y1 + MainLineHeight + lH*line;
+        setc(g, 0.0f);
+        lineH(g, grid->getY() + lH*line - offs - 1, 0, LineNumWidth - 2);
+    }*/
 
-            if(line <= grid->visibleLineSpan)
-            {
-                // gSetMonoColor(g, 0.3f);
-                // gFillRect(g, x1, y + 1, x1 + LeftGap - 2, y + lH - 1);
-
-                setc(g, 0.5f);
-            }
-            else
-            {
-                setc(g, 0.35f);
-            }
-
-            gText(g, FontSmall, (std::string)str, x1 + 1, y + 13);
-        }
-
-        if(line + offs == maxLines)
-        {
-            setc(g, 0.6f);
-            lineH(g, MainLineHeight + lH * line + lH + 1, 0, LineNumWidth - 2);
-        }
-    }
-
-    gPanelRect(g, x1, y2 - BottomPadHeight + 1, x2, y2);
+    setc(g, 0.35f);
+    fillx(g, 0, height - BottomPadHeight, width, height);
+    setc(g, 0.4f);
+    lineH(g, height - BottomPadHeight, 0, width);
 }
 
 void MainEdit::mapObjects()
@@ -107,16 +87,16 @@ void MainEdit::mapObjects()
 
     int yGrid = MainLineHeight - 1;
 
-    timeline->setCoords2(LineNumWidth, 0, width - GridScrollWidth - 1, yGrid - 2);
+    timeline->setCoords2(0, 0, width - GridScrollWidth - 1, yGrid - 2);
 
     //keys->setCoords1(LeftGap, MainLineHeight, 100, height - MainLineHeight - 1);
     //keys1->setCoords2(LeftGap+100, height - 1 - 100, width - GridScrollWidth - 1, height - 1);
 
     verticalGridScroller->setCoords2(width - GridScrollWidth, MainLineHeight, width - 1, height - 1 - BottomPadHeight - 1);
 
-    grid->setCoords2(LineNumWidth, yGrid, width - GridScrollWidth - 1, height - 1 - BottomPadHeight - 1);
+    grid->setCoords2(0, yGrid, width - GridScrollWidth - 1, height - 1 - BottomPadHeight - 1);
 
-    confine(LineNumWidth, 0, width - GridScrollWidth - 1, height - 1 - BottomPadHeight - 1);
+    confine(0, 0, width - GridScrollWidth - 1, height - 1 - BottomPadHeight - 1);
 
     playHead->updatePosFromFrame();
 }
@@ -125,7 +105,7 @@ void MainEdit::handleChildEvent(Gobj * obj, InputEvent& ev)
 {
     if(obj == verticalGridScroller)
     {
-        grid->setVerticalOffset(int(verticalGridScroller->getOffset()));
+        grid->handleChildEvent(verticalGridScroller, ev);
 
         //MInstrPanel->setOffset(int(verticalGridScroller->getOffset()));
     }
@@ -246,7 +226,7 @@ void ScrollTimer::timerCallback()
         // if(abs(_MainObject->lastEvent.mouseY - grid->getY1()) <= range)
         if(MObject->lastEvent.mouseY <= grid->getY1())
         {
-            grid->setVerticalOffset(grid->vertOffset - yDelta);
+            grid->vscr->setOffset(grid->vscr->getOffset() - yDelta);
             moved = true;
         }
 

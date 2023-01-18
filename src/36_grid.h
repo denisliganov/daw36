@@ -94,8 +94,8 @@ protected:
             Image*              elemImage;
             Image*              brushImage;
             Timeline*           timeline;
-            Scroller*           verticalScroller;
-            Scroller*           gridScroller;
+            Scroller*           vscr;
+            Scroller*           hscr;
             Pattern*            patt;
             Element*            activeElem;
             Note*               activeNote;
@@ -107,24 +107,23 @@ protected:
             int                 actionLine;
             int                 alignLine;
             int                 dragLineStart;
-            int                 vertOffset;
-            int                 fullTracksHeight;
-            int                 cursorLine;
             float               prevTick;
             float               alignTick;
             float               currTick;
             float               dragTickStart;
             float               tickOffset;
-            float               cursorTick;
             float               snapSize;
             float               pixelsPerTick;
             float               framesPerPixel;
             float               brushWidthTicks;
+
+            int                 fullTracksHeight;
             float               lastElementEndTick;
             float               lastElementStartTick;
+            int                 lastElementLine;
+
             float               fullTickSpan;
             float               visibleTickSpan;
-            float               visibleLineSpan;
 
             int                 selStartX;
             int                 selStartY;
@@ -167,22 +166,20 @@ protected:
             float               getSnappedTick(float val);
             void                getAlignedPosFromCoords(int mx, int my, float* tick, int* line);
             void                checkActivePosition(InputEvent & ev);
-            void                updateScrollers();
             void                adjustVisibleArea(InputEvent& ev);
  
 public:
 
             Grid(float step_width, int line_height, Pattern* pt, Timeline* tl);
             ~Grid() {}
-            void                grabTextCursor();
+            void                grabTextCursor(float tick, int line);
             void                updateBounds();
             void                removeElementFromLists(Element* el);
             void                setActiveElement(Element* el);
             void                setMode(GridActionMode md);
-            void                setVertScroller(Scroller& scr)   { verticalScroller = &scr; }
-            void                setHorizScroller(Scroller& scr)   { gridScroller = &scr; }
+            void                setVertScroller(Scroller& scr)   { vscr = &scr; }
+            void                setHorizScroller(Scroller& scr)   { hscr = &scr; }
             void                setTickOffset(float tick_offset, bool from_nav_bar = false);
-            void                setVerticalOffset(int vert_offset);
             void                setLineHeight(int newLH);
             void                changeScale(int delta, int mouseRefX = -1);
             void                setPixelsPerTick(float tick_width, int mouseRefX = -1);
@@ -203,7 +200,6 @@ public:
             int                 getLineFromY(int y);
             float               getPixelsPerTick();
             float               getTickOffset();
-            int                 getVertOffset();
             int                 getLineHeight();
             void                deleteElementsAcross(int mx1, int my1, int mx2, int my2);
             void                setDisplayMode( GridDisplayMode display_mode );

@@ -162,7 +162,7 @@ public:
 
             if((grid->isMouseHovering()) && grid->getDisplayMode() == GridDisplayMode_Bars && grid->mode != GridMode_Selecting)
             {
-                if (grid->cursorLine >= 0)
+                if (grid->alignLine >= 0)
                 {
                     setPos(grid->alignTick, grid->alignLine);
                 }
@@ -201,7 +201,6 @@ public:
 Grid::Grid(float step_width, int line_height, Pattern* pt, Timeline* tl)
 {
     tickOffset = 0, 
-    vertOffset = 0;
     snapSize = 0;
     pixelsPerTick = step_width;
     lineHeight = line_height; 
@@ -219,13 +218,11 @@ Grid::Grid(float step_width, int line_height, Pattern* pt, Timeline* tl)
     brushWidthTicks = 0;
     alignTick = 0;
     alignLine = 0;
-    cursorTick = 0;
-    cursorLine = 0;
+
     lastElementEndTick = 0;
     fullTickSpan = visibleTickSpan = 0;
-    visibleLineSpan = 0;
     fullTracksHeight = 0;
-    verticalScroller = gridScroller = NULL;
+    vscr = hscr = NULL;
     mouseIsDown = false;
     stepDefault = true;
     wasSelecting = false;
@@ -244,11 +241,13 @@ Grid::Grid(float step_width, int line_height, Pattern* pt, Timeline* tl)
     lastAction = GridAction_Reset;
 }
 
-void Grid::grabTextCursor()
+void Grid::grabTextCursor(float tick, int line)
 {
     addHighlight(MTextCursor);
 
-    MTextCursor->setPos(cursorTick, cursorLine);
+    MTextCursor->setPos(tick, line);
+
+    updateBounds();
 }
 
 void Grid::drawIntermittentHighlight(Graphics& g, int x, int y, int w, int h, int numBars)
@@ -373,7 +372,7 @@ void Grid::refreshImageBuffer()
 
         int xoffs = RoundFloat((getTickOffset() / tickPerBar - (int)getTickOffset() / tickPerBar) * getPixelsPerTick() * tickPerBar);
 
-        int yoffs = vertOffset % lineHeight;
+        int yoffs = int(vscr->getOffset()) % lineHeight;
 
         ImageBrush* imgBrush = new ImageBrush(brushImage, -xoffs, -yoffs, 1);
 
@@ -568,7 +567,7 @@ void Grid::drawSelf(Graphics& g)
         //g.drawImage(mainImage, x1 + 40, y1 + 40, width - 80, height - 80, 40, 40, width - 80, height - 80);
     }
 
-    if(fullTracksHeight > 0 && vertOffset + height > fullTracksHeight)
+    if(lastElementLine > 0 && vscr->getOffset() + height > lastElementLine)
     {
        ///gSetMonoColor(g, 0.15f);
         //gFillRect(g, x1, fullTracksHeight - vertOffset + y1, x2, y2);
@@ -636,23 +635,11 @@ void Grid::setTickOffset(float offs, bool from_nav_bar)
     MEdit->playHead->updatePosFromFrame();
 }
 
-void Grid::updateScrollers()
-{
-    if(gridScroller)
-    {
-        gridScroller->updateLimits(fullTickSpan, visibleTickSpan, getTickOffset());
-    }
-
-    if(verticalScroller)
-    {
-        verticalScroller->updateLimits(fullTracksHeight + 10*lineHeight, height, (float)vertOffset);
-    }
-}
-
 void Grid::updateBounds()
 {
     lastElementEndTick = 0;
     lastElementStartTick = 0;
+    lastElementLine = 0;
 
     if (patt != NULL)
     {
@@ -669,35 +656,33 @@ void Grid::updateBounds()
                 {
                     lastElementStartTick = el->getStartTick();
                 }
+
+                if(el->getLine() > lastElementLine)
+                {
+                    lastElementLine = el->getLine();
+                }
             }
         }
     }
 
     visibleTickSpan = (float)(width)/getPixelsPerTick();
-    visibleLineSpan = (float)(height)/getLineHeight();
 
     fullTickSpan = lastElementEndTick + (visibleTickSpan*0.9f);
 
-    updateScrollers();
-}
-
-void Grid::handleTransportUpdate()
-{
-    updateScale();
-
-    for(Element* el : patt->ptBase->elems)
+    if (MTextCursor && MTextCursor->grid == this && MTextCursor->getLine() > lastElementLine)
     {
-        if (!el->isDeleted())
-        {
-            el->recalculate();
-
-            el->calcCoordsForGrid(this);
-        }
+        lastElementLine = MTextCursor->getLine();
     }
 
-    patt->updateEvents();
+    if(hscr)
+    {
+        hscr->updateLimits(fullTickSpan, visibleTickSpan, getTickOffset());
+    }
 
-    redraw(true, true);
+    if(vscr)
+    {
+        vscr->updateLimits((1 + lastElementLine + 5)*lineHeight, height, vscr->getOffset());
+    }
 }
 
 void Grid::updateScale()
@@ -754,26 +739,21 @@ void Grid::setPixelsPerTick(float ppt, int mouseRefX)
     setTickOffset(tickOffset);
 }
 
-void Grid::setVerticalOffset(int vert_offs)
+void Grid::handleTransportUpdate()
 {
-    vertOffset = vert_offs;
+    updateScale();
 
-    if(vertOffset < 0)
+    for(Element* el : patt->ptBase->elems)
     {
-        vertOffset = 0;
-    }
-    else if(fullTracksHeight > height)
-    {
-        if(vertOffset + height > fullTracksHeight)
+        if (!el->isDeleted())
         {
-            vertOffset = int(fullTracksHeight - height);
+            el->recalculate();
+
+            el->calcCoordsForGrid(this);
         }
     }
 
-//        if(mode == GridMode_Selecting)
-//            selection->yStart -= (vertOffset - oldOffset)*lineHeight;
-
-    getAlignedPosFromCoords(lastEvent.mouseX, lastEvent.mouseY, &alignTick, &alignLine);
+    patt->updateEvents();
 
     redraw(true, true);
 }
@@ -828,11 +808,6 @@ float Grid::getTickOffset()
     return tickOffset;
 }
 
-int Grid::getVertOffset()
-{
-    return vertOffset;
-}
-
 int Grid::getLineHeight()
 {
     return lineHeight;
@@ -855,12 +830,12 @@ float Grid::getTickFromX(int x)
 
 int Grid::getYfromLine(int line)
 {
-    return getY1() - vertOffset + line*lineHeight + lineHeight - 1;
+    return getY1() - vscr->getOffset() + line*lineHeight + lineHeight - 1;
 }
 
 int Grid::getLineFromY(int y)
 {
-    return (y - getY1() + vertOffset)/lineHeight;
+    return (y - getY1() + vscr->getOffset())/lineHeight;
 }
 
 void Grid::checkActivePosition(InputEvent & ev)
@@ -1134,10 +1109,7 @@ void Grid::handleMouseDown(InputEvent& ev)
                 {
                     if(activeNote == NULL)
                     {
-                        cursorTick = alignTick;
-                        cursorLine = alignLine;
-
-                        grabTextCursor();
+                        grabTextCursor(alignTick, alignLine);
 
                         resetSelection(true);
 
@@ -1424,7 +1396,8 @@ void Grid::handleMouseWheel(InputEvent& ev)
             //setTickOffset(getTickOffset() - ofsDelta);
             
             // Vertical
-            setVerticalOffset(vertOffset - ev.wheelDelta*(lineHeight*.5f));
+            vscr->setOffset(vscr->getOffset() - ev.wheelDelta * (lineHeight * .5f));
+            //vscr->setOffset(vscr->getOffset() - ev.wheelDelta*(lineHeight*.5f));
 
             //MInstrPanel->setOffset((int)(MInstrPanel->getOffset() - ev.wheelDelta*int(InstrHeight*1.1f)));
 
@@ -1455,22 +1428,25 @@ void Grid::adjustVisibleArea(InputEvent& ev)
 
     float yDelta = xDelta;
 
-    int line = alignLine - ((float)vertOffset/getLineHeight());
-    int varea = RoundFloat(visibleLineSpan*yDelta);
-    int vdiff = visibleLineSpan - line;
+    int line = alignLine - ((float)vscr->getOffset()/getLineHeight());
+    int varea = RoundFloat(vscr->getVisible()/getLineHeight()*yDelta);
+    int vdiff = vscr->getVisible()/getLineHeight() - line;
 
     if(vdiff < varea)
-        setVerticalOffset(vertOffset + varea*getLineHeight());
+        vscr->setOffset(vscr->getOffset() + varea*getLineHeight());
 
     if(line < varea)
-        setVerticalOffset(vertOffset - varea*getLineHeight());
+        vscr->setOffset(vscr->getOffset() - varea*getLineHeight());
 
     handleMouseMove(ev);
 }
 
 void Grid::handleChildEvent(Gobj * obj, InputEvent& ev)
 {
-    ///
+    if (obj == vscr || obj == hscr)
+    {
+        redraw(true, true);
+    }
 }
 
 void Grid::setActiveElement(Element* el)

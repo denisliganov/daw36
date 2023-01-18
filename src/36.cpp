@@ -142,8 +142,7 @@ MainWinObject::MainWinObject()
     MCtrllPanel->setEnable(true);
     MEdit->setEnable(true);
 
-    MGrid->grabTextCursor();
-    MTextCursor->setPos(100, 10);
+    MGrid->grabTextCursor(100, 10);
 
     MLanePanel->setCoords1(mainX1, height - AuxHeight, mainX2 - mainX1 + 1, AuxHeight);
     MMixer->setCoords1(mainX1, height - MixerHeight, mainX2 - mainX1 + 1, MixerHeight);

@@ -51,8 +51,10 @@ public:
             Instrument*     ipreview;
             Scroller*       brwScroller;
             BrwEntry*       currEntry;
+
             float           scrollOffset;
             float           fullSpan;
+
             int             brwIndex;
             int             currIndex;
             int             visibleSpan;

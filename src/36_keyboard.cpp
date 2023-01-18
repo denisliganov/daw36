@@ -553,7 +553,7 @@ void TextCursor::advanceView(float dtick, int dline)
 
     if(dline != 0)
     {
-        grid->setVerticalOffset(grid->getVertOffset() + dline*grid->getLineHeight());
+        grid->vscr->setOffset(grid->vscr->getOffset() + dline*grid->getLineHeight());
     }
 
     grid->redraw(false);

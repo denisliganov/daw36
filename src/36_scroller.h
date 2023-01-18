@@ -26,6 +26,7 @@ protected:
         int         fullPixLen;
         int         currPos;
         int         barPos;
+        InputEvent  event;
 
 
 public:
@@ -34,6 +35,7 @@ public:
         void        updateLimits(float full_span, float visible_span, float offs);
         void        setOffset(float offs);
         float       getOffset() { return offset; }
+        float       getVisible() { return visibleSpan; }
         void        handleMouseDown(InputEvent& ev);
         void        handleMouseWheel(InputEvent& ev);
         void        handleMouseDrag(InputEvent& ev);
