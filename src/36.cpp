@@ -112,7 +112,7 @@ MainWinObject::MainWinObject()
     MixChannelPadHeight =   80;
     CtrlPanelHeight =       50;
     GridScrollWidth =       32;
-    InstrHeight =           23;
+    InstrHeight =           32;
     MainLineHeight =        30;
     LeftGap =               26;
     BottomPadHeight =       16;

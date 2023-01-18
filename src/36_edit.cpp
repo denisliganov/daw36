@@ -31,7 +31,7 @@ MainEdit::MainEdit()
     MPattern->addInstance(MPattern);
 
     addObject(timeline = new Timeline(grid));
-    addObject(grid = new Grid(2, InstrHeight + 1, MPattern, timeline));
+    addObject(grid = new Grid(2, 24, MPattern, timeline));
 
     addHighlight(playHead = new Playhead(grid));
 

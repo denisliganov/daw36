@@ -297,14 +297,15 @@ void Grid::refreshImageBrush()
 
     Graphics imageContext(*(brushImage));
 
-    gSetMonoColor(imageContext, .15f, 1);
+    gSetMonoColor(imageContext, .1f, 1);
 
     imageContext.fillAll();
 
     float tick = .25f;
     float beat = .35f;
     float bar = .42f;
-    float divClr = .0f;
+
+    float divClr = .25f;
 
     // ticks
     //gSetMonoColor(imageContext, .5f);
