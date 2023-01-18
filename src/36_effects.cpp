@@ -97,14 +97,15 @@ void Eff::mapObjects()
 
 void Eff::drawSelf(Graphics& g)
 {
-    fill(g, .2f);
-    rect(g, .5f);
+    fill(g, .4f);
+    rect(g, .3f);
+    
     setc(g, .2f);
     lineH(g, height-1, 0, width-1);
 
     int th = gGetTextHeight(FontBold);
-    setc(g, 1.f);
-    gTextFit(g, FontSmall, objName, x1, y2, width - 2);
+    setc(g, .9f);
+    gTextFit(g, FontSmall, objName, x1, y1 + th, width - 2);
 }
 
 Eff* Eff::makeClone(Eff* eff)
