@@ -90,7 +90,7 @@ void StopPlayback(bool force_mixreset)
 
     MPattern->setFrame(0);
 
-    MGrid->setTickOffset(0);
+    MGrid->sethoffs(0);
 
     MTransp->updTimeFromFrame();
 
@@ -106,7 +106,7 @@ void GoToHome()
 {
     MPattern->setFrame(0);
 
-    MGrid->setTickOffset(0);
+    MGrid->sethoffs(0);
 
     MEdit->playHead->updatePosFromFrame();
 

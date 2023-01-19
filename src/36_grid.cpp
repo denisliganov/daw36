@@ -604,9 +604,9 @@ void Grid::redraw(bool remap_objects, bool refresh_image)
     Gobj::redraw();
 }
 
-void Grid::setTickOffset(float offs, bool from_nav_bar)
+void Grid::sethoffs(float offs, bool from_nav_bar)
 {
-    hscr->setOffset(offs);
+    hscr->setoffs(offs);
 
     //updateScrollers();
 
@@ -715,7 +715,7 @@ void Grid::setPixelsPerTick(float ppt, int mouseRefX)
         offs = last;
     }
 
-    setTickOffset(offs);
+    sethoffs(offs);
 }
 
 void Grid::handleTransportUpdate()
@@ -1375,7 +1375,7 @@ void Grid::handleMouseWheel(InputEvent& ev)
             //setTickOffset(getTickOffset() - ofsDelta);
             
             // Vertical
-            vscr->setOffset(vscr->getOffset() - ev.wheelDelta * (lineHeight * .5f));
+            vscr->setoffs(vscr->getOffset() - ev.wheelDelta * (lineHeight * .5f));
             //vscr->setOffset(vscr->getOffset() - ev.wheelDelta*(lineHeight*.5f));
 
             //MInstrPanel->setOffset((int)(MInstrPanel->getOffset() - ev.wheelDelta*int(InstrHeight*1.1f)));
@@ -1397,12 +1397,12 @@ void Grid::adjustVisibleArea(InputEvent& ev)
 
     if(diff < area)
     {
-        setTickOffset(hscr->getOffset() + area);
+        sethoffs(hscr->getOffset() + area);
     }
 
     if(tick < area)
     {
-        setTickOffset(hscr->getOffset() - area);
+        sethoffs(hscr->getOffset() - area);
     }
 
     float yDelta = xDelta;
@@ -1412,10 +1412,10 @@ void Grid::adjustVisibleArea(InputEvent& ev)
     int vdiff = vscr->getVisible()/getLineHeight() - line;
 
     if(vdiff < varea)
-        vscr->setOffset(vscr->getOffset() + varea*getLineHeight());
+        vscr->setoffs(vscr->getOffset() + varea*getLineHeight());
 
     if(line < varea)
-        vscr->setOffset(vscr->getOffset() - varea*getLineHeight());
+        vscr->setoffs(vscr->getOffset() - varea*getLineHeight());
 
     handleMouseMove(ev);
 }

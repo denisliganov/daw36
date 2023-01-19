@@ -548,12 +548,12 @@ void TextCursor::advanceView(float dtick, int dline)
 {
     if(dtick != 0)
     {
-        grid->setTickOffset(grid->getTickOffset() + dtick);
+        grid->sethoffs(grid->getTickOffset() + dtick);
     }
 
     if(dline != 0)
     {
-        grid->vscr->setOffset(grid->vscr->getOffset() + dline*grid->getLineHeight());
+        grid->vscr->setoffs(grid->vscr->getOffset() + dline*grid->getLineHeight());
     }
 
     grid->redraw(false);

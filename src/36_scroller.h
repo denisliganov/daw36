@@ -33,7 +33,7 @@ public:
 
         Scroller(bool is_vertical);
         void        updateLimits(float full_span, float visible_span, float offs);
-        void        setOffset(float offs);
+        void        setoffs(float offs);
         float       getOffset() { return offset; }
         float       getVisible() { return visibleSpan; }
         void        handleMouseDown(InputEvent& ev);

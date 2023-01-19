@@ -62,7 +62,7 @@ void Timeline::handleMouseWheel(InputEvent & ev)
 {
     float ofsDelta = ev.wheelDelta*(grid->visibleTickSpan*0.03f);
 
-    MGrid->setTickOffset(MGrid->getTickOffset() - ofsDelta);
+    MGrid->sethoffs(MGrid->getTickOffset() - ofsDelta);
 }
 
 

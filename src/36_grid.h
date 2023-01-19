@@ -179,7 +179,7 @@ public:
             void                setMode(GridActionMode md);
             void                setVertScroller(Scroller& scr)   { vscr = &scr; }
             void                setHorizScroller(Scroller& scr)   { hscr = &scr; }
-            void                setTickOffset(float tick_offset, bool from_nav_bar = false);
+            void                sethoffs(float tick_offset, bool from_nav_bar = false);
             void                setLineHeight(int newLH);
             void                changeScale(int delta, int mouseRefX = -1);
             void                setPixelsPerTick(float tick_width, int mouseRefX = -1);
