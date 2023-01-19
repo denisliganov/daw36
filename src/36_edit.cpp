@@ -212,14 +212,14 @@ void ScrollTimer::timerCallback()
         //if(abs(_MainObject->lastEvent.mouseX - grid->getX1()) <= range)
         if(MObject->lastEvent.mouseX <= grid->getX1())
         {
-            grid->setTickOffset(grid->tickOffset - xDelta);
+            grid->setTickOffset(grid->hscr->getOffset() - xDelta);
             moved = true;
         }
 
         //if(abs(_MainObject->lastEvent.mouseX - grid->getX2()) <= range)
         if(MObject->lastEvent.mouseX >= grid->getX2())
         {
-            grid->setTickOffset(grid->tickOffset + xDelta);
+            grid->setTickOffset(grid->hscr->getOffset() + xDelta);
             moved = true;
         }
 

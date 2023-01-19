@@ -272,7 +272,7 @@ void ControlPanel::handleChildEvent(Gobj* obj, InputEvent& ev)
 {
     if (obj == gridScroller)
     {
-        MEdit->grid->setTickOffset(gridScroller->getOffset(), true);
+        MEdit->grid->handleChildEvent(obj, ev);
 
         MEdit->playHead->updatePosFromFrame();
     }

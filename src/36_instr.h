@@ -141,7 +141,7 @@ virtual Instrument*             clone();
             void                setLine(int lineNum);
             int                 getLine();
             void                updNotePositions();
-            std::list <Element*>   getNotesFromRange(float tickOffset, float lastVisibleTick);
+            std::list <Element*>   getNotesFromRange(float tick_offset, float lastVisibleTick);
 
 };
 

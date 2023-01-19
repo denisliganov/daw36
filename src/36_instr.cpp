@@ -381,13 +381,13 @@ void Instrument::reinsertNote(Note * note)
     addNote(note);
 }
 
-std::list <Element*> Instrument::getNotesFromRange(float tickOffset, float lastVisibleTick)
+std::list <Element*> Instrument::getNotesFromRange(float offset, float lastVisibleTick)
 {
     std::list <Element*> noteList;
 
     for(auto note : notes)
     {
-        if(note->getEndTick() < tickOffset || note == selfNote)
+        if(note->getEndTick() < offset || note == selfNote)
         {
             continue;
         }

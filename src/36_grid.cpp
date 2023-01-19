@@ -200,7 +200,6 @@ public:
 
 Grid::Grid(float step_width, int line_height, Pattern* pt, Timeline* tl)
 {
-    tickOffset = 0, 
     snapSize = 0;
     pixelsPerTick = step_width;
     lineHeight = line_height; 
@@ -305,7 +304,7 @@ void Grid::refreshImageBrush()
     float beat = .35f;
     float bar = .42f;
 
-    float divClr = .25f;
+    float divClr = .05f;
 
     // ticks
     //gSetMonoColor(imageContext, .5f);
@@ -441,7 +440,7 @@ void Grid::mapElements()
     std::list<Element*>::iterator it = visible.end();
 
     float lastStartTick = -1;
-    float lastVisibleTick = tickOffset + visibleTickSpan;
+    float lastVisibleTick = hscr != NULL? hscr->getOffset() + visibleTickSpan : 0;
 
     if(MInstrPanel)
     {
@@ -462,7 +461,7 @@ void Grid::mapElements()
 
         for(Element* el : patt->elems)
         {
-            if ( el->getEndTick() < tickOffset || el->getStartTick() > lastVisibleTick)
+            if ( el->getEndTick() < hscr->getOffset() || el->getStartTick() > lastVisibleTick)
             {
                 // Skip out-of-visible-area elements
             }
@@ -607,33 +606,11 @@ void Grid::redraw(bool remap_objects, bool refresh_image)
 
 void Grid::setTickOffset(float offs, bool from_nav_bar)
 {
-    if(offs != tickOffset)
-    {
-        float oldOffset = tickOffset;
-
-        float widthInTicks = (float)(width)/getPixelsPerTick();
-
-        tickOffset = offs;
-
-        //if(tickOffset > (fullTickSpan - widthInTicks))
-        //    tickOffset = fullTickSpan - widthInTicks;
-
-        if(tickOffset < 0)
-        {
-            tickOffset = 0;
-        }
-
-        if(mode == GridMode_Selecting)
-        {
-            selStartX -= (tickOffset - oldOffset)*pixelsPerTick;
-        }
-    }
-
-    redraw(true, true);
+    hscr->setOffset(offs);
 
     //updateScrollers();
 
-    MEdit->playHead->updatePosFromFrame();
+    //MEdit->playHead->updatePosFromFrame();
 }
 
 void Grid::updateBounds()
@@ -698,18 +675,19 @@ void Grid::updateScale()
 void Grid::setPixelsPerTick(float ppt, int mouseRefX)
 {
     pixelsPerTick = ppt;
-
     updateScale();
 
     MEdit->playHead->updatePosFromFrame();
 
+    float offs = hscr->getOffset();
+
     if(mouseRefX >= 0)
     {
-        tickOffset = currTick - float(mouseRefX - getX1())/(float)pixelsPerTick;
+        offs = currTick - float(mouseRefX - getX1())/(float)pixelsPerTick;
     }
     else
     {
-        // tickOffset = patt->getPlayTick() - visibleTickSpan/2;
+        // offs = patt->getPlayTick() - visibleTickSpan/2;
     }
 
     float last = 0;
@@ -728,16 +706,16 @@ void Grid::setPixelsPerTick(float ppt, int mouseRefX)
         last = 0;
     }
 
-    if(tickOffset < 0)
+    if(offs < 0)
     {
-        tickOffset = 0;
+        offs = 0;
     }
-    else if(tickOffset > last)
+    else if(offs > last)
     {
-        tickOffset = last;
+        offs = last;
     }
 
-    setTickOffset(tickOffset);
+    setTickOffset(offs);
 }
 
 void Grid::handleTransportUpdate()
@@ -806,7 +784,7 @@ float Grid::getPixelsPerTick()
 
 float Grid::getTickOffset()
 {
-    return tickOffset;
+    return hscr->getOffset();
 }
 
 int Grid::getLineHeight()
@@ -821,12 +799,12 @@ Pattern* Grid::getPattern()
 
 int Grid::getXfromTick(float tick)
 {
-    return RoundFloat((tick - tickOffset)*pixelsPerTick) + getX1();
+    return RoundFloat((tick - hscr->getOffset())*pixelsPerTick) + getX1();
 }
 
 float Grid::getTickFromX(int x)
 {
-    return ((float)x - getX1())/pixelsPerTick + tickOffset;
+    return ((float)x - getX1())/pixelsPerTick + hscr->getOffset();
 }
 
 int Grid::getYfromLine(int line)
@@ -1413,18 +1391,18 @@ void Grid::adjustVisibleArea(InputEvent& ev)
 {
     float xDelta = 0.05f;
 
-    float tick = alignTick - tickOffset;
+    float tick = alignTick - hscr->getOffset();
     float area = visibleTickSpan*xDelta;
     float diff = visibleTickSpan - tick;
 
     if(diff < area)
     {
-        setTickOffset(tickOffset + area);
+        setTickOffset(hscr->getOffset() + area);
     }
 
     if(tick < area)
     {
-        setTickOffset(tickOffset - area);
+        setTickOffset(hscr->getOffset() - area);
     }
 
     float yDelta = xDelta;

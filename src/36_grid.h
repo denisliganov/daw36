@@ -78,6 +78,7 @@ friend  KeyHandler;
 friend  MainWinObject;
 friend  PlaceHighlight;
 friend  TextCursor;
+friend  ControlPanel;
 
 
 protected:
@@ -111,7 +112,6 @@ protected:
             float               alignTick;
             float               currTick;
             float               dragTickStart;
-            float               tickOffset;
             float               snapSize;
             float               pixelsPerTick;
             float               framesPerPixel;
