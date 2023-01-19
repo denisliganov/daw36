@@ -70,7 +70,6 @@ public:
         void    activateContextMenuItem(std::string item);
 
         uint32  getModeColor();
-        void    brwEntryRect(Graphics& g, int x, int y, int w, int h);
         void    drawDevEntry(Graphics& g, int xo, int ycoord, int w);
         void    drawFileEntry(Graphics& g, int xo, int ycoord, int w);
         void    drawSelf(Graphics & g);

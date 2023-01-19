@@ -165,6 +165,7 @@ void Note::calcCoordsForGrid(Grid* grid)
 {
      x1 = grid->getXfromTick(startTick);
      yBase = grid->getYfromLine(trkLine)- 1;
+
      float lHeight = float(grid->getLineHeight() - 1);
 
      if (grid->getDisplayMode() == GridDisplayMode_Bars)
@@ -208,19 +209,15 @@ void Note::drawOnGrid(Graphics& g, Grid* grid)
         //setc(g, .0f, .25f);
         //fillx(g, 0, 1, 7, 8);
 
-        int th = gGetTextHeight(fnt);
-        //int yt = th >= height ? y2 : y2 - height/2 + th/2;
-        int yt = y1 + th - 1;
-
         setc(g, 0.f);
-        gText(g,fnt, instr->getAlias(), x1+1, y2);
+        txt(g,fnt, instr->getAlias(), 1, height-1);
+
         setc(g, 1.f);
-        gText(g,fnt, instr->getAlias(), x1, y2-1);
+        txt(g,fnt, instr->getAlias(), 0, height-2);
 
         if(isSelected())
         {
             fill(g, 1.f, .2f);
-
             rect(g, 1.f, .9f);
         }
     }
@@ -228,7 +225,7 @@ void Note::drawOnGrid(Graphics& g, Grid* grid)
     {
         if(isHighlighted() || isSelected())
         {
-            gSetColor2(g, 0xffFFF020, .9f);
+            setc(g, 0xffFFF020, .9f);
         }
         else
         {

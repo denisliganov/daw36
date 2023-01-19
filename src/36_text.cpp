@@ -85,37 +85,26 @@ int gText(Graphics& g, FontId fontId, std::string str, int x, int y)
 
 void gTextFit(Graphics& g, FontId fontId, std::string str, int x, int y, int maxwidth)
 {
-    char buff[MAX_NAME_LENGTH];
-
-    memset(buff, 0, MAX_NAME_LENGTH);
-    strcpy(buff, str.data());
-
-    int len = str.size();
-    int pos = len;
-
+    std::string str1 = str;
     Font* font = gGetFontById(fontId);
-
     int wi = font->getStringWidth(String(str.data()));
     int ww = font->getStringWidth(String(".."));
-
-    while((wi > (maxwidth - ww)) && pos >= 0)
+    int pos = str.size();
+    while((wi > (maxwidth - ww)) && pos-- >= 0)
     {
-        wi -= font->getStringWidth(&(buff[pos]));
+        int sw = font->getStringWidth(String(str1.substr(pos, 1).data()));
 
-        buff[pos] = 0;
+        wi -= sw;
 
-        pos--;
+        str1 = str1.substr(0, str1.size()-1);
     }
 
-    if(pos >= 0)
+    if(pos >= 0 && pos < str.size())
     {
-        if(pos < len)
-        {
-            strcat(buff, "..");
-        }
+        str1 += "..";
     }
 
-    gText(g, fontId, buff, x, y);
+    gText(g, fontId, str1, x, y);
 }
 
 int gNoteString(Graphics& g, int x, int y, int note, bool relative)

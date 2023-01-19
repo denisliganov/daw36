@@ -76,25 +76,15 @@ uint32 BrwEntry::getModeColor()
     return 0xffDDEEFF;
 }
 
-void BrwEntry::brwEntryRect(Graphics& g, int x, int y, int w, int h)
-{
-    if (w > 0)
-    {
-        gSetMonoColor(g, 0.4f);
-        g.fillRect(x, y, w, h);
-
-        gSetMonoColor(g, 0.35f);
-        g.drawHorizontalLine(y, (float)x, float(x + w - 1));
-    }
-}
-
 void BrwEntry::drawDevEntry(Graphics& g, int x, int y, int w)
 {
-    brwEntryRect(g, x, y, w - BrwEntryOffset, BrwEntryHeight);
+    setc(g, 0.4f);
+    fillx(g, 0, 0, width - BrwEntryOffset, BrwEntryHeight);
+    setc(g, 0.35f);
+    lineH(g, 0, 0, width-BrwEntryOffset);
 
-    gSetMonoColor(g, 0.9f);
-
-    gTextFit(g, FontSmall, objName, x + 15, y + BrwEntryHeight - 3, w - 20);
+    setc(g, 0.9f);
+    txtfit(g, FontSmall, objName, 15, BrwEntryHeight - 3, width - 20);
 }
 
 void BrwEntry::drawFileEntry(Graphics& g, int x, int y, int w)
@@ -103,15 +93,18 @@ void BrwEntry::drawFileEntry(Graphics& g, int x, int y, int w)
     {
         std::string fname;
 
-        brwEntryRect(g, x, y, w - BrwEntryOffset, BrwEntryHeight);
+        setc(g, 0.4f);
+        fillx(g, 0, 0, width - BrwEntryOffset, BrwEntryHeight);
+        setc(g, 0.35f);
+        lineH(g, 0, 0, width-BrwEntryOffset);
 
-        gSetMonoColor(g, 0.9f);
+        setc(g, 0.9f);
 
         fname = objName;
 
         FontId fid = FontSmall;
 
-        gTextFit(g, fid, fname, x + 10, y + BrwEntryHeight - 3, w - 20);
+        txtfit(g, fid, fname, 10, BrwEntryHeight - 3, width - 20);
     }
 }
 

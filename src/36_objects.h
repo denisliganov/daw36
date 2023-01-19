@@ -3,6 +3,7 @@
 
 
 #include "36_globals.h"
+#include "36_text.h"
 
 #include "juce_amalgamated.h"
 
@@ -194,11 +195,12 @@ public:
             void                rectx(Graphics& g, int x, int y, int w, int h);
             void                lineH(Graphics& g, int ly, int lx1, int lx2);
             void                lineV(Graphics& g, int lx, int ly1, int ly2);
+            void                line(int lx,int ly,int lx2,int ly2);
             void                setc(Graphics& g, float c, float a=1.f);
             void                setc(Graphics& g, uint32 clr, float b, float);
             void                setc(Graphics& g, uint32 clr);
-
-            void                line(int lx, int ly, int lx2, int ly2);
+            int                 txt(Graphics& g, FontId fontId, std::string str, int x, int y);
+            void                txtfit(Graphics& g, FontId fontId, std::string str, int x, int y, int maxwidth);
 
     virtual ContextMenu*        createContextMenu() {return NULL;};
     virtual void                activateContextMenuItem(std::string item) {};
