@@ -141,7 +141,7 @@ void Browser::handleChildEvent(Gobj * obj, InputEvent& ev)
 
         if(scr != NULL)
         {
-            setOffset(-scr->getOffset());
+            setOffset(-scr->getoffs());
         }
     }
 }
@@ -225,7 +225,7 @@ void Browser::mapObjects()
     fullSpan += 64;
 
     brwScroller->setCoords1(width - BrwScrollerWidth + 1, cy, BrwScrollerWidth - 2, visibleSpan);
-    brwScroller->updateLimits(fullSpan, float(visibleSpan), -(float)scrollOffset);
+    brwScroller->updlimits(fullSpan, float(visibleSpan), -(float)scrollOffset);
 
     // dbg file browsing
     //ShowFiles->SetXYWH(0, 0, bwidth, bheight);

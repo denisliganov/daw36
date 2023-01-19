@@ -372,7 +372,7 @@ void Grid::refreshImageBuffer()
 
         int xoffs = RoundFloat((getTickOffset() / tickPerBar - (int)getTickOffset() / tickPerBar) * getPixelsPerTick() * tickPerBar);
 
-        int yoffs = int(vscr->getOffset()) % lineHeight;
+        int yoffs = int(vscr->getoffs()) % lineHeight;
 
         ImageBrush* imgBrush = new ImageBrush(brushImage, -xoffs, -yoffs, 1);
 
@@ -440,7 +440,7 @@ void Grid::mapElements()
     std::list<Element*>::iterator it = visible.end();
 
     float lastStartTick = -1;
-    float lastVisibleTick = hscr != NULL? hscr->getOffset() + visibleTickSpan : 0;
+    float lastVisibleTick = hscr != NULL? hscr->getoffs() + visibleTickSpan : 0;
 
     if(MInstrPanel)
     {
@@ -461,7 +461,7 @@ void Grid::mapElements()
 
         for(Element* el : patt->elems)
         {
-            if ( el->getEndTick() < hscr->getOffset() || el->getStartTick() > lastVisibleTick)
+            if ( el->getEndTick() < hscr->getoffs() || el->getStartTick() > lastVisibleTick)
             {
                 // Skip out-of-visible-area elements
             }
@@ -567,7 +567,7 @@ void Grid::drawSelf(Graphics& g)
         //g.drawImage(mainImage, x1 + 40, y1 + 40, width - 80, height - 80, 40, 40, width - 80, height - 80);
     }
 
-    if(lastElementLine > 0 && vscr->getOffset() + height > lastElementLine)
+    if(lastElementLine > 0 && vscr->getoffs() + height > lastElementLine)
     {
        ///gSetMonoColor(g, 0.15f);
         //gFillRect(g, x1, fullTracksHeight - vertOffset + y1, x2, y2);
@@ -654,12 +654,12 @@ void Grid::updateBounds()
 
     if(hscr)
     {
-        hscr->updateLimits(fullTickSpan, visibleTickSpan, getTickOffset());
+        hscr->updlimits(fullTickSpan, visibleTickSpan, getTickOffset());
     }
 
     if(vscr)
     {
-        vscr->updateLimits((1 + lastElementLine + 5)*lineHeight, height, vscr->getOffset());
+        vscr->updlimits((1 + lastElementLine + 5)*lineHeight, height, vscr->getoffs());
     }
 }
 
@@ -679,7 +679,7 @@ void Grid::setPixelsPerTick(float ppt, int mouseRefX)
 
     MEdit->playHead->updatePosFromFrame();
 
-    float offs = hscr->getOffset();
+    float offs = hscr->getoffs();
 
     if(mouseRefX >= 0)
     {
@@ -784,7 +784,7 @@ float Grid::getPixelsPerTick()
 
 float Grid::getTickOffset()
 {
-    return hscr->getOffset();
+    return hscr->getoffs();
 }
 
 int Grid::getLineHeight()
@@ -799,22 +799,22 @@ Pattern* Grid::getPattern()
 
 int Grid::getXfromTick(float tick)
 {
-    return RoundFloat((tick - hscr->getOffset())*pixelsPerTick) + getX1();
+    return RoundFloat((tick - hscr->getoffs())*pixelsPerTick) + getX1();
 }
 
 float Grid::getTickFromX(int x)
 {
-    return ((float)x - getX1())/pixelsPerTick + hscr->getOffset();
+    return ((float)x - getX1())/pixelsPerTick + hscr->getoffs();
 }
 
 int Grid::getYfromLine(int line)
 {
-    return getY1() - vscr->getOffset() + line*lineHeight + lineHeight - 1;
+    return getY1() - vscr->getoffs() + line*lineHeight + lineHeight - 1;
 }
 
 int Grid::getLineFromY(int y)
 {
-    return (y - getY1() + vscr->getOffset())/lineHeight;
+    return (y - getY1() + vscr->getoffs())/lineHeight;
 }
 
 void Grid::checkActivePosition(InputEvent & ev)
@@ -1375,7 +1375,7 @@ void Grid::handleMouseWheel(InputEvent& ev)
             //setTickOffset(getTickOffset() - ofsDelta);
             
             // Vertical
-            vscr->setoffs(vscr->getOffset() - ev.wheelDelta * (lineHeight * .5f));
+            vscr->setoffs(vscr->getoffs() - ev.wheelDelta * (lineHeight * .5f));
             //vscr->setOffset(vscr->getOffset() - ev.wheelDelta*(lineHeight*.5f));
 
             //MInstrPanel->setOffset((int)(MInstrPanel->getOffset() - ev.wheelDelta*int(InstrHeight*1.1f)));
@@ -1391,31 +1391,31 @@ void Grid::adjustVisibleArea(InputEvent& ev)
 {
     float xDelta = 0.05f;
 
-    float tick = alignTick - hscr->getOffset();
+    float tick = alignTick - hscr->getoffs();
     float area = visibleTickSpan*xDelta;
     float diff = visibleTickSpan - tick;
 
     if(diff < area)
     {
-        sethoffs(hscr->getOffset() + area);
+        sethoffs(hscr->getoffs() + area);
     }
 
     if(tick < area)
     {
-        sethoffs(hscr->getOffset() - area);
+        sethoffs(hscr->getoffs() - area);
     }
 
     float yDelta = xDelta;
 
-    int line = alignLine - ((float)vscr->getOffset()/getLineHeight());
-    int varea = RoundFloat(vscr->getVisible()/getLineHeight()*yDelta);
-    int vdiff = vscr->getVisible()/getLineHeight() - line;
+    int line = alignLine - ((float)vscr->getoffs()/getLineHeight());
+    int varea = RoundFloat(vscr->getvisible()/getLineHeight()*yDelta);
+    int vdiff = vscr->getvisible()/getLineHeight() - line;
 
     if(vdiff < varea)
-        vscr->setoffs(vscr->getOffset() + varea*getLineHeight());
+        vscr->setoffs(vscr->getoffs() + varea*getLineHeight());
 
     if(line < varea)
-        vscr->setoffs(vscr->getOffset() - varea*getLineHeight());
+        vscr->setoffs(vscr->getoffs() - varea*getLineHeight());
 
     handleMouseMove(ev);
 }

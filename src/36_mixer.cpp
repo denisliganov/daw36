@@ -1126,7 +1126,7 @@ void Mixer::handleChildEvent(Gobj * obj, InputEvent& ev)
 
     if(scr != NULL)
     {
-        setOffset((int)scr->getOffset());
+        setOffset((int)scr->getoffs());
     }
 }
 

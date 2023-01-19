@@ -38,7 +38,7 @@ void Scroller::handleMouseDrag(InputEvent& ev)
 
 void Scroller::handleMouseDown(InputEvent& ev)
 {
-    currPos = getPosition(ev, barPos);
+    currPos = getpos(ev, barPos);
 
     if(currPos != 0)
     {
@@ -55,7 +55,7 @@ void Scroller::handleMouseDown(InputEvent& ev)
     }
 }
 
-int Scroller::getPosition(InputEvent& ev, int& offset_on_bar)
+int Scroller::getpos(InputEvent& ev, int& offset_on_bar)
 {
     int pos = 0;
     int mouseRef = vertical ? ev.mouseY : ev.mouseX;
@@ -111,7 +111,7 @@ void Scroller::handleMouseWheel(InputEvent& ev)
     setoffs(offset - ofsDelta);
 }
 
-void Scroller::updateLimits(float full_span, float visible_span, float offs)
+void Scroller::updlimits(float full_span, float visible_span, float offs)
 {
     fullSpan = full_span;
     visibleSpan = visible_span;

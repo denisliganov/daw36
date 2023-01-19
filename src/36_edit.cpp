@@ -212,21 +212,21 @@ void ScrollTimer::timerCallback()
         //if(abs(_MainObject->lastEvent.mouseX - grid->getX1()) <= range)
         if(MObject->lastEvent.mouseX <= grid->getX1())
         {
-            grid->sethoffs(grid->hscr->getOffset() - xDelta);
+            grid->sethoffs(grid->hscr->getoffs() - xDelta);
             moved = true;
         }
 
         //if(abs(_MainObject->lastEvent.mouseX - grid->getX2()) <= range)
         if(MObject->lastEvent.mouseX >= grid->getX2())
         {
-            grid->sethoffs(grid->hscr->getOffset() + xDelta);
+            grid->sethoffs(grid->hscr->getoffs() + xDelta);
             moved = true;
         }
 
         // if(abs(_MainObject->lastEvent.mouseY - grid->getY1()) <= range)
         if(MObject->lastEvent.mouseY <= grid->getY1())
         {
-            grid->vscr->setoffs(grid->vscr->getOffset() - yDelta);
+            grid->vscr->setoffs(grid->vscr->getoffs() - yDelta);
             moved = true;
         }
 

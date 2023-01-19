@@ -322,7 +322,7 @@ void InstrPanel::handleChildEvent(Gobj* obj, InputEvent& ev)
     {
         if (obj == scroller)
         {
-            setOffset((int)scroller->getOffset());
+            setOffset((int)scroller->getoffs());
         }
         else if(obj == btShowFX)
         {

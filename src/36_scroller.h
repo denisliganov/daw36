@@ -32,16 +32,16 @@ protected:
 public:
 
         Scroller(bool is_vertical);
-        void        updateLimits(float full_span, float visible_span, float offs);
+        void        updlimits(float full_span, float visible_span, float offs);
         void        setoffs(float offs);
-        float       getOffset() { return offset; }
-        float       getVisible() { return visibleSpan; }
+        float       getoffs() { return offset; }
+        float       getvisible() { return visibleSpan; }
         void        handleMouseDown(InputEvent& ev);
         void        handleMouseWheel(InputEvent& ev);
         void        handleMouseDrag(InputEvent& ev);
         void        handleMouseUp(InputEvent & ev);
         void        drawSelf(Graphics & g);
-        int         getPosition(InputEvent& ev, int& offset_on_bar);
+        int         getpos(InputEvent& ev, int& offset_on_bar);
         void        goToStart();
         void        goToEnd();
 };
