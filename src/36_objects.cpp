@@ -581,7 +581,7 @@ void Gobj::line(int lx,int ly,int lx2,int ly2)
 
 int Gobj::txt(Graphics& g, FontId fontId, std::string str, int x, int y)
 {
-    return gText(g, fontId, str, x, y);
+    return gText(g, fontId, str, x1+x, y1+y);
 }
 
 void Gobj::txtfit(Graphics& g, FontId fontId, std::string str, int x, int y, int maxwidth)
