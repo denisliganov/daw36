@@ -45,7 +45,7 @@ public:
             bool            checkVisible(Grid* grid);
          Element*           checkElement(float tick, int trknum);
             void            deleteAllElements(bool flush, bool preventundo);
-            void            recalculate();
+            void            recalc();
             void            addElement(Element* el);
             void            addInstance(Pattern* child);
             void            removeInstance(Pattern* child);
@@ -53,7 +53,7 @@ public:
             long            getLastElementFrame();
             void            setNewName(const char* name);
     virtual void            handleMouseUp(InputEvent& ev);
-            void            drawOnGrid(Graphics& g, Grid* grid);
+            void            drwongrid(Graphics& g, Grid* grid);
             double          getPlayTick();
             void            setPlayTick(double tick);
             void            setPatt(Pattern* pPt);

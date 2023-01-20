@@ -27,7 +27,7 @@ MainEdit::MainEdit()
 {
     MPattern = new Pattern(NULL, 0.f, -1.f, 0, 119, true);
     MPattern->ptBase = MPattern;
-    MPattern->calcFrames();
+    MPattern->calcframes();
     MPattern->addInstance(MPattern);
 
     addObject(timeline = new Timeline(grid));

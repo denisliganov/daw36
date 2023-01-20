@@ -44,7 +44,7 @@ void Timeline::set(int mouse_x)
 
     float currPosPix = (float(newX) + (float)(grid->getTickOffset()*grid->getPixelsPerTick()));
 
-    grid->getPattern()->setFrame((long)(currPosPix*grid->getFramesPerPixel()));
+    grid->getpatt()->setFrame((long)(currPosPix*grid->getFramesPerPixel()));
 
     MTransp->updTimeFromFrame();
 

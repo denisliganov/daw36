@@ -48,9 +48,9 @@ Element* Element::clone(Pattern* ptBase)
     return NULL;
 }
 
-void Element::recalculate()
+void Element::recalc()
 {
-    calcFrames();
+    calcframes();
 
     calculated = true;
 
@@ -60,7 +60,7 @@ void Element::recalculate()
     }
 }
 
-void Element::calcFrames()
+void Element::calcframes()
 {
     tickLength = endTick - startTick;
 
@@ -73,7 +73,7 @@ void Element::calcFrames()
 
 bool Element::isPointed(int mx, int my, Grid* grid)
 {
-    if(patt == grid->getPattern()->ptBase && checkVisible(grid))
+    if(patt == grid->getpatt()->ptBase && checkVisible(grid))
     {
         if (mx >= dx1 && mx <= dx2 && my >= dy1 && my <= dy2)
         {
@@ -347,7 +347,7 @@ Pattern* Element::getBase()
     return patt;
 }
 
-void Element::calcCoordsForGrid(Grid* grid)
+void Element::calcforgrid(Grid* grid)
 {
     x1 = grid->getXfromTick(getStartTick());
     y1 = grid->getYfromLine(getLine());

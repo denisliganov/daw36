@@ -260,10 +260,10 @@ void KeyHandler::handleNoteKey(int key, int note_val, bool press)
         }
         else
         {
-            note->setNoteValue(note_val);
+            note->setnote(note_val);
         }
 
-        note->recalculate();
+        note->recalc();
 
         note->preview(-1, true);
 
@@ -575,7 +575,7 @@ void TextCursor::handleChar(char c)
 
         grid->setactivelem(note);
 
-        note->recalculate();
+        note->recalc();
 
         note->preview(-1, true);
 

@@ -32,9 +32,9 @@ protected:
             void            load(XmlElement* xmlNode);
             void            handleMouseUp(InputEvent& ev);
             void            handleMouseDown(InputEvent& ev);
-            void            drawOnGrid(Graphics& g, Grid* grid);
-            void            calcCoordsForGrid(Grid* grid);
-    virtual void            calcNoteFreq();
+            void            drwongrid(Graphics& g, Grid* grid);
+            void            calcforgrid(Grid* grid);
+    virtual void            calcfreq();
 
 public:
 
@@ -51,12 +51,12 @@ public:
             void            preview(int note = -1, bool update_instr = false);
             void            releasePreview();
             bool            isNote() {return true;}
-            void            setNoteValue(int note_value);
+            void            setnote(int note_value);
             int             getNoteValue() { return noteValue; }
       Instrument*           getInstr() { return instr; }
             void            setInstr(Instrument* i) { instr = i; }
             Parameter*      getParamByDisplayMode(GridDisplayMode mode);
-            void            recalculate();
+            void            recalc();
             void            setPos(float tick,int line);
 };
 
@@ -75,7 +75,7 @@ protected:
             long            sampleFrameLength;
 
 
-            void            drawOnGrid(Graphics& g, Grid* grid);
+            void            drwongrid(Graphics& g, Grid* grid);
 
 public:
 
@@ -83,14 +83,14 @@ public:
             //const SampleNote& operator= (const SampleNote&);
 
             SampleNote*     clone(Instrument* new_instr);
-            void            calcNoteFreq();
+            void            calcfreq();
             bool            IsOutOfBounds(double* cursor);
             void            updateSampleBounds();
             bool            initCursor(double* cursor);
             void            save(XmlElement* xmlNode);
             void            load(XmlElement* xmlNode);
             void            setTickLength(float tick_length);
-            void            recalculate();
+            void            recalc();
             void            setTickDelta(float tick_delta);
 };
 

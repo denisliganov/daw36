@@ -86,7 +86,7 @@ public:
             long        getFramesRemaining(long frame_phase);
             void        setTickLength(float newlen);
             void        markDeleted(bool del);
-            void        drawOnGrid(Graphics & g,Grid * grid);
+            void        drwongrid(Graphics & g,Grid * grid);
 };
 
 

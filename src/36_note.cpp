@@ -43,7 +43,7 @@ Note::Note(Instrument* i, int note_val)
     vol = new Parameter("Volume", Param_Vol, 1.f, 0.f, DAW_VOL_RANGE);
     pan = new Parameter("Panning", Param_Pan, 0.f, -1.f, 2.f);
 
-    setNoteValue(note_val);
+    setnote(note_val);
 
     tickLength = (float)MTransp->getTicksPerBeat();
 
@@ -114,13 +114,13 @@ void Note::load(XmlElement * xmlNode)
     pan->setValue((float)xmlNode->getDoubleAttribute(T("Panning")));
 }
 
-void Note::recalculate()
+void Note::recalc()
 {
     if(!isDeleted())
     {
-        calcNoteFreq();
+        calcfreq();
 
-        calcFrames();
+        calcframes();
 
         calculated = true;
 
@@ -161,7 +161,7 @@ void Note::preview(int note, bool update_instr)
     }
 }
 
-void Note::calcCoordsForGrid(Grid* grid)
+void Note::calcforgrid(Grid* grid)
 {
      x1 = grid->getXfromTick(startTick);
      yBase = grid->getYfromLine(trkLine)- 1;
@@ -196,13 +196,13 @@ void Note::calcCoordsForGrid(Grid* grid)
     setDrawAreaDirectly(x1, y1, x2, y2);
 }
 
-void Note::drawOnGrid(Graphics& g, Grid* grid)
+void Note::drwongrid(Graphics& g, Grid* grid)
 {
     if (grid->getDisplayMode() == GridDisplayMode_Bars)
     {
         FontId fnt = FontSmall;
 
-        fill(g, .1.f, .3f);
+        fill(g, 1.f, .3f);
         setc(g, 1.f);
         lineH(g, 0, 0, width);
 
@@ -255,14 +255,14 @@ void Note::drawOnGrid(Graphics& g, Grid* grid)
     //gTextFit(g, FontSmall, instr->objName.data(), x1, y2 - 1, width);
 }
 
-void Note::setNoteValue(int note_value)
+void Note::setnote(int note_value)
 {
     noteValue = note_value;
 
     instr->updNotePositions();
 }
 
-void Note::calcNoteFreq()
+void Note::calcfreq()
 {
     freq = NoteToFreq(noteValue);
 }
@@ -404,7 +404,7 @@ bool SampleNote::initCursor(double* cursor)
     }
 }
 
-void SampleNote::calcNoteFreq()
+void SampleNote::calcfreq()
 {
     int val = noteValue - BaseNote;
 
@@ -554,7 +554,7 @@ void SampleNote::load(XmlElement * xmlNode)
     reversed = xmlNode->getBoolAttribute(T("Reversed"));
 }
 
-void SampleNote::drawOnGrid(Graphics& g, Grid* grid)
+void SampleNote::drwongrid(Graphics& g, Grid* grid)
 {
     if(sample->waveImage == NULL)
     {
@@ -571,7 +571,7 @@ void SampleNote::drawOnGrid(Graphics& g, Grid* grid)
         g.restoreState();
     }
 
-    Note::drawOnGrid(g, grid);
+    Note::drwongrid(g, grid);
 
     //g.setColour(Colour(instr->getColor()).withBrightness(1.f).withAlpha(0.8f));
     //gText(g, FontSmall, instr->instrAlias, x1 + 2, y1 + 13);
@@ -584,9 +584,9 @@ void SampleNote::drawOnGrid(Graphics& g, Grid* grid)
     //gTextFit(g, FontSmall, instr->alias, x2 - 5, y1 + 8, width);
 }
 
-void SampleNote::recalculate()
+void SampleNote::recalc()
 {
-    Note::recalculate();
+    Note::recalc();
 }
 
 void SampleNote::setTickDelta(float tick_delta)

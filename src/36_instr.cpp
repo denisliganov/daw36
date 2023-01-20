@@ -481,7 +481,7 @@ void Instrument::createSelfPattern()
         selfNote->propagateTriggers(selfPattern);
     }
 
-    selfPattern->recalculate();
+    selfPattern->recalc();
 }
 
 void Instrument::forceStop()
@@ -1113,7 +1113,7 @@ void Instrument::load(XmlElement * instrNode)
 
 void Instrument::preview(int note)
 {
-    selfNote->setNoteValue(note);
+    selfNote->setnote(note);
 
     selfNote->preview(note);
 }

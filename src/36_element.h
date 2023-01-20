@@ -52,15 +52,15 @@ public:
     virtual void            propagateTriggers(Pattern* pt);
     virtual void            unpropagateTriggers(Pattern* pt);
     virtual void            handleMouseDown(InputEvent& ev);
-    virtual void            recalculate();
+    virtual void            recalc();
     virtual bool            checkVisible(Grid* grid);
             bool            isPointed(int mx, int my, Grid* grid);
-    virtual void            calcCoordsForGrid(Grid* grid);
+    virtual void            calcforgrid(Grid* grid);
     virtual void            save(XmlElement* xmlNode);
     virtual void            load(XmlElement* xmlNode);
     virtual void            preview(int key) {}
     virtual bool            isNote() {return false;}
-            void            calcFrames();
+            void            calcframes();
             void            addTrigger(Trigger* tg);
             void            removeTrigger(Trigger* tg);
             void            deleteAllTriggers();
@@ -90,7 +90,7 @@ public:
     virtual float           getTickLength();
             int             getNumLines() { return numLines; }
             Pattern*        getBase();
-    virtual void            drawOnGrid(Graphics& g, Grid* grid) {}
+    virtual void            drwongrid(Graphics& g, Grid* grid) {}
             void            softDelete();
 };
 

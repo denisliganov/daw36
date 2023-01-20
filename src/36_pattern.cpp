@@ -128,9 +128,9 @@ Element* Pattern::checkElement(float tick, int trknum)
     return NULL;
 }
 
-void Pattern::recalculate()
+void Pattern::recalc()
 {
-    calcFrames();
+    calcframes();
 
     for(Element* el : elems)
     {
@@ -140,7 +140,7 @@ void Pattern::recalculate()
         }
     }
 
-    calcNoteFreq();
+    calcfreq();
 
     relocateTriggers();
 }
@@ -241,9 +241,9 @@ void Pattern::handleMouseUp(InputEvent& ev)
     Element::handleMouseUp(ev);
 }
 
-void Pattern::drawOnGrid(Graphics& g, Grid * grid)
+void Pattern::drwongrid(Graphics& g, Grid * grid)
 {
-    calcCoordsForGrid(grid);
+    calcforgrid(grid);
 
     int gx1 = x1;
     int gy1 = y1;

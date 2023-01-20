@@ -20,7 +20,7 @@ Playhead::Playhead(Grid* grd)
     grid = grd;
     posX = absX = relX = 0;
 
-    patt = grid->getPattern();
+    patt = grid->getpatt();
 }
 
 void Playhead::timerCallback()

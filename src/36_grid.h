@@ -188,7 +188,7 @@ public:
             void                changebars(InputEvent& ev);
             void                reassign();
             void                action(GridAction act, float dTick = 0, int dLine = 0);
-            Pattern*            getPattern();
+            Pattern*            getpatt();
             Element*            getActiveElement()  { return activeElem; };
             GridActionMode      getActionMode()   { return mode; };
             float               getFramesPerPixel() { return framesPerPixel; }

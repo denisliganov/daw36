@@ -521,7 +521,7 @@ void Grid::drawelems(Graphics& g)
         {
             Element* el = *it;
 
-            el->drawOnGrid(g, this);
+            el->drwongrid(g, this);
 
             it++;
         }
@@ -793,7 +793,7 @@ int Grid::getLineHeight()
     return lheight;
 }
 
-Pattern* Grid::getPattern()
+Pattern* Grid::getpatt()
 {
     return patt;
 }
@@ -1374,7 +1374,7 @@ void Grid::handleMouseWheel(InputEvent& ev)
             //setTickOffset(getTickOffset() - ofsDelta);
             
             // Vertical
-            vscr->setoffs(vscr->getoffs() - ev.wheelDelta * (lheight * .5f));
+            vscr->setoffs(vscr->getoffs() - ev.wheelDelta * (lheight*1.5f));
             //vscr->setOffset(vscr->getOffset() - ev.wheelDelta*(lheight*.5f));
 
             //MInstrPanel->setOffset((int)(MInstrPanel->getOffset() - ev.wheelDelta*int(InstrHeight*1.1f)));
@@ -1481,7 +1481,7 @@ bool Grid::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
 
         n->setPos(tick, line);
 
-        n->calcCoordsForGrid(this);
+        n->calcforgrid(this);
 
         drag.setCoords1(n->x1, n->y1, n->width, n->height);
 
@@ -1503,7 +1503,7 @@ bool Grid::handleObjDrop(Gobj * obj,int mx,int my, unsigned flags)
         getpos(mx, my, &tick, &line);
 
         Note* note = putnote(tick, line, BaseNote);
-        note->recalculate();
+        note->recalc();
 
         MAudio->releaseAllPreviews();
 
@@ -1519,7 +1519,7 @@ bool Grid::drawDraggedObject(Graphics & g,Gobj * obj)
 
     if(i != NULL)
     {
-        i->selfNote->drawOnGrid(g, this);
+        i->selfNote->drwongrid(g, this);
 
         return true;
     }
@@ -1747,7 +1747,7 @@ Note* Grid::putnote(float tick, int line, int noteVal)
         MInstrPanel->setCurrInstr(instr);
 
         Note* newNote = _Create_Note(tick, line, instr, noteVal > 0 ? noteVal : instr->lastNoteVal, 
-                                        instr->lastNoteLength, instr->lastNoteVol, instr->lastNotePan, getPattern());
+                                        instr->lastNoteLength, instr->lastNoteVol, instr->lastNotePan, getpatt());
 
         updbounds();
 
