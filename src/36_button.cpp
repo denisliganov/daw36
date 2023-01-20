@@ -163,7 +163,7 @@ void Button36::drawButtonBase(Graphics& g)
     }
 }
 
-void Button36::drawSelf(Graphics& g)
+void Button36::drawself(Graphics& g)
 {
     drawButtonBase(g);
 

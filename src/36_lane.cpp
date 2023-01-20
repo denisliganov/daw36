@@ -34,7 +34,7 @@ LanePanel::LanePanel(Grid* grid)
     addObject(keys = new AuxKeys(workGrid, 30, false));
 }
 
-void LanePanel::drawSelf(Graphics& g)
+void LanePanel::drawself(Graphics& g)
 {
     fill(g, 0.32f);
 
@@ -46,7 +46,7 @@ void LanePanel::drawSelf(Graphics& g)
     //gLineHorizontal(g, y2 - BottomPadHeight + 1, x1, x2);
 }
 
-void LanePanel::mapObjects()
+void LanePanel::remap()
 {
     if(laneType == Lane_Vol || laneType == Lane_Pan)
     {
@@ -179,7 +179,7 @@ void Lane::drawBars(Graphics& g)
     //grid->drawIntermittentHighlight(g, x1, y1, height);
 }
 
-void Lane::drawSelf(Graphics& g)
+void Lane::drawself(Graphics& g)
 {
     // Draw backdrop with vertical bars
 

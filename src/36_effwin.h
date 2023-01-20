@@ -12,7 +12,7 @@ protected:
 
         Eff*        eff;
 
-        void        drawSelf(Graphics& g);
+        void        drawself(Graphics& g);
         void        handleChildEvent(Gobj * obj,InputEvent & ev);
 
 public:

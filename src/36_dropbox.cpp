@@ -97,7 +97,7 @@ void DropBox::handleMouseUp(InputEvent& ev)
     //
 }
 
-void DropBox::drawSelf(Graphics& g)
+void DropBox::drawself(Graphics& g)
 {
     if (mouseHovering)
     {

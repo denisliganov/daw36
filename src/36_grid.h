@@ -91,7 +91,7 @@ protected:
             Selection*          sel;
             PlaceHighlight*     place;
             ResizeEdge          resizeEdge;
-            Image*              mainImage;
+            Image*              mainimg;
             Image*              elemImage;
             Image*              brushImage;
             Timeline*           timeline;
@@ -104,7 +104,7 @@ protected:
             InputEvent          lastEvent;
             InputEvent          newEvent;
             bool                mouseIsDown;
-            int                 lineHeight;
+            int                 lheight;
             int                 actionLine;
             int                 alignLine;
             int                 dragLineStart;
@@ -117,10 +117,9 @@ protected:
             float               framesPerPixel;
             float               brushWidthTicks;
 
-            int                 fullTracksHeight;
             float               lastElementEndTick;
             float               lastElementStartTick;
-            int                 lastElementLine;
+            int                 lastline;
 
             float               fullTickSpan;
             float               visibleTickSpan;
@@ -155,13 +154,13 @@ protected:
             void                refreshElementsImage();
             void                drawIntermittentHighlight(Graphics& g, int xh, int yh, int wh, int hh, int numBars);
             bool                drawDraggedObject(Graphics& g, Gobj* obj);
-            void                drawSelf(Graphics & g);
+            void                drawself(Graphics & g);
             void                drawElements(Graphics& g);
             void                updateMode(InputEvent & ev);
             void                updateCursorImage(InputEvent & ev);
             ContextMenu*        createContextMenu();
             void                activateContextMenuItem(std::string item);
-            void                mapObjects();
+            void                remap();
             void                mapElements();
             float               getSnappedTick(float val);
             void                getAlignedPosFromCoords(int mx, int my, float* tick, int* line);

@@ -17,7 +17,7 @@ protected:
 
         std::vector<std::string>        vitems;
 
-        void    drawSelf(Graphics& g);
+        void    drawself(Graphics& g);
         void    activateContextMenuItem(std::string item);
         void    handleMouseDown(InputEvent& ev);
         void    handleMouseUp(InputEvent & ev);

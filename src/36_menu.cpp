@@ -55,7 +55,7 @@ public:
             }
         }
 
-        void drawSelf(Graphics& g)
+        void drawself(Graphics& g)
         {
             if(itemstr == "")   //  delimiter
             {
@@ -132,7 +132,7 @@ void ContextMenu::addMenuItem( std::string item_str )
     setCoords1(0, 0, width, mHeight);
 }
 
-void ContextMenu::mapObjects()
+void ContextMenu::remap()
 {
     int itemY = MenuItemsGap;
 
@@ -151,7 +151,7 @@ void ContextMenu::activateContextMenuItem(std::string item)
     menuObject->activateContextMenuItem(item);
 }
 
-void ContextMenu::drawSelf(Graphics & g)
+void ContextMenu::drawself(Graphics & g)
 {
     fill(g, .5f);
 }

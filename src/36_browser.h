@@ -75,8 +75,8 @@ public:
             void            handleMouseDrag(InputEvent& ev);
             void            handleMouseDown(InputEvent& ev);
             void            handleMouseUp(InputEvent& ev);
-            void            mapObjects();
-            void            drawSelf(Graphics& g);
+            void            remap();
+            void            drawself(Graphics& g);
             BrwEntry*       getEntryByIndex(int index);
             void            setMode(BrwMode mode);
             bool            isFileMode();

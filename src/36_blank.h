@@ -9,7 +9,7 @@ class Blank : public Gobj
 {
 protected:
 
-        void    drawSelf(Graphics& g);
+        void    drawself(Graphics& g);
         void    handleMouseDown(InputEvent& ev);
         void    handleMouseUp(InputEvent& ev);
         void    handleMouseDrag(InputEvent& ev);

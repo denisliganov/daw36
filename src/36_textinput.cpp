@@ -210,7 +210,7 @@ TextInput::TextInput(std::string def_str)
     textstr = def_str;
 }
 
-void TextInput::drawSelf(Graphics & g)
+void TextInput::drawself(Graphics & g)
 {
     gSetMonoColor(g, 0.3f);
 

@@ -88,7 +88,7 @@ void ChanVU::tick()
     redraw();
 }
 
-void ChanVU::drawSelf(Graphics & g)
+void ChanVU::drawself(Graphics & g)
 {
     Instrument* i = dynamic_cast<Instrument*>(parent);
 
@@ -179,7 +179,7 @@ InstrVU::InstrVU() : ChanVU(true)
     
 }
 
-void InstrVU::drawSelf(Graphics & g)
+void InstrVU::drawself(Graphics & g)
 {
     float val = (getL() + getR())/2.f;
 

@@ -142,7 +142,7 @@ bool Playhead::handleAutomationRecording(float currStep)
     return refreshcontent;
 };
 
-void Playhead::drawSelf(Graphics & g)
+void Playhead::drawself(Graphics & g)
 {
     g.saveState();
     g.reduceClipRegion(dx1, dy1, dwidth, dheight);

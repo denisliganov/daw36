@@ -49,7 +49,7 @@ MainEdit::MainEdit()
     MTextCursor = new TextCursor();
 }
 
-void MainEdit::drawSelf(Graphics& g)
+void MainEdit::drawself(Graphics& g)
 {
     //setc(g, 0.2f);
     //fillx(g, 0, 0, LineNumWidth, height);
@@ -81,7 +81,7 @@ void MainEdit::drawSelf(Graphics& g)
     lineH(g, height - BottomPadHeight, 0, width);
 }
 
-void MainEdit::mapObjects()
+void MainEdit::remap()
 {
     confine();
 

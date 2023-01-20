@@ -262,7 +262,7 @@ void Gobj::updCoords()
             }
         }
 
-        mapObjects();
+        remap();
     }
 }
 
@@ -408,18 +408,18 @@ void Gobj::remapAndRedraw()
     {
         redraw();
 
-        mapObjects();
+        remap();
     }
 }
 
-void Gobj::handleDraw(Graphics& g)
+void Gobj::drawloop(Graphics& g)
 {
     gr = &g;
 
     g.saveState();
     g.reduceClipRegion(dx1, dy1, dwidth, dheight);
 
-    drawSelf(g);
+    drawself(g);
 
     // Draw child objects
 
@@ -427,11 +427,11 @@ void Gobj::handleDraw(Graphics& g)
     {
         if(obj->isShown() && obj->objGroup != ObjGroup_Highlight)
         {
-            obj->handleDraw(g);
+            obj->drawloop(g);
         }
     }
 
-    drawOverChildren(g);
+    drawover(g);
 
     g.restoreState();
 

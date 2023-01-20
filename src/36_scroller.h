@@ -40,7 +40,7 @@ public:
         void        handleMouseWheel(InputEvent& ev);
         void        handleMouseDrag(InputEvent& ev);
         void        handleMouseUp(InputEvent & ev);
-        void        drawSelf(Graphics & g);
+        void        drawself(Graphics & g);
         int         getpos(InputEvent& ev, int& offset_on_bar);
         void        goToStart();
         void        goToEnd();

@@ -16,7 +16,7 @@ public:
 
         DropHighlight(bool vert);
 
-        void    drawSelf(Graphics& g);
+        void    drawself(Graphics& g);
 };
 
 class DragAndDrop  : public Gobj
@@ -33,7 +33,7 @@ public:
 
         void            start(Gobj * drag_obj, int mx, int my);
         void            reset();
-        void            drawSelf(Graphics & g);
+        void            drawself(Graphics & g);
         bool            canDrag();
         bool            isActive();
         void            drag(Gobj* targetObj, int mx, int my);

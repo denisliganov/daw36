@@ -100,7 +100,7 @@ public:
 virtual Instrument*             clone();
         Instrument*             makeClone(Instrument * instr);
             std::string         getAlias()                          {return instrAlias;};
-            void                mapObjects();
+            void                remap();
             void                preview(int note = BaseNote);
             float               getLastNoteLength()                 { return lastNoteLength; }
             void                setLastParams(float last_length,float last_vol,float last_pan, int last_val);
@@ -112,8 +112,8 @@ virtual Instrument*             clone();
             void                handleChildEvent(Gobj * obj, InputEvent& ev);
 //            void                handleMouseEnter(InputEvent & ev)  { redraw(); }
 //            void                handleMouseLeave(InputEvent & ev)  { redraw(); }
-            void                drawSelf(Graphics& g);
-            void                drawOverChildren(Graphics & g);
+            void                drawself(Graphics& g);
+            void                drawover(Graphics & g);
             void                forceStop();
             void                setIndex(int idx);
     virtual void                createSelfPattern();

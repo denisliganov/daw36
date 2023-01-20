@@ -25,7 +25,7 @@ protected:
     virtual void    handleMouseDown(InputEvent& ev);
     virtual void    handleMouseUp(InputEvent& ev);
     virtual void    handleMouseDrag(InputEvent& ev);
-            void    drawSelf(Graphics& g);
+            void    drawself(Graphics& g);
 
     virtual void    handleNumDrag(int count) {}
     virtual void    updAfterDrag() {}
@@ -40,7 +40,7 @@ class BpmBox : public NumBox
 {
 protected:
 
-            void    drawSelf(Graphics& g);
+            void    drawself(Graphics& g);
             void    handleNumDrag(int count);
             void    updAfterDrag();
             void    handleMouseWheel(InputEvent& ev);
@@ -58,7 +58,7 @@ protected:
         int             bpbVal;
 
 
-        void    drawSelf(Graphics& g);
+        void    drawself(Graphics& g);
         void    handleNumDrag(int count);
         void    updAfterDrag();
         void    handleMouseWheel(InputEvent& ev);
@@ -81,7 +81,7 @@ protected:
 
         void    handleMouseWheel(InputEvent & ev);
         void    handleNumDrag(int count);
-        void    drawSelf(Graphics& g);
+        void    drawself(Graphics& g);
 
 public:
 
@@ -101,7 +101,7 @@ protected:
 
         ChanVU*             vu;
 
-        void    drawSelf(Graphics& g);
+        void    drawself(Graphics& g);
         void    handleNumDrag(int count);
         void    handleMouseWheel(InputEvent& ev);
 
@@ -131,8 +131,8 @@ protected:
             void    handleMouseDown(InputEvent & ev);
             void    handleMouseDrag(InputEvent & ev);
             void    handleMouseUp(InputEvent& ev);
-            void    drawSelf(Graphics& g);
-            void    mapObjects();
+            void    drawself(Graphics& g);
+            void    remap();
             void    redraw();
 
 public:

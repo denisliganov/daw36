@@ -146,7 +146,7 @@ void Browser::handleChildEvent(Gobj * obj, InputEvent& ev)
     }
 }
 
-void Browser::drawSelf(Graphics& g)
+void Browser::drawself(Graphics& g)
 {
     setc(g, 0.2f);
 
@@ -164,7 +164,7 @@ void Browser::drawSelf(Graphics& g)
     {
         if (be->isShown())
         {
-            be->drawSelf(g);
+            be->drawself(g);
         }
     }
 
@@ -182,7 +182,7 @@ void Browser::disableAllEntries()
     }
 }
 
-void Browser::mapObjects()
+void Browser::remap()
 {
     disableAllEntries();
 

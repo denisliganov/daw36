@@ -77,7 +77,7 @@ VstEffect::~VstEffect()
         VstHost->removeModule(vst2);
 }
 
-void VstEffect::drawSelf(Graphics & g)
+void VstEffect::drawself(Graphics & g)
 {
     setc(g, 0xff508080);
     fillx(g, 0, 0, width, height);

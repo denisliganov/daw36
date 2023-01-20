@@ -30,7 +30,7 @@ void Blank::handleMouseDown(InputEvent& ev)
 {
 }
 
-void Blank::drawSelf(Graphics& g)
+void Blank::drawself(Graphics& g)
 {
 }
 

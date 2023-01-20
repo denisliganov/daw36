@@ -14,7 +14,7 @@ protected:
 
         Grid*       grid;
 
-        void        drawSelf(Graphics& g);
+        void        drawself(Graphics& g);
         void        handleMouseDown(InputEvent& ev);
         void        handleMouseDrag(InputEvent& ev);
         void        handleMouseMove(InputEvent & ev);

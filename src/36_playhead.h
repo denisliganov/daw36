@@ -21,7 +21,7 @@ protected:
 
             void        timerCallback();
             bool        isMouseTouching(int mx, int my) { return false; }
-            void        drawSelf(Graphics& g);
+            void        drawself(Graphics& g);
 
 public:
 

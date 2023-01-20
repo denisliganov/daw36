@@ -56,11 +56,11 @@ protected:
         void            handleMouseDrag(InputEvent& ev);
         void            handleMouseUp(InputEvent& ev);
         void            updCursorImage(unsigned flags);
-        void            mapObjects();
+        void            remap();
         void            handleWindowResize(int wx, int wh);
         void            setMode(DragMode m) { mode = m; }
         DragMode        getMode() { return mode; }
-        void            drawSelf(Graphics& g);
+        void            drawself(Graphics& g);
         void            handleClose();
         void            handleChildEvent(Gobj * obj,InputEvent & ev);
 

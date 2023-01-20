@@ -95,7 +95,7 @@ void Timeline::drawIntermittentHighlight(Graphics& g, int x, int y, int w, int h
     }
 }
 
-void Timeline::drawSelf(Graphics & g)
+void Timeline::drawself(Graphics & g)
 {
     fill(g, .25f);
 

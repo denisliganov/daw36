@@ -21,8 +21,8 @@ protected:
             void            activateContextMenuItem(std::string item);
     virtual void            processData(float* in_buff, float* out_buff, int num_frames) {};
     virtual Eff*            makeClone(Eff* eff);
-            void            drawSelf(Graphics& g);
-            void            mapObjects();
+            void            drawself(Graphics& g);
+            void            remap();
             void            handleMouseUp(InputEvent& ev);
             void            handleMouseDown(InputEvent& ev);
             void            handleMouseDrag(InputEvent& ev);

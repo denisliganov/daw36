@@ -47,7 +47,7 @@ public:
         std::string     textstr;
 
                 TextInput(std::string def_str);
-        void    drawSelf(Graphics& g);
+        void    drawself(Graphics& g);
 };
 
 

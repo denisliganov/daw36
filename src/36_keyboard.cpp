@@ -323,7 +323,7 @@ void TextCursor::updPos()
     }
 }
 
-void TextCursor::drawSelf(Graphics& g)
+void TextCursor::drawself(Graphics& g)
 {
     fill(g, 1.f);
 }

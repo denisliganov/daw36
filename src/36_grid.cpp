@@ -39,7 +39,7 @@ protected:
 
         bool        isMouseTouching(int mx, int my)  { return false; }
 
-        void        drawSelf(Graphics& g)
+        void        drawself(Graphics& g)
         {
             g.saveState();
             //g.reduceClipRegion(x1, y1, width, height);
@@ -67,7 +67,7 @@ friend  Grid;
 
         bool        isMouseTouching(int mx, int my)  { return false; }
 
-        void drawSelf(Graphics& g)
+        void drawself(Graphics& g)
         {
             g.saveState();
             g.reduceClipRegion(grid->getX1(),grid->getY1(), grid->getW(), grid->getH());
@@ -169,7 +169,7 @@ public:
             }
         }
 
-        void drawSelf(Graphics& g)
+        void drawself(Graphics& g)
         {
             if (currNote && !currNote->isDeleted())
             {
@@ -202,7 +202,7 @@ Grid::Grid(float step_width, int line_height, Pattern* pt, Timeline* tl)
 {
     snapSize = 0;
     pixelsPerTick = step_width;
-    lineHeight = line_height; 
+    lheight = line_height; 
     timeline = tl;
     timeline->grid = this;
     patt = pt;
@@ -210,7 +210,7 @@ Grid::Grid(float step_width, int line_height, Pattern* pt, Timeline* tl)
     activeElem = NULL;
     activeNote = previewNote = NULL;
 
-    mainImage = NULL;
+    mainimg = NULL;
     brushImage = NULL;
     elemImage = NULL;
 
@@ -220,7 +220,6 @@ Grid::Grid(float step_width, int line_height, Pattern* pt, Timeline* tl)
 
     lastElementEndTick = 0;
     fullTickSpan = visibleTickSpan = 0;
-    fullTracksHeight = 0;
     vscr = hscr = NULL;
     mouseIsDown = false;
     stepDefault = true;
@@ -277,7 +276,7 @@ void Grid::drawIntermittentHighlight(Graphics& g, int x, int y, int w, int h, in
 
 void Grid::refreshImageBrush()
 {
-    int imgHeight = lineHeight; //*20;
+    int imgHeight = lheight; //*20;
     int barWidth = RoundFloat(MTransp->getTicksPerBar()*getPixelsPerTick());
     int imgWidth = barWidth;
 
@@ -315,13 +314,13 @@ void Grid::refreshImageBrush()
         for (int x = 0; x < imgWidth; x += pixelsPerTick)
         {
             //gFillRectWH(imageContext, x, 0, 1, 5);
-            gFillRectWH(imageContext, x, 0, 1, lineHeight);
+            gFillRectWH(imageContext, x, 0, 1, lheight);
         }
     }
     else
     {
         //gFillRectWH(imageContext, 0, 0, imgWidth, 5);
-        gFillRectWH(imageContext, 0, 0, imgWidth, lineHeight);
+        gFillRectWH(imageContext, 0, 0, imgWidth, lheight);
     }
 
     // beats
@@ -330,13 +329,13 @@ void Grid::refreshImageBrush()
     int beatStep = MTransp->getTicksPerBeat()*getPixelsPerTick();
     for (int x = 0; x < imgWidth; x += beatStep)
     {
-        gFillRectWH(imageContext, x, 0, 1, lineHeight);
+        gFillRectWH(imageContext, x, 0, 1, lheight);
     }
 
     // bar line
     gSetMonoColor(imageContext, bar);
 
-    gLineVertical(imageContext, 0, 0, lineHeight);
+    gLineVertical(imageContext, 0, 0, lheight);
 
     // horiz bottom line
     gSetMonoColor(imageContext, divClr);
@@ -359,20 +358,20 @@ void Grid::refreshImageBuffer()
 {
     if (brushImage != NULL && width > 0 && height > 0)
     {
-        if (mainImage != NULL) 
+        if (mainimg != NULL) 
         {
-            delete mainImage;
+            delete mainimg;
         }
 
-        mainImage = new juce::Image(Image::RGB, width, height, true);
+        mainimg = new juce::Image(Image::RGB, width, height, true);
 
-        Graphics image(*(mainImage));
+        Graphics image(*(mainimg));
 
         int tickPerBar = MTransp->getTicksPerBar();
 
         int xoffs = RoundFloat((getTickOffset() / tickPerBar - (int)getTickOffset() / tickPerBar) * getPixelsPerTick() * tickPerBar);
 
-        int yoffs = int(vscr->getoffs()) % lineHeight;
+        int yoffs = int(vscr->getoffs()) % lheight;
 
         ImageBrush* imgBrush = new ImageBrush(brushImage, -xoffs, -yoffs, 1);
 
@@ -422,7 +421,7 @@ void Grid::setMode(GridActionMode md)
     mode = md;
 }
 
-void Grid::mapObjects()
+void Grid::remap()
 {
     refreshImageBuffer();
 
@@ -557,20 +556,21 @@ void Grid::drawElements(Graphics& g)
 */
 }
 
-void Grid::drawSelf(Graphics& g)
+void Grid::drawself(Graphics& g)
 {
-    if(mainImage != NULL)
+    if(mainimg != NULL)
     {
-        g.drawImageAt(mainImage, x1, y1);
+        g.drawImageAt(mainimg, x1, y1);
 
         //gFillRect(g, x1, y1, x2, y2);
-        //g.drawImage(mainImage, x1 + 40, y1 + 40, width - 80, height - 80, 40, 40, width - 80, height - 80);
+        //g.drawImage(mainimg, x1 + 40, y1 + 40, width - 80, height - 80, 40, 40, width - 80, height - 80);
     }
 
-    if(lastElementLine > 0 && vscr->getoffs() + height > lastElementLine)
+    if(lastline > 0 && (vscr->getoffs() + height)/lheight > lastline)
     {
-       ///gSetMonoColor(g, 0.15f);
-        //gFillRect(g, x1, fullTracksHeight - vertOffset + y1, x2, y2);
+        setc(g, 0.15f);
+        int y = lastline*lheight - vscr->getoffs();
+        fillx(g, 0, y, width, height - y);
     }
 
     //if(elemImage != NULL)
@@ -579,9 +579,9 @@ void Grid::drawSelf(Graphics& g)
     drawElements(g);
 
 // Testing text output:
-//    gSetColor(g, 0xdfFFFFFF);
-//    gDString(g, "01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ", 550, 297, 8, 8);
-//    gZxString(g, "0123456ABCDEFGHIJKLMNOPQRST", 550, 320);
+    setc(g, 0xdfFFFFFF);
+    gDString(g, "01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ", 550, 297, 8, 8);
+    gZxString(g, "0123456ABCDEFGHIJKLMNOPQRST", 550, 320);
 }
 
 void Grid::redraw(bool remap_objects, bool refresh_image)
@@ -596,7 +596,7 @@ void Grid::redraw(bool remap_objects, bool refresh_image)
 
     if(remap_objects)
     {
-        mapObjects();
+        remap();
 
         refreshElementsImage();
     }
@@ -617,7 +617,7 @@ void Grid::updateBounds()
 {
     lastElementEndTick = 0;
     lastElementStartTick = 0;
-    lastElementLine = 0;
+    lastline = 0;
 
     if (patt != NULL)
     {
@@ -635,9 +635,9 @@ void Grid::updateBounds()
                     lastElementStartTick = el->getStartTick();
                 }
 
-                if(el->getLine() > lastElementLine)
+                if(el->getLine() > lastline)
                 {
-                    lastElementLine = el->getLine();
+                    lastline = el->getLine();
                 }
             }
         }
@@ -647,9 +647,9 @@ void Grid::updateBounds()
 
     fullTickSpan = lastElementEndTick + (visibleTickSpan*0.9f);
 
-    if (MTextCursor && MTextCursor->grid == this && MTextCursor->getLine() > lastElementLine)
+    if (MTextCursor && MTextCursor->grid == this && MTextCursor->getLine() > lastline)
     {
-        lastElementLine = MTextCursor->getLine();
+        lastline = MTextCursor->getLine();
     }
 
     if(hscr)
@@ -659,7 +659,7 @@ void Grid::updateBounds()
 
     if(vscr)
     {
-        vscr->updlimits((1 + lastElementLine + 5)*lineHeight, height, vscr->getoffs());
+        vscr->updlimits((1 + lastline + 5)*lheight, height, vscr->getoffs());
     }
 }
 
@@ -769,9 +769,9 @@ void Grid::changeScale(int delta, int mouseRefX)
 
 void Grid::setLineHeight(int newLH)
 {
-    if(newLH != lineHeight)
+    if(newLH != lheight)
     {
-        lineHeight = newLH;
+        lheight = newLH;
     }
 
     redraw(true, true);
@@ -789,7 +789,7 @@ float Grid::getTickOffset()
 
 int Grid::getLineHeight()
 {
-    return lineHeight;
+    return lheight;
 }
 
 Pattern* Grid::getPattern()
@@ -809,12 +809,12 @@ float Grid::getTickFromX(int x)
 
 int Grid::getYfromLine(int line)
 {
-    return getY1() - vscr->getoffs() + line*lineHeight + lineHeight - 1;
+    return getY1() - vscr->getoffs() + line*lheight + lheight - 1;
 }
 
 int Grid::getLineFromY(int y)
 {
-    return (y - getY1() + vscr->getoffs())/lineHeight;
+    return (y - getY1() + vscr->getoffs())/lheight;
 }
 
 void Grid::checkActivePosition(InputEvent & ev)
@@ -1375,8 +1375,8 @@ void Grid::handleMouseWheel(InputEvent& ev)
             //setTickOffset(getTickOffset() - ofsDelta);
             
             // Vertical
-            vscr->setoffs(vscr->getoffs() - ev.wheelDelta * (lineHeight * .5f));
-            //vscr->setOffset(vscr->getOffset() - ev.wheelDelta*(lineHeight*.5f));
+            vscr->setoffs(vscr->getoffs() - ev.wheelDelta * (lheight * .5f));
+            //vscr->setOffset(vscr->getOffset() - ev.wheelDelta*(lheight*.5f));
 
             //MInstrPanel->setOffset((int)(MInstrPanel->getOffset() - ev.wheelDelta*int(InstrHeight*1.1f)));
 
@@ -1574,8 +1574,8 @@ void Grid::processVolsPans(InputEvent& ev)
     int         tx1 = x1;
     int         tx2 = x2;
     int         ty2 = getYfromLine(actionLine) - 1;
-    int         ty1 = ty2 - lineHeight + 2;
-    int         tH = lineHeight - 1;
+    int         ty1 = ty2 - lheight + 2;
+    int         tH = lheight - 1;
     int         setY = ev.mouseY - ty1;
 
     if (prevX == -1 && prevY == -1)
@@ -1929,7 +1929,7 @@ void Grid::doAction(GridAction act, float dTick, int dLine)
     else if(act == GridAction_Delete)
     {
         //if (alignLine == actionLine)
-        //    deleteElementsAcross(lastEvent.mouseX, getYfromLine(actionLine) - lineHeight, newEvent.mouseX, getYfromLine(actionLine) - 1);
+        //    deleteElementsAcross(lastEvent.mouseX, getYfromLine(actionLine) - lheight, newEvent.mouseX, getYfromLine(actionLine) - 1);
 
         std::list<Element*> elem;
 
@@ -2293,7 +2293,7 @@ void Grid::doAction(GridAction act, float dTick, int dLine)
 
             // Adjust selection to snap setting
 
-            sel->setCoords2(getXfromTick(selTickStart) - getX1(), getYfromLine(selLineStart) - getY1() - lineHeight, 
+            sel->setCoords2(getXfromTick(selTickStart) - getX1(), getYfromLine(selLineStart) - getY1() - lheight, 
                                         getXfromTick(selTickEnd) - getX1(), getYfromLine(selLineEnd) - getY1());
 
             for(Element* el : visible)

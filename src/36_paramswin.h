@@ -13,7 +13,7 @@ protected:
         Slider36*   slider2;
         Slider36*   slider3;
 
-        void    drawSelf(Graphics& g);
+        void    drawself(Graphics& g);
         void    handleChildEvent(Gobj * obj,InputEvent & ev);
 
 public:

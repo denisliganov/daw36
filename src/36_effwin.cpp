@@ -34,7 +34,7 @@ EffParamObject::EffParamObject(Eff* eff)
     WinObject::setName(String(eff->getObjName().data()));
 }
 
-void EffParamObject::drawSelf(Graphics& g)
+void EffParamObject::drawself(Graphics& g)
 {
     fill(g, 0.35f);
 }

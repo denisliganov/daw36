@@ -29,7 +29,7 @@ class EnableButton : public Button36
 {
 protected:
 
-        void drawSelf(Graphics& g)
+        void drawself(Graphics& g)
         {
             Instrument* instr = (Instrument*)parent;
 
@@ -57,7 +57,7 @@ class SoloButton : public Button36
 {
 protected:
 
-        void drawSelf(Graphics& g)
+        void drawself(Graphics& g)
         {
             Instrument* instr = (Instrument*)parent;
 
@@ -90,7 +90,7 @@ public:
 
 protected:
 
-        void drawSelf(Graphics& g)
+        void drawself(Graphics& g)
         {
             Instrument* instr = (Instrument*)parent;
 
@@ -130,7 +130,7 @@ class GuiButton : public Button36
 {
 protected:
 
-        void drawSelf(Graphics& g)
+        void drawself(Graphics& g)
         {
             Instrument* instr = (Instrument*)parent;
 
@@ -238,7 +238,7 @@ Instrument::~Instrument()
     ReleaseMutex(MixerMutex);
 }
 
-void Instrument::mapObjects()
+void Instrument::remap()
 {
     //guiButt->setCoords1(width - 180, 1, 26, 12);
 
@@ -262,7 +262,7 @@ void Instrument::mapObjects()
     }
 }
 
-void Instrument::drawSelf(Graphics& g)
+void Instrument::drawself(Graphics& g)
 {
     Gobj::fill(g, .3f);
 
@@ -277,7 +277,7 @@ void Instrument::drawSelf(Graphics& g)
 //    lineH(0, 0, width - 1);
 }
 
-void Instrument::drawOverChildren(Graphics & g)
+void Instrument::drawover(Graphics & g)
 {
     //setMonoColor(.9f);
     //gTextFit(g, FontSmall, instrAlias, x1 + 6, y2 - 3, width - (width/2));

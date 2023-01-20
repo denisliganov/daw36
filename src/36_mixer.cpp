@@ -178,7 +178,7 @@ void MixChannel::init(Instrument* ins)
     defineMonoColor(.08f);
 }
 
-void MixChannel::mapObjects()
+void MixChannel::remap()
 {
     //if(volslider)
     //    volslider->setCoords1(width - 30, 1, 10, height - 2);
@@ -222,7 +222,7 @@ void MixChannel::mapObjects()
 */
 }
 
-void MixChannel::drawSelf(Graphics& g)
+void MixChannel::drawself(Graphics& g)
 {
     int baseheight = MixChannelPadHeight;
 
@@ -1130,7 +1130,7 @@ void Mixer::handleChildEvent(Gobj * obj, InputEvent& ev)
     }
 }
 
-void Mixer::mapObjects()
+void Mixer::remap()
 {
     int yCh = 0 - MInstrPanel->getOffset();
 
@@ -1195,7 +1195,7 @@ void Mixer::mapObjects()
     */
 }
 
-void Mixer::drawSelf(Graphics& g)
+void Mixer::drawself(Graphics& g)
 {
     fill(g, .1f);
 /*

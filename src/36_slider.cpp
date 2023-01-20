@@ -95,7 +95,7 @@ void Slider36::handleMouseDown(InputEvent& ev)
     }
 }
 
-void Slider36::mapObjects()
+void Slider36::remap()
 {
     if (vertical)
         length = height;
@@ -115,7 +115,7 @@ std::string Slider36::getHint()
     return hint;
 }
 
-void Slider36::drawSelf(Graphics& g)
+void Slider36::drawself(Graphics& g)
 {
     Instrument* instr = dynamic_cast<Instrument*>(parent);
     MixChannel* mc = dynamic_cast<MixChannel*>(parent);

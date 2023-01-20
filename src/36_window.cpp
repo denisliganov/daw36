@@ -752,7 +752,7 @@ void JuceListener::redrawPerAction()
             {
                 if(obj->getObjGroup() != ObjGroup_Highlight)
                 {
-                    obj->handleDraw(imG);
+                    obj->drawloop(imG);
                 }
             }
         }
@@ -782,7 +782,7 @@ void JuceListener::paint(Graphics& g)
     {
         if (obj->isShown())
         {
-            obj->handleDraw(g);
+            obj->drawloop(g);
         }
     }
 }
@@ -975,7 +975,7 @@ JuceComponent::~JuceComponent()
 
 void JuceComponent::paint(Graphics& g)
 {
-    winObject->handleDraw(g);
+    winObject->drawloop(g);
 }
 
 void JuceComponent::repaintObject(Gobj* obj)

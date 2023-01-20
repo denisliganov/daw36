@@ -34,7 +34,7 @@ class EffGuiButton : public Button36
 {
 protected:
 
-        void drawSelf(Graphics& g)
+        void drawself(Graphics& g)
         {
             Instrument* instr = (Instrument*)parent;
 
@@ -88,14 +88,14 @@ Eff::~Eff()
     ///
 }
 
-void Eff::mapObjects()
+void Eff::remap()
 {
     //guiButt->setCoords1(width - 13, 0, 12, 12);
 
     //sliderAmount->setCoords2(4, height - 12, 30, height - 4);
 }
 
-void Eff::drawSelf(Graphics& g)
+void Eff::drawself(Graphics& g)
 {
     fill(g, .4f);
     rect(g, .3f);

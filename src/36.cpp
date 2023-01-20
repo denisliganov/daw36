@@ -169,10 +169,10 @@ void MainWinObject::handleWindowResize(int wx, int wh)
 
     mainX2 = width - AuxCtrlWidth - 1;
 
-    mapObjects();
+    remap();
 }
 
-void MainWinObject::mapObjects()
+void MainWinObject::remap()
 {
     if (!InitComplete)
     {
@@ -246,7 +246,7 @@ void MainWinObject::mapObjects()
     redraw();
 }
 
-void MainWinObject::drawSelf(Graphics& g)
+void MainWinObject::drawself(Graphics& g)
 {
     g.fillAll(Colours::black);
 
@@ -431,7 +431,7 @@ void MainWinObject::setMainX1(int main_x1)
         mainX2 = mainX1 + LeftGap;
     }
 
-    mapObjects();
+    remap();
 }
 
 void MainWinObject::setMainX2(int main_x2)
@@ -440,14 +440,14 @@ void MainWinObject::setMainX2(int main_x2)
 
     LIMIT(mainX2, 0, width - 1);
 
-    mapObjects();
+    remap();
 }
 
 void MainWinObject::setMainY1(int main_y1)
 {
     mainY1 = main_y1;
 
-    mapObjects();
+    remap();
 }
 
 void MainWinObject::setMainY2(int main_y2)
@@ -459,7 +459,7 @@ void MainWinObject::setMainY2(int main_y2)
         currAuxPanel->setCoords1(-1, -1, width, height - mainY2);
     }
 
-    mapObjects();
+    remap();
 }
 
 void MainWinObject::switchBrowser(bool on)

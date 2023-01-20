@@ -30,7 +30,7 @@ ConfigObject::ConfigObject()
     WinObject::setWidthHeight(500, 400);
 }
 
-void ConfigObject::drawSelf(Graphics& g)
+void ConfigObject::drawself(Graphics& g)
 {
     gSetMonoColor(g, 0.4f);
 

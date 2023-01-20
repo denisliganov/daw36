@@ -30,9 +30,9 @@ public:
         ContextMenu(Gobj* obj, DropBox* drop_box = NULL);
 
         void            addMenuItem( std::string item );
-        void            mapObjects();
+        void            remap();
         void            activateContextMenuItem(std::string item);
-        void            drawSelf(Graphics & g);
+        void            drawself(Graphics & g);
         void            handleClose();
 };
 

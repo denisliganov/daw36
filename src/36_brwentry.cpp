@@ -108,7 +108,7 @@ void BrwEntry::drawFileEntry(Graphics& g, int x, int y, int w)
     }
 }
 
-void BrwEntry::drawSelf(Graphics & g)
+void BrwEntry::drawself(Graphics & g)
 {
     g.saveState();
     g.reduceClipRegion(dx1, dy1, dwidth, dheight);

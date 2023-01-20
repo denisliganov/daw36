@@ -147,7 +147,7 @@ bool ControlPanel::wavesAreVisible()
     return btWaveMode->isPressed();
 }
 
-void ControlPanel::mapObjects()
+void ControlPanel::remap()
 {
     int buttonWidth = 30;
     int yTop = 0;
@@ -222,7 +222,7 @@ void ControlPanel::mapObjects()
     }
 }
 
-void ControlPanel::drawSelf(Graphics& g)
+void ControlPanel::drawself(Graphics& g)
 {
     fill(g, 0.35f);
 

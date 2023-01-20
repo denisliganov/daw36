@@ -22,7 +22,7 @@ protected:
 
         float       getL();
         float       getR();
-        void        drawSelf(Graphics & g);
+        void        drawself(Graphics & g);
         bool        isMouseTouching(int mx, int my) { return false; }
 
 public:
@@ -38,7 +38,7 @@ class InstrVU : public ChanVU
 {
 protected:
 
-        void    drawSelf(Graphics & g);
+        void    drawself(Graphics & g);
 
 public:
 

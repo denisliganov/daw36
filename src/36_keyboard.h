@@ -146,7 +146,7 @@ public:
         TextCursor();
         void    setPos(float newTick, int newLine);
         void    updPos();
-        void    drawSelf(Graphics& g);
+        void    drawself(Graphics& g);
         float   getTick();
         int     getLine();
         void    handleKey(int key);

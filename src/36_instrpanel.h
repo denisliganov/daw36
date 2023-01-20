@@ -56,8 +56,8 @@ public:
             void            cloneInstrument(Instrument* i);
             Instrument*     getInstrByIndex(int index);
             void            editAutopattern(Instrument* instr);
-            void            mapObjects();
-            void            drawSelf(Graphics& g);
+            void            remap();
+            void            drawself(Graphics& g);
             void            addInstrument(Instrument* i, Instrument* objAfter = NULL);
             VstInstr*       loadVst(const char* path, VstInstr* otherVst);
             VstInstr*       addVst(const char* path, VstInstr* vst);

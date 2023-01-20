@@ -99,7 +99,7 @@ void SnapMenu::handleMouseUp(InputEvent& ev)
     ///
 }
 
-void SnapMenu::drawSelf(Graphics& g)
+void SnapMenu::drawself(Graphics& g)
 {
     fill(g, .3f);
     rect(g, 0.22f);

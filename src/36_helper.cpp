@@ -12,7 +12,7 @@ HelperPanel::HelperPanel()
     
 }
 
-void HelperPanel::drawSelf(Graphics & g)
+void HelperPanel::drawself(Graphics & g)
 {
     gPanelRect(g, x1, y1, x2, y2);
 }

@@ -78,13 +78,13 @@ public:
             void            doSend(float * sendbuff, float amount, int num_frames);
             void            save(XmlElement* xmlChanNode);
             void            load(XmlElement* xmlChanNode);
-            void            mapObjects();
+            void            remap();
             ContextMenu*    createContextMenu();
             ContextMenu*    createContextMenuForEffect(Eff* eff);
             void            activateEffectMenuItem(Eff* eff, std::string mi);
             void            activateContextMenuItem(std::string mi);
             Eff*            addEffectFromBrowser(BrwEntry* de);
-            void            drawSelf(Graphics& g);
+            void            drawself(Graphics& g);
             void            handleMouseWheel(InputEvent& ev);
             void            handleMouseDown(InputEvent& ev);
             void            handleMouseUp(InputEvent& ev);
@@ -117,8 +117,8 @@ public:
             void            mixAll(int num_frames);
             void            cleanBuffers(int num_frames);
             void            setCurrentEffect(Eff* eff);
-            void            mapObjects();
-            void            drawSelf(Graphics& g);
+            void            remap();
+            void            drawself(Graphics& g);
             void            resetAll();
             void            handleChildEvent(Gobj * obj, InputEvent& ev);
             void            setOffset(int offs);

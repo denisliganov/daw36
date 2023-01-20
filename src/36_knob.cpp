@@ -91,14 +91,14 @@ void Knob::handleMouseUp(InputEvent & ev)
 {
 }
 
-void Knob::mapObjects()
+void Knob::remap()
 {
     delete parentImage;
 
     parentImage = NULL;
 }
 
-void Knob::drawSelf(Graphics& g)
+void Knob::drawself(Graphics& g)
 {
 /*
     if(parentImage == NULL)

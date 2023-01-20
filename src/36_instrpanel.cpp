@@ -762,7 +762,7 @@ bool InstrPanel::handleObjDrop(Gobj * obj, int mx, int my, unsigned int flags)
     return false;
 }
 
-void InstrPanel::mapObjects()
+void InstrPanel::remap()
 {
     confine();
 
@@ -836,7 +836,7 @@ void InstrPanel::mapObjects()
     //MEdit->verticalGridScroller->updateLimits(fullSpan, visibleSpan, (float)instrOffset);
 }
 
-void InstrPanel::drawSelf(Graphics& g)
+void InstrPanel::drawself(Graphics& g)
 {
     fill(g, 0.1f);
 

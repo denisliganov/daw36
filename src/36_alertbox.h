@@ -31,7 +31,7 @@ protected:
 public:
 
         AlertBox( std::string message, std::string button1 = "", std::string button2 = "", std::string button3 = "");
-        void            drawSelf(Graphics & g);
+        void            drawself(Graphics & g);
         void            addButton(std::string button);
         void            handleChildEvent(Gobj * obj,InputEvent & ev);
         std::string     getChoice();

@@ -72,7 +72,7 @@ public:
         uint32  getModeColor();
         void    drawDevEntry(Graphics& g, int xo, int ycoord, int w);
         void    drawFileEntry(Graphics& g, int xo, int ycoord, int w);
-        void    drawSelf(Graphics & g);
+        void    drawself(Graphics & g);
 };
 
 

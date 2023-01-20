@@ -278,7 +278,7 @@ AuxKeys::AuxKeys(Grid * gr, int key_width,bool vert)
     }
 }
 
-void AuxKeys::drawSelf(Graphics& g)
+void AuxKeys::drawself(Graphics& g)
 {
     fill(g, 0.35f);
 

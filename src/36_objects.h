@@ -163,7 +163,7 @@ public:
     virtual void                setDrawAreaDirectly(int xabs1, int xabs2, int xabs3, int xabs4);
 
     virtual void                updCoords();
-    virtual void                mapObjects() {}
+    virtual void                remap() {}
     virtual void                confine(int bxNew = -1, int byNew = -1, int bx1New = -1, int by1New = -1);
     virtual void                updDrawCoords();
     virtual bool                isMouseTouching(int mx, int my);
@@ -180,9 +180,9 @@ public:
     virtual bool                drawDraggedObject(Graphics& g, Gobj* obj) { return false; };
 
     virtual void                redraw(bool change = true);
-    virtual void                handleDraw(Graphics& g);
-    virtual void                drawSelf(Graphics& g) {};
-    virtual void                drawOverChildren(Graphics& g) {};
+    virtual void                drawloop(Graphics& g);
+    virtual void                drawself(Graphics& g) {};
+    virtual void                drawover(Graphics& g) {};
 
             // Drawing methods using relative coords
             void                fill(Graphics& g, float clr, float alpha=1);

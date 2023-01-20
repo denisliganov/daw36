@@ -20,7 +20,7 @@ SampleObject::SampleObject()
     setWidthHeight(300, 300);
 }
 
-void SampleObject::drawSelf(Graphics& g)
+void SampleObject::drawself(Graphics& g)
 {
     gSetMonoColor(g, 0.4f);
 

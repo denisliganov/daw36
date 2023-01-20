@@ -21,7 +21,7 @@ ParamObject::ParamObject()
     setWidthHeight(300, 300);
 }
   
-void ParamObject::drawSelf(Graphics& g)
+void ParamObject::drawself(Graphics& g)
 {
     gSetMonoColor(g, 0.4f);
 

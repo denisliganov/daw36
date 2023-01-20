@@ -73,8 +73,8 @@ protected:
             DropBox*            brwMenu;
 
             void                handleChildEvent(Gobj* obj, InputEvent& ev);
-            void                drawSelf(Graphics& g);
-            void                mapObjects();
+            void                drawself(Graphics& g);
+            void                remap();
 
 public:
 
