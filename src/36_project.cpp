@@ -190,7 +190,7 @@ void Project36::deleteProject()
 
     // Position cursor, playback pos and mainbar
 
-    MGrid->setPixelsPerTick(6);
+    MGrid->setppt(6);
 
     MInstrPanel->setOffset(0);
 

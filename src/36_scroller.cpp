@@ -79,6 +79,11 @@ int Scroller::getpos(InputEvent& ev, int& offset_on_bar)
     return pos;
 }
 
+void Scroller::adjoffs(float delta)
+{
+    setoffs(offset + delta);
+}
+
 void Scroller::setoffs(float offs)
 {
     offset = offs;
@@ -172,13 +177,13 @@ void Scroller::drawself(Graphics & g)
     }
 }
 
-void Scroller::goToStart()
+void Scroller::gotostart()
 {
     event = {};
     setoffs(0);
 }
 
-void Scroller::goToEnd()
+void Scroller::gotoend()
 {
     event = {};
     setoffs(fullSpan - visibleSpan);

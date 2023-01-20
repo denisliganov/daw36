@@ -112,8 +112,8 @@ protected:
             float               alignTick;
             float               currTick;
             float               dragTickStart;
-            float               snapSize;
-            float               pixelsPerTick;
+            float               snap;
+            float               pixpertick;
             float               framesPerPixel;
             float               brushWidthTicks;
 
@@ -145,7 +145,7 @@ protected:
     virtual void                handleMouseUp(InputEvent& ev);
             void                handleMouseEnter(InputEvent & ev);
             void                handleMouseLeave(InputEvent & ev);
-            void                updatePosition(InputEvent & ev, bool textCursor = false);
+            void                updpos(InputEvent & ev, bool textCursor = false);
             void                handleChildEvent(Gobj * obj, InputEvent& ev);
             bool                handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my);
             bool                handleObjDrop(Gobj * obj,int mx,int my, unsigned int flags);
@@ -155,44 +155,44 @@ protected:
             void                drawIntermittentHighlight(Graphics& g, int xh, int yh, int wh, int hh, int numBars);
             bool                drawDraggedObject(Graphics& g, Gobj* obj);
             void                drawself(Graphics & g);
-            void                drawElements(Graphics& g);
-            void                updateMode(InputEvent & ev);
-            void                updateCursorImage(InputEvent & ev);
+            void                drawelems(Graphics& g);
+            void                updmode(InputEvent & ev);
+            void                updcursor(InputEvent & ev);
             ContextMenu*        createContextMenu();
             void                activateContextMenuItem(std::string item);
             void                remap();
-            void                mapElements();
-            float               getSnappedTick(float val);
-            void                getAlignedPosFromCoords(int mx, int my, float* tick, int* line);
-            void                checkActivePosition(InputEvent & ev);
-            void                adjustVisibleArea(InputEvent& ev);
+            void                mapelems();
+            float               getticksnap(float val);
+            void                getpos(int mx, int my, float* tick, int* line);
+            void                checkpos(InputEvent & ev);
+            void                clickscroll(InputEvent& ev);
  
 public:
 
             Grid(float step_width, int line_height, Pattern* pt, Timeline* tl);
             ~Grid() {}
             void                grabTextCursor(float tick, int line);
-            void                updateBounds();
+            void                updbounds();
             void                removeElementFromLists(Element* el);
-            void                setActiveElement(Element* el);
-            void                setMode(GridActionMode md);
+            void                setactivelem(Element* el);
+            void                setmode(GridActionMode md);
             void                setVertScroller(Scroller& scr)   { vscr = &scr; }
             void                setHorizScroller(Scroller& scr)   { hscr = &scr; }
             void                sethoffs(float tick_offset, bool from_nav_bar = false);
             void                setLineHeight(int newLH);
             void                changeScale(int delta, int mouseRefX = -1);
-            void                setPixelsPerTick(float tick_width, int mouseRefX = -1);
+            void                setppt(float tick_width, int mouseRefX = -1);
             void                redraw(bool remap_objects, bool refresh_image = false);
-            Note*               putNote(float tick, int line, int noteVal);
-            void                selectDeselectAll(bool select);
-            void                processVolsPans(InputEvent& ev);
-            void                reassignAfterMove();
-            void                doAction(GridAction act, float dTick = 0, int dLine = 0);
+            Note*               putnote(float tick, int line, int noteVal);
+            void                selall(bool select);
+            void                changebars(InputEvent& ev);
+            void                reassign();
+            void                action(GridAction act, float dTick = 0, int dLine = 0);
             Pattern*            getPattern();
             Element*            getActiveElement()  { return activeElem; };
             GridActionMode      getActionMode()   { return mode; };
             float               getFramesPerPixel() { return framesPerPixel; }
-            float               getSnapSize()   { return snapSize; }
+            float               getSnapSize()   { return snap; }
             int                 getXfromTick(float tick);
             float               getTickFromX(int x);
             int                 getYfromLine(int line);
@@ -200,15 +200,15 @@ public:
             float               getPixelsPerTick();
             float               getTickOffset();
             int                 getLineHeight();
-            void                deleteElementsAcross(int mx1, int my1, int mx2, int my2);
+            void                delacross(int mx1, int my1, int mx2, int my2);
             void                setDisplayMode( GridDisplayMode display_mode );
             GridDisplayMode     getDisplayMode() { return displayMode; }
-            void                updateScale();
+            void                updscale();
             void                handleTransportUpdate();
-            void                resetSelection(bool deselect = true);
+            void                selreset(bool deselect = true);
     virtual void                handleModifierKeys(unsigned flags);
-            int                 getNumSelected();
-            bool                isElementSelected(Element* el);
+            int                 getselnum();
+            bool                iselselected(Element* el);
             void                updateChangedElements();
 };
 

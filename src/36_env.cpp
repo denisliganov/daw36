@@ -654,14 +654,14 @@ void Envelope::check(int mouse_x, int mouse_y)
     {
         if((abs(mouse_x - (x1 + width)) <= 3)&&(mouse_y >= y1 - 12)&&(mouse_y <= (y1 + height)))
         {
-            MGrid->setMode(GridMode_ElemResizing);
+            MGrid->setmode(GridMode_ElemResizing);
 
             MGrid->resizeEdge = Resize_Right;
             MGrid->activeElem = (Element*)this;
         }
         else if((abs(mouse_y - (y1 + height)) <= 2)&&(mouse_x >= x1)&&(mouse_x <= x1 + width))
         {
-            MGrid->setMode(GridMode_ElemResizing);
+            MGrid->setmode(GridMode_ElemResizing);
 
             MGrid->resizeEdge = Resize_Bottom;
             MGrid->activeElem = (Element*)this;

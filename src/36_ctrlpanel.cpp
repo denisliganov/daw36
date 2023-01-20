@@ -344,15 +344,15 @@ void ControlPanel::handleChildEvent(Gobj* obj, InputEvent& ev)
             }
             else if (obj == btScale1)
             {
-                MGrid->setPixelsPerTick(2);
+                MGrid->setppt(2);
             }
             else if (obj == btScale2)
             {
-                MGrid->setPixelsPerTick(10);
+                MGrid->setppt(10);
             }
             else if (obj == btScale3)
             {
-                MGrid->setPixelsPerTick(32);
+                MGrid->setppt(32);
             }
             else if(obj == btHome)
             {

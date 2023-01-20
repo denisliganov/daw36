@@ -202,8 +202,8 @@ void Note::drawOnGrid(Graphics& g, Grid* grid)
     {
         FontId fnt = FontSmall;
 
-        fill(g, .8f, .25f);
-        setc(g, .8f);
+        fill(g, .1.f, .3f);
+        setc(g, 1.f);
         lineH(g, 0, 0, width);
 
         //setc(g, .0f, .25f);

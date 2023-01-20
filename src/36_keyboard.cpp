@@ -254,9 +254,9 @@ void KeyHandler::handleNoteKey(int key, int note_val, bool press)
 
         if(note == NULL)
         {
-            note = MGrid->putNote(MTextCursor->getTick(), MTextCursor->getLine(), note_val);
+            note = MGrid->putnote(MTextCursor->getTick(), MTextCursor->getLine(), note_val);
 
-            MGrid->setActiveElement(note);
+            MGrid->setactivelem(note);
         }
         else
         {
@@ -352,19 +352,19 @@ void TextCursor::handleKeyOrCharPressed(unsigned key, char character, unsigned f
         {
             if(key == 'A')
             {
-                grid->selectDeselectAll(true);
+                grid->selall(true);
             }
             else if(key == 'C')
             {
-                grid->doAction(GridAction_Copy);
+                grid->action(GridAction_Copy);
             }
             else if(key == 'X')
             {
-                grid->doAction(GridAction_Cut);
+                grid->action(GridAction_Cut);
             }
             else if(key == 'V')
             {
-                grid->doAction(GridAction_Paste);
+                grid->action(GridAction_Paste);
             }
             else if(key == 'Z')
             {
@@ -507,7 +507,7 @@ void TextCursor::handleKeyOrCharPressed(unsigned key, char character, unsigned f
             
                 case key_delete:
                 {
-                    grid->doAction(GridAction_Delete);
+                    grid->action(GridAction_Delete);
                 }
                 break;
             
@@ -571,9 +571,9 @@ void TextCursor::handleChar(char c)
     {
         MInstrPanel->setCurrInstr(i);
 
-        Note* note = grid->putNote(getTick(), getLine(), -1);
+        Note* note = grid->putnote(getTick(), getLine(), -1);
 
-        grid->setActiveElement(note);
+        grid->setactivelem(note);
 
         note->recalculate();
 
