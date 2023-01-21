@@ -443,14 +443,19 @@ void ParamBox::drawself(Graphics& g)
     //fillx(g, xstart, height - 1, w, 1);
 
     setc(g, 0xffB0B000);
+    //setc(g, .75f);
     fillx(g, xstart, height - 2, w, 1);
+
     setc(g, 0xff606000);
+    //setc(g, .4f);
     fillx(g, xstart, height - 1, w, 1);
 
     setc(g, 0xffA0A000);
+    //setc(g, .66f);
     fillx(g, xoffs, height - 2, 1, 3);
 
     setc(g, 0xffFFFF00);
+    //setc(g, 1.f);
     fillx(g, xval, height - 2, 1, 3);
 }
 

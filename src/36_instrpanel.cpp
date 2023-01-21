@@ -48,10 +48,10 @@ class InstrHighlight : public Gobj
             //setc(g, 0xffFFC030, 1, .5f);
 
             //rect(g, 0xa0FFC030);
-            setc(g, 0xafFFFF00);
+            setc(g, 0xa0FFA000);
             lineH(g, 0, 0, width-1);
             lineH(g, height-1, 0, width-1);
-            fillx(g, width-4, 4, 3, height-8);
+            fillx(g, width-3, 4, 1, height-8);
         }
 
 public:
@@ -62,7 +62,7 @@ public:
             Instrument* instr = MInstrPanel->getCurrInstr();
 
             if (instr)
-                setCoords2(0, instr->getY1()-1, instr->getX2() + 10, instr->getY2() + 1);
+                setCoords2(0, instr->getY1()-1, instr->getX2() + 5, instr->getY2() + 1);
         }
 };
 

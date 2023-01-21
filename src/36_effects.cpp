@@ -99,13 +99,14 @@ void Eff::drawself(Graphics& g)
 {
     fill(g, .4f);
     rect(g, .3f);
-    
+
     setc(g, .2f);
     lineH(g, height-1, 0, width-1);
 
     int th = gGetTextHeight(FontBold);
     setc(g, .9f);
-    gTextFit(g, FontSmall, objName, x1+1, y1 + th, width - 2);
+
+    txtfit(g, FontSmall, objName, 1, th, width - 2);
 }
 
 Eff* Eff::makeClone(Eff* eff)
