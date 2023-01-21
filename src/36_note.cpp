@@ -45,9 +45,9 @@ Note::Note(Instrument* i, int note_val)
 
     setnote(note_val);
 
-    tickLength = (float)MTransp->getTicksPerBeat();
+    ticklen = (float)MTransp->getTicksPerBeat();
 
-    endTick = startTick + tickLength;
+    tick2 = tick1 + ticklen;
 
     yPositionAdjust = .5f;
 
@@ -75,7 +75,7 @@ Note::~Note()
 
 Note* Note::clone(Instrument* new_instr)
 {
-    return _Create_Note(startTick, trkLine, new_instr == NULL ? instr : new_instr, noteValue, tickLength, vol->value, pan->value, patt);
+    return _Create_Note(tick1, line, new_instr == NULL ? instr : new_instr, noteValue, ticklen, vol->value, pan->value, patt);
 }
 
 Element* Note::clone()
@@ -85,14 +85,14 @@ Element* Note::clone()
 
 void Note::move(float dtick, int dtrack)
 {
-    Element::setPos(startTick + dtick, trkLine + dtrack);
+    Element::setpos(tick1 + dtick, line + dtrack);
 
     instr->reinsertNote(this);
 }
 
-void Note::setPos(float tick,int line)
+void Note::setpos(float tick,int line)
 {
-    Element::setPos(tick, line);
+    Element::setpos(tick, line);
 
     instr->reinsertNote(this);
 }
@@ -116,7 +116,7 @@ void Note::load(XmlElement * xmlNode)
 
 void Note::recalc()
 {
-    if(!isDeleted())
+    if(!isdel())
     {
         calcfreq();
 
@@ -154,7 +154,7 @@ void Note::preview(int note, bool update_instr)
 
     if(update_instr)
     {
-        instr->lastNoteLength = getTickLength();
+        instr->lastNoteLength = getticklen();
         instr->lastNoteVol = vol->getValue();
         instr->lastNotePan = pan->getValue();
         instr->lastNoteVal = noteValue;
@@ -163,10 +163,10 @@ void Note::preview(int note, bool update_instr)
 
 void Note::calcforgrid(Grid* grid)
 {
-     x1 = grid->getXfromTick(startTick);
-     yBase = grid->getYfromLine(trkLine)- 1;
+     x1 = grid->getXfromTick(tick1);
+     yBase = grid->getYfromLine(line)- 1;
 
-     float lHeight = float(grid->getLineHeight() - 1);
+     float lHeight = float(grid->getlh() - 1);
 
      if (grid->getDisplayMode() == GridDisplayMode_Bars)
      {
@@ -188,7 +188,7 @@ void Note::calcforgrid(Grid* grid)
          barStart = yBase - start;
      }
 
-     width = (int)(tickLength*grid->getPixelsPerTick());
+     width = (int)(ticklen*grid->getPixelsPerTick());
 
      y2 = y1 + height - 1;
      x2 = x1 + width - 1;
@@ -215,7 +215,7 @@ void Note::drwongrid(Graphics& g, Grid* grid)
         setc(g, 1.f);
         txt(g,fnt, instr->getAlias(), 0, height-2);
 
-        if(isSelected())
+        if(issel())
         {
             fill(g, 1.f, .2f);
             rect(g, 1.f, .9f);
@@ -223,7 +223,7 @@ void Note::drwongrid(Graphics& g, Grid* grid)
     }
     else if (grid->getDisplayMode() == GridDisplayMode_Volumes || grid->getDisplayMode() == GridDisplayMode_Pans)
     {
-        if(isHighlighted() || isSelected())
+        if(issel())
         {
             setc(g, 0xffFFF020, .9f);
         }
@@ -290,7 +290,7 @@ void Note::handleMouseDown(InputEvent & ev)
         preview();
     }
 
-    MInstrPanel->setCurrInstr(instr);
+    MInstrPanel->setcurr(instr);
 }
 
 void Note::propagateTriggers(Pattern* sonPatt)
@@ -344,7 +344,7 @@ SampleNote::SampleNote(Sample* smp, int note_val) : Note(smp, note_val)
     instr = sample = smp;
     sampleFrameLength = (long)sample->sample_info.frames;
 
-    setTickLength(-1);
+    setticklen(-1);
 
     reversed = false;
 }
@@ -358,16 +358,16 @@ SampleNote* SampleNote::clone(Instrument* new_instr)
     return clone;
 }
 
-void SampleNote::setTickLength(float tick_length)
+void SampleNote::setticklen(float tick_length)
 {
     if(tick_length == -1)
     {
         // default length, based on the number of frames in the sample
-        Element::setTickLength(MTransp->getTickFromFrame(sampleFrameLength)*sample->rateUp/CalcFreqRatio(noteValue - BaseNote));
+        Element::setticklen(MTransp->getTickFromFrame(sampleFrameLength)*sample->rateUp/CalcFreqRatio(noteValue - BaseNote));
     }
     else
     {
-        Element::setTickLength(tick_length);
+        Element::setticklen(tick_length);
     }
 }
 
@@ -394,7 +394,7 @@ bool SampleNote::initCursor(double* cursor)
        *cursor = rightmostFrame;
     }
 
-    if(patt->ranged && (patt != MPattern)&&((startFrame + *cursor) >= patt->endFrame))
+    if(patt->ranged && (patt != MPattern)&&((frame1 + *cursor) >= patt->endFrame))
     {
         return false;
     }
@@ -410,9 +410,9 @@ void SampleNote::calcfreq()
 
     dataStep = sample->calcSampleFreqIncrement(val);
 
-    tickLength = MTransp->getTickFromFrame(sampleFrameLength)*sample->rateUp/CalcFreqRatio(val);
+    ticklen = MTransp->getTickFromFrame(sampleFrameLength)*sample->rateUp/CalcFreqRatio(val);
 
-    endTick = startTick + tickLength;
+    tick2 = tick1 + ticklen;
 
     updateSampleBounds();
 }
@@ -493,18 +493,18 @@ void SampleNote::updateSampleBounds()
 
             if((patt != NULL)&&(patt != MPattern))
             {
-                if(startFrame < 0)
+                if(frame1 < 0)
                 {
-                    p_offs = (long)(abs(startFrame)*sample->rateDown);
+                    p_offs = (long)(abs(frame1)*sample->rateDown);
                 }
                 else
                 {
                     p_offs = 0;
                 }
 
-                if(patt->frameLength < endFrame)
+                if(patt->framelen < frame2)
                 {
-                    p_cut = (long)(abs(endFrame - patt->frameLength)*(sample->rateDown));
+                    p_cut = (long)(abs(frame2 - patt->framelen)*(sample->rateDown));
                 }
                 else
                 {
@@ -589,7 +589,7 @@ void SampleNote::recalc()
     Note::recalc();
 }
 
-void SampleNote::setTickDelta(float tick_delta)
+void SampleNote::settickdelta(float tick_delta)
 {
     
 }

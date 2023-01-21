@@ -38,7 +38,34 @@ sf_count_t                  sf_readf_float(SNDFILE *sndfile, float *ptr, sf_coun
 
 
 
-//namespace M {
+class InstrHighlight : public Gobj
+{
+        bool        isMouseTouching(int mx, int my)  { return false; }
+
+        void drawself(Graphics& g)
+        {
+            //gSetMonoColor(g, 1, 0.7f);
+            //setc(g, 0xffFFC030, 1, .5f);
+
+            //rect(g, 0xa0FFC030);
+            setc(g, 0xafFFFF00);
+            lineH(g, 0, 0, width-1);
+            lineH(g, height-1, 0, width-1);
+            fillx(g, width-4, 4, 3, height-8);
+        }
+
+public:
+
+        InstrHighlight() {}
+        void updpos()
+        {
+            Instrument* instr = MInstrPanel->getCurrInstr();
+
+            if (instr)
+                setCoords2(0, instr->getY1()-1, instr->getX2() + 10, instr->getY2() + 1);
+        }
+};
+
 
 InstrPanel::InstrPanel(Mixer* mixer)
 {
@@ -71,6 +98,9 @@ InstrPanel::InstrPanel(Mixer* mixer)
     addObject(masterVolKnob = new Knob(masterVolume));
 
     masterVolume->addControl(masterVolKnob);
+
+    addHighlight(instrHighlight = new InstrHighlight());
+    instrHighlight->setRelative(false);
 }
 
 void InstrPanel::editAutopattern(Instrument * instr)
@@ -173,7 +203,7 @@ void InstrPanel::cloneInstrument(Instrument* i)
 
     // And set it current
 
-    setCurrInstr(i);
+    setcurr(i);
 
     colorizeInstruments();
 
@@ -216,7 +246,7 @@ Instrument* InstrPanel::loadInstrFromBrowser(BrwEntry * be)
 
     if(ni)
     {
-        setCurrInstr(ni);
+        setcurr(ni);
     }
 
     return ni;
@@ -299,7 +329,7 @@ void InstrPanel::addInstrument(Instrument * i, Instrument * objAfter)
 
         MProject.setChange();
 
-        if(MMixer->isShown())
+        if(MMixer->isshown())
         {
             i->mixChannel->setEnable(true);
 
@@ -395,7 +425,7 @@ Instrument* InstrPanel::getCurrInstr()
     }
 }
 
-void InstrPanel::setCurrInstr(Instrument* instr)
+void InstrPanel::setcurr(Instrument* instr)
 {
     if(*currInstr == instr)
     {
@@ -426,6 +456,8 @@ void InstrPanel::setCurrInstr(Instrument* instr)
     instr = *currInstr;
 
     redraw();
+
+    instrHighlight->updpos();
 }
 
 // Make current instrument always visible on panel
@@ -833,7 +865,7 @@ void InstrPanel::remap()
     fullSpan += InstrHeight*3;
     visibleSpan = float(height);// - MainLineHeight);
 
-    //MEdit->verticalGridScroller->updateLimits(fullSpan, visibleSpan, (float)instrOffset);
+    instrHighlight->updpos();
 }
 
 void InstrPanel::drawself(Graphics& g)

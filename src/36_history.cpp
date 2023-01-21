@@ -229,11 +229,11 @@ void EditHistory::perform(HistoryAction* act, bool forward)
                 {
                     //jassert(el->deleted == false);
 
-                    el->softDelete();
+                    el->softdel();
                 }
                 else
                 {
-                    el->markDeleted(false);
+                    el->markdel(false);
                 }
             }
         }break;
@@ -244,11 +244,11 @@ void EditHistory::perform(HistoryAction* act, bool forward)
             {
                 if(forward)
                 {
-                    el->markDeleted(false);
+                    el->markdel(false);
                 }
                 else
                 {
-                    el->softDelete();
+                    el->softdel();
                 }
             }
         }break;
@@ -277,11 +277,11 @@ void EditHistory::perform(HistoryAction* act, bool forward)
 
             if(forward)
             {
-                el->setTickLength(act->f2);
+                el->setticklen(act->f2);
             }
             else
             {
-                el->setTickLength(act->f1);
+                el->setticklen(act->f1);
             }
         }break;
 
@@ -291,11 +291,11 @@ void EditHistory::perform(HistoryAction* act, bool forward)
             {
                 if(forward)
                 {
-                    el->setTickDelta(act->f1);
+                    el->settickdelta(act->f1);
                 }
                 else
                 {
-                    el->setTickDelta(-act->f1);
+                    el->settickdelta(-act->f1);
                 }
             }
         }break;

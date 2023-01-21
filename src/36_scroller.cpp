@@ -172,7 +172,7 @@ void Scroller::drawself(Graphics & g)
         }
         else
         {
-            fillx(g, 1 + offsetPix, y1 + 1, barPixLen, height - 2);
+            fillx(g, 1 + offsetPix, 1, barPixLen, height - 2);
         }
     }
 }

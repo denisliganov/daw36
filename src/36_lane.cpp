@@ -162,17 +162,17 @@ void Lane::drawBars(Graphics& g)
 
     for(Element* el : grid->getpatt()->ptBase->elems)
     {
-        if (!el->isDeleted() && el->isNote())
+        if (!el->isdel() && el->isNote())
         {
-            drawBar(g, el, grid->getXfromTick(el->getStartTick()), false, divHgt);
+            drawBar(g, el, grid->getXfromTick(el->gettick()), false, divHgt);
         }
     }
 
     for (Element* el : grid->selected)
     {
-        if (!el->isDeleted() && el->patt == grid->getpatt() && el->isNote())
+        if (!el->isdel() && el->patt == grid->getpatt() && el->isNote())
         {
-            drawBar(g, el, grid->getXfromTick(el->getStartTick()), true, divHgt);
+            drawBar(g, el, grid->getXfromTick(el->gettick()), true, divHgt);
         }
     }
 
@@ -274,9 +274,9 @@ void Lane::process(bool leftbt, int mx, int my, unsigned flags)
 
     for(Element* el : grid->getpatt()->ptBase->elems)
     {
-        int cx = grid->getXfromTick(el->getStartTick());
+        int cx = grid->getXfromTick(el->gettick());
 
-        if (!el->isDeleted() && el->isNote() && (!processSelectedOnly || el->isSelected()) && (cx >= x1 && cx <= x2))
+        if (!el->isdel() && el->isNote() && (!processSelectedOnly || el->issel()) && (cx >= x1 && cx <= x2))
         {
             doChange = false;
 

@@ -81,7 +81,7 @@ void Envelope::placePoint(EnvPoint* p)
 
 void Envelope::calcTime()
 {
-    frameLength = long(tickLength*MTransp->getFramesPerTick());
+    framelen = long(ticklen*MTransp->getFramesPerTick());
 }
 
 void Envelope::removePoint(EnvPoint* p)
@@ -230,7 +230,7 @@ bool Envelope::processBuffer1(long      curr_frame,
     int         cntdown = 1;
     long        i = 0;
 
-    while(i < num_frames && i < MAX_BUFF_SIZE && xval < tickLength)
+    while(i < num_frames && i < MAX_BUFF_SIZE && xval < ticklen)
     {
         float val = 0;
 
@@ -413,7 +413,7 @@ void Envelope::updateLastValue()
 {
     if(points.size() > 0)
     {
-        if(points.back()->tick <= tickLength)
+        if(points.back()->tick <= ticklen)
         {
             lastValue = points.back()->y_norm;
         }
@@ -432,9 +432,9 @@ void Envelope::updateLastValue()
                         EnvPoint* ep = (*itr);
                         EnvPoint* ep1 = (*itr1);
 
-                        if(ep1->tick > tickLength)
+                        if(ep1->tick > ticklen)
                         {
-                            lastValue = Interpolate_Line(ep->tick, ep->y_norm, ep1->tick, ep1->y_norm, tickLength);
+                            lastValue = Interpolate_Line(ep->tick, ep->y_norm, ep1->tick, ep1->y_norm, ticklen);
 
                             break;
                         }
@@ -763,12 +763,12 @@ void Envelope::handleMouseDown(InputEvent& ev)
 
 long Envelope::getFramesRemaining(long frame_phase)
 {
-    return frameLength - frame_phase;
+    return framelen - frame_phase;
 }
 
 bool Envelope::isOutOfBounds(long frame_phase)
 {
-    if(frame_phase < 0 || frame_phase > frameLength)
+    if(frame_phase < 0 || frame_phase > framelen)
     {
         return true;
     }
@@ -778,14 +778,14 @@ bool Envelope::isOutOfBounds(long frame_phase)
     }
 }
 
-void Envelope::setTickLength(float tl)
+void Envelope::setticklen(float tl)
 {
-    Element::setTickLength(tl);
+    Element::setticklen(tl);
 
     updateLastValue();
 }
 
-void Envelope::markDeleted(bool del)
+void Envelope::markdel(bool del)
 {
     deleted = del;
 
@@ -848,7 +848,7 @@ void Envelope::drwongrid(Graphics & g,Grid * grid)
 
             if(p->deleted == false)
             {
-                if(p->tick <= tickLength && (pnext == NULL || pnext->tick <= tickLength))
+                if(p->tick <= ticklen && (pnext == NULL || pnext->tick <= ticklen))
                 {
                     if(pnext != NULL)
                     {
@@ -878,7 +878,7 @@ void Envelope::drwongrid(Graphics & g,Grid * grid)
                         py2 = p->y_norm;
                     }
 
-                    float py3 = Interpolate_Line(px1, py1, px2, py2, tickLength);
+                    float py3 = Interpolate_Line(px1, py1, px2, py2, ticklen);
 
                     path.lineTo((float)(x1 + width), (float)(y1 + height - py3*(float)height));
 
@@ -906,7 +906,7 @@ void Envelope::drwongrid(Graphics & g,Grid * grid)
 
     for(EnvPoint* p : points)
     {
-        if(p->tick <= tickLength)
+        if(p->tick <= ticklen)
         {
             gSetColor(g, (0xafFFFFFF));
 
@@ -956,7 +956,7 @@ void Envelope::drwongrid(Graphics & g,Grid * grid)
             float py1 = pprev->y_norm;
             float py2 = p->y_norm;
 
-            float py3 = Interpolate_Line(px1, py1, px2, py2, tickLength);
+            float py3 = Interpolate_Line(px1, py1, px2, py2, ticklen);
 
             gLine(g, (float)(x1 + px1*scale), (float)(y1 + height - py1*(float)height), (float)(x2 - 1), (float)(y1 + height - py3*(float)height));
 

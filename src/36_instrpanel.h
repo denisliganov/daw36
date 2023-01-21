@@ -20,8 +20,8 @@ friend Audio36;
 
 public:
 
-            Mixer*          mixr;
-
+            Mixer*              mixr;
+            InstrHighlight*     instrHighlight;
             Slider36*       masterVolSlider;
             ParamBox*       masterVolBox;
             Knob*           masterVolKnob;
@@ -70,7 +70,7 @@ public:
             void            setSampleRate(float sampleRate);
             void            setBufferSize(unsigned bufferSize);
             Instrument*     getCurrInstr();
-            void            setCurrInstr(Instrument* instr);
+            void            setcurr(Instrument* instr);
             void            placeBefore(Instrument* instr, Instrument* before);
             Instrument*     getInstrByAlias(std::string alstr);
             void            updateWaves();

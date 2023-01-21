@@ -821,7 +821,7 @@ void MixChannel::handleMouseDown(InputEvent& ev)
 {
     if(instr != NULL)
     {
-        MInstrPanel->setCurrInstr(instr);
+        MInstrPanel->setcurr(instr);
 
         if(ev.keyFlags & kbd_ctrl && ev.mouseY < y1 + MixerTopHeight)
         {
@@ -1140,9 +1140,9 @@ void Mixer::remap()
         {
             if((yCh + InstrHeight > 0) && yCh < getH())
             {
-                instr->mixChannel->setCoords1(10, yCh, width - 10, instr->getH());
+                instr->mixChannel->setCoords1(0, yCh, width, instr->getH());
             }
-            else if(instr->mixChannel->isShown())
+            else if(instr->mixChannel->isshown())
             {
                 instr->mixChannel->setVisible(false);
             }

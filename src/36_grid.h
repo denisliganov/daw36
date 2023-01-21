@@ -99,7 +99,7 @@ protected:
             Scroller*           hscr;
             Pattern*            patt;
             Element*            activeElem;
-            Note*               activeNote;
+            Note*               actnote;
             Note*               previewNote;
             InputEvent          lastEvent;
             InputEvent          newEvent;
@@ -199,7 +199,7 @@ public:
             int                 getLineFromY(int y);
             float               getPixelsPerTick();
             float               getTickOffset();
-            int                 getLineHeight();
+            int                 getlh();
             void                delacross(int mx1, int my1, int mx2, int my2);
             void                setDisplayMode( GridDisplayMode display_mode );
             GridDisplayMode     getDisplayMode() { return displayMode; }

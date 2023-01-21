@@ -250,7 +250,7 @@ void KeyHandler::handleNoteKey(int key, int note_val, bool press)
         keyNoteMap[key].pressed = true;
         keyNoteMap[key].noteValue = note_val;
 
-        Note* note = MGrid->activeNote;
+        Note* note = MGrid->actnote;
 
         if(note == NULL)
         {
@@ -313,13 +313,15 @@ void TextCursor::updPos()
             if (grid->mode == GridMode_Default)
             {
                 int x = grid->getXfromTick(tick) - grid->getX1();
-                int y = grid->getYfromLine(line) - int(grid->getLineHeight()) - grid->getY1() + 1;
+                int y = grid->getYfromLine(line) - int(grid->getlh()) - grid->getY1() + 1;
 
-                setCoords2(x, y, x, y + int(grid->getLineHeight()) - 1);
+                setCoords2(x, y, x, y + int(grid->getlh()) - 1);
 
                 setVisible(true);
             }
         }
+
+        grid->updbounds();
     }
 }
 
@@ -548,12 +550,12 @@ void TextCursor::advanceView(float dtick, int dline)
 {
     if(dtick != 0)
     {
-        grid->sethoffs(grid->getTickOffset() + dtick);
+        grid->sethoffs(grid->vscr->getoffs() + dtick);
     }
 
     if(dline != 0)
     {
-        grid->vscr->setoffs(grid->vscr->getoffs() + dline*grid->getLineHeight());
+        grid->vscr->setoffs(grid->vscr->getoffs() + dline*grid->getlh());
     }
 
     grid->redraw(false);
@@ -569,7 +571,7 @@ void TextCursor::handleChar(char c)
 
     if (i != NULL)
     {
-        MInstrPanel->setCurrInstr(i);
+        MInstrPanel->setcurr(i);
 
         Note* note = grid->putnote(getTick(), getLine(), -1);
 

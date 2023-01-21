@@ -425,7 +425,7 @@ void Gobj::drawloop(Graphics& g)
 
     for(Gobj* obj : objs)
     {
-        if(obj->isShown() && obj->objGroup != ObjGroup_Highlight)
+        if(obj->isshown() && obj->objGroup != ObjGroup_Highlight)
         {
             obj->drawloop(g);
         }
@@ -442,7 +442,7 @@ void Gobj::drawloop(Graphics& g)
 
 bool Gobj::checkMouseHovering(int mx, int my)
 {
-    return (isShown() && mx >= dx1 && mx <= dx2 && my >= dy1 && my <= dy2);
+    return (isshown() && mx >= dx1 && mx <= dx2 && my >= dy1 && my <= dy2);
 }
 
 bool Gobj::isMouseTouching(int mx, int my)
@@ -518,22 +518,10 @@ void Gobj::setc(Graphics& g, uint32 c, float b, float a)
     gSetColor2(g, c, b, a);
 }
 
-void Gobj::fill(Graphics& g, float clr, float alpha) 
-{
-    gSetMonoColor(g, clr, alpha);
-    gFillRect(g, x1, y1, x2, y2);
-}
-
 void Gobj::rect(Graphics& g, float clr, float alpha) 
 {
     gSetMonoColor(g, clr, alpha);
     gDrawRect(g, x1, y1, x2, y2);
-}
-
-void Gobj::fill(Graphics& g, uint32 clr, float b, float a) 
-{
-    gSetColor2(g, clr, b, a);
-    gFillRect(g, x1, y1, x2, y2);
 }
 
 void Gobj::rect(Graphics& g, uint32 clr, float b, float a) 
@@ -542,9 +530,27 @@ void Gobj::rect(Graphics& g, uint32 clr, float b, float a)
     gDrawRect(g, x1, y1, x2, y2);
 }
 
+void Gobj::rect(Graphics& g, uint32 clr) 
+{
+    gSetColor(g, clr);
+    gDrawRect(g, x1, y1, x2, y2);
+}
+
 void Gobj::rectx(Graphics& g, int x, int y, int w, int h) 
 {
     gDrawRectWH(g, x1 + x, y1 + y, w, h);
+}
+
+void Gobj::fill(Graphics& g, float clr, float alpha) 
+{
+    gSetMonoColor(g, clr, alpha);
+    gFillRect(g, x1, y1, x2, y2);
+}
+
+void Gobj::fill(Graphics& g, uint32 clr, float b, float a) 
+{
+    gSetColor2(g, clr, b, a);
+    gFillRect(g, x1, y1, x2, y2);
 }
 
 void Gobj::fill(Graphics& g, uint32 clr) 
@@ -556,12 +562,6 @@ void Gobj::fill(Graphics& g, uint32 clr)
 void Gobj::fillx(Graphics& g,int x, int y, int w, int h)
 {
     gFillRectWH(g, x1 + x, y1 + y, w, h);
-}
-
-void Gobj::rect(Graphics& g, uint32 clr) 
-{
-    gSetColor(g, clr);
-    gDrawRect(g, x1, y1, x2, y2);
 }
 
 void Gobj::lineH(Graphics& g, int ly,int lx1,int lx2)
@@ -635,7 +635,7 @@ Gobj* CheckNeighborObjectsY(std::list<Gobj*> &lst, std::string oname, int my, Go
 
     for(Gobj* o : lst)
     {
-        if(o->isShown() && o->getObjId().substr(0, oname.size()) == oname)
+        if(o->isshown() && o->getObjId().substr(0, oname.size()) == oname)
         {
             if(my > o->getY1() + o->getH()/2)
             {
@@ -668,7 +668,7 @@ Gobj* CheckNeighborObjectsX(std::list<Gobj*> &lst, std::string oname, int mx, Go
 
     for(Gobj* o : lst)
     {
-        if(o->isShown() && o->getObjId().substr(0, oname.size()) == oname)
+        if(o->isshown() && o->getObjId().substr(0, oname.size()) == oname)
         {
             if(mx > o->getX1() + o->getW()/2)
             {

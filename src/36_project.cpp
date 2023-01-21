@@ -496,7 +496,7 @@ bool Project36::loadProjectData(File chosenFile, LoadThread* thread)
 
             loadElementsFromNode(xmlMainNode, NULL);
 
-            MInstrPanel->setCurrInstr(NULL);
+            MInstrPanel->setcurr(NULL);
         }
     }
 
@@ -567,7 +567,7 @@ void Project36::saveProjectData(File chosenFile)
 
     for(Element* el : MPattern->elems)
     {
-        if(!el->isDeleted() && el->type != El_Pattern)
+        if(!el->isdel() && el->type != El_Pattern)
         {
             XmlElement* xmlElem = new XmlElement(T("Element"));
 

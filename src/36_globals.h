@@ -81,6 +81,7 @@ class HistoryAction;
 class EnvPoint;
 class ParamBox;
 class TextCursor;
+class InstrHighlight;
 
 
 struct RenderConfig;

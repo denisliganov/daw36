@@ -26,8 +26,7 @@ Element::Element()
     dev = NULL;
     patt = NULL;
 
-    trkLine = 0;
-    highlighted = false;
+    line = 0;
     selected = false;
     deleted = false;
     calculated = false;
@@ -62,13 +61,13 @@ void Element::recalc()
 
 void Element::calcframes()
 {
-    tickLength = endTick - startTick;
+    ticklen = tick2 - tick1;
 
-    startFrame = MTransp != NULL ? MTransp->getFrameFromTick(startTick) : 0;
+    frame1 = MTransp != NULL ? MTransp->getFrameFromTick(tick1) : 0;
 
-    endFrame = MTransp != NULL ? MTransp->getFrameFromTick(endTick) : 0;
+    frame2 = MTransp != NULL ? MTransp->getFrameFromTick(tick2) : 0;
 
-    frameLength = endFrame - startFrame - 1;
+    framelen = frame2 - frame1 - 1;
 }
 
 bool Element::isPointed(int mx, int my, Grid* grid)
@@ -90,10 +89,10 @@ bool Element::isPointed(int mx, int my, Grid* grid)
 
 bool Element::checkVisible(Grid* grid)
 {
-    int x1 = grid->getXfromTick(getStartTick());
-    int x2 = grid->getXfromTick(getEndTick());
-    int y1 = grid->getYfromLine(getLine()) - grid->getLineHeight();
-    int y2 = grid->getYfromLine(getLine());
+    int x1 = grid->getXfromTick(gettick());
+    int x2 = grid->getXfromTick(getendtick());
+    int y1 = grid->getYfromLine(getline()) - grid->getlh();
+    int y2 = grid->getYfromLine(getline());
 
     if(CheckPlaneCrossing(x1, y1, x2, y2, grid->getX1(), grid->getY1(), grid->getX2(), grid->getY2()))
     {
@@ -103,31 +102,31 @@ bool Element::checkVisible(Grid* grid)
     return false;
 }
 
-void Element::setPos(float tick, int line)
+void Element::setpos(float tick, int ln)
 {
-    if(tick != startTick || line != trkLine)
+    if(tick != tick1 || ln != line)
     {
-        startTick = tick;
+        tick1 = tick;
 
-        if(startTick < 0)
+        if(tick1 < 0)
         {
-            startTick = 0;
+            tick1 = 0;
         }
 
-        endTick = startTick + tickLength;
+        tick2 = tick1 + ticklen;
 
-        trkLine = line;
+        line = ln;
 
-        if(trkLine < 0)
+        if(line < 0)
         {
-            trkLine = 0;
+            line = 0;
         }
 
         if (patt)
         {
-            if (trkLine >= patt->numLines)
+            if (line >= patt->numlines)
             {
-                trkLine = patt->numLines - 1;
+                line = patt->numlines - 1;
             }
         }
     }
@@ -135,12 +134,12 @@ void Element::setPos(float tick, int line)
 
 void Element::move(float dtick, int dtrack)
 {
-    setPos(startTick + dtick, trkLine + dtrack);
+    setpos(tick1 + dtick, line + dtrack);
 }
 
 void Element::handleMouseDown(InputEvent& ev)
 {
-    oldTick = getStartTick();
+
 }
 
 void Element::addTrigger(Trigger* tg)
@@ -153,7 +152,7 @@ void Element::removeTrigger(Trigger* tg)
     triggers.remove(tg);
 }
 
-bool Element::isShown()
+bool Element::isshown()
 {
     if(deleted || patt == NULL)
     {
@@ -168,10 +167,10 @@ bool Element::isShown()
 void Element::save(XmlElement * xmlNode)
 {
     xmlNode->setAttribute(T("Type"), int(type));
-    xmlNode->setAttribute(T("getStartTick"), startTick);
-    xmlNode->setAttribute(T("getEndTick"), endTick);
-    xmlNode->setAttribute(T("TickLength"), tickLength);
-    xmlNode->setAttribute(T("getLine"), trkLine);
+    xmlNode->setAttribute(T("gettick"), tick1);
+    xmlNode->setAttribute(T("getendtick"), tick2);
+    xmlNode->setAttribute(T("TickLength"), ticklen);
+    xmlNode->setAttribute(T("getline"), line);
 
     if(type != El_Pattern)
     {
@@ -181,53 +180,36 @@ void Element::save(XmlElement * xmlNode)
 
 void Element::load(XmlElement * xmlNode)
 {
-    startTick = (float)xmlNode->getDoubleAttribute(T("getStartTick"));
-    endTick = (float)xmlNode->getDoubleAttribute(T("getEndTick"));
-    tickLength = (float)xmlNode->getDoubleAttribute(T("TickLength"));
+    tick1 = (float)xmlNode->getDoubleAttribute(T("gettick"));
+    tick2 = (float)xmlNode->getDoubleAttribute(T("getendtick"));
+    ticklen = (float)xmlNode->getDoubleAttribute(T("TickLength"));
 }
 
-void Element::softDelete()
+void Element::softdel()
 {
-    markDeleted(true);
+    markdel(true);
 
-    markSelected(false);
-
-    highlightOff();
+    marksel(false);
 }
 
-void Element::markDeleted(bool del)
+void Element::markdel(bool del)
 {
     deleted = del;
 }
 
-bool Element::isDeleted()
+bool Element::isdel()
 {
     return deleted;
 }
 
-void Element::markSelected(bool sel)
+void Element::marksel(bool sel)
 {
     selected = sel;
 }
 
-bool Element::isSelected()
+bool Element::issel()
 {
     return selected;
-}
-
-void Element::highlightOn()
-{
-    highlighted = true;
-}
-
-void Element::highlightOff()
-{
-    highlighted = false;
-}
-
-bool Element::isHighlighted()
-{
-    return highlighted;
 }
 
 void Element::deactivateAllTriggers()
@@ -342,87 +324,87 @@ void Element::relocateTriggers()
     ReleaseMutex(AudioMutex);
 }
 
-Pattern* Element::getBase()
+Pattern* Element::getbasepatt()
 {
     return patt;
 }
 
 void Element::calcforgrid(Grid* grid)
 {
-    x1 = grid->getXfromTick(getStartTick());
-    y1 = grid->getYfromLine(getLine());
+    x1 = grid->getXfromTick(gettick());
+    y1 = grid->getYfromLine(getline());
 }
 
-float Element::getStartTick()
+float Element::gettick()
 {
-    return startTick;
+    return tick1;
 }
 
-float Element::getEndTick()
+float Element::getendtick()
 {
-    return endTick;
+    return tick2;
 }
 
-int Element::getLine()
+int Element::getline()
 {
-    return trkLine;
+    return line;
 }
 
-long Element::getStartFrame()
+long Element::getframe()
 {
-    return startFrame;
+    return frame1;
 }
 
-long Element::getEndFrame()
+long Element::getendframe()
 {
-    if(endFrame == 0)
+    if(frame2 == 0)
     {
         return 2147483647;  // -1 casts "infinite" frame length
     }
 
-    return endFrame;
+    return frame2;
 }
 
-long Element::getFrameLength()
+long Element::getframes()
 {
-    return getEndFrame() - getStartFrame();
+    return getendframe() - getframe();
 }
 
-void Element::setLine(int trkline)
+void Element::setline(int trkline)
 {
-    trkLine = trkline;
+    line = trkline;
 }
 
-void Element::setEndTick(float endtick)
+void Element::setendtick(float endtick)
 {
-    endTick = endtick;
+    tick2 = endtick;
 }
 
-void Element::setTickLength(float tick_length)
+void Element::setticklen(float tick_length)
 {
-    tickLength = tick_length;
+    ticklen = tick_length;
 
-    endTick = startTick + tickLength;
+    tick2 = tick1 + ticklen;
 }
 
-void Element::setTickDelta(float tick_delta)
+void Element::settickdelta(float tick_delta)
 {
-    tickLength += tick_delta;
+    ticklen += tick_delta;
 
-    if(tickLength < 0)
-        tickLength = 0;
+    if(ticklen < 0)
+        ticklen = 0;
 
-    endTick = startTick + tickLength;
+    tick2 = tick1 + ticklen;
 }
 
-float Element::getTickLength()
+float Element::getticklen()
 {
-    if(tickLength == -1)
+    if(ticklen == -1)
     {
         return 2147483647.f;  // -1 casts "infinite" step length
     }
 
-    return tickLength;
+    return ticklen;
 }
 
 

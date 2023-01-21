@@ -72,7 +72,7 @@ void Trigger::start(long frame)
             {
                 Note* note = (Note*)el;
 
-                note->getInstr()->activateTrigger(this);
+                note->getinstr()->activateTrigger(this);
             }
 
             break;
@@ -95,9 +95,9 @@ void Trigger::stop()
             case El_SampleNote:
             case El_GenNote:
 
-                if(((Note*)el)->getInstr() != NULL)
+                if(((Note*)el)->getinstr() != NULL)
                 {
-                    ((Note*)el)->getInstr()->deactivateTrigger(this);
+                    ((Note*)el)->getinstr()->deactivateTrigger(this);
                 }
 
                 break;
@@ -147,7 +147,7 @@ void Trigger::setFrame(long frame)
 
 bool Trigger::isOutOfPlayback()
 {
-    if(ev->evpatt->getFrame() < ev->ev_frame || ev->evpatt->getFrame() > ev->ev_frame + el->frameLength)
+    if(ev->evpatt->getFrame() < ev->ev_frame || ev->evpatt->getFrame() > ev->ev_frame + el->framelen)
     {
         return true;
     }
@@ -159,7 +159,7 @@ bool Trigger::isOutOfPlayback()
 
 bool Trigger::checkRemoval()
 {
-    if(toberemoved == true || el->isDeleted())
+    if(toberemoved == true || el->isdel())
     {
         return true;
     }
@@ -222,9 +222,9 @@ void Event::activateTriggers(bool deactonly)
 {
     for(Trigger* tg : triggers)
     {
-        if(!tg->tgPatt->muted && !tg->el->isDeleted())
+        if(!tg->tgPatt->muted && !tg->el->isdel())
         {
-            if(tg->starter && (tick < 0 || tick > tg->tgPatt->getTickLength()))
+            if(tg->starter && (tick < 0 || tick > tg->tgPatt->getticklen()))
             {
                 // skip activators that are out of pattern bounds
             }
@@ -238,7 +238,7 @@ void Event::activateTriggers(bool deactonly)
 
                         if(tg->isActive())
                         {
-                            ii->getInstr()->flowTriggers(tg, tg);
+                            ii->getinstr()->flowTriggers(tg, tg);
 
                             if(tg->isActive())  tg->stop();     // it could change 
                         }

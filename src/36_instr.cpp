@@ -96,9 +96,9 @@ protected:
 
             if(instr==MInstrPanel->getCurrInstr())
             {
-                fill(g, 0xffFFFF40, .4f, 1);
+                fill(g, .4f, 1);
 
-                rect(g, 0xffFFFF40, .8f, 1);
+                rect(g, .8f, 1);
             }
             else
             {
@@ -108,18 +108,18 @@ protected:
                     fill(g, .35f);
             }
 
-            int tw = gGetTextWidth(FontVis, instr->getAlias());
-            int th = gGetTextHeight(FontVis);
+            int tw = gGetTextWidth(FontInst, instr->getAlias());
+            int th = gGetTextHeight(FontInst);
 
-            gSetMonoColor(g, .1f);
-            gText(g, FontVis, instr->getAlias(), x1 + 3, y2 - height/2 + th/2);
+            setc(g, .1f);
+            gText(g, FontInst, instr->getAlias(), x1 + width/2 - tw/2 + 3, y2 - height/2 + th/2 + 3);
 
             //int gap = 3;
             //gTriangle(g, x1 + gap,y1 + gap, x2 - gap, y1 + height/2, x1 + gap, y2 - gap, clr1, clr1);
             //gTriangle(g, x1,y1, x2, y1 + height/2, x1, y2);
 
-            gSetMonoColor(g, 1.f);
-            gText(g, FontVis, instr->getAlias(), x1 + 4, y2 - height/2 + th/2 - 1);
+            setc(g, 1.f);
+            gText(g, FontInst, instr->getAlias(), x1 + width/2 - tw/2, y2 - height/2 + th/2);
         }
 
         void handleMouseDrag(InputEvent & ev)   { parent->handleMouseDrag(ev); }
@@ -248,7 +248,7 @@ void Instrument::remap()
     soloButt->setCoords1(width - 11, 0, 11, height/2);
     muteButt->setCoords1(width - 11, height/2, 11, height/2);
 
-    previewButt->setCoords1(3, 0, 14, height);
+    previewButt->setCoords1(3, 0, 22, 22);
 
     ivu->setCoords1(0, 1, 3, height - 1);
 
@@ -291,10 +291,10 @@ void Instrument::updNotePositions()
 
     for(auto note : notes)
     {
-        if (note == selfNote || note->isDeleted())
+        if (note == selfNote || note->isdel())
             continue;
 
-        lastTick = note->getStartTick();
+        lastTick = note->gettick();
 
         if (note->getNoteValue() > maxVal)
         {
@@ -313,7 +313,7 @@ void Instrument::updNotePositions()
 
     for(auto note : notes)
     {
-        if (note == selfNote || note->isDeleted())
+        if (note == selfNote || note->isdel())
             continue;
 
         if (range > 0)
@@ -347,12 +347,12 @@ void Instrument::addNote(Note * note)
             continue;
         }
 
-        if(n->getStartTick() > note->getStartTick())
+        if(n->gettick() > note->gettick())
         {
             notes.insert(it, note);
             break;
         }
-        else if (n->getStartTick() == note->getStartTick())
+        else if (n->gettick() == note->gettick())
         {
             if(n->getNoteValue() < note->getNoteValue())
             {
@@ -387,15 +387,15 @@ std::list <Element*> Instrument::getNotesFromRange(float offset, float lastVisib
 
     for(auto note : notes)
     {
-        if(note->getEndTick() < offset || note == selfNote)
+        if(note->getendtick() < offset || note == selfNote)
         {
             continue;
         }
-        else if (note->getStartTick() > lastVisibleTick)
+        else if (note->gettick() > lastVisibleTick)
         {
             break;
         }
-        else if (!note->isDeleted())
+        else if (!note->isdel())
         {
             noteList.push_back((Element*)note);
         }
@@ -415,7 +415,7 @@ void Instrument::setLine(int line_num)
 
     for(auto note : notes)
     {
-        note->setLine(line_num);
+        note->setline(line_num);
     }
 }
 
@@ -1122,7 +1122,7 @@ void Instrument::handleMouseDown(InputEvent& ev)
 {
     if(ev.leftClick)
     {
-        MInstrPanel->setCurrInstr(this);
+        MInstrPanel->setcurr(this);
 
         //if(ev.keyFlags & kbd_ctrl)
         {
@@ -1147,7 +1147,7 @@ void Instrument::handleMouseUp(InputEvent& ev)
 
     MAudio->releaseAllPreviews();
 
-    MInstrPanel->setCurrInstr(this);
+    MInstrPanel->setcurr(this);
 
     showWindow(!isWindowVisible());
 }
@@ -1169,7 +1169,7 @@ void Instrument::handleMouseWheel(InputEvent& ev)
 
 ContextMenu* Instrument::createContextMenu()
 {
-    MInstrPanel->setCurrInstr(this);
+    MInstrPanel->setcurr(this);
 
     //Menu* menu = new Menu(Obj_MenuPopup);
 
@@ -1210,14 +1210,14 @@ void Instrument::handleChildEvent(Gobj * obj, InputEvent& ev)
 
     if(obj == guiButt && !ev.clickDown)
     {
-        MInstrPanel->setCurrInstr(this);
+        MInstrPanel->setcurr(this);
         showWindow(guiButt->isPressed());
     }
     else if (obj == previewButt)
     {
         if(previewButt->isPressed())
         {
-            MInstrPanel->setCurrInstr(this);
+            MInstrPanel->setcurr(this);
 
             preview(); 
         }

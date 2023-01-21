@@ -156,17 +156,17 @@ void ControlPanel::remap()
 
     if(width - 30 > (xStartCoord + 30*2))
     {
-        if(!btScrollBack->isShown())
+        if(!btScrollBack->isshown())
         {
             btScrollBack->setEnable(true);
         }
 
-        if(!btScrollForth->isShown()) 
+        if(!btScrollForth->isshown()) 
         {
             btScrollForth->setEnable(true);
         }
 
-        if(!gridScroller->isShown()) 
+        if(!gridScroller->isshown()) 
         {
             gridScroller->setEnable((true));
         }

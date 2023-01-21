@@ -22,20 +22,17 @@ class Element : public Gobj
 {
 public:
 
-            int             trkLine;
-            int             numLines;
+            int             line;
+            int             numlines;
             bool            deleted;
             bool            selected;
-            long            startFrame;
-            long            endFrame;
-            long            frameLength;
-            bool            highlighted;
+            long            frame1;
+            long            frame2;
+            long            framelen;
             bool            calculated;
-            float           oldTick;
-            float           endTick;
-            float           moveTick;
-            float           startTick;
-            float           tickLength;
+            float           tick1;
+            float           tick2;
+            float           ticklen;
             Pattern*        patt;
             Device36*       dev;
             ElemType        type;
@@ -67,31 +64,27 @@ public:
             void            deactivateAllTriggers();
             void            relocateTriggers();
 
-            void            markSelected(bool sel);
-    virtual void            markDeleted(bool del);
-            bool            isDeleted();
-            bool            isSelected();
-            void            highlightOn();
-            void            highlightOff();
-            bool            isHighlighted();
-    virtual bool            isShown();
+            void            marksel(bool sel);
+    virtual void            markdel(bool del);
+            bool            isdel();
+            bool            issel();
+    virtual bool            isshown();
 
-            int             getLine();
-    virtual void            setLine(int tkl);
-    virtual void            setPos(float tk, int l);
-    virtual void            setEndTick(float et);
-    virtual void            setTickLength(float tl);
-    virtual void            setTickDelta(float tick_delta);
-    virtual long            getStartFrame();
-    virtual long            getEndFrame();
-    virtual long            getFrameLength();
-    virtual float           getStartTick();
-    virtual float           getEndTick();
-    virtual float           getTickLength();
-            int             getNumLines() { return numLines; }
-            Pattern*        getBase();
+            int             getline();
+    virtual void            setline(int tkl);
+    virtual void            setpos(float tk, int ln);
+    virtual void            setendtick(float et);
+    virtual void            setticklen(float tl);
+    virtual void            settickdelta(float tick_delta);
+    virtual long            getframe();
+    virtual long            getendframe();
+    virtual long            getframes();
+    virtual float           gettick();
+    virtual float           getendtick();
+    virtual float           getticklen();
+            Pattern*        getbasepatt();
     virtual void            drwongrid(Graphics& g, Grid* grid) {}
-            void            softDelete();
+            void            softdel();
 };
 
 

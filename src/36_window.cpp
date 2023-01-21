@@ -262,7 +262,7 @@ void MainWindow::broughtToFront()
 {
     for(auto cw : childs)
     {
-        if(cw->isShown())
+        if(cw->isshown())
         {
             cw->updFocus = false;
             cw->toFront(false);
@@ -277,7 +277,7 @@ void MainWindow::maximizeChilds()
 {
     for(auto cw : childs)
     {
-        if(cw->isShown())
+        if(cw->isshown())
         {
             cw->updFocus = false;
             cw->setVisible(true);
@@ -290,7 +290,7 @@ void MainWindow::minimizeChilds()
 {
     for(auto cw : childs)
     {
-        if(cw->isShown())
+        if(cw->isshown())
         {
             cw->setVisible(false);
         }
@@ -748,7 +748,7 @@ void JuceListener::redrawPerAction()
 
         for(Gobj* obj : mainComp->getWinObject().changedObjects)
         {
-            if (obj->isShown() && obj->isChanged())
+            if (obj->isshown() && obj->isChanged())
             {
                 if(obj->getObjGroup() != ObjGroup_Highlight)
                 {
@@ -780,7 +780,7 @@ void JuceListener::paint(Graphics& g)
 
     for (Gobj* obj : mainComp->getWinObject().highlights)
     {
-        if (obj->isShown())
+        if (obj->isshown())
         {
             obj->drawloop(g);
         }

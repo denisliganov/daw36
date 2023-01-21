@@ -134,7 +134,7 @@ public:
 
             bool                isChanged()         { return changed; }
             bool                isEnabled()         {  return enabled; }
-    virtual bool                isShown()           { return (enabled && visible); }
+    virtual bool                isshown()           { return (enabled && visible); }
             bool                isMouseHovering()   { return mouseHovering; }
             Gobj*               getParent()         { return parent; }
             WinObject*          getWindow()         { return window; };
@@ -187,8 +187,8 @@ public:
             // Drawing methods using relative coords
             void                fill(Graphics& g, float clr, float alpha=1);
             void                rect(Graphics& g, float clr, float alpha=1);
-            void                fill(Graphics& g, uint32 clr, float b=1, float a=1);
-            void                rect(Graphics& g, uint32 clr, float b=1, float a=1);
+            void                fill(Graphics& g, uint32 clr, float b, float a=1);
+            void                rect(Graphics& g, uint32 clr, float b, float a=1);
             void                fill(Graphics& g, uint32 clr);
             void                rect(Graphics& g, uint32 clr);
             void                fillx(Graphics& g,int x, int y, int w, int h);

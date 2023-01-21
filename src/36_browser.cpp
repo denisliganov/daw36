@@ -127,7 +127,7 @@ void Browser::handleChildEvent(Gobj * obj, InputEvent& ev)
             MBrowser->setMode(Browse_Samples);
 
         /*
-        if (_MainObject->showFX->isShown())
+        if (_MainObject->showFX->isshown())
         {
            if(ev.clickDown)
                _MainObject->showFX->handleMouseDown(ev);
@@ -162,7 +162,7 @@ void Browser::drawself(Graphics& g)
 
     for (auto be : entries[browsingMode])
     {
-        if (be->isShown())
+        if (be->isshown())
         {
             be->drawself(g);
         }

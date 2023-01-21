@@ -119,7 +119,7 @@ public:
         SubWindow(WinObject* wo, bool title_bar = true);
         ~SubWindow();
 
-        bool    isShown()   { return shown; }
+        bool    isshown()   { return shown; }
         void    setVisibility(bool vis);
         void    updateTitle();
         void    setColor(uint32 clr) { color = clr; }

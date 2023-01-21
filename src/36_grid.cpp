@@ -59,32 +59,6 @@ public:
         }
 };
 
-class InstrHighlight : public Gobj
-{
-friend  Grid;
-
-        Grid*       grid;
-
-        bool        isMouseTouching(int mx, int my)  { return false; }
-
-        void drawself(Graphics& g)
-        {
-            g.saveState();
-            g.reduceClipRegion(grid->getX1(),grid->getY1(), grid->getW(), grid->getH());
-
-            //gSetMonoColor(g, 1, 0.7f);
-            //gSetColor2(g, 0xffFFC030, 1, .5f);
-
-            fill(g, 1.f, .09f);
-
-            g.restoreState();
-        }
-
-public:
-
-        InstrHighlight(Grid* grd) {grid = grd;}
-};
-
 
 class PlaceHighlight : public Gobj
 {
@@ -93,7 +67,6 @@ friend  Grid;
         float               tick;
         int                 line;
         Grid*               grid;
-        InstrHighlight*     instrHighlight;
         Note*               currNote;
 
         bool    isMouseTouching(int mx, int my)  { return false; }
@@ -108,10 +81,6 @@ public:
 
             tick = 0;
             line = 0;
-
-            addHighlight(instrHighlight = new InstrHighlight(grid));
-
-            instrHighlight->setRelative(false);
         }
 
         void setPos(float newTick, int newLine)
@@ -122,18 +91,15 @@ public:
             if (grid->isMouseHovering())
             {
                 int ly = grid->getYfromLine(line);
-                int lh = grid->getLineHeight();
-
-                instrHighlight->setCoords1(grid->getX1() - 7, ly - lh + 2, 2, lh - 2);
-                //instrHighlight->setCoords1(grid->getX1(), ly - lh + 2, grid->getW(), InstrHeight);
+                int lh = grid->getlh();
 
                 if (grid->getDisplayMode() == GridDisplayMode_Bars)
                 {
-                    currNote = grid->activeNote;
+                    currNote = grid->actnote;
 
-                    if (currNote && !currNote->isDeleted())
+                    if (currNote && !currNote->isdel())
                     {
-                        if (!currNote->isSelected())
+                        if (!currNote->issel())
                         {
                             int x = currNote->getX1() - grid->getX1();
                             int y = currNote->getY1() - grid->getY1();
@@ -146,9 +112,9 @@ public:
                     else if (grid->mode == GridMode_Default)
                     {
                         int x = grid->getXfromTick(tick) - grid->getX1();
-                        int y = grid->getYfromLine(line) - int(grid->getLineHeight()) - grid->getY1() + 1;
+                        int y = grid->getYfromLine(line) - int(grid->getlh()) - grid->getY1() + 1;
 
-                        setCoords2(x, y, x + grid->snap*grid->getPixelsPerTick() - 1, y + int(grid->getLineHeight()) - 1);
+                        setCoords2(x, y, x + grid->snap*grid->getPixelsPerTick() - 1, y + int(grid->getlh()) - 1);
 
                         setVisible(true);
                     }
@@ -171,9 +137,9 @@ public:
 
         void drawself(Graphics& g)
         {
-            if (currNote && !currNote->isDeleted())
+            if (currNote && !currNote->isdel())
             {
-                if (!currNote->isSelected())
+                if (!currNote->issel())
                 {
                     //gSetMonoColor(g, 1, .9f);
                     //gLineVertical(g, x1, y1, y2);
@@ -208,7 +174,7 @@ Grid::Grid(float step_width, int line_height, Pattern* pt, Timeline* tl)
     patt = pt;
 
     activeElem = NULL;
-    activeNote = previewNote = NULL;
+    actnote = previewNote = NULL;
 
     mainimg = NULL;
     brushImage = NULL;
@@ -340,17 +306,17 @@ void Grid::refreshImageBrush()
     // horiz bottom line
     gSetMonoColor(imageContext, divClr);
 
-    gLineHorizontal(imageContext, getLineHeight() - 1, 0, imgWidth);
+    gLineHorizontal(imageContext, getlh() - 1, 0, imgWidth);
 
     if (displayMode != GridDisplayMode_Pans)
     {
      //   gSetMonoColor(imageContext, .12f);
-     //   gLineHorizontal(imageContext, float(getLineHeight() - 1)*(1 - DAW_INVERTED_VOL_RANGE), 0, imgWidth);
+     //   gLineHorizontal(imageContext, float(getlh() - 1)*(1 - DAW_INVERTED_VOL_RANGE), 0, imgWidth);
     }
     else
     {
         gSetMonoColor(imageContext, .12f);
-        gLineHorizontal(imageContext, getLineHeight()*.5f - 1, 0, imgWidth);
+        gLineHorizontal(imageContext, getlh()*.5f - 1, 0, imgWidth);
     }
 }
 
@@ -446,7 +412,7 @@ void Grid::mapelems()
         /*
         for(Instrument* i : MInstrPanel->instrs)
         {
-            if(i->isShown())
+            if(i->isshown())
             {
                 visible.splice(visible.end(), i->getNotesFromRange(tickOffset, lastVisibleTick));
             }
@@ -460,21 +426,21 @@ void Grid::mapelems()
 
         for(Element* el : patt->elems)
         {
-            if ( el->getEndTick() < hscr->getoffs() || el->getStartTick() > lastVisibleTick)
+            if ( el->getendtick() < hscr->getoffs() || el->gettick() > lastVisibleTick)
             {
                 // Skip out-of-visible-area elements
             }
             else
             {
-                if (el->isShown())
+                if (el->isshown())
                 {
                     if(visible.size() > 0)
                     {
                         // Place to the right position, so the list is sorted according to start tick
     
-                        if(el->getStartTick() >= (*it)->getStartTick())
+                        if(el->gettick() >= (*it)->gettick())
                         {
-                            while(it != visible.end() && el->getStartTick() >= (*it)->getStartTick())
+                            while(it != visible.end() && el->gettick() >= (*it)->gettick())
                             {
                                 it++;
                             }
@@ -485,7 +451,7 @@ void Grid::mapelems()
                             {
                                 --it;
     
-                                if(el->getStartTick() >= (*it)->getStartTick())
+                                if(el->gettick() >= (*it)->gettick())
                                 {
                                     it++;
     
@@ -499,7 +465,7 @@ void Grid::mapelems()
 
                     it--;
 
-                    el->calcCoordsForGrid(this);
+                    el->calcforgrid(this);
                 }
             }
         }
@@ -623,21 +589,21 @@ void Grid::updbounds()
     {
         for(Element* el : patt->ptBase->elems)
         {
-            if (!el->isDeleted())
+            if (!el->isdel())
             {
-                if(el->getEndTick() > lastElementEndTick)
+                if(el->getendtick() > lastElementEndTick)
                 {
-                    lastElementEndTick = el->getEndTick();
+                    lastElementEndTick = el->getendtick();
                 }
 
-                if(el->getStartTick() > lastElementStartTick)
+                if(el->gettick() > lastElementStartTick)
                 {
-                    lastElementStartTick = el->getStartTick();
+                    lastElementStartTick = el->gettick();
                 }
 
-                if(el->getLine() > lastline)
+                if(el->getline() > lastline)
                 {
-                    lastline = el->getLine();
+                    lastline = el->getline();
                 }
             }
         }
@@ -725,11 +691,11 @@ void Grid::handleTransportUpdate()
 
     for(Element* el : patt->ptBase->elems)
     {
-        if (!el->isDeleted())
+        if (!el->isdel())
         {
-            el->recalculate();
+            el->recalc();
 
-            el->calcCoordsForGrid(this);
+            el->calcforgrid(this);
         }
     }
 
@@ -788,7 +754,7 @@ float Grid::getTickOffset()
     return hscr->getoffs();
 }
 
-int Grid::getLineHeight()
+int Grid::getlh()
 {
     return lheight;
 }
@@ -836,14 +802,14 @@ void Grid::checkpos(InputEvent & ev)
 
             if(checkByStep)
             {
-                if (el->getLine() == alignLine)
+                if (el->getline() == alignLine)
                 {
-                    if (el->isSelected() && el->isPointed(ev.mouseX, ev.mouseY, this))
+                    if (el->issel() && el->isPointed(ev.mouseX, ev.mouseY, this))
                     {
                         newEl = el;
                         break;
                     }
-                    else if (el->getStartTick() == alignTick)
+                    else if (el->gettick() == alignTick)
                     {
                         newEl = el;
                         break;
@@ -852,7 +818,7 @@ void Grid::checkpos(InputEvent & ev)
             }
             else
             {
-                if (el->getLine() == alignLine)
+                if (el->getline() == alignLine)
                 {
                     if (mode == GridMode_Alt)
                     {
@@ -890,6 +856,42 @@ void Grid::checkpos(InputEvent & ev)
     if (newEl != activeElem)
     {
         setactivelem(newEl);
+    }
+}
+
+void Grid::updpos(InputEvent & ev, bool textCursor)
+{
+    getpos(ev.mouseX, ev.mouseY, &alignTick, &alignLine);
+
+    //if (alignLine >= MInstrPanel->getInstrNum() || alignLine < 0)
+    //    alignLine = -1;
+
+    updmode(ev);
+
+    currTick = getTickFromX(ev.mouseX);
+
+    checkpos(ev);
+}
+
+void Grid::updmode(InputEvent & ev)
+{
+    if (ev.keyFlags & kbd_alt)
+    {
+        setmode(GridMode_Alt);
+    }
+    else if (ev.keyFlags & kbd_shift)
+    {
+        setmode(GridMode_Shift);
+    }
+    else if (ev.keyFlags & kbd_ctrl)
+    {
+        setmode(GridMode_Ctrl);
+    }
+    else
+    {
+        //selreset(false);
+
+        setmode(GridMode_Default);
     }
 }
 
@@ -941,28 +943,6 @@ void Grid::handleMouseEnter(InputEvent & ev)
     //place->update();
 }
 
-void Grid::updmode(InputEvent & ev)
-{
-    if (ev.keyFlags & kbd_alt)
-    {
-        setmode(GridMode_Alt);
-    }
-    else if (ev.keyFlags & kbd_shift)
-    {
-        setmode(GridMode_Shift);
-    }
-    else if (ev.keyFlags & kbd_ctrl)
-    {
-        setmode(GridMode_Ctrl);
-    }
-    else
-    {
-        //selreset(false);
-
-        setmode(GridMode_Default);
-    }
-}
-
 void Grid::handleModifierKeys(unsigned flags)
 {
     if (mouseIsDown)
@@ -993,10 +973,10 @@ void Grid::handleModifierKeys(unsigned flags)
 
     if (mode == GridMode_Ctrl)
     {
-        if (activeNote != NULL)
+        if (actnote != NULL)
         {
-            //activeNote->preview();
-            //previewNote = activeNote;
+            //actnote->preview();
+            //previewNote = actnote;
         }
     }
 
@@ -1007,30 +987,16 @@ void Grid::handleModifierKeys(unsigned flags)
     updcursor(lastEvent);
 }
 
-void Grid::updpos(InputEvent & ev, bool textCursor)
-{
-    getpos(ev.mouseX, ev.mouseY, &alignTick, &alignLine);
-
-    //if (alignLine >= MInstrPanel->getInstrNum() || alignLine < 0)
-    //    alignLine = -1;
-
-    updmode(ev);
-
-    currTick = getTickFromX(ev.mouseX);
-
-    checkpos(ev);
-}
-
 void Grid::handleMouseMove(InputEvent & ev)
 {
     newEvent = ev;
 
     updpos(ev);
 
-    if (mode == GridMode_Ctrl && activeNote != NULL && activeNote != previewNote)
+    if (mode == GridMode_Ctrl && actnote != NULL && actnote != previewNote)
     {
-        //activeNote->preview();
-        //previewNote = activeNote;
+        //actnote->preview();
+        //previewNote = actnote;
     }
 
     if(mode == GridMode_Selecting)
@@ -1060,7 +1026,7 @@ void Grid::handleMouseDown(InputEvent& ev)
     {
         if (mode == GridMode_ElemResizing)
         {
-            if(!activeElem->isSelected())
+            if(!activeElem->issel())
             {
                 selreset(true);
             }
@@ -1070,7 +1036,7 @@ void Grid::handleMouseDown(InputEvent& ev)
             dragTickStart = alignTick;
             dragLineStart = alignLine;
 
-            if (selected.size() > 0 && activeElem != NULL && activeElem->isSelected())
+            if (selected.size() > 0 && activeElem != NULL && activeElem->issel())
             {
                 if (mode == GridMode_Shift)
                 {
@@ -1085,16 +1051,16 @@ void Grid::handleMouseDown(InputEvent& ev)
             {
                 if (alignLine >= 0)
                 {
-                    if(activeNote == NULL)
+                    if(actnote == NULL)
                     {
                         grabTextCursor(alignTick, alignLine);
 
                         selreset(true);
 
-                        //activeNote = putnote(alignTick, alignLine, -1);
-                        //activeNote->recalculate();
-                        //activeNote->preview(-1, true);
-                        //setactivelem(activeNote);
+                        //actnote = putnote(alignTick, alignLine, -1);
+                        //actnote->recalculate();
+                        //actnote->preview(-1, true);
+                        //setactivelem(actnote);
                         //place->update();
 
                         //setmode(GridMode_Moving);
@@ -1103,15 +1069,15 @@ void Grid::handleMouseDown(InputEvent& ev)
                     {
                         if (mode == GridMode_Ctrl)
                         {
-                            Note* nt = activeNote;
+                            Note* nt = actnote;
 
-                            if (!nt->isSelected())
+                            if (!nt->issel())
                             {
                                 selected.remove(nt);
                             
                                 selected.push_back(nt);
                             
-                                nt->markSelected(true);
+                                nt->marksel(true);
                             
                                 redraw(false, false);
                             }
@@ -1119,7 +1085,7 @@ void Grid::handleMouseDown(InputEvent& ev)
                             {
                                 selected.remove(nt);
                             
-                                nt->markSelected(false);
+                                nt->marksel(false);
                             
                                 redraw(false, false);
                             }
@@ -1128,7 +1094,9 @@ void Grid::handleMouseDown(InputEvent& ev)
                         {
                             selreset(true);
 
-                            activeNote->preview(-1, true);
+                            actnote->preview(-1, true);
+
+                            MInstrPanel->setcurr(actnote->getinstr());
 
                             if (displayMode == GridDisplayMode_Steps)
                             {
@@ -1160,7 +1128,7 @@ void Grid::handleMouseDown(InputEvent& ev)
                 selreset(true);
             }
         */
-            if(activeNote != NULL && activeNote->isSelected())
+            if(actnote != NULL && actnote->issel())
             {
 
             }
@@ -1327,7 +1295,7 @@ void Grid::handleMouseWheel(InputEvent& ev)
 
             if (note)
             {
-                float fraction = 1.f/(getLineHeight() - 1);
+                float fraction = 1.f/(getlh() - 1);
 
                 float newVal = note->vol->getValue();
 
@@ -1427,9 +1395,9 @@ void Grid::setactivelem(Element* el)
 {
     activeElem = el; 
 
-    activeNote = dynamic_cast<Note*>(el);
+    actnote = dynamic_cast<Note*>(el);
 
-    if (activeNote != previewNote && previewNote != NULL)
+    if (actnote != previewNote && previewNote != NULL)
     {
         previewNote->releasePreview();
 
@@ -1479,7 +1447,7 @@ bool Grid::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
 
         Note* n = i->selfNote;
 
-        n->setPos(tick, line);
+        n->setpos(tick, line);
 
         n->calcforgrid(this);
 
@@ -1533,17 +1501,17 @@ void Grid::selall(bool select)
 
     for(Element* el : patt->elems)
     {
-        if(!el->isDeleted())
+        if(!el->isdel())
         {
             if(select)
             {
-                el->markSelected(true);
+                el->marksel(true);
 
                 selected.push_back(el);
             }
             else
             {
-                el->markSelected(false);
+                el->marksel(false);
             }
         }
     }
@@ -1594,7 +1562,7 @@ void Grid::changebars(InputEvent& ev)
     {
         int noteX = note->getX1();
 
-        if (note->isShown() && (noteX >= tx1 && noteX <= tx2) && (!processSelectedOnly || note->isSelected()))
+        if (note->isshown() && (noteX >= tx1 && noteX <= tx2) && (!processSelectedOnly || note->issel()))
         {
             bool doChange = false;
 
@@ -1706,18 +1674,18 @@ void Grid::reassign()
 
         if (note)
         {
-            Instrument* instrNew = MInstrPanel->getInstrFromLine(note->getLine());
-            Instrument* instrOld = note->getInstr();
+            Instrument* instrNew = MInstrPanel->getInstrFromLine(note->getline());
+            Instrument* instrOld = note->getinstr();
 
             if (instrOld != instrNew)
             {
-                Note* newNote = _Create_Note(note->getStartTick(), note->getLine(), instrNew, note->getNoteValue(), 
-                                                note->getTickLength(), note->vol->getValue(), note->pan->getValue(), patt);
+                Note* newNote = _Create_Note(note->gettick(), note->getline(), instrNew, note->getNoteValue(), 
+                                                note->getticklen(), note->vol->getValue(), note->pan->getValue(), patt);
 
                 if (selected.size() > 0)
                 {
                     newSelected.push_back(newNote);
-                    newNote->markSelected(true);
+                    newNote->marksel(true);
                 }
                 else
                 {
@@ -1744,7 +1712,7 @@ Note* Grid::putnote(float tick, int line, int noteVal)
 
     if(instr != NULL)
     {
-        MInstrPanel->setCurrInstr(instr);
+        MInstrPanel->setcurr(instr);
 
         Note* newNote = _Create_Note(tick, line, instr, noteVal > 0 ? noteVal : instr->lastNoteVal, 
                                         instr->lastNoteLength, instr->lastNoteVol, instr->lastNotePan, getpatt());
@@ -1778,14 +1746,14 @@ void Grid::action(GridAction act, float dTick, int dLine)
     {
         for(Element* el : clipboard)
         {
-            if(firstElemTick == -1 || el->getStartTick() < firstElemTick)
+            if(firstElemTick == -1 || el->gettick() < firstElemTick)
             {
-                firstElemTick = el->getStartTick();
+                firstElemTick = el->gettick();
             }
 
-            if(firstElemLine == -1 || el->getLine() < firstElemLine)
+            if(firstElemLine == -1 || el->getline() < firstElemLine)
             {
-                firstElemLine = el->getLine();
+                firstElemLine = el->getline();
             }
         }
     }
@@ -1805,8 +1773,8 @@ void Grid::action(GridAction act, float dTick, int dLine)
 
             if (mode == GridMode_Ctrl)
             {
-                brushStep = activeElem->getTickLength();
-                xtick = activeElem->getStartTick();
+                brushStep = activeElem->getticklen();
+                xtick = activeElem->gettick();
             }
 
             if(alignTick < currTick)
@@ -1824,7 +1792,7 @@ void Grid::action(GridAction act, float dTick, int dLine)
                     {
                         el = activeElem->clone();
 
-                        el->setPos(xtick, actionLine);
+                        el->setpos(xtick, actionLine);
                     }
                     else
                     {
@@ -1875,7 +1843,7 @@ void Grid::action(GridAction act, float dTick, int dLine)
             {
                 //float range = note->vol->getRange();
 
-                float fraction = 1.f/(getLineHeight() - 1);
+                float fraction = 1.f/(getlh() - 1);
 
                 float newVal = note->vol->getValue();
 
@@ -1961,14 +1929,14 @@ void Grid::action(GridAction act, float dTick, int dLine)
             // turn off moving across instruments for now
             //dLine = 0;
 
-            if(activeElem->getStartTick() + dTick < 0)
+            if(activeElem->gettick() + dTick < 0)
             {
-                dTick -= activeElem->getStartTick() + dTick;
+                dTick -= activeElem->gettick() + dTick;
             }
 
-            if(activeElem->getLine() + dLine < 0)
+            if(activeElem->getline() + dLine < 0)
             {
-                dLine -= activeElem->getLine() + dLine;
+                dLine -= activeElem->getline() + dLine;
             }
 
             if(dTick != 0 || dLine != 0)
@@ -1999,14 +1967,14 @@ void Grid::action(GridAction act, float dTick, int dLine)
 
             for(Element* el : selected)
             {
-                if(el->getStartTick() + dTick < ct)
+                if(el->gettick() + dTick < ct)
                 {
-                    ct = el->getStartTick() + dTick;
+                    ct = el->gettick() + dTick;
                 }
 
-                if(el->getLine() + dLine < cl)
+                if(el->getline() + dLine < cl)
                 {
-                    cl = el->getLine() + dLine;
+                    cl = el->getline() + dLine;
                 }
             }
 
@@ -2065,11 +2033,11 @@ void Grid::action(GridAction act, float dTick, int dLine)
 
                 for(Element* el : selected)
                 {
-                    el->markSelected(false);
+                    el->marksel(false);
 
                     Element* cl = el->clone();
 
-                    cl->markSelected(true);
+                    cl->marksel(true);
 
                     cloned.push_back(cl);
                 }
@@ -2101,13 +2069,13 @@ void Grid::action(GridAction act, float dTick, int dLine)
             newLen = getSnapSize();
         }
 
-        if(newLen != activeElem->getTickLength())
+        if(newLen != activeElem->getticklen())
         {
             std::list<Element*> resized;
 
-            float delta = newLen - activeElem->getTickLength();
+            float delta = newLen - activeElem->getticklen();
 
-            MHistory->addNewAction(HistAction_Resize, (void*)activeElem, activeElem->getTickLength(), newLen, 0, 0);
+            MHistory->addNewAction(HistAction_Resize, (void*)activeElem, activeElem->getticklen(), newLen, 0, 0);
 
             resized.push_back(activeElem);
 
@@ -2115,18 +2083,18 @@ void Grid::action(GridAction act, float dTick, int dLine)
             {
                 if(el != activeElem)
                 {
-                    newLen = el->getTickLength() + delta;
+                    newLen = el->getticklen() + delta;
 
                     if (newLen < getSnapSize())
                     {
                         newLen = getSnapSize();
                     }
 
-                    if(newLen != el->getTickLength())
+                    if(newLen != el->getticklen())
                     {
                         resized.push_back(el);
 
-                        MHistory->addNewAction(HistAction_Resize, (void*)el, el->getTickLength(), newLen, 0, 0);
+                        MHistory->addNewAction(HistAction_Resize, (void*)el, el->getticklen(), newLen, 0, 0);
                     }
                 }
             }
@@ -2141,8 +2109,8 @@ void Grid::action(GridAction act, float dTick, int dLine)
         float deltaTick = dTick;
 
         if(deltaTick != 0 && 
-                activeElem->getTickLength() + deltaTick > 0 && 
-                    activeElem->getTickLength() + deltaTick != activeElem->getTickLength())
+                activeElem->getticklen() + deltaTick > 0 && 
+                    activeElem->getticklen() + deltaTick != activeElem->getticklen())
         {
             std::list<Element*> resized;
 
@@ -2152,7 +2120,7 @@ void Grid::action(GridAction act, float dTick, int dLine)
             {
                 if(el != activeElem)
                 {
-                    if(el->getTickLength() + deltaTick > 0)
+                    if(el->getticklen() + deltaTick > 0)
                     {
                         resized.push_back(el);
                     }
@@ -2197,7 +2165,7 @@ void Grid::action(GridAction act, float dTick, int dLine)
 
             for(Element* el : clipboard)
             {
-                el->markSelected(true);
+                el->marksel(true);
 
                 selected.push_back(el);
             }
@@ -2212,7 +2180,7 @@ void Grid::action(GridAction act, float dTick, int dLine)
 
             for(Element* el : clipboard)
             {
-                el->markSelected(false);
+                el->marksel(false);
 
                 Element* cl = el->clone();
 
@@ -2220,7 +2188,7 @@ void Grid::action(GridAction act, float dTick, int dLine)
                 {
                     //cl->setPos(cl->getStartTick() + alignTick - firstElemTick, cl->getLine());
 
-                    cl->markSelected(true);
+                    cl->marksel(true);
 
                     selected.push_back(cl);
 
@@ -2299,15 +2267,15 @@ void Grid::action(GridAction act, float dTick, int dLine)
 
                     selected.push_back(el);
 
-                    el->markSelected(true);
+                    el->marksel(true);
 
                     redraw(false, false);
                 }
-                else if(el->isSelected())
+                else if(el->issel())
                 {
                     selected.remove(el);
 
-                    el->markSelected(false);
+                    el->marksel(false);
 
                     redraw(false, false);
                 }
@@ -2334,9 +2302,9 @@ bool Grid::iselselected(Element* el)
 {
     if (displayMode == GridDisplayMode_Bars)
     {
-        float ex1 = el->getStartTick();
-        float ex2 = el->getEndTick();
-        float ey1 = (float)el->getLine();
+        float ex1 = el->gettick();
+        float ex2 = el->getendtick();
+        float ey1 = (float)el->getline();
         float ey2 = ey1;
 
         if ( CheckPlaneCrossing(ex1, ey1, ex2, ey2, selTickStart, (float)selLineStart, selTickEnd, (float)selLineEnd))
@@ -2346,7 +2314,7 @@ bool Grid::iselselected(Element* el)
     }
     else
     {
-        if (el->getStartTick() >= selTickStart && el->getStartTick() < selTickEnd && el->getLine() >= selLineStart && el->getLine() <= selLineEnd )
+        if (el->gettick() >= selTickStart && el->gettick() < selTickEnd && el->getline() >= selLineStart && el->getline() <= selLineEnd )
         {
             return true;
         }
@@ -2366,7 +2334,7 @@ ContextMenu* Grid::createContextMenu()
 
     ContextMenu* menu = new ContextMenu(this);
 
-    if(activeNote != NULL)
+    if(actnote != NULL)
     {
         menu->addMenuItem("Copy");
         menu->addMenuItem("Cut");
@@ -2407,7 +2375,7 @@ void Grid::updateChangedElements()
 {
     for(Element* el : updateList)
     {
-        el->recalculate();
+        el->recalc();
     }
 
     updateList.clear();

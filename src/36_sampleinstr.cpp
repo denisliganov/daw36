@@ -81,7 +81,7 @@ Sample::Sample(float* data, char* smp_path, SF_INFO sfinfo)
     timelen = numFrames/MAudio->getSampleRate();
 
     envVol = new Envelope(CmdEnv_VolEnv);
-    envVol->tickLength = jmax(timelen, 2.f);
+    envVol->ticklen = jmax(timelen, 2.f);
     //envVol->timebased = true;
 
     // Add some default breakpoints to the sample envelope
@@ -188,14 +188,14 @@ bool Sample::checkBounds(SampleNote* samplent, Trigger* tg, long num_frames)
 
             endframe = 0;
         }
-        else if(tg->framePhase >= samplent->frameLength)
+        else if(tg->framePhase >= samplent->framelen)
         {
             tg->setState(TS_SoftFinish);
         }
     }
     else
     {
-        if(tg->tgState == TS_Sustain && !tg->previewTrigger && tg->framePhase >= samplent->frameLength)
+        if(tg->tgState == TS_Sustain && !tg->previewTrigger && tg->framePhase >= samplent->framelen)
         {
             // Go to release state as note is over
 
@@ -959,10 +959,10 @@ void Sample::updWaveImage()
             frameCount++;
         }
 
-        waveImage = new Image(Image::ARGB, pixels, MGrid->getLineHeight() - 1, true);
+        waveImage = new Image(Image::ARGB, pixels, MGrid->getlh() - 1, true);
 
         Graphics    imageContext(*(waveImage));
-        int         halfHeight = int(float(MGrid->getLineHeight() - 3) / 2);
+        int         halfHeight = int(float(MGrid->getlh() - 3) / 2);
         int         yCenter = halfHeight + 1;
         long        sampleCount = 0;
         float       normFactor = 1.f;

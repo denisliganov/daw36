@@ -53,11 +53,11 @@ public:
             bool            isNote() {return true;}
             void            setnote(int note_value);
             int             getNoteValue() { return noteValue; }
-      Instrument*           getInstr() { return instr; }
+      Instrument*           getinstr() { return instr; }
             void            setInstr(Instrument* i) { instr = i; }
             Parameter*      getParamByDisplayMode(GridDisplayMode mode);
             void            recalc();
-            void            setPos(float tick,int line);
+            void            setpos(float tick,int line);
 };
 
 
@@ -89,8 +89,8 @@ public:
             bool            initCursor(double* cursor);
             void            save(XmlElement* xmlNode);
             void            load(XmlElement* xmlNode);
-            void            setTickLength(float tick_length);
+            void            setticklen(float tick_length);
             void            recalc();
-            void            setTickDelta(float tick_delta);
+            void            settickdelta(float tick_delta);
 };
 

@@ -66,7 +66,7 @@ VstInstr::~VstInstr()
 
 void VstInstr::checkBounds(Note * gnote, Trigger * tg, long num_frames)
 {
-    if(tg->framePhase + num_frames >= gnote->frameLength || 
+    if(tg->framePhase + num_frames >= gnote->framelen || 
                             tg->tgState == TS_Release || tg->tgState == TS_Finished ||tg->tgState == TS_SoftFinish)
     {
         // Check: Or better stop?
@@ -87,12 +87,12 @@ long VstInstr::processTrigger(Trigger* tg, long num_frames, long buffframe)
 
     if(!tg->previewTrigger)
     {
-        if(gnote->frameLength - tg->framePhase < loc_num_frames)
+        if(gnote->framelen - tg->framePhase < loc_num_frames)
         {
-            loc_num_frames = gnote->frameLength - tg->framePhase;
+            loc_num_frames = gnote->framelen - tg->framePhase;
         }
 
-        addNoteEvent(tg->noteVal, loc_num_frames, tg->framePhase, gnote->frameLength, vol);
+        addNoteEvent(tg->noteVal, loc_num_frames, tg->framePhase, gnote->framelen, vol);
 
         checkBounds(gnote, tg, loc_num_frames);
     }

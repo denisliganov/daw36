@@ -162,12 +162,12 @@ Note* Create_Note(float tick, int line, Instrument* instr, int note_val, float l
         newNote = new Note(instr, note_val);
     }
 
-    newNote->setPos(tick, line);
+    newNote->setpos(tick, line);
 
     newNote->vol->setValue(vol);
     newNote->pan->setValue(pan);
 
-    newNote->setTickLength(length);
+    newNote->setticklen(length);
 
     if(ptBase)
     {
