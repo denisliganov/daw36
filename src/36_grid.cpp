@@ -187,7 +187,6 @@ Grid::Grid(float step_width, int line_height, Pattern* pt, Timeline* tl)
     lastElementEndTick = 0;
     vscr = hscr = NULL;
     mouseIsDown = false;
-    stepDefault = true;
     wasSelecting = false;
 
     dispmode = GridDisplayMode_Bars;
@@ -195,22 +194,21 @@ Grid::Grid(float step_width, int line_height, Pattern* pt, Timeline* tl)
     addHighlight(sel = new Selection(this));
     addHighlight(place = new PlaceHighlight(this));
 
-    selreset();
+    addObject(vscr = new Scroller(true));
+    addObject(hscr = new Scroller(false));
 
-    updbounds();
+    selReset();
 
     setmode(GridMode_Default);
 
-    lastAction = GridAction_Reset;
+    lastAction = GridAction_Release;
 }
 
 void Grid::grabcursor(float tick, int line)
 {
-    addHighlight(MTextCursor);
+    addHighlight(MCursor);
 
-    MTextCursor->setPos(tick, line);
-
-    updbounds();
+    MCursor->setPos(tick, line);
 }
 
 void Grid::drawintermittent(Graphics& g, int x, int y, int w, int h, int numBars)
@@ -390,14 +388,14 @@ void Grid::remap()
 {
     updbuffimage();
 
-    updbounds();
+    updBounds();
 
-    mapelems();
+    mapElems();
 
     place->update();
 }
 
-void Grid::mapelems()
+void Grid::mapElems()
 {
     visible.clear();
 
@@ -469,11 +467,6 @@ void Grid::mapelems()
             }
         }
     }
-
-    if (MTextCursor && MTextCursor->getParent() == this)
-    {
-        MTextCursor->updPos();
-    }
 }
 
 void Grid::drawelems(Graphics& g)
@@ -531,10 +524,10 @@ void Grid::drawself(Graphics& g)
         //g.drawImage(mainimg, x1 + 40, y1 + 40, width - 80, height - 80, 40, 40, width - 80, height - 80);
     }
 
-    if(lastline > 0 && (vscr->getoffs() + height)/lheight > lastline)
+    if(bottomLine > 0 && (vscr->getoffs() + height)/lheight > bottomLine)
     {
         setc(g, 0.15f, .4f);
-        int y = (lastline+1)*lheight - vscr->getoffs();
+        int y = (bottomLine+1)*lheight - vscr->getoffs();
         fillx(g, 0, y, width, height - y);
     }
 
@@ -563,6 +556,11 @@ void Grid::redraw(bool remap_objects, bool refresh_image)
     {
         remap();
 
+        if (MCursor && MCursor->getParent() == this)
+        {
+            MCursor->updPos();
+        }
+
         //updelimage();
     }
 
@@ -576,65 +574,6 @@ void Grid::sethoffs(float offs, bool from_nav_bar)
     //updateScrollers();
 
     //MEdit->playHead->updatePosFromFrame();
-}
-
-void Grid::updbounds()
-{
-    lastElementEndTick = 0;
-    lastElementStartTick = 0;
-    lastline = 0;
-
-    if (patt != NULL)
-    {
-        for(Element* el : patt->ptBase->elems)
-        {
-            if (!el->isdel())
-            {
-                if(el->getendtick() > lastElementEndTick)
-                {
-                    lastElementEndTick = el->getendtick();
-                }
-
-                if(el->gettick() > lastElementStartTick)
-                {
-                    lastElementStartTick = el->gettick();
-                }
-
-                if(el->getline() > lastline)
-                {
-                    lastline = el->getline();
-                }
-            }
-        }
-    }
-
-
-    if(hscr)
-    {
-        float visiblepart = (float)(width)/getppt();
-
-        float full = lastElementEndTick + (visiblepart*0.9f);
-
-        if (full < (float)width/getppt())
-            full = (1.1f*width)/getppt();
-
-        hscr->updlimits(full, visiblepart, getTickOffset());
-    }
-
-    if (MTextCursor && MTextCursor->grid == this && MTextCursor->getline() > lastline)
-    {
-        lastline = MTextCursor->getline();
-    }
-
-    if(vscr)
-    {
-        float full = (1 + lastline + 5)*lheight;
-
-        if (full < height)
-            full = 1.1f*height;
-
-        vscr->updlimits(full, height, vscr->getoffs());
-    }
 }
 
 void Grid::adjustscale(int delta, int mouseRefX)
@@ -681,40 +620,13 @@ void Grid::setppt(float ppt, int mouseRefX)
 
     if(mouseRefX >= 0)
     {
-        offs = currTick - float(mouseRefX - getX1())/(float)pixpertick;
+        sethoffs(currTick - float(mouseRefX - getX1())/(float)pixpertick);
     }
     else
     {
-        // offs = patt->getPlayTick() - visibleTickSpan/2;
+        //sethoffs(patt->getPlayTick() - visibleTickSpan/2);
+        sethoffs(hscr->getoffs());
     }
-
-    float last = 0;
-    float visiblepart = (float)(width)/getppt();
-
-    if (dispmode == GridDisplayMode_Bars)
-    {
-        last = lastElementEndTick - visiblepart*0.2f;
-    }
-    else
-    {
-        last = lastElementStartTick - visiblepart*0.2f;
-    }
-
-    if (last < 0)
-    {
-        last = 0;
-    }
-
-    if(offs < 0)
-    {
-        offs = 0;
-    }
-    else if(offs > last)
-    {
-        offs = last;
-    }
-
-    sethoffs(offs);
 }
 
 void Grid::updtransport()
@@ -788,7 +700,7 @@ int Grid::getLineFromY(int y)
     return (y - getY1() + vscr->getoffs())/lheight;
 }
 
-void Grid::checkpos(InputEvent & ev)
+void Grid::checkElementsAtPos(InputEvent & ev)
 {
     Element* newEl = NULL;
 
@@ -863,22 +775,12 @@ void Grid::checkpos(InputEvent & ev)
     }
 }
 
-void Grid::updpos(InputEvent & ev, bool textCursor)
+void Grid::updpos(InputEvent & ev)
 {
     getpos(ev.mouseX, ev.mouseY, &alignTick, &alignLine);
 
-    //if (alignLine >= MInstrPanel->getInstrNum() || alignLine < 0)
-    //    alignLine = -1;
-
-    updmode(ev);
-
     currTick = getTickFromX(ev.mouseX);
 
-    checkpos(ev);
-}
-
-void Grid::updmode(InputEvent & ev)
-{
     if (ev.keyFlags & kbd_alt)
     {
         setmode(GridMode_Alt);
@@ -893,10 +795,58 @@ void Grid::updmode(InputEvent & ev)
     }
     else
     {
-        //selreset(false);
+        //selReset(false);
 
         setmode(GridMode_Default);
     }
+
+    checkElementsAtPos(ev);
+}
+
+void Grid::handleModifierKeys(unsigned flags)
+{
+    if (mouseIsDown)
+    {
+        return;
+    }
+
+    InputEvent& event = lastEvent;
+
+    event.keyFlags = 0;
+
+    if (flags & kbd_ctrl)
+    {
+        event.keyFlags |= kbd_ctrl;
+    }
+
+    if (flags & kbd_alt)
+    {
+        event.keyFlags |= kbd_alt;
+    }
+
+    if (flags & kbd_shift)
+    {
+        event.keyFlags |= kbd_shift;
+    }
+
+    //updmode(event);
+
+    if (mode == GridMode_Ctrl)
+    {
+        if (actnote != NULL)
+        {
+            //actnote->preview();
+            //previewNote = actnote;
+        }
+    }
+
+    //checkElementsAtPos(event);
+
+    updpos(event);
+
+    place->update();
+
+    updcursor(lastEvent);
 }
 
 void Grid::updcursor(InputEvent & ev)
@@ -947,50 +897,6 @@ void Grid::handleMouseEnter(InputEvent & ev)
     //place->update();
 }
 
-void Grid::handleModifierKeys(unsigned flags)
-{
-    if (mouseIsDown)
-    {
-        return;
-    }
-
-    InputEvent& event = lastEvent;
-
-    event.keyFlags = 0;
-
-    if (flags & kbd_ctrl)
-    {
-        event.keyFlags |= kbd_ctrl;
-    }
-
-    if (flags & kbd_alt)
-    {
-        event.keyFlags |= kbd_alt;
-    }
-
-    if (flags & kbd_shift)
-    {
-        event.keyFlags |= kbd_shift;
-    }
-
-    updmode(event);
-
-    if (mode == GridMode_Ctrl)
-    {
-        if (actnote != NULL)
-        {
-            //actnote->preview();
-            //previewNote = actnote;
-        }
-    }
-
-    checkpos(event);
-
-    place->update();
-
-    updcursor(lastEvent);
-}
-
 void Grid::handleMouseMove(InputEvent & ev)
 {
     newEvent = ev;
@@ -1019,7 +925,7 @@ void Grid::handleMouseDown(InputEvent& ev)
 {
     mouseIsDown = true;
 
-    updpos(ev, true);
+    //updpos(ev);
 
     place->update();
 
@@ -1032,7 +938,7 @@ void Grid::handleMouseDown(InputEvent& ev)
         {
             if(!activeElem->issel())
             {
-                selreset(true);
+                selReset(true);
             }
         }
         else if(ev.leftClick)
@@ -1059,7 +965,7 @@ void Grid::handleMouseDown(InputEvent& ev)
                     {
                         grabcursor(alignTick, alignLine);
 
-                        selreset(true);
+                        selReset(true);
 
                         //actnote = putnote(alignTick, alignLine, -1);
                         //actnote->recalculate();
@@ -1096,7 +1002,7 @@ void Grid::handleMouseDown(InputEvent& ev)
                         }
                         else
                         {
-                            selreset(true);
+                            selReset(true);
 
                             actnote->preview(-1, true);
 
@@ -1129,7 +1035,7 @@ void Grid::handleMouseDown(InputEvent& ev)
             {
                 setmode(GridMode_Selecting);
 
-                selreset(true);
+                selReset(true);
             }
         */
             if(actnote != NULL && actnote->issel())
@@ -1138,7 +1044,7 @@ void Grid::handleMouseDown(InputEvent& ev)
             }
             else
             {
-                selreset(true);
+                selReset(true);
             }
 
 /*
@@ -1188,20 +1094,20 @@ void Grid::handleMouseUp(InputEvent& ev)
             }
         }
 
-        if (lastAction == GridAction_Reset)
+        if (lastAction == GridAction_Release)
         {
-            //selreset(true);
+            //selReset(true);
         }
     }
     else
     {
         if (mode == GridMode_Selecting)
         {
-            selreset(false);
+            selReset(false);
         }
     }
 
-    action(GridAction_Reset);
+    action(GridAction_Release);
 
     lastEvent = ev;
 }
@@ -1270,8 +1176,6 @@ void Grid::handleMouseDrag(InputEvent& ev)
     {
         action(GridAction_VolPanChange);
     }
-
-    updbounds();
 
     redraw(true, false);
 
@@ -1474,8 +1378,8 @@ bool Grid::handleObjDrop(Gobj * obj,int mx,int my, unsigned flags)
 
         getpos(mx, my, &tick, &line);
 
-        Note* note = putnote(tick, line, BaseNote);
-        note->recalc();
+        action(GridAction_PutNote, tick, line);
+        action(GridAction_Release);
 
         MAudio->releaseAllPreviews();
 
@@ -1523,7 +1427,7 @@ void Grid::selall(bool select)
     redraw(true);
 }
 
-void Grid::selreset(bool deselect)
+void Grid::selReset(bool deselect)
 {
     selStartX = selStartY = -1;
 
@@ -1721,8 +1625,6 @@ Note* Grid::putnote(float tick, int line, int noteVal)
         Note* newNote = _Create_Note(tick, line, instr, noteVal > 0 ? noteVal : instr->lastNoteVal, 
                                         instr->lastNoteLength, instr->lastNoteVol, instr->lastNotePan, getpatt());
 
-        updbounds();
-
         redraw(true);
 
         return newNote;
@@ -1766,7 +1668,9 @@ void Grid::action(GridAction act, float dTick, int dLine)
 
     if(act == GridAction_PutNote)
     {
-        
+        Note* nt = putnote(dTick, dLine, BaseNote);
+
+        updateList.push_back(nt);
     }
     else if(act == GridAction_Brush)
     {
@@ -2288,16 +2192,16 @@ void Grid::action(GridAction act, float dTick, int dLine)
         }
     }
 
-    else  if (act == GridAction_Reset)
+    else  if (act == GridAction_Release)
     {
         hasCloned = false;
 
-        updelems();
+        recalcElems();
 
         setmode(GridMode_Default);
     }
 
-    updbounds();
+    updBounds();
 
     lastAction = act;
 }
@@ -2372,10 +2276,10 @@ void Grid::activatemenuitem(std::string item)
         MGrid->action(GridAction_Cut);
     }
 
-    updelems();
+    recalcElems();
 }
 
-void Grid::updelems()
+void Grid::recalcElems()
 {
     for(Element* el : updateList)
     {
@@ -2383,6 +2287,58 @@ void Grid::updelems()
     }
 
     updateList.clear();
+}
+
+void Grid::updBounds()
+{
+    lastElementEndTick = 0;
+    bottomLine = 0;
+
+    if (patt != NULL)
+    {
+        for(Element* el : patt->ptBase->elems)
+        {
+            if (!el->isdel())
+            {
+                if(el->getendtick() > lastElementEndTick)
+                {
+                    lastElementEndTick = el->getendtick();
+                }
+
+                if(el->getline() > bottomLine)
+                {
+                    bottomLine = el->getline();
+                }
+            }
+        }
+    }
+
+
+    if(hscr)
+    {
+        float visiblepart = (float)(width)/getppt();
+
+        float full = lastElementEndTick + (visiblepart*0.9f);
+
+        if (full < (float)width/getppt())
+        {
+            full = (1.1f*width)/getppt();
+        }
+
+        hscr->updlimits(full, visiblepart, getTickOffset());
+    }
+
+    if(vscr)
+    {
+        float full = (1 + bottomLine + 5)*lheight;
+
+        if (full < height)
+        {
+            full = 1.1f*height;
+        }
+
+        vscr->updlimits(full, height, vscr->getoffs());
+    }
 }
 
 

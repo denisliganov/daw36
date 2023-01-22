@@ -91,7 +91,7 @@ Grid*               MGrid;
 HelperPanel*        MHelperPanel;
 KeyHandler*         MKeys;
 MainWinObject*      MObject;
-TextCursor*         MTextCursor;
+TextCursor*         MCursor;
 
 bool                InitComplete = false;
 

@@ -58,7 +58,7 @@ typedef enum GridAction
     GridAction_SelectRectangle,
     GridAction_VolPanChange,
     GridAction_WheelVolume,
-    GridAction_Reset,
+    GridAction_Release,
 }GridAction;
 
 class Selection;
@@ -86,7 +86,6 @@ protected:
             GridDisplayMode     dispmode;
             GridActionMode      mode;
             GridAction          lastAction;
-            bool                stepDefault;
             bool                wasSelecting;
             Selection*          sel;
             PlaceHighlight*     place;
@@ -118,8 +117,7 @@ protected:
             float               brushWidthTicks;
 
             float               lastElementEndTick;
-            float               lastElementStartTick;
-            int                 lastline;
+            int                 bottomLine;
 
             int                 selStartX;
             int                 selStartY;
@@ -142,7 +140,7 @@ protected:
     virtual void                handleMouseUp(InputEvent& ev);
             void                handleMouseEnter(InputEvent & ev);
             void                handleMouseLeave(InputEvent & ev);
-            void                updpos(InputEvent & ev, bool textCursor = false);
+            void                updpos(InputEvent & ev);
             void                handleChildEvent(Gobj * obj, InputEvent& ev);
             bool                handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my);
             bool                handleObjDrop(Gobj * obj,int mx,int my, unsigned int flags);
@@ -153,15 +151,14 @@ protected:
             bool                drawDraggedObject(Graphics& g, Gobj* obj);
             void                drawself(Graphics & g);
             void                drawelems(Graphics& g);
-            void                updmode(InputEvent & ev);
             void                updcursor(InputEvent & ev);
             ContextMenu*        createmenu();
             void                activatemenuitem(std::string item);
             void                remap();
-            void                mapelems();
+            void                mapElems();
             float               getticksnap(float val);
             void                getpos(int mx, int my, float* tick, int* line);
-            void                checkpos(InputEvent & ev);
+            void                checkElementsAtPos(InputEvent & ev);
             void                clickscroll(InputEvent& ev);
  
 public:
@@ -169,7 +166,7 @@ public:
             Grid(float step_width, int line_height, Pattern* pt, Timeline* tl);
             ~Grid() {}
             void                grabcursor(float tick, int line);
-            void                updbounds();
+            void                updBounds();
             void                removeelem(Element* el);
             void                setactivelem(Element* el);
             void                setmode(GridActionMode md);
@@ -201,11 +198,11 @@ public:
             void                setdispmode( GridDisplayMode display_mode );
             GridDisplayMode     getdispmode() { return dispmode; }
             void                updtransport();
-            void                selreset(bool deselect = true);
+            void                selReset(bool deselect = true);
     virtual void                handleModifierKeys(unsigned flags);
             int                 getselnum();
             bool                isselected(Element* el);
-            void                updelems();
+            void                recalcElems();
 };
 
 

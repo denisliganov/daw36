@@ -219,7 +219,7 @@ void KeyHandler::handleKeyPressed(char key_code, char c, unsigned flags)
 {
     unsigned k = (key_code > 255) ? 0 : keyMap[key_code];
 
-    MTextCursor->handleKeyOrCharPressed(k != 0 ? k : key_code, c, flags);
+    MCursor->handleKeyOrCharPressed(k != 0 ? k : key_code, c, flags);
 }
 
 void KeyHandler::handleKeyStateChange(bool key_down)
@@ -240,7 +240,7 @@ void KeyHandler::handleKeyStateChange(bool key_down)
         }
     }
 
-    MGrid->updelems();
+    MGrid->recalcElems();
 }
 
 void KeyHandler::handleNoteKey(int key, int note_val, bool press)
@@ -254,7 +254,7 @@ void KeyHandler::handleNoteKey(int key, int note_val, bool press)
 
         if(note == NULL)
         {
-            note = MGrid->putnote(MTextCursor->getTick(), MTextCursor->getline(), note_val);
+            note = MGrid->putnote(MCursor->getTick(), MCursor->getline(), note_val);
 
             MGrid->setactivelem(note);
         }
@@ -310,7 +310,7 @@ void TextCursor::updPos()
     {
         if (grid->getdispmode() == GridDisplayMode_Bars)
         {
-            if (grid->mode == GridMode_Default)
+            //if (grid->mode == GridMode_Default)
             {
                 int x = grid->getXfromTick(tick) - grid->getX1();
                 int y = grid->getYfromLine(line) - int(grid->getlh()) - grid->getY1() + 1;
@@ -320,8 +320,6 @@ void TextCursor::updPos()
                 setVisible(true);
             }
         }
-
-        grid->updbounds();
     }
 }
 
@@ -516,6 +514,7 @@ void TextCursor::handleKeyOrCharPressed(unsigned key, char character, unsigned f
                 default:
                 {
                     handleChar(character);
+
                     /*
                     for (int k = 0; k < KEYNUM; k++)
                     {
@@ -543,7 +542,35 @@ void TextCursor::handleKeyOrCharPressed(unsigned key, char character, unsigned f
 
     MHistory->newGroup();
 
-    grid->updelems();
+    grid->recalcElems();
+}
+
+void TextCursor::handleChar(char c)
+{
+    char al[2] = {};
+
+    al[0] = c;
+
+    Instrument* i = MInstrPanel->getInstrByAlias(al);
+
+    if (i != NULL)
+    {
+        MInstrPanel->setcurr(i);
+
+        grid->action(GridAction_PutNote, getTick(), getline());
+
+        Note* note = (Note*)grid->updateList.back();
+
+        grid->updateList.clear();
+
+        grid->setactivelem(note);
+
+        note->recalc();
+
+        note->preview(-1, true);
+
+        grid->redraw(true);
+    }
 }
 
 void TextCursor::advanceView(float dtick, int dline)
@@ -559,30 +586,6 @@ void TextCursor::advanceView(float dtick, int dline)
     }
 
     grid->redraw(false);
-}
-
-void TextCursor::handleChar(char c)
-{
-    char al[2] = {};
-
-    al[0] = c;
-
-    Instrument* i = MInstrPanel->getInstrByAlias(al);
-
-    if (i != NULL)
-    {
-        MInstrPanel->setcurr(i);
-
-        Note* note = grid->putnote(getTick(), getline(), -1);
-
-        grid->setactivelem(note);
-
-        note->recalc();
-
-        note->preview(-1, true);
-
-        grid->redraw(true);
-    }
 }
 
 

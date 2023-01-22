@@ -161,7 +161,7 @@ extern InstrPanel*      MInstrPanel;
 extern HelperPanel*     MHelperPanel;
 extern Browser*         MBrowser;
 extern Pattern*         MPattern;
-extern TextCursor*      MTextCursor;
+extern TextCursor*      MCursor;
 
 extern MixChannel*      SoloMixChannel;
 extern Instrument*      SoloInstr;

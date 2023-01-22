@@ -21,7 +21,6 @@ protected:
         Button36*           forth;
         Button36*           btup;
         Button36*           btdown;
-        Scroller*           verticalGridScroller;
         AuxKeys*            keys;
         AuxKeys*            keys1;
 

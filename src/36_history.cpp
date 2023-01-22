@@ -154,7 +154,7 @@ void EditHistory::redo()
 
     if(itRedo != actions.end())
     {
-        MGrid->selreset();
+        MGrid->selReset();
 
         int id = (*itRedo)->groupID;
 
@@ -175,7 +175,7 @@ void EditHistory::undo()
 {
     if(currAction != actions.end() && currAction != actions.begin())
     {
-        MGrid->selreset();
+        MGrid->selReset();
 
         int id = (*currAction)->groupID;
 

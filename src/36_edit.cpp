@@ -41,12 +41,15 @@ MainEdit::MainEdit()
     MPattern->ptBase = MPattern;
     MPattern->setBounds(0, 2147483647);
 
-    addObject(verticalGridScroller = new Scroller(true));
+    addObject(grid->vscr);
+    MCtrllPanel->addObject(grid->hscr);
 
-    grid->setvscr(*verticalGridScroller);
-    grid->sethscr(MCtrllPanel->getScroller());
+    //grid->setvscr(*verticalGridScroller);
+    //grid->sethscr(MCtrllPanel->getScroller());
 
-    MTextCursor = new TextCursor();
+    grid->redraw(true, true);
+
+    MCursor = new TextCursor();
 }
 
 void MainEdit::drawself(Graphics& g)
@@ -92,7 +95,7 @@ void MainEdit::remap()
     //keys->setCoords1(LeftGap, MainLineHeight, 100, height - MainLineHeight - 1);
     //keys1->setCoords2(LeftGap+100, height - 1 - 100, width - GridScrollWidth - 1, height - 1);
 
-    verticalGridScroller->setCoords2(width - GridScrollWidth, MainLineHeight, width - 1, height - 1 - BottomPadHeight - 1);
+    grid->vscr->setCoords2(width - GridScrollWidth, MainLineHeight, width - 1, height - 1 - BottomPadHeight - 1);
 
     grid->setCoords2(0, yGrid, width - GridScrollWidth - 1, height - 1 - BottomPadHeight - 1);
 
@@ -103,9 +106,9 @@ void MainEdit::remap()
 
 void MainEdit::handleChildEvent(Gobj * obj, InputEvent& ev)
 {
-    if(obj == verticalGridScroller)
+    if(obj == grid->vscr)
     {
-        grid->handleChildEvent(verticalGridScroller, ev);
+        grid->handleChildEvent(obj, ev);
 
         //MInstrPanel->setOffset(int(verticalGridScroller->getOffset()));
     }

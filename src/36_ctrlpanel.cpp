@@ -138,8 +138,8 @@ ControlPanel::ControlPanel()
 
     addObject(btScrollBack = new Button36(false), "bt.navback");
     addObject(btScrollForth = new Button36(false), "bt.navforth");
-    addObject(gridScroller = new Scroller(false), "maingrid.hscroll");
 
+    //addObject(gridScroller = new Scroller(false), "maingrid.hscroll");
 }
 
 bool ControlPanel::wavesAreVisible()
@@ -166,9 +166,9 @@ void ControlPanel::remap()
             btScrollForth->setEnable(true);
         }
 
-        if(!gridScroller->isshown()) 
+        if(!MGrid->hscr->isshown()) 
         {
-            gridScroller->setEnable((true));
+            MGrid->hscr->setEnable((true));
         }
 
 /*
@@ -191,7 +191,7 @@ void ControlPanel::remap()
 
         xStartCoord = xControls + 80;
 
-        gridScroller->setCoords2(btScrollBack->getX2() + 3, yTop, btScrollForth->getX1() - 3, yTop + navHeight - 1);
+        MGrid->hscr->setCoords2(btScrollBack->getX2() + 3, yTop, btScrollForth->getX1() - 3, yTop + navHeight - 1);
 
         int xEditButtons = 150;
         int yEditButtons = 4;
@@ -218,7 +218,7 @@ void ControlPanel::remap()
     {
         btScrollBack->setEnable(false);
         btScrollForth->setEnable(false);
-        gridScroller->setEnable(false);
+        MGrid->hscr->setEnable(false);
     }
 }
 
@@ -270,9 +270,9 @@ ContextMenu* ControlPanel::createmenu()
 
 void ControlPanel::handleChildEvent(Gobj* obj, InputEvent& ev)
 {
-    if (obj == gridScroller)
+    if (obj == MGrid->hscr)
     {
-        MEdit->grid->handleChildEvent(obj, ev);
+        MGrid->handleChildEvent(obj, ev);
 
         MEdit->playHead->updatePosFromFrame();
     }
