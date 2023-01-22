@@ -148,7 +148,7 @@ public:
         void    updPos();
         void    drawself(Graphics& g);
         float   getTick();
-        int     getLine();
+        int     getline();
         void    handleKey(int key);
         void    advanceView(float dtick, int dline);
         void    handleKeyOrCharPressed(unsigned key, char character, unsigned flags);

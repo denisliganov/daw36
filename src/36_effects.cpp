@@ -127,12 +127,12 @@ Eff* Eff::clone()
     return makeClone(CreateEffect(objId));
 }
 
-ContextMenu* Eff::createContextMenu()
+ContextMenu* Eff::createmenu()
 {
     return mixChannel->createContextMenuForEffect(this);
 }
 
-void Eff::activateContextMenuItem(std::string item)
+void Eff::activatemenuitem(std::string item)
 {
     mixChannel->activateEffectMenuItem(this, item);
 }

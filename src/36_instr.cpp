@@ -140,7 +140,7 @@ protected:
                 //gSetMonoColor(g, .6f);
                 setc(g, 1.f);
             }
-            else if (mouseHovering)
+            else if (undermouse)
             {
                 setc(g, .6f);
             }
@@ -1167,7 +1167,7 @@ void Instrument::handleMouseWheel(InputEvent& ev)
     parent->handleMouseWheel(ev);
 }
 
-ContextMenu* Instrument::createContextMenu()
+ContextMenu* Instrument::createmenu()
 {
     MInstrPanel->setcurr(this);
 
@@ -1182,7 +1182,7 @@ ContextMenu* Instrument::createContextMenu()
     return menu;
 }
 
-void Instrument::activateContextMenuItem(std::string item)
+void Instrument::activatemenuitem(std::string item)
 {
     if(item == "Clone")
     {

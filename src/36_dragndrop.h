@@ -38,7 +38,6 @@ public:
         bool            isActive();
         void            drag(Gobj* targetObj, int mx, int my);
         void            drop(int mx, int my, unsigned int flags);
-        bool            isMouseTouching(int mx, int my) { return false; }     // can't touch this
 };
 
 

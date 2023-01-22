@@ -14,44 +14,44 @@ Scroller::Scroller(bool is_vertical)
 
     event = {};
 
-    wheelMult = 1;
     ratio = 0;
 
-    coordRef = is_vertical ? &y1 : &x1;
+    coordref = is_vertical ? &y1 : &x1;
 }
 
 void Scroller::handleMouseUp(InputEvent & ev)
 {
-    currPos = 0;
+    currpos = 0;
 }
 
 void Scroller::handleMouseDrag(InputEvent& ev)
 {
     int mouseRef = vertical ? ev.mouseY : ev.mouseX;
 
-    if(currPos == 0)
+    if(currpos == 0)
     {
         event = ev;
-        setoffs(float(mouseRef - barPos - (*coordRef + 1))/ratio);
+
+        setoffs(float(mouseRef - barpos - (*coordref + 1))/ratio);
     }
 }
 
 void Scroller::handleMouseDown(InputEvent& ev)
 {
-    currPos = getpos(ev, barPos);
+    currpos = getpos(ev, barpos);
 
-    if(currPos != 0)
+    if(currpos != 0)
     {
         int mouseRef = vertical ? ev.mouseY : ev.mouseX;
-        int ref = mouseRef - (*coordRef + 1);
+        int ref = mouseRef - (*coordref + 1);
 
         event = ev;
-        //setOffset(offset + (visibleSpan*0.9f)*currPos);
-        setoffs(float(ref)/ratio - float(barPixLen*0.5f)/ratio);
+        //setOffset(offset + (visiblepart*0.9f)*currpos);
+        setoffs(float(ref)/ratio - float(barpixlen*0.5f)/ratio);
 
-        int barRef = (*coordRef + 1 + offsetPix);
-        barPos = mouseRef - barRef;
-        currPos = 0;
+        int barRef = (*coordref + 1 + offsetpix);
+        barpos = mouseRef - barRef;
+        currpos = 0;
     }
 }
 
@@ -59,9 +59,9 @@ int Scroller::getpos(InputEvent& ev, int& offset_on_bar)
 {
     int pos = 0;
     int mouseRef = vertical ? ev.mouseY : ev.mouseX;
-    int barRef = (*coordRef + 1 + offsetPix);
+    int barRef = (*coordref + 1 + offsetpix);
 
-    if (mouseRef >= barRef && mouseRef <= (barRef + barPixLen))
+    if (mouseRef >= barRef && mouseRef <= (barRef + barpixlen))
     {
         pos = 0;
 
@@ -88,19 +88,23 @@ void Scroller::setoffs(float offs)
 {
     offset = offs;
 
-    if(offset < 0) 
+    if(offset < 0)
+    {
         offset = 0;
+    }
 
-    if(offset + visibleSpan > fullSpan) 
-        offset = fullSpan - visibleSpan;
+    if(offset + visiblepart > fullspan)
+    {
+        offset = fullspan - visiblepart;
+    }
 
-    if(fullSpan < visibleSpan)
+    if(fullspan < visiblepart)
     {
         offset = 0;
         active = false;
     }
 
-    offsetPix = int(fullPixLen*(offset/fullSpan));
+    offsetpix = int(fullpixlen*(offset/fullspan));
 
     redraw();
 
@@ -109,7 +113,7 @@ void Scroller::setoffs(float offs)
 
 void Scroller::handleMouseWheel(InputEvent& ev)
 {
-    float ofsDelta = ev.wheelDelta*(visibleSpan*0.1f)*wheelMult;
+    float ofsDelta = ev.wheelDelta*(visiblepart*0.1f);
 
     event = ev;
 
@@ -118,8 +122,8 @@ void Scroller::handleMouseWheel(InputEvent& ev)
 
 void Scroller::updlimits(float full_span, float visible_span, float offs)
 {
-    fullSpan = full_span;
-    visibleSpan = visible_span;
+    fullspan = full_span;
+    visiblepart = visible_span;
     offset = offs;
 
     if(offset < 0)
@@ -127,24 +131,24 @@ void Scroller::updlimits(float full_span, float visible_span, float offs)
         offset = 0;
     }
 
-    if(fullSpan > visibleSpan || offset > 0)
+    if(fullspan > visiblepart || offset > 0)
     {
         active = true;
 
         if(vertical)
         {
-            fullPixLen = height - 2;
+            fullpixlen = height - 2;
         }
         else
         {
-            fullPixLen = width - 2;
+            fullpixlen = width - 2;
         }
 
-        ratio = (float)fullPixLen/fullSpan;
+        ratio = (float)fullpixlen/fullspan;
 
-        barPixLen = int(ratio*visibleSpan);
+        barpixlen = int(ratio*visiblepart);
 
-        offsetPix = int(ratio*offset);
+        offsetpix = int(ratio*offset);
     }
     else
     {
@@ -168,11 +172,11 @@ void Scroller::drawself(Graphics & g)
 
         if(vertical)
         {
-            fillx(g, 3, 1 + offsetPix, width - 4, barPixLen);
+            fillx(g, 3, 1 + offsetpix, width - 4, barpixlen);
         }
         else
         {
-            fillx(g, 1 + offsetPix, 1, barPixLen, height - 2);
+            fillx(g, 1 + offsetpix, 1, barpixlen, height - 2);
         }
     }
 }
@@ -186,7 +190,7 @@ void Scroller::gotostart()
 void Scroller::gotoend()
 {
     event = {};
-    setoffs(fullSpan - visibleSpan);
+    setoffs(fullspan - visiblepart);
 }
 
 

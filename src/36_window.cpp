@@ -1214,7 +1214,7 @@ WinObject::~WinObject()
     // Delete child objects here, to prevent issue when ~Gobj destructor unregisters
     // objects being deleted and catches an error, since the internal lists won't be valid after this
     // destructor
-    Gobj::deleteAllObjects();
+    Gobj::delobjects();
 
     deleteAndZero(hintBox);
 }
@@ -1335,7 +1335,7 @@ void WinObject::updActiveObject(InputEvent& ev)
     {
         if (lastActiveObj != NULL && lastActiveObj != this)
         {
-            lastActiveObj->setMouseHovering(false);
+            lastActiveObj->setundermouse(false);
 
             lastActiveObj->handleMouseLeave(ev);
         }
@@ -1410,7 +1410,7 @@ void WinObject::handleMouseUp(InputEvent& ev)
 
         if(ev.rightClick && dragDistance <= 2)
         {
-            ContextMenu* m = activeObj->createContextMenu();
+            ContextMenu* m = activeObj->createmenu();
 
             if(m != NULL)
             {

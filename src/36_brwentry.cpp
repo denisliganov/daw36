@@ -47,7 +47,7 @@ BrwEntry::BrwEntry(Device36* preset_dev) : dev(preset_dev)
 {
 }
 
-ContextMenu* BrwEntry::createContextMenu()
+ContextMenu* BrwEntry::createmenu()
 {
     return NULL;
 /*
@@ -63,7 +63,7 @@ ContextMenu* BrwEntry::createContextMenu()
     */
 }
 
-void BrwEntry::activateContextMenuItem(std::string item)
+void BrwEntry::activatemenuitem(std::string item)
 {
     if(item == "Open location")
     {

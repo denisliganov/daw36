@@ -23,7 +23,7 @@ protected:
         std::vector<std::string>    menuItems;
 
         void        drawself(Graphics& g);
-        void        activateContextMenuItem(std::string item);
+        void        activatemenuitem(std::string item);
         void        handleMouseDown(InputEvent& ev);
         void        handleMouseUp(InputEvent & ev);
         void        handleMouseWheel(InputEvent & ev);

@@ -11,7 +11,7 @@ DropHighlight::DropHighlight(bool vert)
 {
     vertical = vert;
 
-    setRelative(false);
+    setrelative(false);
 }
 
 void DropHighlight::drawself(Graphics & g)
@@ -44,6 +44,8 @@ void DropHighlight::drawself(Graphics & g)
 
 DragAndDrop::DragAndDrop()
 {
+    settouchable(false);
+
     addHighlight(dropHighlightHorizontal = new DropHighlight(false));
     addHighlight(dropHighlightVertical = new DropHighlight(true));
 

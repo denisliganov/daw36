@@ -52,7 +52,7 @@ void SnapMenu::updateSnapSize()
         snapSize = 1.f/6.f;
 }
 
-void SnapMenu::activateContextMenuItem(std::string item)
+void SnapMenu::activatemenuitem(std::string item)
 {
     int idx = 0;
 

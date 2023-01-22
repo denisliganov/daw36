@@ -255,7 +255,7 @@ void ControlPanel::drawself(Graphics& g)
     }*/
 }
 
-ContextMenu* ControlPanel::createContextMenu()
+ContextMenu* ControlPanel::createmenu()
 {
     ContextMenu* menu = new ContextMenu(this);
 
@@ -299,7 +299,7 @@ void ControlPanel::handleChildEvent(Gobj* obj, InputEvent& ev)
         {
             while (ev.wheelDelta > 0)
             {
-                MGrid->changeScale(1, -1);
+                MGrid->adjustscale(1, -1);
 
                 ev.wheelDelta--;
             }
@@ -308,7 +308,7 @@ void ControlPanel::handleChildEvent(Gobj* obj, InputEvent& ev)
         {
             while (ev.wheelDelta < 0)
             {
-                MGrid->changeScale(-1, -1);
+                MGrid->adjustscale(-1, -1);
 
                 ev.wheelDelta++;
             }
@@ -320,25 +320,25 @@ void ControlPanel::handleChildEvent(Gobj* obj, InputEvent& ev)
         {
             if(obj == btVols)
             {
-                MGrid->setDisplayMode(GridDisplayMode_Volumes);
+                MGrid->setdispmode(GridDisplayMode_Volumes);
 
                 MObject->switchBrowser(false);
             }
             else if(obj == btPans)
             {
-                MGrid->setDisplayMode(GridDisplayMode_Pans);
+                MGrid->setdispmode(GridDisplayMode_Pans);
 
                 MObject->switchBrowser(false);
             }
             else if(obj == btStepMode)
             {
-                MGrid->setDisplayMode(GridDisplayMode_Steps);
+                MGrid->setdispmode(GridDisplayMode_Steps);
 
                 MObject->switchBrowser(false);
             }
             else if(obj == btBarMode)
             {
-                MGrid->setDisplayMode(GridDisplayMode_Bars);
+                MGrid->setdispmode(GridDisplayMode_Bars);
 
                 MObject->switchBrowser(false);
             }
@@ -364,11 +364,11 @@ void ControlPanel::handleChildEvent(Gobj* obj, InputEvent& ev)
             }
             else if(obj == btZoomIn)
             {
-                MGrid->changeScale(1);
+                MGrid->adjustscale(1);
             }
             else if(obj == btZoomOut)
             {
-                MGrid->changeScale(-1);
+                MGrid->adjustscale(-1);
             }
             else if (obj == btScrollBack)
             {

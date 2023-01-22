@@ -25,6 +25,8 @@ void Vu_ShowCoolFalldown()
 
 ChanVU::ChanVU(bool vert)
 {
+    settouchable(false);
+
     vertical = vert;
 
     leftVal = rightVal = 0;

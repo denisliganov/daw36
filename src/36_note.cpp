@@ -65,7 +65,7 @@ Note::~Note()
 
     patt->removeElement(this);
 
-    MGrid->removeElementFromLists(this);
+    MGrid->removeelem(this);
 
     instr->removeNote(this);
 
@@ -168,9 +168,9 @@ void Note::calcforgrid(Grid* grid)
 
      float lHeight = float(grid->getlh() - 1);
 
-     if (grid->getDisplayMode() == GridDisplayMode_Bars)
+     if (grid->getdispmode() == GridDisplayMode_Bars)
      {
-         Parameter* param = getParamByDisplayMode(grid->getDisplayMode());
+         Parameter* param = getParamByDisplayMode(grid->getdispmode());
 
          float mul = param == NULL ? DAW_INVERTED_VOL_RANGE : param->getEditorValue();
 
@@ -178,9 +178,9 @@ void Note::calcforgrid(Grid* grid)
 
          y1 = yBase - height;
      }
-     else if (grid->getDisplayMode() == GridDisplayMode_Volumes || grid->getDisplayMode() == GridDisplayMode_Pans)
+     else if (grid->getdispmode() == GridDisplayMode_Volumes || grid->getdispmode() == GridDisplayMode_Pans)
      {
-         Parameter* param = getParamByDisplayMode(grid->getDisplayMode());
+         Parameter* param = getParamByDisplayMode(grid->getdispmode());
 
          int start = int(lHeight*((0.f - param->getOffset())/param->getRange()));
 
@@ -188,7 +188,7 @@ void Note::calcforgrid(Grid* grid)
          barStart = yBase - start;
      }
 
-     width = (int)(ticklen*grid->getPixelsPerTick());
+     width = (int)(ticklen*grid->getppt());
 
      y2 = y1 + height - 1;
      x2 = x1 + width - 1;
@@ -198,7 +198,7 @@ void Note::calcforgrid(Grid* grid)
 
 void Note::drwongrid(Graphics& g, Grid* grid)
 {
-    if (grid->getDisplayMode() == GridDisplayMode_Bars)
+    if (grid->getdispmode() == GridDisplayMode_Bars)
     {
         FontId fnt = FontSmall;
 
@@ -221,7 +221,7 @@ void Note::drwongrid(Graphics& g, Grid* grid)
             rect(g, 1.f, .9f);
         }
     }
-    else if (grid->getDisplayMode() == GridDisplayMode_Volumes || grid->getDisplayMode() == GridDisplayMode_Pans)
+    else if (grid->getdispmode() == GridDisplayMode_Volumes || grid->getdispmode() == GridDisplayMode_Pans)
     {
         if(issel())
         {
@@ -561,7 +561,7 @@ void SampleNote::drwongrid(Graphics& g, Grid* grid)
         sample->updWaveImage();
     }
 
-    if (grid->getDisplayMode() == GridDisplayMode_Bars && MCtrllPanel->wavesAreVisible() && sample->waveImage != NULL)
+    if (grid->getdispmode() == GridDisplayMode_Bars && MCtrllPanel->wavesAreVisible() && sample->waveImage != NULL)
     {
         setc(g, 1.f, 0.4f);
 

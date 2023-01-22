@@ -31,7 +31,7 @@ public:
 
         void            addMenuItem( std::string item );
         void            remap();
-        void            activateContextMenuItem(std::string item);
+        void            activatemenuitem(std::string item);
         void            drawself(Graphics & g);
         void            handleClose();
 };

@@ -661,7 +661,7 @@ void MixChannel::load(XmlElement * xmlNode)
     }
 }
 
-ContextMenu* MixChannel::createContextMenu()
+ContextMenu* MixChannel::createmenu()
 {
     ContextMenu* menu = new ContextMenu(this);
 
@@ -700,7 +700,7 @@ void MixChannel::activateEffectMenuItem(Eff * eff, std::string mi)
     }
 }
 
-void MixChannel::activateContextMenuItem(std::string mi)
+void MixChannel::activatemenuitem(std::string mi)
 {
     Eff* eff = NULL;
 

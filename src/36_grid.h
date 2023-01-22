@@ -83,7 +83,7 @@ friend  ControlPanel;
 
 protected:
 
-            GridDisplayMode     displayMode;
+            GridDisplayMode     dispmode;
             GridActionMode      mode;
             GridAction          lastAction;
             bool                stepDefault;
@@ -114,15 +114,12 @@ protected:
             float               dragTickStart;
             float               snap;
             float               pixpertick;
-            float               framesPerPixel;
+            float               framesperpix;
             float               brushWidthTicks;
 
             float               lastElementEndTick;
             float               lastElementStartTick;
             int                 lastline;
-
-            float               fullTickSpan;
-            float               visibleTickSpan;
 
             int                 selStartX;
             int                 selStartY;
@@ -149,17 +146,17 @@ protected:
             void                handleChildEvent(Gobj * obj, InputEvent& ev);
             bool                handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my);
             bool                handleObjDrop(Gobj * obj,int mx,int my, unsigned int flags);
-            void                refreshImageBrush();
-            void                refreshImageBuffer();
-            void                refreshElementsImage();
-            void                drawIntermittentHighlight(Graphics& g, int xh, int yh, int wh, int hh, int numBars);
+            void                updfillerimage();
+            void                updbuffimage();
+            void                updelimage();
+            void                drawintermittent(Graphics& g, int xh, int yh, int wh, int hh, int numBars);
             bool                drawDraggedObject(Graphics& g, Gobj* obj);
             void                drawself(Graphics & g);
             void                drawelems(Graphics& g);
             void                updmode(InputEvent & ev);
             void                updcursor(InputEvent & ev);
-            ContextMenu*        createContextMenu();
-            void                activateContextMenuItem(std::string item);
+            ContextMenu*        createmenu();
+            void                activatemenuitem(std::string item);
             void                remap();
             void                mapelems();
             float               getticksnap(float val);
@@ -171,45 +168,44 @@ public:
 
             Grid(float step_width, int line_height, Pattern* pt, Timeline* tl);
             ~Grid() {}
-            void                grabTextCursor(float tick, int line);
+            void                grabcursor(float tick, int line);
             void                updbounds();
-            void                removeElementFromLists(Element* el);
+            void                removeelem(Element* el);
             void                setactivelem(Element* el);
             void                setmode(GridActionMode md);
-            void                setVertScroller(Scroller& scr)   { vscr = &scr; }
-            void                setHorizScroller(Scroller& scr)   { hscr = &scr; }
+            void                setvscr(Scroller& scr)   { vscr = &scr; }
+            void                sethscr(Scroller& scr)   { hscr = &scr; }
             void                sethoffs(float tick_offset, bool from_nav_bar = false);
-            void                setLineHeight(int newLH);
-            void                changeScale(int delta, int mouseRefX = -1);
+            void                setlineheight(int newLH);
+            void                adjustscale(int delta, int mouseRefX = -1);
             void                setppt(float tick_width, int mouseRefX = -1);
             void                redraw(bool remap_objects, bool refresh_image = false);
             Note*               putnote(float tick, int line, int noteVal);
             void                selall(bool select);
-            void                changebars(InputEvent& ev);
+            void                editbars(InputEvent& ev);
             void                reassign();
             void                action(GridAction act, float dTick = 0, int dLine = 0);
             Pattern*            getpatt();
             Element*            getActiveElement()  { return activeElem; };
             GridActionMode      getActionMode()   { return mode; };
-            float               getFramesPerPixel() { return framesPerPixel; }
+            float               getFramesPerPixel() { return framesperpix; }
             float               getSnapSize()   { return snap; }
             int                 getXfromTick(float tick);
             float               getTickFromX(int x);
             int                 getYfromLine(int line);
             int                 getLineFromY(int y);
-            float               getPixelsPerTick();
+            float               getppt();
             float               getTickOffset();
             int                 getlh();
             void                delacross(int mx1, int my1, int mx2, int my2);
-            void                setDisplayMode( GridDisplayMode display_mode );
-            GridDisplayMode     getDisplayMode() { return displayMode; }
-            void                updscale();
-            void                handleTransportUpdate();
+            void                setdispmode( GridDisplayMode display_mode );
+            GridDisplayMode     getdispmode() { return dispmode; }
+            void                updtransport();
             void                selreset(bool deselect = true);
     virtual void                handleModifierKeys(unsigned flags);
             int                 getselnum();
-            bool                iselselected(Element* el);
-            void                updateChangedElements();
+            bool                isselected(Element* el);
+            void                updelems();
 };
 
 

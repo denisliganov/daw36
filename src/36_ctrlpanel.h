@@ -85,7 +85,7 @@ public:
             SnapMenu&           getSnapMenu()   { return *snapMenu; } 
             TimeScreen&         getTimeScreen()     { return *timeScreen; } 
             Scroller&           getScroller()       { return *gridScroller; } 
-            ContextMenu*        createContextMenu();
+            ContextMenu*        createmenu();
 
             bool                wavesAreVisible();
             bool                isDarkGrid() { return true; }

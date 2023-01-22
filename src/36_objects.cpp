@@ -14,9 +14,10 @@ Gobj::Gobj()
     enabled = false;
     visible = false;
     changed = false;
-    mouseHovering = false;
+    undermouse = false;
     relativeToParent = true;
     autoMapped = false;
+    touchable = true;
 
     objGroup = ObjGroup_Default;
 
@@ -41,10 +42,10 @@ Gobj::~Gobj()
         window->unregisterObject(this);
     }
 
-    deleteAllObjects();
+    delobjects();
 }
 
-void Gobj::deleteAllObjects()
+void Gobj::delobjects()
 {
     while(objs.size() > 0)
     {
@@ -86,11 +87,15 @@ void Gobj::setParent(Gobj* par)
     setWindow(parent->getWindow());
 }
 
-void Gobj::setRelative(bool rel)
+void Gobj::setrelative(bool rel)
 {
     relativeToParent = rel;
 }
 
+void Gobj::settouchable(bool t)
+{
+    touchable = t;
+}
 
 void Gobj::addObject(Gobj* obj, std::string id, ObjectGroup type)
 {
@@ -153,7 +158,7 @@ Gobj* Gobj::getLastTouchedObject(int mx, int my)
 {
     for(Gobj* obj : objs)
     {
-        if(obj->isMouseTouching(mx, my))
+        if(obj->checkMouseTouching(mx, my))
         {
             return obj->getLastTouchedObject(mx, my);
         }
@@ -246,11 +251,106 @@ void Gobj::updCoords()
     x2 = x1 + width - 1;
     y2 = y1 + height - 1;
 
-    updDrawCoords();
+    // Update drawing coords
+    {
+        width = getW();
+        height = getH();
+    
+        int cx1 = xRel, cx2 = xRel + width - 1, cy1 = yRel, cy2 = yRel + height - 1;
+    
+        if(relativeToParent && parent != NULL)
+        {
+            // Override bounds with those of parent's, if they overlap
+    
+            if (parent->bx1 > cx1) 
+            {
+                cx1 = (parent->bx1);
+            }
+    
+            if (parent->by1 > cy1) 
+            {
+                cy1 = (parent->by1);
+            }
+    
+            if (parent->bx2 < cx2) 
+            {
+                cx2 = (parent->bx2);
+            }
+    
+            if (parent->by2 < cy2) 
+            {
+                cy2 = (parent->by2);
+            }
+    
+            // Make coords absolute
+    
+            cx1 += parent->x1;
+            cy1 += parent->y1;
+            cx2 += parent->x1;
+            cy2 += parent->y1;
+    
+            // If parent had their draw coords cut, adjust ours as well
+    
+            if(parent->dx1 > cx1) 
+            {
+                cx1 = parent->dx1;
+            }
+    
+            if(parent->dy1 > cy1)
+            {
+                cy1 = parent->dy1;
+            }
+    
+            if(parent->dx2 < cx2)
+            {
+                cx2 = parent->dx2;
+            }
+    
+            if(parent->dy2 < cy2) 
+            {
+                cy2 = parent->dy2;
+            }
+        }
+        else
+        {
+            // Use absolute coords
+    
+            cx1 = x1; cy1 = y1; cx2 = x2; cy2 = y2;
+        }
+    
+        // now adjust drawing coords 
+    
+        if(CheckPlaneCrossing(x1, y1, x2, y2, cx1, cy1, cx2, cy2) == true)
+        {
+            setVisible(true);
+    
+            dx1 =       x1 > cx1 ? x1 : cx1;
+            dy1 =       y1 > cy1 ? y1 : cy1;
+            dwidth =    x2 < cx2 ? width : cx2 - x1 + 1;
+            dheight =   y2 < cy2 ? height : cy2 - y1 + 1;
+    
+            dwidth -= (dx1 - x1);
+            dheight -= (dy1 - y1);
+    
+            dx2 =  dx1 + dwidth - 1;
+            dy2 =  dy1 + dheight - 1;
+    
+            if(window)
+            {
+                window->addRepaint(dx1, dy1, dwidth, dheight); // window->listen->repaint(dx1, dy1, dwidth, dheight);
+            }
+        }
+        else
+        {
+            setVisible(false);
+    
+           // dx1 = dy1 = dx2 = dy2 = dwidth = dheight = 0;
+        }
+    }
 
     if(visible)
     {
-        // Reset draw bounds & draw kids
+        // Reset draw bounds, update child coords, remap all
 
         confine();
 
@@ -263,103 +363,6 @@ void Gobj::updCoords()
         }
 
         remap();
-    }
-}
-
-void Gobj::updDrawCoords()
-{
-    width = getW();
-    height = getH();
-
-    int cx1 = xRel, cx2 = xRel + width - 1, cy1 = yRel, cy2 = yRel + height - 1;
-
-    if(relativeToParent && parent != NULL)
-    {
-        // Override bounds with those of parent's, if they overlap
-
-        if (parent->bx1 > cx1) 
-        {
-            cx1 = (parent->bx1);
-        }
-
-        if (parent->by1 > cy1) 
-        {
-            cy1 = (parent->by1);
-        }
-
-        if (parent->bx2 < cx2) 
-        {
-            cx2 = (parent->bx2);
-        }
-
-        if (parent->by2 < cy2) 
-        {
-            cy2 = (parent->by2);
-        }
-
-        // Make coords absolute
-
-        cx1 += parent->x1;
-        cy1 += parent->y1;
-        cx2 += parent->x1;
-        cy2 += parent->y1;
-
-        // If parent had their draw coords cut, adjust ours as well
-
-        if(parent->dx1 > cx1) 
-        {
-            cx1 = parent->dx1;
-        }
-
-        if(parent->dy1 > cy1)
-        {
-            cy1 = parent->dy1;
-        }
-
-        if(parent->dx2 < cx2)
-        {
-            cx2 = parent->dx2;
-        }
-
-        if(parent->dy2 < cy2) 
-        {
-            cy2 = parent->dy2;
-        }
-    }
-    else
-    {
-        // Use absolute coords
-
-        cx1 = x1; cy1 = y1; cx2 = x2; cy2 = y2;
-    }
-
-    // now adjust drawing coords 
-
-    if(CheckPlaneCrossing(x1, y1, x2, y2, cx1, cy1, cx2, cy2) == true)
-    {
-        setVisible(true);
-
-        dx1 =       x1 > cx1 ? x1 : cx1;
-        dy1 =       y1 > cy1 ? y1 : cy1;
-        dwidth =    x2 < cx2 ? width : cx2 - x1 + 1;
-        dheight =   y2 < cy2 ? height : cy2 - y1 + 1;
-
-        dwidth -= (dx1 - x1);
-        dheight -= (dy1 - y1);
-
-        dx2 =  dx1 + dwidth - 1;
-        dy2 =  dy1 + dheight - 1;
-
-        if(window)
-        {
-            window->addRepaint(dx1, dy1, dwidth, dheight); // window->listen->repaint(dx1, dy1, dwidth, dheight);
-        }
-    }
-    else
-    {
-        setVisible(false);
-
-       // dx1 = dy1 = dx2 = dy2 = dwidth = dheight = 0;
     }
 }
 
@@ -440,43 +443,50 @@ void Gobj::drawloop(Graphics& g)
     changed = false;
 }
 
-bool Gobj::checkMouseHovering(int mx, int my)
+void Gobj::setundermouse(bool hover)
 {
-    return (isshown() && mx >= dx1 && mx <= dx2 && my >= dy1 && my <= dy2);
+    undermouse = hover; 
 }
 
-bool Gobj::isMouseTouching(int mx, int my)
+bool Gobj::checkMouseTouching(int mx, int my)
 {
-    if(checkMouseHovering(mx, my))
+    if (touchable)
     {
-        if(!mouseHovering)
+        if (isshown() && mx >= dx1 && mx <= dx2 && my >= dy1 && my <= dy2)
         {
-            InputEvent ev = {};
+            if(!undermouse)
+            {
+                InputEvent ev = {};
 
-            ev.mouseX = mx;
-            ev.mouseY = my;
+                ev.mouseX = mx;
+                ev.mouseY = my;
 
-            handleMouseEnter(ev);
+                handleMouseEnter(ev);
+            }
+
+            undermouse = true;
+        }
+        else
+        {
+            if(undermouse)
+            {
+                InputEvent ev = {};
+
+                ev.mouseX = mx;
+                ev.mouseY = my;
+
+                handleMouseLeave(ev);
+            }
+
+            undermouse = false;
         }
 
-        mouseHovering = true;
+        return undermouse;
     }
     else
     {
-        if(mouseHovering)
-        {
-            InputEvent ev = {};
-
-            ev.mouseX = mx;
-            ev.mouseY = my;
-
-            handleMouseLeave(ev);
-        }
-
-        mouseHovering = false;
+        return false;
     }
-
-    return mouseHovering;
 }
 
 bool Gobj::handleObjDrag(DragAndDrop& drag, Gobj* obj, int mx, int my)

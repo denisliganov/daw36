@@ -251,7 +251,7 @@ void Pattern::drwongrid(Graphics& g, Grid * grid)
     int gx2 = grid->getXfromTick(getendtick());
     int gy2 = grid->getYfromLine(line + numlines - 1);
 
-    int pl = (int)(ticklen*grid->getPixelsPerTick());
+    int pl = (int)(ticklen*grid->getppt());
     int tH, ptheight;
 
 

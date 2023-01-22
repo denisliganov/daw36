@@ -15,17 +15,17 @@ protected:
 
         bool        vertical;
         bool        active;
-        int*        coordRef;
-        float       fullSpan;
-        float       visibleSpan;
+        int*        coordref;
+        float       fullspan;
+        float       visiblepart;
         float       ratio;
         float       offset;
-        int         wheelMult;
-        int         barPixLen;
-        int         offsetPix;
-        int         fullPixLen;
-        int         currPos;
-        int         barPos;
+
+        int         barpixlen;
+        int         offsetpix;
+        int         fullpixlen;
+        int         currpos;
+        int         barpos;
         InputEvent  event;
 
 
@@ -36,7 +36,7 @@ public:
         void        setoffs(float offs);
         void        adjoffs(float delta);
         float       getoffs() { return offset; }
-        float       getvisible() { return visibleSpan; }
+        float       getvisible() { return visiblepart; }
         void        drawself(Graphics & g);
         int         getpos(InputEvent& ev, int& offset_on_bar);
         void        gotostart();

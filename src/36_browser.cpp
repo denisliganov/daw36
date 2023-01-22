@@ -637,15 +637,15 @@ void Browser::activateEntry(BrwEntry* be)
     }
 }
 
-bool Browser::isMouseTouching(int mx,int my)
+bool Browser::checkMouseTouching(int mx,int my)
 {
-    bool val =  Gobj::isMouseTouching(mx, my);
+    bool val =  Gobj::checkMouseTouching(mx, my);
 
     //if(val)  brwindex = (my - y1 - MainLineHeight - (int)mainoffs)/BrwEntryHeight;
 
     for(auto entry : entries[browsingMode])
     {
-        if(entry->isMouseTouching(mx, my))
+        if(entry->checkMouseTouching(mx, my))
         {
             brwIndex = entry->listIndex;
         }
@@ -769,7 +769,7 @@ void Browser::handleMouseWheel(InputEvent& ev)
     setOffset(getOffset() + offsdelta);
 }
 
-ContextMenu* Browser::createContextMenu()
+ContextMenu* Browser::createmenu()
 {
     if(browsingMode == Browse_Presets)
     {
@@ -824,7 +824,7 @@ ContextMenu* Browser::createContextMenu()
     }
 }
 
-void Browser::activateContextMenuItem(std::string item)
+void Browser::activatemenuitem(std::string item)
 {
     if(item == "Load as instrument")
     {

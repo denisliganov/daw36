@@ -67,7 +67,7 @@ public:
             }
             else
             {
-                if(mouseHovering)
+                if(undermouse)
                 {
                     fill(g, 0.6f);
                 }
@@ -86,7 +86,7 @@ public:
         void handleMouseLeave(InputEvent & ev)  { redraw(); }
         void handleMouseDown(InputEvent& ev)
         {
-            parent->activateContextMenuItem(itemstr);
+            parent->activatemenuitem(itemstr);
         }
 };
 
@@ -146,9 +146,9 @@ void ContextMenu::remap()
     Component::setBounds(Component::getX(), Component::getY(), width, height);
 }
 
-void ContextMenu::activateContextMenuItem(std::string item)
+void ContextMenu::activatemenuitem(std::string item)
 {
-    menuObject->activateContextMenuItem(item);
+    menuObject->activatemenuitem(item);
 }
 
 void ContextMenu::drawself(Graphics & g)

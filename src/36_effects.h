@@ -17,8 +17,8 @@ protected:
             Button36*       wndToggle;
             Slider36*       sliderAmount;
 
-            ContextMenu*    createContextMenu();
-            void            activateContextMenuItem(std::string item);
+            ContextMenu*    createmenu();
+            void            activatemenuitem(std::string item);
     virtual void            processData(float* in_buff, float* out_buff, int num_frames) {};
     virtual Eff*            makeClone(Eff* eff);
             void            drawself(Graphics& g);

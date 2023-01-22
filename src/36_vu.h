@@ -23,7 +23,6 @@ protected:
         float       getL();
         float       getR();
         void        drawself(Graphics & g);
-        bool        isMouseTouching(int mx, int my) { return false; }
 
 public:
 

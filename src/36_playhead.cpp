@@ -17,6 +17,8 @@
 
 Playhead::Playhead(Grid* grd)
 {
+    settouchable(false);
+
     grid = grd;
     posX = absX = relX = 0;
 
@@ -58,7 +60,7 @@ void Playhead::updatePosFromFrame()
 
     absX = int(patt->getFrame()/grid->getFramesPerPixel());
 
-    relX = absX - RoundFloat(grid->getTickOffset() * grid->getPixelsPerTick());
+    relX = absX - RoundFloat(grid->getTickOffset() * grid->getppt());
 
     posX = grid->getX() + relX;
 

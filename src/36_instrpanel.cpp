@@ -40,8 +40,6 @@ sf_count_t                  sf_readf_float(SNDFILE *sndfile, float *ptr, sf_coun
 
 class InstrHighlight : public Gobj
 {
-        bool        isMouseTouching(int mx, int my)  { return false; }
-
         void drawself(Graphics& g)
         {
             //gSetMonoColor(g, 1, 0.7f);
@@ -56,7 +54,11 @@ class InstrHighlight : public Gobj
 
 public:
 
-        InstrHighlight() {}
+        InstrHighlight() 
+        {
+            settouchable(false);
+        }
+
         void updpos()
         {
             Instrument* instr = MInstrPanel->getCurrInstr();
@@ -100,7 +102,8 @@ InstrPanel::InstrPanel(Mixer* mixer)
     masterVolume->addControl(masterVolKnob);
 
     addHighlight(instrHighlight = new InstrHighlight());
-    instrHighlight->setRelative(false);
+
+    instrHighlight->setrelative(false);
 }
 
 void InstrPanel::editAutopattern(Instrument * instr)

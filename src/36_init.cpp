@@ -314,7 +314,7 @@ void InitializeAndStartProgram()
 
     VstHost = new Vst2Host(WinHWND);
 
-    MTransp->propagateChanges();
+    MTransp->propagate();
 
     InitComplete = true;
 

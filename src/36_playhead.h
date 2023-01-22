@@ -20,7 +20,6 @@ protected:
             Pattern*    patt;
 
             void        timerCallback();
-            bool        isMouseTouching(int mx, int my) { return false; }
             void        drawself(Graphics& g);
 
 public:

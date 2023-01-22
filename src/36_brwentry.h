@@ -65,9 +65,9 @@ public:
         bool    isNative()          {return (devClass == DevClass_GenInternal || devClass == DevClass_EffInternal);};
         bool    isExternal()        {return (devClass == DevClass_GenVst || devClass == DevClass_EffVst || devClass == DevClass_Default);};
 
-        ContextMenu*  createContextMenu();
+        ContextMenu*  createmenu();
 
-        void    activateContextMenuItem(std::string item);
+        void    activatemenuitem(std::string item);
 
         uint32  getModeColor();
         void    drawDevEntry(Graphics& g, int xo, int ycoord, int w);

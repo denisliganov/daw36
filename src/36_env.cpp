@@ -624,7 +624,7 @@ void Envelope::check(int mouse_x, int mouse_y)
 
     envAction = ENVUSUAL;
 
-    if(isMouseTouching(mouse_x, mouse_y))
+    if(checkMouseTouching(mouse_x, mouse_y))
     {
         envAction = ENVUSUAL;
 
@@ -823,7 +823,7 @@ void Envelope::drwongrid(Graphics & g,Grid * grid)
         gLineHorizontal(g, RoundFloat(y1 + (float)height/2), x1, x1 + width);
     }
 
-    float scale = grid->getPixelsPerTick();
+    float scale = grid->getppt();
 
     if(type != CmdEnv_PanEnv)
     {

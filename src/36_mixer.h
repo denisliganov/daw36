@@ -79,10 +79,10 @@ public:
             void            save(XmlElement* xmlChanNode);
             void            load(XmlElement* xmlChanNode);
             void            remap();
-            ContextMenu*    createContextMenu();
+            ContextMenu*    createmenu();
             ContextMenu*    createContextMenuForEffect(Eff* eff);
             void            activateEffectMenuItem(Eff* eff, std::string mi);
-            void            activateContextMenuItem(std::string mi);
+            void            activatemenuitem(std::string mi);
             Eff*            addEffectFromBrowser(BrwEntry* de);
             void            drawself(Graphics& g);
             void            handleMouseWheel(InputEvent& ev);

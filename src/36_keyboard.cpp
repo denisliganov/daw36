@@ -240,7 +240,7 @@ void KeyHandler::handleKeyStateChange(bool key_down)
         }
     }
 
-    MGrid->updateChangedElements();
+    MGrid->updelems();
 }
 
 void KeyHandler::handleNoteKey(int key, int note_val, bool press)
@@ -254,7 +254,7 @@ void KeyHandler::handleNoteKey(int key, int note_val, bool press)
 
         if(note == NULL)
         {
-            note = MGrid->putnote(MTextCursor->getTick(), MTextCursor->getLine(), note_val);
+            note = MGrid->putnote(MTextCursor->getTick(), MTextCursor->getline(), note_val);
 
             MGrid->setactivelem(note);
         }
@@ -308,7 +308,7 @@ void TextCursor::updPos()
 
     if (grid)
     {
-        if (grid->getDisplayMode() == GridDisplayMode_Bars)
+        if (grid->getdispmode() == GridDisplayMode_Bars)
         {
             if (grid->mode == GridMode_Default)
             {
@@ -335,7 +335,7 @@ float TextCursor::getTick()
     return tick;
 }
 
-int TextCursor::getLine()
+int TextCursor::getline()
 {
     return line;
 }
@@ -466,13 +466,13 @@ void TextCursor::handleKeyOrCharPressed(unsigned key, char character, unsigned f
             
                 case key_tab:
                 {
-                    if (grid->getDisplayMode() == GridDisplayMode_Steps)
+                    if (grid->getdispmode() == GridDisplayMode_Steps)
                     {
-                        grid->setDisplayMode(GridDisplayMode_Bars);
+                        grid->setdispmode(GridDisplayMode_Bars);
                     }
-                    else if (grid->getDisplayMode() == GridDisplayMode_Bars)
+                    else if (grid->getdispmode() == GridDisplayMode_Bars)
                     {
-                        grid->setDisplayMode(GridDisplayMode_Steps);
+                        grid->setdispmode(GridDisplayMode_Steps);
                     }
             
                     grid->redraw(true);
@@ -543,7 +543,7 @@ void TextCursor::handleKeyOrCharPressed(unsigned key, char character, unsigned f
 
     MHistory->newGroup();
 
-    grid->updateChangedElements();
+    grid->updelems();
 }
 
 void TextCursor::advanceView(float dtick, int dline)
@@ -573,7 +573,7 @@ void TextCursor::handleChar(char c)
     {
         MInstrPanel->setcurr(i);
 
-        Note* note = grid->putnote(getTick(), getLine(), -1);
+        Note* note = grid->putnote(getTick(), getline(), -1);
 
         grid->setactivelem(note);
 

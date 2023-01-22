@@ -869,7 +869,7 @@ int Sample::calcPixLength(long num_frames, long sample_rate, float tickwidth)
 {
     float rate = (float)MAudio->getSampleRate()/sample_info.samplerate;
 
-    return RoundDouble(((double)numFrames/(double)MAudio->getSampleRate())/MTransp->getSecondsPerTick()*MGrid->getPixelsPerTick()*rate);
+    return RoundDouble(((double)numFrames/(double)MAudio->getSampleRate())/MTransp->getSecondsPerTick()*MGrid->getppt()*rate);
 }
 
 void Sample::updWaveImage()
@@ -884,8 +884,8 @@ void Sample::updWaveImage()
     //int pixlen = (int)(((double)sample_info.frames/(double)_MAudio->getSampleRate())/MainClock->getSecondsPerTick()*_MGrid->getPixelsPerTick());
 
     double ticks = (double)numFrames*rateUp/MTransp->getFramesPerTick();
-    int pixels = ticks*MGrid->getPixelsPerTick();
-    float ppf = rateUp*(MGrid->getPixelsPerTick()/MTransp->getFramesPerTick());
+    int pixels = ticks*MGrid->getppt();
+    float ppf = rateUp*(MGrid->getppt()/MTransp->getFramesPerTick());
 
     if (pixels > 0)
     {

@@ -43,8 +43,8 @@ MainEdit::MainEdit()
 
     addObject(verticalGridScroller = new Scroller(true));
 
-    grid->setVertScroller(*verticalGridScroller);
-    grid->setHorizScroller(MCtrllPanel->getScroller());
+    grid->setvscr(*verticalGridScroller);
+    grid->sethscr(MCtrllPanel->getScroller());
 
     MTextCursor = new TextCursor();
 }
@@ -204,7 +204,7 @@ void ScrollTimer::timerCallback()
 
         // Scroll deltas for x and y axes
 
-        float xDelta = grid->visibleTickSpan*.05f;
+        float xDelta = (float)grid->getW()/grid->getppt()*.05f;
         float yDelta = grid->getH()*.08f;
 
         bool moved = false;

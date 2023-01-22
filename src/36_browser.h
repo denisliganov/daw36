@@ -67,9 +67,9 @@ public:
 
             void            setCurrentEntry(int index);
             void            setCurrentIndex(int index);
-            void            activateContextMenuItem(std::string item);
-            ContextMenu*      createContextMenu();
-            bool            isMouseTouching(int mx, int my);
+            void            activatemenuitem(std::string item);
+            ContextMenu*    createmenu();
+            bool            checkMouseTouching(int mx, int my);
             void            activateEntry(BrwEntry* be);
             void            handleMouseWheel(InputEvent& ev);
             void            handleMouseDrag(InputEvent& ev);

@@ -42,7 +42,7 @@ void Timeline::set(int mouse_x)
 
     LIMIT(newX, 0, getW());
 
-    float currPosPix = (float(newX) + (float)(grid->getTickOffset()*grid->getPixelsPerTick()));
+    float currPosPix = (float(newX) + (float)(grid->getTickOffset()*grid->getppt()));
 
     grid->getpatt()->setFrame((long)(currPosPix*grid->getFramesPerPixel()));
 
@@ -60,7 +60,7 @@ void Timeline::handleMouseMove(InputEvent & ev)
 
 void Timeline::handleMouseWheel(InputEvent & ev)
 {
-    float ofsDelta = ev.wheelDelta*(grid->visibleTickSpan*0.03f);
+    float ofsDelta = ev.wheelDelta*((float)grid->getW()/grid->getppt()*0.03f);
 
     MGrid->sethoffs(MGrid->getTickOffset() - ofsDelta);
 }
@@ -69,9 +69,9 @@ void Timeline::handleMouseWheel(InputEvent & ev)
 void Timeline::drawIntermittentHighlight(Graphics& g, int x, int y, int w, int h, int numBars)
 {
     int tickLen = numBars*MTransp->getTicksPerBar();
-    int pixLen = int(grid->getPixelsPerTick() * tickLen);
+    int pixLen = int(grid->getppt() * tickLen);
 
-    int xoffs = RoundFloat((grid->getTickOffset() / tickLen - (int)grid->getTickOffset() / tickLen) * grid->getPixelsPerTick() * tickLen);
+    int xoffs = RoundFloat((grid->getTickOffset() / tickLen - (int)grid->getTickOffset() / tickLen) * grid->getppt() * tickLen);
 
     int num = int(grid->getTickOffset() / tickLen);
     int flag = num % 2;
@@ -105,7 +105,7 @@ void Timeline::drawself(Graphics & g)
     lineH(g, height - 1, 0, width - 1);
 
     int barLenTicks = MTransp->getTicksPerBar();
-    float barLenPixels = grid->getPixelsPerTick()*barLenTicks;
+    float barLenPixels = grid->getppt()*barLenTicks;
 
     int step = 1;
 

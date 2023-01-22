@@ -165,7 +165,7 @@ Transport::Transport(float bpm,int tpb,int bpb)
     beatsPerBar = bpb;
 
     init = true;
-    propagateChanges();
+    propagate();
     init = false;
 }
 
@@ -175,7 +175,7 @@ void Transport::reset()
     ticksPerBeat = 4;
     beatsPerBar = 4;
 
-    propagateChanges();
+    propagate();
 }
 
 float Transport::getInvertedFPT()
@@ -192,21 +192,21 @@ void Transport::setBeatsPerMinute(float bpm)
 {
     beatsPerMinute = bpm;
 
-    propagateChanges();
+    propagate();
 }
 
 void Transport::setTicksPerBeat(int tpb)
 {
     ticksPerBeat = tpb;
 
-    propagateChanges();
+    propagate();
 }
 
 void Transport::setBeatsPerBar(int bpb)
 {
     beatsPerBar = bpb;
 
-    propagateChanges();
+    propagate();
 }
 
 float Transport::getBeatsPerMinute()
@@ -234,7 +234,7 @@ float Transport::getFramesPerTick()
     return framesPerTick;
 }
 
-void Transport::propagateChanges()
+void Transport::propagate()
 {
     float sr = MAudio != NULL ? MAudio->getSampleRate() : 44100;
 
@@ -246,7 +246,7 @@ void Transport::propagateChanges()
 
     if(MGrid)
     {
-        MGrid->handleTransportUpdate();
+        MGrid->updtransport();
     }
 
     if(MEdit)

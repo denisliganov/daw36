@@ -71,7 +71,8 @@ protected:
             bool                changed;
             bool                relativeToParent;
             bool                autoMapped;
-            bool                mouseHovering;
+            bool                undermouse;
+            bool                touchable;
 
             // Relative coords, width, height
             int                 xRel;
@@ -135,11 +136,10 @@ public:
             bool                isChanged()         { return changed; }
             bool                isEnabled()         {  return enabled; }
     virtual bool                isshown()           { return (enabled && visible); }
-            bool                isMouseHovering()   { return mouseHovering; }
+            bool                isundermouse()   { return undermouse; }
             Gobj*               getParent()         { return parent; }
             WinObject*          getWindow()         { return window; };
             bool                getRelative()       { return relativeToParent; };
-            Gobj*               getLastTouchedObject(int mx, int my);
             void                remapAndRedraw();
 
             void                addObject(Gobj* o, ObjectGroup type);
@@ -147,14 +147,15 @@ public:
             void                addObject(Gobj* o, int xr, int yr, std::string id = "", ObjectGroup type = ObjGroup_Default);
             void                addObject(Gobj* o, int xr, int yr, int ww, int hh, std::string id = "", ObjectGroup type = ObjGroup_Default);
             void                addHighlight(Gobj* obj);
+            void                removeObject(Gobj* obj);
             void                deleteObject(Gobj* o);
+
             void                setParent(Gobj* parent);
             void                setWindow(WinObject* w);
-            void                setRelative(bool rel);
+            void                setrelative(bool rel);
             void                setVisible(bool vis);
-            void                setMouseHovering(bool hover)    { mouseHovering = hover; }
-            bool                checkMouseHovering(int mx, int my);
-            void                removeObject(Gobj* obj);
+            Gobj*               getLastTouchedObject(int mx, int my);
+            void                settouchable(bool tch);
 
     virtual void                setEnable(bool en);
 
@@ -165,8 +166,8 @@ public:
     virtual void                updCoords();
     virtual void                remap() {}
     virtual void                confine(int bxNew = -1, int byNew = -1, int bx1New = -1, int by1New = -1);
-    virtual void                updDrawCoords();
-    virtual bool                isMouseTouching(int mx, int my);
+    virtual bool                checkMouseTouching(int mx, int my);
+            void                setundermouse(bool hover);
     virtual void                handleMouseMove(InputEvent& ev) {}
     virtual void                handleMouseWheel(InputEvent& ev) {};
     virtual void                handleMouseDrag(InputEvent& ev) {};
@@ -202,11 +203,11 @@ public:
             int                 txt(Graphics& g, FontId fontId, std::string str, int x, int y);
             void                txtfit(Graphics& g, FontId fontId, std::string str, int x, int y, int maxwidth);
 
-    virtual ContextMenu*        createContextMenu() {return NULL;};
-    virtual void                activateContextMenuItem(std::string item) {};
+    virtual ContextMenu*        createmenu() {return NULL;};
+    virtual void                activatemenuitem(std::string item) {};
             void                deactivateDropBoxById(int dropbox_id);
     virtual void                setMyColor(Graphics& g, float brightness=-1.f, float saturation = -1.f, float alpha=1.f);
-            void                deleteAllObjects();
+            void                delobjects();
             void                defineHueColor(float hue, float sat) { colorHue = hue; colorSat = sat; }
             void                defineMonoColor(float mono_level) { monoLevel = mono_level; }
 
