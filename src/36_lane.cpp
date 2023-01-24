@@ -193,8 +193,8 @@ void Lane::drawself(Graphics& g)
     float xOffset;
     int xTick;
 
-    xOffset = (grid->getTickOffset() - (int)grid->getTickOffset()) * grid->getppt();
-    xTick = (int)grid->getTickOffset();
+    xOffset = (grid->getHoffs() - (int)grid->getHoffs()) * grid->getppt();
+    xTick = (int)grid->getHoffs();
 
     float xtt = 0;
     int xc;

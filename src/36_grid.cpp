@@ -185,7 +185,6 @@ Grid::Grid(float step_width, int line_height, Pattern* pt, Timeline* tl)
     alignLine = 0;
 
     lastElementEndTick = 0;
-    vscr = hscr = NULL;
     mouseIsDown = false;
     wasSelecting = false;
 
@@ -193,9 +192,6 @@ Grid::Grid(float step_width, int line_height, Pattern* pt, Timeline* tl)
 
     addHighlight(sel = new Selection(this));
     addHighlight(place = new PlaceHighlight(this));
-
-    addObject(vscr = new Scroller(true));
-    addObject(hscr = new Scroller(false));
 
     selReset();
 
@@ -215,8 +211,8 @@ void Grid::drawintermittent(Graphics& g, int x, int y, int w, int h, int numBars
 {
     int tickLen = numBars*MTransp->getTicksPerBar();
     int pixLen = int(getppt() * tickLen);
-    int xoffs = RoundFloat((getTickOffset() / tickLen - (int)getTickOffset() / tickLen) * getppt() * tickLen);
-    int num = int(getTickOffset() / tickLen);
+    int xoffs = RoundFloat((getHoffs() / tickLen - (int)getHoffs() / tickLen) * getppt() * tickLen);
+    int num = int(getHoffs() / tickLen);
     int flag = num % 2;
     int xCoordinate = -xoffs + pixLen * flag + x;
 
@@ -332,7 +328,7 @@ void Grid::updbuffimage()
 
         int tickPerBar = MTransp->getTicksPerBar();
 
-        int xoffs = RoundFloat((getTickOffset() / tickPerBar - (int)getTickOffset() / tickPerBar) * getppt() * tickPerBar);
+        int xoffs = RoundFloat((getHoffs() / tickPerBar - (int)getHoffs() / tickPerBar) * getppt() * tickPerBar);
 
         int yoffs = int(vscr->getoffs()) % lheight;
 
@@ -567,15 +563,6 @@ void Grid::redraw(bool remap_objects, bool refresh_image)
     Gobj::redraw();
 }
 
-void Grid::sethoffs(float offs, bool from_nav_bar)
-{
-    hscr->setoffs(offs);
-
-    //updateScrollers();
-
-    //MEdit->playHead->updatePosFromFrame();
-}
-
 void Grid::adjustscale(int delta, int mouseRefX)
 {
     float midTick = getTickFromX(getX1() + getW()/2);
@@ -620,12 +607,12 @@ void Grid::setppt(float ppt, int mouseRefX)
 
     if(mouseRefX >= 0)
     {
-        sethoffs(currTick - float(mouseRefX - getX1())/(float)pixpertick);
+        setHoffs(currTick - float(mouseRefX - getX1())/(float)pixpertick);
     }
     else
     {
-        //sethoffs(patt->getPlayTick() - visibleTickSpan/2);
-        sethoffs(hscr->getoffs());
+        //setHoffs(patt->getPlayTick() - visibleTickSpan/2);
+        setHoffs(getHoffs());
     }
 }
 
@@ -663,11 +650,6 @@ void Grid::setlineheight(int newLH)
 float Grid::getppt()
 {
     return pixpertick;
-}
-
-float Grid::getTickOffset()
-{
-    return hscr->getoffs();
 }
 
 int Grid::getlh()
@@ -1247,7 +1229,7 @@ void Grid::handleMouseWheel(InputEvent& ev)
         {
             // Horizontal
             //float ofsDelta = ev.wheelDelta*(visibleTickSpan*0.03f);
-            //setTickOffset(getTickOffset() - ofsDelta);
+            //setTickOffset(getHoffs() - ofsDelta);
             
             // Vertical
             vscr->setoffs(vscr->getoffs() - ev.wheelDelta * (lheight*1.5f));
@@ -2325,19 +2307,19 @@ void Grid::updBounds()
             full = (1.1f*width)/getppt();
         }
 
-        hscr->updlimits(full, visiblepart, getTickOffset());
+        hscr->updlimits(full, visiblepart, getHoffs());
     }
 
     if(vscr)
     {
         float full = (1 + bottomLine + 5)*lheight;
 
-        if (full < height)
+        if (full < 1.1f*height)
         {
             full = 1.1f*height;
         }
 
-        vscr->updlimits(full, height, vscr->getoffs());
+        vscr->updlimits(full, height, getVoffs());
     }
 }
 

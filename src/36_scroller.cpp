@@ -15,6 +15,9 @@ Scroller::Scroller(bool is_vertical)
     event = {};
 
     ratio = 0;
+    offset = 0;
+    fullspan = 0;
+    visiblepart = 0;
 
     coordref = is_vertical ? &y1 : &x1;
 }
@@ -193,4 +196,29 @@ void Scroller::gotoend()
     setoffs(fullspan - visiblepart);
 }
 
+Scrolled::Scrolled()
+{
+    addObject(vscr = new Scroller(true));
+    addObject(hscr = new Scroller(false));
+}
+
+float Scrolled::getHoffs()
+{
+    return hscr->getoffs();
+}
+
+void Scrolled::setHoffs(float offs)
+{
+    hscr->setoffs(offs);
+}
+
+float Scrolled::getVoffs()
+{
+    return vscr->getoffs();
+}
+
+void Scrolled::setVoffs(float offs)
+{
+    vscr->setoffs(offs);
+}
 

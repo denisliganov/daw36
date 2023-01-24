@@ -203,11 +203,8 @@ bool VstEffect::onUpdateDisplay()
     {
         if (MMixer->getCurrentEffect() == this)
         {
-            float oldoffs = MBrowser->scrollOffset;
-
             MBrowser->update();
             MBrowser->updateCurrentHighlight();
-            MBrowser->scrollOffset = oldoffs;
         }
     }
 

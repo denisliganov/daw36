@@ -10,6 +10,7 @@
 
 #include "36_globals.h"
 #include "36_objects.h"
+#include "36_scroller.h"
 
 
 
@@ -26,7 +27,7 @@ typedef enum BrwMode
 }BrwMode;
 
 
-class Browser : public Gobj
+class Browser : public Scrolled
 {
 protected:
 
@@ -49,17 +50,11 @@ public:
             BrwMode         browsingMode;
             unsigned int    viewMask;
             Instrument*     ipreview;
-            Scroller*       brwScroller;
             BrwEntry*       currEntry;
-
-            float           scrollOffset;
-            float           fullSpan;
 
             int             brwIndex;
             int             currIndex;
-            int             visibleSpan;
             bool            plugsscanned;
-
 
             Button36*       btSamples;
             Button36*       btDevices;
@@ -86,8 +81,6 @@ public:
             void            updateEntries();
             void            updateParamsData();
             void            updateCurrentHighlight();
-            void            setOffset(float new_offs);
-            float           getOffset();
             void            setViewMask(unsigned int vmask);
             void            prreviewSample(bool down);
             void            scanDirForFiles(std::string path, std::string ext, bool recurs);

@@ -47,5 +47,19 @@ public:
         void        handleMouseUp(InputEvent & ev);
 };
 
+class Scrolled : public Gobj
+{
+public:
+
+        Scroller*           vscr;
+        Scroller*           hscr;
+
+        Scrolled();
+        void                setHoffs(float offs);
+        float               getHoffs();
+        void                setVoffs(float offs);
+        float               getVoffs();
+
+};
 
 

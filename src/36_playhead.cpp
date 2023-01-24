@@ -60,7 +60,7 @@ void Playhead::updatePosFromFrame()
 
     absX = int(patt->getFrame()/grid->getFramesPerPixel());
 
-    relX = absX - RoundFloat(grid->getTickOffset() * grid->getppt());
+    relX = absX - RoundFloat(grid->getHoffs() * grid->getppt());
 
     posX = grid->getX() + relX;
 

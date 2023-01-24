@@ -64,7 +64,7 @@ typedef enum GridAction
 class Selection;
 class PlaceHighlight;
 
-class Grid : public Gobj
+class Grid : public Scrolled
 {
 friend  Selection;
 friend  Lane;
@@ -94,8 +94,6 @@ protected:
             Image*              elemImage;
             Image*              brushImage;
             Timeline*           timeline;
-            Scroller*           vscr;
-            Scroller*           hscr;
             Pattern*            patt;
             Element*            activeElem;
             Note*               actnote;
@@ -170,9 +168,7 @@ public:
             void                removeelem(Element* el);
             void                setactivelem(Element* el);
             void                setmode(GridActionMode md);
-            void                setvscr(Scroller& scr)   { vscr = &scr; }
-            void                sethscr(Scroller& scr)   { hscr = &scr; }
-            void                sethoffs(float tick_offset, bool from_nav_bar = false);
+
             void                setlineheight(int newLH);
             void                adjustscale(int delta, int mouseRefX = -1);
             void                setppt(float tick_width, int mouseRefX = -1);
@@ -192,7 +188,6 @@ public:
             int                 getYfromLine(int line);
             int                 getLineFromY(int y);
             float               getppt();
-            float               getTickOffset();
             int                 getlh();
             void                delacross(int mx1, int my1, int mx2, int my2);
             void                setdispmode( GridDisplayMode display_mode );

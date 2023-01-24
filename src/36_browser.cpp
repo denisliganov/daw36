@@ -79,7 +79,6 @@ Browser::Browser(const char* dirpath)
 
     currEntry = NULL;
     currIndex = -1;
-    scrollOffset = 0;
     ipreview = NULL;
     plugsscanned = false;
 
@@ -99,8 +98,6 @@ Browser::Browser(const char* dirpath)
     btDevices->setLedType(true);
     btPlugins->setLedType(true);
     btSamples->press();
-
-    addObject(brwScroller = new Scroller(true), "brw.scroller");
 
     setCurrentIndex(3);
 
@@ -135,14 +132,9 @@ void Browser::handleChildEvent(Gobj * obj, InputEvent& ev)
                _MainObject->showFX->handleMouseUp(ev);
         }*/
     }
-    else
+    else if (obj == vscr)
     {
-        Scroller* scr = dynamic_cast<Scroller*>(obj);
-
-        if(scr != NULL)
-        {
-            setOffset(-scr->getoffs());
-        }
+        remapAndRedraw();
     }
 }
 
@@ -191,10 +183,10 @@ void Browser::remap()
     int cy = MainLineHeight;
     int cw = width - BrwScrollerWidth;
 
-    visibleSpan = height - cy - BottomPadHeight - 1, cy;
+    float visibleSpan = (float)(height - cy - BottomPadHeight - 1);
 
-    int yentry = cy + (int)scrollOffset;
-    fullSpan = 0;
+    int yentry = cy - (int)vscr->getoffs();
+    float fullSpan = 0;
 
     confine(cx, cy, cx + cw - 1, cy + visibleSpan - 1);
 
@@ -224,8 +216,9 @@ void Browser::remap()
 
     fullSpan += 64;
 
-    brwScroller->setCoords1(width - BrwScrollerWidth + 1, cy, BrwScrollerWidth - 2, visibleSpan);
-    brwScroller->updlimits(fullSpan, float(visibleSpan), -(float)scrollOffset);
+    vscr->setCoords1(width - BrwScrollerWidth + 1, cy, BrwScrollerWidth - 2, visibleSpan);
+
+    vscr->updlimits(fullSpan, float(visibleSpan), vscr->getoffs());
 
     // dbg file browsing
     //ShowFiles->SetXYWH(0, 0, bwidth, bheight);
@@ -267,7 +260,7 @@ void Browser::removeEntry(BrwEntry * entry)
 
 void Browser::cleanEntries()
 {
-    scrollOffset = 0;
+    setVoffs(0);
 
     while(entries[browsingMode].size() > 0)
     {
@@ -304,7 +297,7 @@ void Browser::setMode(BrwMode mode)
         be->setEnable(true);
     }
 
-    setOffset(0);
+    setVoffs(0);
 
     remapAndRedraw();
 }
@@ -734,39 +727,11 @@ void Browser::setViewMask(unsigned int vmask)
     viewMask = vmask;
 }
 
-void Browser::setOffset(float new_offs)
-{
-    scrollOffset = new_offs;
-
-    if (scrollOffset > 0)
-    {
-        scrollOffset = 0;
-    }
-    else if (visibleSpan < fullSpan + 50)
-    {
-        if(scrollOffset - visibleSpan < -(fullSpan + 50))
-        {
-            scrollOffset = -(fullSpan + 50 - visibleSpan);
-        }
-    }
-    else
-    {
-        scrollOffset = 0;
-    }
-
-    remapAndRedraw();
-}
-
-float Browser::getOffset()
-{
-    return scrollOffset;
-}
-
 void Browser::handleMouseWheel(InputEvent& ev)
 {
-    float offsdelta = (float)ev.wheelDelta*(BrwEntryHeight*2 + 3);
+    float offsdelta = -(float)ev.wheelDelta*(BrwEntryHeight*2 + 3);
 
-    setOffset(getOffset() + offsdelta);
+    setVoffs(getVoffs() + offsdelta);
 }
 
 ContextMenu* Browser::createmenu()

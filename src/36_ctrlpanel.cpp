@@ -372,11 +372,11 @@ void ControlPanel::handleChildEvent(Gobj* obj, InputEvent& ev)
             }
             else if (obj == btScrollBack)
             {
-                MGrid->sethoffs(MGrid->getTickOffset() - (MTransp->getTicksPerBeat()));
+                MGrid->setHoffs(MGrid->getHoffs() - (MTransp->getTicksPerBeat()));
             }
             else if (obj == btScrollForth)
             {
-                MGrid->sethoffs(MGrid->getTickOffset() + (MTransp->getTicksPerBeat()));
+                MGrid->setHoffs(MGrid->getHoffs() + (MTransp->getTicksPerBeat()));
             }
             else if (obj == btPlay)
             {
