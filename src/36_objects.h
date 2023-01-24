@@ -161,6 +161,7 @@ public:
 
     virtual void                setCoords1(int xNew, int yNew, int wNew = -1, int hNew = -1);
     virtual void                setCoords2(int xNew, int yNew, int x1New, int y1New);
+            void                setCoordsAbs(int ax1, int ay1, int ax2, int ay2);
     virtual void                setDrawAreaDirectly(int xabs1, int xabs2, int xabs3, int xabs4);
 
     virtual void                updCoords();

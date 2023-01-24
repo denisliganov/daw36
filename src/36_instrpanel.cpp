@@ -63,8 +63,15 @@ public:
         {
             Instrument* instr = MInstrPanel->getCurrInstr();
 
-            if (instr)
-                setCoords2(0, instr->getY1()-1, instr->getX2() + 5, instr->getY2() + 1);
+            if (instr && instr->isshown())
+            {
+                setCoordsAbs(0, instr->getY1() - 1, instr->getX2() + 5, instr->getY2() + 1);
+                //setCoords2(0, instr->getY1() - 1, instr->getX2() + 5, instr->getY2() + 1);
+            }
+            else
+            {
+                setVisible(false);
+            }
         }
 };
 
@@ -102,8 +109,6 @@ InstrPanel::InstrPanel(Mixer* mixer)
     masterVolume->addControl(masterVolKnob);
 
     addHighlight(instrHighlight = new InstrHighlight());
-
-    instrHighlight->setrelative(false);
 }
 
 void InstrPanel::editAutopattern(Instrument * instr)
@@ -865,10 +870,11 @@ void InstrPanel::remap()
         send3FX->setVisible(false);
     }
 
+    confine(0, instrListY, width, instrListY + instrListHeight - 1);
+    instrHighlight->updpos();
+
     fullSpan += InstrHeight*3;
     visibleSpan = float(height);// - MainLineHeight);
-
-    instrHighlight->updpos();
 }
 
 void InstrPanel::drawself(Graphics& g)

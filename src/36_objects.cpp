@@ -199,10 +199,10 @@ void Gobj::setVisible(bool vis)
 
 void Gobj::setDrawAreaDirectly(int sx1, int sy1, int sx2, int sy2)
 {
-    dx1 = x1;
-    dy1 = y1;
-    dx2 = x2;
-    dy2 = y2;
+    x1 = dx1 = sx1;
+    y1 = dy1 = sy1;
+    x2 = dx2 = sx2;
+    y2 = dy2 = sy2;
 
     dwidth = sx2 - sx1 + 1;
     dheight = sy2 - sy1 + 1;
@@ -235,11 +235,18 @@ void Gobj::setCoords1(int xnew, int ynew, int wnew, int hnew)
     updCoords();
 }
 
-// use x, y, x2, y2
+// use x, y, x, y
 
 void Gobj::setCoords2(int x, int y, int xx, int yy)
 {
     setCoords1(x, y, xx - x + 1, yy - y + 1);
+}
+
+// use absolute coords, within window
+
+void Gobj::setCoordsAbs(int ax1, int ay1, int ax2, int ay2)
+{
+    setCoords2(ax1 - parent->getX1(), ay1 - parent->getY1(), ax2 - parent->getX1(), ay2 - parent->getY1());
 }
 
 void Gobj::updCoords()
