@@ -6,6 +6,7 @@
 #include "36_globals.h"
 #include "36_objects.h"
 #include "36_device.h"
+#include "36_scroller.h"
 
 
 #include <list>
@@ -14,11 +15,14 @@
 // namespace M {
 
 
-class InstrPanel : public Device36
+class InstrPanel : public Scrolled
 {
 friend Audio36;
 
 public:
+
+            std::list<Instrument*>              instrs;
+            std::list<Instrument*>::iterator    currInstr;
 
             Mixer*              mixr;
             InstrHighlight*     instrHighlight;
@@ -46,9 +50,6 @@ public:
             float           visibleSpan;
             MixChannel*     currMixChannel;
             bool            fxShowing;
-
-            std::list<Instrument*>              instrs;
-            std::list<Instrument*>::iterator    currInstr;
 
             InstrPanel(Mixer* mixer);
             Instrument*     loadInstrFromBrowser(BrwEntry* fdi);

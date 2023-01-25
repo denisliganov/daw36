@@ -90,10 +90,6 @@ InstrPanel::InstrPanel(Mixer* mixer)
 
     addObject(scroller = new Scroller(true));
 
-    masterVolume = new Parameter("Master", Param_Vol, 1.f, 0.f, DAW_VOL_RANGE, Units_dB);
-
-    addParamWithControl(masterVolume, "sl.vol", masterVolBox = new ParamBox(masterVolume));
-
     addObject(masterFX = new Button36(false), "bt.mfx");
     addObject(send1FX = new Button36(false), "s1.mfx");
     addObject(send2FX = new Button36(false), "s2.mfx");
@@ -104,9 +100,14 @@ InstrPanel::InstrPanel(Mixer* mixer)
 
     addObject(mixr = mixer);
 
-    addObject(masterVolKnob = new Knob(masterVolume));
+    //addParamWithControl(masterVolume, "sl.vol", masterVolBox = new ParamBox(masterVolume));
 
-    masterVolume->addControl(masterVolKnob);
+    masterVolume = new Parameter("Master", Param_Vol, 1.f, 0.f, DAW_VOL_RANGE, Units_dB);
+
+    addObject(masterVolBox = new ParamBox(masterVolume));
+
+    //addObject(masterVolKnob = new Knob(masterVolume));
+    //masterVolume->addControl(masterVolKnob);
 
     addHighlight(instrHighlight = new InstrHighlight());
 }
@@ -746,12 +747,12 @@ bool InstrPanel::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
         if(o2 != NULL)
         {
             //drag.dropHighlightHorizontal->setCoords2(o2->getX1(), o2->getY1() - 2 - 4, o2->getX2() + 1, o2->getY1() - 2 + 4);
-            drag.dropHighlightHorizontal->setCoordsAbs(o2->getX1(), o2->getY1() - 2 - 4, o2->getX2() + 1, o2->getY1() - 2 + 4);
+            drag.dropHighlightHorizontal->setCoordsUn(o2->getX1(), o2->getY1() - 2 - 4, o2->getX2() + 1, o2->getY1() - 2 + 4);
         }
         else if(o1 != NULL)
         {
             //drag.dropHighlightHorizontal->setCoords2(o1->getX1(), o1->getY2() + 2 - 4, o1->getX2() + 1, o1->getY2() + 2 + 4);
-            drag.dropHighlightHorizontal->setCoordsAbs(o1->getX1(), o1->getY2() + 2 - 4, o1->getX2() + 1, o1->getY2() + 2 + 4);
+            drag.dropHighlightHorizontal->setCoordsUn(o1->getX1(), o1->getY2() + 2 - 4, o1->getX2() + 1, o1->getY2() + 2 + 4);
         }
 
         int tw = gGetTextWidth(FontSmall, obj->getObjName());
@@ -872,7 +873,7 @@ void InstrPanel::remap()
         send3FX->setVisible(false);
     }
 
-    confine(0, instrListY, width, instrListY + instrListHeight - 1);
+    confine(0, instrListY-1, width, instrListY + instrListHeight - 1);
     instrHighlight->updpos();
 
     fullSpan += InstrHeight*3;

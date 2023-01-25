@@ -53,6 +53,13 @@ void Gobj::delobjects()
     }
 }
 
+void Gobj::deleteObject(Gobj* obj)
+{
+    objs.remove(obj);
+
+    delete obj;
+}
+
 void Gobj::setWindow(WinObject* w)
 {
     if(window)
@@ -85,16 +92,6 @@ void Gobj::setParent(Gobj* par)
     parent->objs.push_back(this);
 
     setWindow(parent->getWindow());
-}
-
-void Gobj::setrelative(bool rel)
-{
-    relativeToParent = rel;
-}
-
-void Gobj::settouchable(bool t)
-{
-    touchable = t;
 }
 
 void Gobj::addObject(Gobj* obj, std::string id, ObjectGroup type)
@@ -140,31 +137,9 @@ void Gobj::addHighlight(Gobj* obj)
     addObject(obj, obj->getObjId(), ObjGroup_Highlight);
 }
 
-void Gobj::deleteObject(Gobj* obj)
-{
-    objs.remove(obj);
-
-    delete obj;
-}
-
 void Gobj::removeObject(Gobj* obj)
 {
     objs.remove(obj);
-}
-
-// Recusively look for the top object touched by mouse
-//
-Gobj* Gobj::getLastTouchedObject(int mx, int my)
-{
-    for(Gobj* obj : objs)
-    {
-        if(obj->checkMouseTouching(mx, my))
-        {
-            return obj->getLastTouchedObject(mx, my);
-        }
-    }
-
-    return this;
 }
 
 void Gobj::setEnable(bool en)
@@ -188,7 +163,7 @@ void Gobj::setVisible(bool vis)
 
     if(visible == false)
     {
-        // Force all child objs invisible
+        // Force all childs invisible
 
         for(Gobj* obj : objs)
         {
@@ -242,11 +217,22 @@ void Gobj::setCoords2(int x, int y, int xx, int yy)
     setCoords1(x, y, xx - x + 1, yy - y + 1);
 }
 
-// use absolute coords, within window
+// use absolute coords, cropped by parent
 
 void Gobj::setCoordsAbs(int ax1, int ay1, int ax2, int ay2)
 {
     setCoords2(ax1 - parent->getX1(), ay1 - parent->getY1(), ax2 - parent->getX1(), ay2 - parent->getY1());
+}
+
+// use absolute coords, not cropped
+
+void Gobj::setCoordsUn(int ax1, int ay1, int ax2, int ay2)
+{
+    relativeToParent = false;
+
+    setCoords2(ax1, ay1, ax2, ay2);
+
+    relativeToParent = true;
 }
 
 void Gobj::updCoords()
@@ -453,6 +439,26 @@ void Gobj::drawloop(Graphics& g)
 void Gobj::setundermouse(bool hover)
 {
     undermouse = hover; 
+}
+
+void Gobj::settouchable(bool t)
+{
+    touchable = t;
+}
+
+// Recusively look for the top object touched by mouse
+//
+Gobj* Gobj::getLastTouchedObject(int mx, int my)
+{
+    for(Gobj* obj : objs)
+    {
+        if(obj->checkMouseTouching(mx, my))
+        {
+            return obj->getLastTouchedObject(mx, my);
+        }
+    }
+
+    return this;
 }
 
 bool Gobj::checkMouseTouching(int mx, int my)

@@ -139,7 +139,6 @@ public:
             bool                isundermouse()   { return undermouse; }
             Gobj*               getParent()         { return parent; }
             WinObject*          getWindow()         { return window; };
-            bool                getRelative()       { return relativeToParent; };
             void                remapAndRedraw();
 
             void                addObject(Gobj* o, ObjectGroup type);
@@ -149,10 +148,10 @@ public:
             void                addHighlight(Gobj* obj);
             void                removeObject(Gobj* obj);
             void                deleteObject(Gobj* o);
+            void                delobjects();
 
             void                setParent(Gobj* parent);
             void                setWindow(WinObject* w);
-            void                setrelative(bool rel);
             void                setVisible(bool vis);
             Gobj*               getLastTouchedObject(int mx, int my);
             void                settouchable(bool tch);
@@ -162,6 +161,7 @@ public:
     virtual void                setCoords1(int xNew, int yNew, int wNew = -1, int hNew = -1);
     virtual void                setCoords2(int xNew, int yNew, int x1New, int y1New);
             void                setCoordsAbs(int ax1, int ay1, int ax2, int ay2);
+            void                setCoordsUn(int ax1, int ay1, int ax2, int ay2);
     virtual void                setDrawAreaDirectly(int xabs1, int xabs2, int xabs3, int xabs4);
 
     virtual void                updCoords();
@@ -177,6 +177,8 @@ public:
     virtual void                handleChildEvent(Gobj* obj, InputEvent& ev) {};
     virtual void                handleMouseEnter(InputEvent& ev) {};
     virtual void                handleMouseLeave(InputEvent& ev) {};
+
+    // drag'n'drop support
     virtual bool                handleObjDrag(DragAndDrop& drag, Gobj* obj, int mx, int my);
     virtual bool                handleObjDrop(Gobj* obj, int mx, int my, unsigned int flags);
     virtual bool                drawDraggedObject(Graphics& g, Gobj* obj) { return false; };
@@ -186,7 +188,7 @@ public:
     virtual void                drawself(Graphics& g) {};
     virtual void                drawover(Graphics& g) {};
 
-            // Drawing methods using relative coords
+            // Drawing methods
             void                fill(Graphics& g, float clr, float alpha=1);
             void                rect(Graphics& g, float clr, float alpha=1);
             void                fill(Graphics& g, uint32 clr, float b, float a=1);
@@ -204,11 +206,12 @@ public:
             int                 txt(Graphics& g, FontId fontId, std::string str, int x, int y);
             void                txtfit(Graphics& g, FontId fontId, std::string str, int x, int y, int maxwidth);
 
+    // context menu suppott
     virtual ContextMenu*        createmenu() {return NULL;};
     virtual void                activatemenuitem(std::string item) {};
             void                deactivateDropBoxById(int dropbox_id);
+
     virtual void                setMyColor(Graphics& g, float brightness=-1.f, float saturation = -1.f, float alpha=1.f);
-            void                delobjects();
             void                defineHueColor(float hue, float sat) { colorHue = hue; colorSat = sat; }
             void                defineMonoColor(float mono_level) { monoLevel = mono_level; }
 
