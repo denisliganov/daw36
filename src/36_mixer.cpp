@@ -925,7 +925,7 @@ bool MixChannel::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
         yh2 = o1->getY2();
     }
 
-    drag.dropHighlightVertical->setCoords2(xh - 4, yh1, xh + 4, yh2);
+    drag.dropHighlightVertical->setCoordsAbs(xh - 4, yh1, xh + 4, yh2);
 
     int tw = gGetTextWidth(FontSmall, obj->getObjName());
     int th = gGetTextHeight(FontSmall);

@@ -11,7 +11,7 @@ DropHighlight::DropHighlight(bool vert)
 {
     vertical = vert;
 
-    setrelative(false);
+//    setrelative(false);
 }
 
 void DropHighlight::drawself(Graphics & g)
@@ -107,7 +107,8 @@ void DragAndDrop::drag(Gobj* target_object, int mx, int my)
         int tw = gGetTextWidth(FontSmall, dragObj->getObjName());
         int th = gGetTextHeight(FontSmall);
 
-        setCoords1(mx - tw/2, my - th/2, tw, th);
+        //setCoords1(mx - tw/2, my - th/2, tw, th);
+        setCoordsAbs(mx - tw/2, my - th/2, mx - tw/2 + tw, my - th/2 + th);
     }
 
     targetObj = target_object;
