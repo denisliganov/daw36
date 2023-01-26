@@ -38,99 +38,78 @@ friend  ChanVU;
 friend  Eff;
 
 public:
-
-            std::string     chanTitle;
-            std::list<Eff*> effs;
-
-            Instrument*     instr;
-            ChanVU*         vu;
-            Slider36*       volslider;
-            Slider36*       panslider;
-            Knob*           volKnob;
-            Knob*           panKnob;
-            Button36*       solotoggle;
-            Button36*       mutetoggle;
-            Parameter*      volParam;
-            Parameter*      panParam;
-            BoolParam*      muteparam;
-            BoolParam*      soloparam;
-            int             mutecount;
-            bool            master;
-            int             voffs;
-            int             contentheight; 
-            Gobj*           dropObj;
-
-            SendSingle      sends[NUM_SENDS];
-
-            float           inbuff[MAX_BUFF_SIZE*2];
-            float           outbuff[MAX_BUFF_SIZE*2];
-
-            MixChannel*     mchanout;
-
-
             MixChannel();
             MixChannel(Instrument* i);
             ~MixChannel();
-            void            init(Instrument* i);
-            void            addEffect(Eff* eff);
-            void            removeEffect(Eff* eff);
-            void            process(int num_frames, float* outbuff);
-            void            doSend(float * sendbuff, float amount, int num_frames);
-            void            save(XmlElement* xmlChanNode);
-            void            load(XmlElement* xmlChanNode);
-            void            remap();
-            ContextMenu*    createmenu();
-            ContextMenu*    createContextMenuForEffect(Eff* eff);
+            std::string     chanTitle;
+            int             contentheight; 
+            Gobj*           dropObj;
+            std::list<Eff*> effs;
+            Instrument*     instr;
+            float           inbuff[MAX_BUFF_SIZE*2];
+            BoolParam*      muteparam;
+            MixChannel*     mchanout;
+            int             mutecount;
+            bool            master;
+            Button36*       mutetoggle;
+            float           outbuff[MAX_BUFF_SIZE*2];
+            Slider36*       panslider;
+            Knob*           panKnob;
+            Parameter*      panParam;
+            BoolParam*      soloparam;
+            SendSingle      sends[NUM_SENDS];
+            Button36*       solotoggle;
+            Parameter*      volParam;
+            ChanVU*         vu;
+            Slider36*       volslider;
+            Knob*           volKnob;
+            int             voffs;
             void            activateEffectMenuItem(Eff* eff, std::string mi);
             void            activatemenuitem(std::string mi);
+            void            addEffect(Eff* eff);
             Eff*            addEffectFromBrowser(BrwEntry* de);
+            ContextMenu*    createmenu();
+            ContextMenu*    createContextMenuForEffect(Eff* eff);
             void            drawself(Graphics& g);
+            void            doSend(float * sendbuff, float amount, int num_frames);
+            void            deleteEffect(Eff* eff);
             void            handleMouseWheel(InputEvent& ev);
             void            handleMouseDown(InputEvent& ev);
             void            handleMouseUp(InputEvent& ev);
-            void            setBufferSize(unsigned int bufferSize);
-            void            setSampleRate(float sampleRate);
-            void            placeEffectBefore(Eff* eff, Eff* before);
             bool            handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my);
             bool            handleObjDrop(Gobj * obj,int mx,int my,unsigned flags);
-            void            deleteEffect(Eff* eff);
+            void            init(Instrument* i);
+            void            load(XmlElement* xmlChanNode);
+            void            process(int num_frames, float* outbuff);
+            void            placeEffectBefore(Eff* eff, Eff* before);
+            void            remap();
             void            reset();
+            void            removeEffect(Eff* eff);
+            void            save(XmlElement* xmlChanNode);
+            void            setBufferSize(unsigned int bufferSize);
+            void            setSampleRate(float sampleRate);
 };
 
 
 class Mixer : public Gobj
 {
-protected:
-
-            Eff*            currentEffect;
-            Scroller*       scroller;
-            int             masterSectionWidth;
-
 public:
-
-            MixChannel*     masterChannel;
-            MixChannel*     sendChannel[NUM_SENDS];
-
             Mixer();
             ~Mixer();
+            Eff*            currentEffect;
+            MixChannel*     masterChannel;
+            MixChannel*     sendChannel[NUM_SENDS];
+            MixChannel*     addMixChannel(Instrument* instr);
+            void            cleanBuffers(int num_frames);
+            void            drawself(Graphics& g);
+            Eff*            getCurrentEffect() { return currentEffect; }
+            void            handleChildEvent(Gobj * obj, InputEvent& ev);
             void            init();
             void            mixAll(int num_frames);
-            void            cleanBuffers(int num_frames);
-            void            setCurrentEffect(Eff* eff);
             void            remap();
-            void            drawself(Graphics& g);
             void            resetAll();
-            void            handleChildEvent(Gobj * obj, InputEvent& ev);
-            void            setOffset(int offs);
-            int             getOffset()                 { return xOffset; }
+            void            setCurrentEffect(Eff* eff);
             void            updateChannelIndexes();
-            int             getInstrChannelsRange();
-            Eff*            getCurrentEffect() { return currentEffect; }
-            MixChannel*     addMixChannel(Instrument* instr);
-
-private:
-
-            int             xOffset;
 };
 
 Eff* CreateEffect(std::string effname);

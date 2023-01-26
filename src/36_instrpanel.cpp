@@ -103,30 +103,6 @@ InstrPanel::InstrPanel(Mixer* mixer)
     addHighlight(instrHighlight = new InstrHighlight());
 }
 
-void InstrPanel::editAutopattern(Instrument * instr)
-{
-    // (was here) Place cursor at the previously edited pattern
-}
-
-int InstrPanel::getFullHeight()
-{
-    int fulllen = 20;
-    int instroffs;
-
-    for(Instrument* i : instrs)
-    {
-        if(i->previewOnly == false)
-        {
-            instroffs = i->getH();
-
-            fulllen += instroffs;
-            fulllen += 1;
-        }
-    }
-
-    return fulllen;
-}
-
 void InstrPanel::deleteInstrument(Instrument* i)
 {
     WaitForSingleObject(AudioMutex, INFINITE);
@@ -838,11 +814,6 @@ Instrument* InstrPanel::getInstrFromLine(int trkLine)
     }
 
     return NULL;
-}
-
-void InstrPanel::setInstrHeight(int instr_height)
-{
-    
 }
 
 void InstrPanel::showFX()

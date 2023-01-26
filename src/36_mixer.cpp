@@ -771,11 +771,6 @@ void MixChannel::deleteEffect(Eff* eff)
 {
     WaitForSingleObject(MixerMutex, INFINITE);
 
-    if(eff == MMixer->getCurrentEffect())
-    {
-        MMixer->setCurrentEffect(NULL);
-    }
-
     effs.remove(eff);
 
     deleteObject(eff);
@@ -1011,7 +1006,6 @@ void Mixer::init()
 {
     objId = "mixer";
 
-    xOffset = 0;
     currentEffect = NULL;
 
     for(int sc = 0; sc < NUM_SENDS; sc++)
@@ -1026,8 +1020,6 @@ void Mixer::init()
 
     masterChannel->master = true;
     masterChannel->chanTitle = "MASTER";
-
-    addObject(scroller = new Scroller(false));
 }
 
 
@@ -1103,26 +1095,9 @@ void Mixer::setCurrentEffect(Eff * eff)
     ReleaseMutex(MixerMutex);
 }
 
-void Mixer::setOffset(int offs)
-{
-    xOffset = offs; 
-
-    if(xOffset < 0)
-    {
-        xOffset = 0; 
-    }
-
-    remapAndRedraw();
-}
-
 void Mixer::handleChildEvent(Gobj * obj, InputEvent& ev)
 {
-    Scroller* scr = dynamic_cast<Scroller*>(obj);
-
-    if(scr != NULL)
-    {
-        setOffset((int)scr->getoffs());
-    }
+    ///
 }
 
 void Mixer::remap()
@@ -1207,11 +1182,6 @@ void Mixer::drawself(Graphics& g)
     int xBound = getX1() + getW() - MixChanWidth - 35;
 
     g.drawVerticalLine(xBound + 1, (float)getY1(), (float)getY2());*/
-}
-
-int Mixer::getInstrChannelsRange()
-{
-    return width - masterSectionWidth;
 }
 
 void Mixer::updateChannelIndexes()

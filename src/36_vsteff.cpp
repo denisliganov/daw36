@@ -199,15 +199,6 @@ bool VstEffect::onUpdateDisplay()
 
     updatePresets();
 
-    if(MBrowser->browsingMode == Browse_Presets)
-    {
-        if (MMixer->getCurrentEffect() == this)
-        {
-            MBrowser->update();
-            MBrowser->updateCurrentHighlight();
-        }
-    }
-
     // Update pointer to current active preset
 
     BrwEntry* updPreset = getPreset(vst2->getProgram());

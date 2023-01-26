@@ -15,76 +15,56 @@
 // namespace M {
 
 
-class InstrPanel : public Scrolled
+class InstrPanel : public Gobj
 {
 friend Audio36;
 
 public:
-
-            std::list<Instrument*>              instrs;
-            std::list<Instrument*>::iterator    currInstr;
-
-            Mixer*              mixr;
-            InstrHighlight*     instrHighlight;
-            Slider36*       masterVolSlider;
-            ParamBox*       masterVolBox;
-            Knob*           masterVolKnob;
-            Parameter*      masterVolume;
-
-            Button36*       sizeUp;
-            Button36*       sizeDown;
-            Button36*       colorUp;
-            Button36*       colorDown;
-
-            Button36*       masterFX;
-            Button36*       send1FX;
-            Button36*       send2FX;
-            Button36*       send3FX;
-            Button36*       btShowFX;
-            Button36*       btHideFX;
-
-            Gobj*           dropObj;
-            MixChannel*     currMixChannel;
-            bool            fxShowing;
-
             InstrPanel(Mixer* mixer);
-            Instrument*     loadInstrFromBrowser(BrwEntry* fdi);
-            void            deleteInstrument(Instrument* i);
-            void            cloneInstrument(Instrument* i);
-            Instrument*     getInstrByIndex(int index);
-            void            editAutopattern(Instrument* instr);
-            void            remap();
-            void            drawself(Graphics& g);
-            void            addInstrument(Instrument* i, Instrument* objAfter = NULL);
-            VstInstr*       loadVst(const char* path, VstInstr* otherVst);
-            VstInstr*       addVst(const char* path, VstInstr* vst);
-            Sample*         loadSample(const char* path);
-            Sample*         addSample(const char* path, bool temporaryForPreview = false);
-            int             getFullHeight();
-            int             getInstrNum();
-            void            resetAll();
-            void            generateAll(long num_frames, long mixbuffframe);
-            void            setSampleRate(float sampleRate);
-            void            setBufferSize(unsigned bufferSize);
-            Instrument*     getCurrInstr();
-            void            setcurr(Instrument* instr);
-            void            placeBefore(Instrument* instr, Instrument* before);
-            Instrument*     getInstrByAlias(std::string alstr);
-            void            updateWaves();
-            Instrument*     getInstrFromLine(int trkLine);
-            void            setInstrHeight(int instr_height);
-            void            showFX();
-            void            hideFX();
-            void            updateInstrNotePositions();
-
-protected:
-
-            bool            handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my);
-            bool            handleObjDrop(Gobj * obj,int mx,int my, unsigned int flags);
-            void            colorizeInstruments();
-            void            handleChildEvent(Gobj* obj, InputEvent& ev);
-            void            handleMouseWheel(InputEvent& ev);
-            void            updateInstrIndexes();
+            Button36*           btShowFX;
+            Button36*           btHideFX;
+            std::list<Instrument*>::iterator    currInstr;
+            MixChannel*         currMixChannel;
+            Gobj*               dropObj;
+            std::list<Instrument*>              instrs;
+            InstrHighlight*     instrHighlight;
+            bool                fxShowing;
+            Mixer*              mixr;
+            Slider36*           masterVolSlider;
+            ParamBox*           masterVolBox;
+            Knob*               masterVolKnob;
+            Parameter*          masterVolume;
+            void                addInstrument(Instrument* i, Instrument* objAfter = NULL);
+            VstInstr*           addVst(const char* path, VstInstr* vst);
+            Sample*             addSample(const char* path, bool temporaryForPreview = false);
+            void                cloneInstrument(Instrument* i);
+            void                colorizeInstruments();
+            void                deleteInstrument(Instrument* i);
+            void                drawself(Graphics& g);
+            Instrument*         getInstrByIndex(int index);
+            int                 getInstrNum();
+            Instrument*         getInstrByAlias(std::string alstr);
+            void                generateAll(long num_frames, long mixbuffframe);
+            Instrument*         getInstrFromLine(int trkLine);
+            Instrument*         getCurrInstr();
+            bool                handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my);
+            bool                handleObjDrop(Gobj * obj,int mx,int my, unsigned int flags);
+            void                handleChildEvent(Gobj* obj, InputEvent& ev);
+            void                handleMouseWheel(InputEvent& ev);
+            void                hideFX();
+            Instrument*         loadInstrFromBrowser(BrwEntry* fdi);
+            VstInstr*           loadVst(const char* path, VstInstr* otherVst);
+            Sample*             loadSample(const char* path);
+            void                placeBefore(Instrument* instr, Instrument* before);
+            void                resetAll();
+            void                remap();
+            void                setSampleRate(float sampleRate);
+            void                setBufferSize(unsigned bufferSize);
+            void                setcurr(Instrument* instr);
+            void                showFX();
+            void                updateWaves();
+            void                updateInstrNotePositions();
+            void                updateInstrIndexes();
 };
 
 //};
