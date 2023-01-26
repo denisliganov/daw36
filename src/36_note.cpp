@@ -277,8 +277,6 @@ void Note::handleMouseUp(InputEvent& ev)
     Element::handleMouseUp(ev);
 
     MAudio->releaseAllPreviews();
-
-    MInstrPanel->adjustOffset();
 }
 
 void Note::handleMouseDown(InputEvent & ev)

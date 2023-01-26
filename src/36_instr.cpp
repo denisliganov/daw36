@@ -1143,8 +1143,6 @@ void Instrument::handleMouseDown(InputEvent& ev)
 
 void Instrument::handleMouseUp(InputEvent& ev)
 {
-    MInstrPanel->adjustOffset();
-
     MAudio->releaseAllPreviews();
 
     MInstrPanel->setcurr(this);

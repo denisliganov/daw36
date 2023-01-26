@@ -64,45 +64,43 @@ void LoadDefaultInstruments()
     MBrowser->addSearchDir("C:\\Plugins\\");
 
     MInstrPanel->addVst("Plugins\\mda Piano.dll", NULL);
-    ///_MInstrPanel->addVst("Plugins\\mda DX10.dll", NULL);
-
+    MInstrPanel->addVst("Plugins\\mda DX10.dll", NULL);
     MInstrPanel->addSample("Samples\\Kicked.wav");
     MInstrPanel->addSample("Samples\\808.wav");
     MInstrPanel->addSample("Samples\\Kik 2.wav");
     MInstrPanel->addSample("Samples\\Clave.wav");
     MInstrPanel->addSample("Samples\\Timbale 2.wav");
     MInstrPanel->addSample("Samples\\Closed Hat.wav");
-
     MInstrPanel->addSample("Samples\\Dark Hat.wav");
     MInstrPanel->addSample("Samples\\Jazzy Hat.wav");
     MInstrPanel->addSample("Samples\\snar_04m1.wav");
     MInstrPanel->addSample("Samples\\Crash 2.wav");
-    MInstrPanel->addSample("Samples\\rhodes41_L.wav");
-    MInstrPanel->addSample("Samples\\rhodes48_L.wav");
-    MInstrPanel->addSample("Samples\\rhodes55_L.wav");
-    MInstrPanel->addSample("Samples\\rhodes56_L.wav");
-    MInstrPanel->addSample("Samples\\rhodes58_L.wav");
+    MInstrPanel->addSample("Samples\\SBALUN.wav");
+    MInstrPanel->addSample("Samples\\SarodC5.wav");
+    MInstrPanel->addSample("Samples\\SBAP.wav");
+    MInstrPanel->addSample("Samples\\Snare Tail.wav");
+    MInstrPanel->addSample("Samples\\Zheng_64.wav");
     MInstrPanel->addSample("Samples\\test1.wav");
-    MInstrPanel->addSample("Samples\\tada.wav");
+    MInstrPanel->addSample("Samples\\SBA4.wav");
     MInstrPanel->addSample("Samples\\test.wav");
     MInstrPanel->addSample("Samples\\Clap.wav");
     MInstrPanel->addSample("Samples\\Rasta.wav");
-    MInstrPanel->addSample("Samples\\Gtr Wawa 1.wav");
+    MInstrPanel->addSample("Samples\\Pipa_66.wav");
     MInstrPanel->addSample("Samples\\SarodC5.wav");
     MInstrPanel->addSample("Samples\\Gtr Hi Chuck.wav");
     MInstrPanel->addSample("Samples\\starpad.wav");
-
     MInstrPanel->addSample("Samples\\Long OpnClsd Hat.wav");
     MInstrPanel->addSample("Samples\\Nother Rim.wav");
     MInstrPanel->addSample("Samples\\Rim 2.wav");
     MInstrPanel->addSample("Samples\\Kicked.wav");
-    MInstrPanel->addSample("Samples\\808.wav");
-    MInstrPanel->addSample("Samples\\Kik 2.wav");
-    MInstrPanel->addSample("Samples\\Clave.wav");
+    MInstrPanel->addSample("Samples\\SBAF.wav");
+    MInstrPanel->addSample("Samples\\Blockhead.wav");
+    MInstrPanel->addSample("Samples\\Horn Hit.wav");
     MInstrPanel->addSample("Samples\\Timbale 2.wav");
     MInstrPanel->addSample("Samples\\Closed Hat.wav");
-
     MInstrPanel->addSample("Samples\\Dark Hat.wav");
+
+/*
     MInstrPanel->addSample("Samples\\Jazzy Hat.wav");
     MInstrPanel->addSample("Samples\\snar_04m1.wav");
     MInstrPanel->addSample("Samples\\Crash 2.wav");
@@ -110,7 +108,7 @@ void LoadDefaultInstruments()
     MInstrPanel->addSample("Samples\\Kicked.wav");
     MInstrPanel->addSample("Samples\\808.wav");
     MInstrPanel->addSample("Samples\\Kik 2.wav");
-
+*/
 //    _MInstrPanel->addSample("Samples\\Snare Tail.wav");
 //    _MInstrPanel->addSample("Samples\\CircleBrsh 2.wav");
  //   _MInstrPanel->addSample("Samples\\DABACLOS.wav");

@@ -814,7 +814,7 @@ Eff* MixChannel::addEffectFromBrowser(BrwEntry * de)
 
 void MixChannel::handleMouseWheel(InputEvent& ev)
 {
-    MInstrPanel->setOffset((int)(MInstrPanel->getOffset() - ev.wheelDelta*int(InstrHeight*1.1f)));
+    //
 }
 
 void MixChannel::handleMouseDown(InputEvent& ev)
@@ -832,11 +832,6 @@ void MixChannel::handleMouseDown(InputEvent& ev)
 
 void MixChannel::handleMouseUp(InputEvent& ev)
 {
-    if(instr != NULL)
-    {
-        MInstrPanel->adjustOffset();
-    }
-
     MAudio->releaseAllPreviews();
 
     //if(ev.mouseY < y1 + MixerTopHeight)
@@ -1132,7 +1127,7 @@ void Mixer::handleChildEvent(Gobj * obj, InputEvent& ev)
 
 void Mixer::remap()
 {
-    int yCh = 0 - MInstrPanel->getOffset();
+    int yCh = 0;
 
     for(Instrument* instr : MInstrPanel->instrs)
     {

@@ -43,11 +43,7 @@ public:
             Button36*       btShowFX;
             Button36*       btHideFX;
 
-            int             instrOffset;
-            Scroller*       scroller;
             Gobj*           dropObj;
-            float           fullSpan;
-            float           visibleSpan;
             MixChannel*     currMixChannel;
             bool            fxShowing;
 
@@ -75,9 +71,6 @@ public:
             void            placeBefore(Instrument* instr, Instrument* before);
             Instrument*     getInstrByAlias(std::string alstr);
             void            updateWaves();
-            void            adjustOffset();
-            int             getOffset() { return instrOffset; }
-            void            setOffset(int offs);
             Instrument*     getInstrFromLine(int trkLine);
             void            setInstrHeight(int instr_height);
             void            showFX();

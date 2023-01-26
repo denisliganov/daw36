@@ -78,8 +78,6 @@ public:
 
 InstrPanel::InstrPanel(Mixer* mixer)
 {
-    instrOffset = 0;
-
     fxShowing = false;
 
     currInstr = instrs.begin();
@@ -87,13 +85,6 @@ InstrPanel::InstrPanel(Mixer* mixer)
     currMixChannel = NULL;
 
     int buttw = 25;
-
-    addObject(scroller = new Scroller(true));
-
-    addObject(masterFX = new Button36(false), "bt.mfx");
-    addObject(send1FX = new Button36(false), "s1.mfx");
-    addObject(send2FX = new Button36(false), "s2.mfx");
-    addObject(send3FX = new Button36(false), "s3.mfx");
 
     addObject(btShowFX = new Button36(false), "bt.showbrw");
     addObject(btHideFX = new Button36(false), "bt.hidebrw");
@@ -240,6 +231,14 @@ Instrument* InstrPanel::getInstrByIndex(int index)
 
 Instrument* InstrPanel::loadInstrFromBrowser(BrwEntry * be)
 {
+    if (instrs.size() >= 36)
+    {
+        MWindow->showAlertBox("Can't load more than instruments ;)");
+
+        return NULL;
+    }
+
+
     Instrument* ni = NULL;
 
     if(be->ftype == FType_Wave)
@@ -359,11 +358,7 @@ void InstrPanel::handleChildEvent(Gobj* obj, InputEvent& ev)
 {
     if(ev.leftClick)
     {
-        if (obj == scroller)
-        {
-            setOffset((int)scroller->getoffs());
-        }
-        else if(obj == btShowFX)
+        if(obj == btShowFX)
         {
             if (ev.clickDown)
             {
@@ -382,44 +377,11 @@ void InstrPanel::handleChildEvent(Gobj* obj, InputEvent& ev)
             }
         }
     }
-    else if (obj == scroller)
-    {
-        if(ev.wheelDelta != 0)
-        {
-            setOffset((int)(instrOffset - ev.wheelDelta*32));
-        }
-    }
 }
 
 void InstrPanel::handleMouseWheel(InputEvent& ev)
 {
-    setOffset((int)(instrOffset - ev.wheelDelta*30));
-}
-
-void InstrPanel::setOffset(int offs)
-{ 
-    if(fullSpan > visibleSpan)
-    {
-        instrOffset = offs;
-
-        if(instrOffset < 0)
-        {
-            instrOffset = 0;
-        }
-
-        if(instrOffset + visibleSpan > fullSpan)
-        {
-            instrOffset = int(fullSpan - visibleSpan);
-        }
-    }
-    else if (instrOffset > 0)
-    {
-        instrOffset = 0;
-    }
-
-    remapAndRedraw();
-
-    //MGrid->setVerticalOffset(instrOffset);
+    //
 }
 
 Instrument* InstrPanel::getCurrInstr()
@@ -467,47 +429,6 @@ void InstrPanel::setcurr(Instrument* instr)
     redraw();
 
     instrHighlight->updpos();
-}
-
-// Make current instrument always visible on panel
-//
-void InstrPanel::adjustOffset()
-{
-    updateInstrIndexes();
-
-    Instrument* instr = getCurrInstr();
-
-    if(instr)
-    {
-        int instrY = (1 + instr->getIndex())*(InstrHeight + 1);
-
-        if(instrY + InstrHeight > instrOffset + getH())
-        {
-            setOffset(instrY - getH() + InstrHeight);
-        }
-
-        if(instrY - InstrHeight*2 < instrOffset)
-        {
-            setOffset(instrY - InstrHeight - InstrHeight);
-        }
-
-        MMixer->updateChannelIndexes();
-
-/*
-        int chanX = (1 + instr->mixChannel->getIndex())*(MixChanWidth + 1);
-
-        if (chanX + MixChanWidth > MMixer->getOffset() + MMixer->getInstrChannelsRange())
-        {
-            MMixer->setOffset(chanX - MMixer->getInstrChannelsRange() + MixChanWidth);
-        }
-
-        if (chanX - MixChanWidth*2 < MMixer->getOffset())
-        {
-            MMixer->setOffset(chanX - MixChanWidth - MixChanWidth);
-        }*/
-
-        window->refreshActiveObject();
-    }
 }
 
 void InstrPanel::updateInstrIndexes()
@@ -707,8 +628,6 @@ void InstrPanel::placeBefore(Instrument* instr, Instrument* before)
 
     ReleaseMutex(AudioMutex);
 
-    adjustOffset();
-
     colorizeInstruments();
 
     MInstrPanel->remapAndRedraw();
@@ -809,17 +728,23 @@ void InstrPanel::remap()
 {
     confine();
 
-    //masterVolSlider->setCoords1(width - 90, 6, 80, 16);
-    //masterVolKnob->setCoords1(width - InstrControlWidth + 2, 2, 24, 24);
     masterVolBox->setCoords1(width - 120, 6, -1, 16);
 
     int instrListY = MainLineHeight - 1;
     int instrListHeight = (height - instrListY - BottomPadHeight - 1);
-    int yoffs = -instrOffset;
+    int yoffs =0;
 
     confine(0, instrListY, width, instrListY + instrListHeight - 1);
 
-    fullSpan = 0;
+    int num = instrs.size();
+    int ih = 32;
+
+    while (num*(ih + 1) > instrListHeight)
+    {
+        ih--;
+    }
+
+    InstrHeight = ih;
 
     for (Instrument* i : instrs)
     {
@@ -834,8 +759,6 @@ void InstrPanel::remap()
                 i->setVisible(false);
             }
 
-            fullSpan += InstrHeight + 1;
-
             yoffs += InstrHeight + 1;
         }
     }
@@ -849,35 +772,17 @@ void InstrPanel::remap()
         confine(0, instrListY, FxPanelMaxWidth, height);
 
         mixr->setCoords1(0, instrListY, FxPanelMaxWidth, instrListHeight);
-
-        int xOffs = 4;
-        int bh = MainLineHeight - 6;
-        masterFX->setCoords1(xOffs, 2, 30, bh);
-        xOffs += 30 + 1;
-        send1FX->setCoords1(xOffs, 2, 30, bh);
-        xOffs += 30 + 1;
-        send2FX->setCoords1(xOffs, 2, 30, bh);
-        xOffs += 30 + 1;
-        send3FX->setCoords1(xOffs, 2, 30, bh);
     }
     else
     {
         btShowFX->setCoords1(0, 0, 28, 28);
 
         mixr->setVisible(false);
-
-        masterFX->setVisible(false);
-
-        send1FX->setVisible(false);
-        send2FX->setVisible(false);
-        send3FX->setVisible(false);
     }
 
     confine(0, instrListY-1, width, instrListY + instrListHeight - 1);
-    instrHighlight->updpos();
 
-    fullSpan += InstrHeight*3;
-    visibleSpan = float(height);// - MainLineHeight);
+    instrHighlight->updpos();
 }
 
 void InstrPanel::drawself(Graphics& g)

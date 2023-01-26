@@ -192,8 +192,6 @@ void Project36::deleteProject()
 
     MGrid->setppt(6);
 
-    MInstrPanel->setOffset(0);
-
     // Reset scrollers here (todo)
 
     projectPath = "";
