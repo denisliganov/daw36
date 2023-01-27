@@ -112,11 +112,7 @@ protected:
             int th = gGetTextHeight(FontInst);
 
             setc(g, .1f);
-            gText(g, FontInst, instr->getAlias(), x1 + width/2 - tw/2 + 3, y2 - height/2 + th/2 + 3);
-
-            //int gap = 3;
-            //gTriangle(g, x1 + gap,y1 + gap, x2 - gap, y1 + height/2, x1 + gap, y2 - gap, clr1, clr1);
-            //gTriangle(g, x1,y1, x2, y1 + height/2, x1, y2);
+            gText(g, FontInst, instr->getAlias(), x1 + width/2 - tw/2 + 2, y2 - height/2 + th/2 + 2);
 
             setc(g, 1.f);
             gText(g, FontInst, instr->getAlias(), x1 + width/2 - tw/2, y2 - height/2 + th/2);
@@ -187,7 +183,6 @@ Instrument::Instrument()
     cfsV = 0;
     rampCounterP = 0;
     cfsP = 0;
-    line = 0;
 
     lastNoteLength = 4;
     lastNoteVol = 1;
@@ -238,41 +233,97 @@ Instrument::~Instrument()
     ReleaseMutex(MixerMutex);
 }
 
-void Instrument::remap()
+void Instrument::activatemenuitem(std::string item)
 {
-    //guiButt->setCoords1(width - 180, 1, 26, 12);
-
-    volBox->setCoords1(width - 84, 1, 70, 13);
-    panBox->setCoords1(width - 149, 1, -1, 13);
-
-    soloButt->setCoords1(width - 11, 0, 11, height/2);
-    muteButt->setCoords1(width - 11, height/2, 11, height/2);
-
-    previewButt->setCoords1(3, 0, 22, 22);
-
-    ivu->setCoords1(0, 1, 3, height - 1);
-
-    if(gGetTextWidth(FontSmall, objName) > width - 38 - 50 - 10)
+    if(item == "Clone")
     {
-        setHint(objName);
+        MInstrPanel->cloneInstrument(this);
     }
-    else
+    else if(item == "Delete")
     {
-        setHint("");
+        MInstrPanel->deleteInstrument(this);
     }
+}
+
+void Instrument::activateTrigger(Trigger* tg)
+{
+    Note* note = (Note*)tg->el;
+
+    tg->outsync = false;
+    tg->tgworking = true;
+    tg->muted = false;
+    tg->broken = false;
+    tg->framePhase = 0;
+    tg->auCount = 0;
+    tg->volBase = note->vol->outVal;
+    tg->panBase = note->pan->outVal;
+
+    tg->setState(TS_Sustain);
+
+    tg->noteVal = note->getNoteValue();
+    tg->freq = note->freq;
+
+    tg->wt_pos = 0;
+
+    activeTriggers.remove(tg);
+    activeTriggers.push_back(tg);
+}
+
+void Instrument::addNote(Note * note)
+{
+    std::list<Note*>::iterator it = notes.begin();
+
+    while(1)
+    {
+        if (it == notes.end())
+        {
+            notes.insert(it, note);
+            break;
+        }
+
+        Note* n = *it;
+
+        if(n == selfNote)
+        {
+            it++;
+            continue;
+        }
+
+        if(n->gettick() > note->gettick())
+        {
+            notes.insert(it, note);
+            break;
+        }
+        else if (n->gettick() == note->gettick())
+        {
+            if(n->getNoteValue() < note->getNoteValue())
+            {
+                notes.insert(it, note);
+                break;
+            }
+        }
+
+        it++;
+    }
+
+    updNotePositions();
+}
+
+void Instrument::addMixChannel()
+{
+    mixChannel = MMixer->addMixChannel(this);
 }
 
 void Instrument::drawself(Graphics& g)
 {
     Gobj::fill(g, .3f);
-
     Gobj::setc(g, .1f);
 
-    gTextFit(g, FontSmall, objName, x1 + 19, y2, width - 26);
+    gTextFit(g, FontSmall, objName, x1 + 24, y1 + 9, width - 29);
 
     setc(g, .7f);
 
-    gTextFit(g, FontSmall, objName, x1 + 20, y2 - 1, width - 27);
+    gTextFit(g, FontSmall, objName, x1 + 25, y1 + 8, width - 30);
 
 //    lineH(0, 0, width - 1);
 }
@@ -282,6 +333,152 @@ void Instrument::drawover(Graphics & g)
     //setMonoColor(.9f);
     //gTextFit(g, FontSmall, instrAlias, x1 + 6, y2 - 3, width - (width/2));
 }
+
+void Instrument::deactivateTrigger(Trigger* tg)
+{
+    activeTriggers.remove(tg);
+
+    tg->tgworking = false;
+}
+
+// Perform fadeout or fadein antialiasing
+//
+// [IN]     stuff
+//
+void Instrument::deClick(Trigger* tg, long num_frames, long buffframe, long mixbuffframe, long buff_remaining)
+{
+    long tc0;
+
+    float mul;
+
+    if(tg->aaOUT)
+    {
+        int nc = 0;
+
+        tc0 = buffframe*2;
+
+        while(nc < num_frames)
+        {
+            if(tg->aaCount > 0)
+            {
+                mul = (float)tg->aaCount/DECLICK_COUNT;
+
+                inBuff[tc0] *= mul;
+                inBuff[tc0 + 1] *= mul;
+
+                tc0++; tc0++;
+
+                tg->aaCount--;
+            }
+            else
+            {
+                inBuff[tc0] = 0;
+                inBuff[tc0 + 1] = 0;
+
+                tc0++; tc0++;
+            }
+
+            nc++;
+        }
+
+        if(tg->aaCount == 0)
+        {
+            tg->aaOUT = false;
+        }
+    }
+    else if(tg->aaIN)
+    {
+        int nc = 0;
+
+        tc0 = buffframe*2;
+
+        while(nc < num_frames && tg->aaCount > 0)
+        {
+            mul = (float)(DECLICK_COUNT - tg->aaCount)/DECLICK_COUNT;
+
+            inBuff[tc0] *= mul;
+            inBuff[tc0 + 1] *= mul;
+
+            tc0++;
+            tc0++;
+            nc++;
+
+            tg->aaCount--;
+        }
+
+        if(tg->aaCount == 0)
+        {
+            tg->aaIN = false;
+        }
+    }
+
+    // Check if finished
+
+    bool aaU = false;
+    int aaStart;
+
+    if(tg->tgState == TS_SoftFinish)
+    {
+        // Finished case
+
+        aaU = true;
+
+        if(tg->auCount == 0)
+        {
+            aaStart = endframe - DECLICK_COUNT;
+
+            if(aaStart < 0)
+            {
+                aaStart = 0;
+            }
+        }
+        else
+        {
+            tg->setState(TS_Finished);
+
+            aaStart = 0;
+        }
+    }
+
+    // Finish declick processing
+
+    if(aaU == true)
+    {
+        jassert(aaStart >= 0);
+
+        if(aaStart >= 0)
+        {
+            tc0 = buffframe*2 + aaStart*2;
+
+            while(aaStart < num_frames)
+            {
+                if(tg->auCount < DECLICK_COUNT)
+                {
+                    tg->auCount++;
+
+                    mul = float(DECLICK_COUNT - tg->auCount)/DECLICK_COUNT;
+
+                    inBuff[tc0] *= mul;
+                    inBuff[tc0 + 1] *= mul;
+
+                    tc0++;
+                    tc0++;
+                }
+                else
+                {
+                    inBuff[tc0] = 0;
+                    inBuff[tc0 + 1] = 0;
+
+                    tc0++;
+                    tc0++;
+                }
+
+                aaStart++;
+            }
+        }
+    }
+}
+
 
 void Instrument::updNotePositions()
 {
@@ -327,60 +524,6 @@ void Instrument::updNotePositions()
     }
 }
 
-void Instrument::addNote(Note * note)
-{
-    std::list<Note*>::iterator it = notes.begin();
-
-    while(1)
-    {
-        if (it == notes.end())
-        {
-            notes.insert(it, note);
-            break;
-        }
-
-        Note* n = *it;
-
-        if(n == selfNote)
-        {
-            it++;
-            continue;
-        }
-
-        if(n->gettick() > note->gettick())
-        {
-            notes.insert(it, note);
-            break;
-        }
-        else if (n->gettick() == note->gettick())
-        {
-            if(n->getNoteValue() < note->getNoteValue())
-            {
-                notes.insert(it, note);
-                break;
-            }
-        }
-
-        it++;
-    }
-
-    updNotePositions();
-}
-
-void Instrument::removeNote(Note * note)
-{
-    notes.remove(note);
-
-    updNotePositions();
-}
-
-void Instrument::reinsertNote(Note * note)
-{
-    notes.remove(note);
-
-    addNote(note);
-}
-
 std::list <Element*> Instrument::getNotesFromRange(float offset, float lastVisibleTick)
 {
     std::list <Element*> noteList;
@@ -402,26 +545,6 @@ std::list <Element*> Instrument::getNotesFromRange(float offset, float lastVisib
     }
 
     return noteList;
-}
-
-int Instrument::getLine()
-{
-    return line;
-}
-
-void Instrument::setLine(int line_num)
-{
-    line = line_num;
-
-    for(auto note : notes)
-    {
-        note->setline(line_num);
-    }
-}
-
-void Instrument::addMixChannel()
-{
-    mixChannel = MMixer->addMixChannel(this);
 }
 
 Instrument* Instrument::makeClone(Instrument * instr)
@@ -494,37 +617,6 @@ restart:
 
         goto restart;
     }
-}
-
-void Instrument::activateTrigger(Trigger* tg)
-{
-    Note* note = (Note*)tg->el;
-
-    tg->outsync = false;
-    tg->tgworking = true;
-    tg->muted = false;
-    tg->broken = false;
-    tg->framePhase = 0;
-    tg->auCount = 0;
-    tg->volBase = note->vol->outVal;
-    tg->panBase = note->pan->outVal;
-
-    tg->setState(TS_Sustain);
-
-    tg->noteVal = note->getNoteValue();
-    tg->freq = note->freq;
-
-    tg->wt_pos = 0;
-
-    activeTriggers.remove(tg);
-    activeTriggers.push_back(tg);
-}
-
-void Instrument::deactivateTrigger(Trigger* tg)
-{
-    activeTriggers.remove(tg);
-
-    tg->tgworking = false;
 }
 
 void Instrument::generateData(long num_frames, long mixbuffframe)
@@ -673,144 +765,6 @@ long Instrument::workTrigger(Trigger * tg, long num_frames, long remaining, long
     }
 
     return actual_num_frames;
-}
-
-// Perform fadeout or fadein antialiasing
-//
-// [IN]     stuff
-//
-void Instrument::deClick(Trigger* tg, long num_frames, long buffframe, long mixbuffframe, long buff_remaining)
-{
-    long tc0;
-
-    float mul;
-
-    if(tg->aaOUT)
-    {
-        int nc = 0;
-
-        tc0 = buffframe*2;
-
-        while(nc < num_frames)
-        {
-            if(tg->aaCount > 0)
-            {
-                mul = (float)tg->aaCount/DECLICK_COUNT;
-
-                inBuff[tc0] *= mul;
-                inBuff[tc0 + 1] *= mul;
-
-                tc0++; tc0++;
-
-                tg->aaCount--;
-            }
-            else
-            {
-                inBuff[tc0] = 0;
-                inBuff[tc0 + 1] = 0;
-
-                tc0++; tc0++;
-            }
-
-            nc++;
-        }
-
-        if(tg->aaCount == 0)
-        {
-            tg->aaOUT = false;
-        }
-    }
-    else if(tg->aaIN)
-    {
-        int nc = 0;
-
-        tc0 = buffframe*2;
-
-        while(nc < num_frames && tg->aaCount > 0)
-        {
-            mul = (float)(DECLICK_COUNT - tg->aaCount)/DECLICK_COUNT;
-
-            inBuff[tc0] *= mul;
-            inBuff[tc0 + 1] *= mul;
-
-            tc0++;
-            tc0++;
-            nc++;
-
-            tg->aaCount--;
-        }
-
-        if(tg->aaCount == 0)
-        {
-            tg->aaIN = false;
-        }
-    }
-
-    // Check if finished
-
-    bool aaU = false;
-    int aaStart;
-
-    if(tg->tgState == TS_SoftFinish)
-    {
-        // Finished case
-
-        aaU = true;
-
-        if(tg->auCount == 0)
-        {
-            aaStart = endframe - DECLICK_COUNT;
-
-            if(aaStart < 0)
-            {
-                aaStart = 0;
-            }
-        }
-        else
-        {
-            tg->setState(TS_Finished);
-
-            aaStart = 0;
-        }
-    }
-
-    // Finish declick processing
-
-    if(aaU == true)
-    {
-        jassert(aaStart >= 0);
-
-        if(aaStart >= 0)
-        {
-            tc0 = buffframe*2 + aaStart*2;
-
-            while(aaStart < num_frames)
-            {
-                if(tg->auCount < DECLICK_COUNT)
-                {
-                    tg->auCount++;
-
-                    mul = float(DECLICK_COUNT - tg->auCount)/DECLICK_COUNT;
-
-                    inBuff[tc0] *= mul;
-                    inBuff[tc0 + 1] *= mul;
-
-                    tc0++;
-                    tc0++;
-                }
-                else
-                {
-                    inBuff[tc0] = 0;
-                    inBuff[tc0 + 1] = 0;
-
-                    tc0++;
-                    tc0++;
-                }
-
-                aaStart++;
-            }
-        }
-    }
 }
 
 void Instrument::preProcessTrigger(Trigger* tg, bool* skip, bool* fill, long num_frames, long buffframe)
@@ -1008,40 +962,6 @@ void Instrument::fillMixChannel(long num_frames, long buffframe, long mixbufffra
     ivu->setValues(lMax, rMax);
 }
 
-void Instrument::setIndex(int idx)
-{
-    devIdx = idx;
-
-    int num = devIdx;
-
-    //if(num == 10)
-    //    num = 0;
-
-    instrAlias = "a";
-
-    char c;
-
-    if(num < 10)
-    {
-        c = num + 0x30; // ASCII offset for numbers
-    }
-    else
-    {
-        c = num + 0x37; // ASCII offset for uppercase letters minus 0xB
-        //c = num + 0x56; // ASCII offset for lowercase letters minus 0xB
-    }
-
-    instrAlias = c;
-}
-
-void Instrument::setLastParams(float last_length,float last_vol,float last_pan, int last_val)
-{
-    lastNoteLength = last_length;
-    lastNoteVol = last_vol;
-    lastNotePan = last_pan;
-    lastNoteVal = last_val;
-}
-
 // This function helps to declick when we're forcing note removal due to lack of free voice slots
 //
 void Instrument::flowTriggers(Trigger* tgfrom, Trigger* tgto)
@@ -1180,16 +1100,76 @@ ContextMenu* Instrument::createmenu()
     return menu;
 }
 
-void Instrument::activatemenuitem(std::string item)
+void Instrument::removeNote(Note * note)
 {
-    if(item == "Clone")
+    notes.remove(note);
+
+    updNotePositions();
+}
+
+void Instrument::reinsertNote(Note * note)
+{
+    notes.remove(note);
+
+    addNote(note);
+}
+
+void Instrument::remap()
+{
+    //guiButt->setCoords1(width - 180, 1, 26, 12);
+
+    volBox->setCoords1(width - 86, height - 10, 70, 10);
+    panBox->setCoords1(width - 149, height - 10, -1, 10);
+
+    soloButt->setCoords1(width - 11, 0, 11, height/2);
+    muteButt->setCoords1(width - 11, height/2, 11, height/2);
+
+    previewButt->setCoords1(3, 0, 20, height/2 + 1);
+
+    ivu->setCoords1(0, 1, 3, height - 1);
+
+    if(gGetTextWidth(FontSmall, objName) > width - 38 - 50 - 10)
     {
-        MInstrPanel->cloneInstrument(this);
+        setHint(objName);
     }
-    else if(item == "Delete")
+    else
     {
-        MInstrPanel->deleteInstrument(this);
+        setHint("");
     }
+}
+
+void Instrument::setIndex(int idx)
+{
+    devIdx = idx;
+
+    int num = devIdx;
+
+    //if(num == 10)
+    //    num = 0;
+
+    instrAlias = "a";
+
+    char c;
+
+    if(num < 10)
+    {
+        c = num + 0x30; // ASCII offset for numbers
+    }
+    else
+    {
+        c = num + 0x37; // ASCII offset for uppercase letters minus 0xB
+        //c = num + 0x56; // ASCII offset for lowercase letters minus 0xB
+    }
+
+    instrAlias = c;
+}
+
+void Instrument::setLastParams(float last_length,float last_vol,float last_pan, int last_val)
+{
+    lastNoteLength = last_length;
+    lastNoteVol = last_vol;
+    lastNotePan = last_pan;
+    lastNoteVal = last_val;
 }
 
 void Instrument::setBufferSize(unsigned bufferSize)

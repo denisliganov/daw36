@@ -103,10 +103,9 @@ void Eff::drawself(Graphics& g)
     setc(g, .2f);
     lineH(g, height-1, 0, width-1);
 
-    int th = gGetTextHeight(FontBold);
-    setc(g, .9f);
-
-    txtfit(g, FontSmall, objName, 1, th, width - 2);
+    setc(g, .8f);
+    int th = gGetTextHeight(FontSmall);
+    txtfit(g, FontSmall, objName, 1, th - 2, width - 2);
 }
 
 Eff* Eff::makeClone(Eff* eff)
