@@ -259,8 +259,8 @@ void Grid::updfillerimage()
     imageContext.fillAll();
 
     float tick = .2f;
-    float beat = .26f;
-    float bar =  .32f;
+    float beat = .28f;
+    float bar =  .36f;
 
     float divClr = .05f;
 
@@ -2323,4 +2323,24 @@ void Grid::updBounds()
     }
 }
 
+
+Note* Grid::getNoteAt(float tick, int line)
+{
+    Note* note = NULL;
+
+    for (Element* el : visible)
+    {
+        if(el->gettick() == tick && el->getline() == line)
+        {
+            note = dynamic_cast<Note*>(el);
+
+            if (note)
+            {
+                break;
+            }
+        }
+    }
+
+    return note;
+}
 

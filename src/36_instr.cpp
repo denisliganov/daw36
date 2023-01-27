@@ -31,18 +31,18 @@ protected:
 
         void drawself(Graphics& g)
         {
-            Instrument* instr = (Instrument*)parent;
+            fill(g, .2f);
 
             if(pressed)
             {
-                instr->setMyColor(g, 1);
+                setc(g, 1.f);
             }
             else
             {
-                instr->setMyColor(g, .6f);
+                setc(g, .6f);
             }
 
-            gText(g, FontVis, "M", x1 + 1, y1 + gGetTextHeight(FontInst) - 1);
+            txt(g, FontVis, "M", width/2 - 2, height/2 + gGetTextHeight(FontVis)/2 - 1);
         }
 
         void handleMouseDrag(InputEvent & ev)   { parent->handleMouseDrag(ev); }
@@ -59,18 +59,18 @@ protected:
 
         void drawself(Graphics& g)
         {
-            Instrument* instr = (Instrument*)parent;
+            fill(g, .2f);
 
             if(pressed)
             {
-                instr->setMyColor(g, 1);
+                setc(g, 1.f);
             }
             else
             {
-                instr->setMyColor(g, .6f);
+                setc(g, .6f);
             }
 
-            gText(g, FontVis, "S", x1 + 2, y1 + gGetTextHeight(FontInst) - 1);
+            txt(g, FontVis, "S", width/2 - 2, height/2 + gGetTextHeight(FontVis)/2 - 1);
         }
 
         void handleMouseDrag(InputEvent & ev)   { parent->handleMouseDrag(ev); }
@@ -383,13 +383,13 @@ void Instrument::drawself(Graphics& g)
     setc(g, .25f);
     fillx(g, 0, 0, width, height/2);
 
-    Gobj::setc(g, .1f);
+    Gobj::setc(g, .0f);
 
-    gTextFit(g, FontSmall, objName, x1 + 24, y1 + 9, width - 29);
+    gTextFit(g, FontSmall, objName, x1 + 25, y1 + 9, width - 26);
 
     setc(g, .7f);
 
-    gTextFit(g, FontSmall, objName, x1 + 25, y1 + 8, width - 30);
+    gTextFit(g, FontSmall, objName, x1 + 26, y1 + 8, width - 26);
 
 //    lineH(0, 0, width - 1);
 }
@@ -1019,17 +1019,17 @@ void Instrument::reinsertNote(Note * note)
 
 void Instrument::remap()
 {
-    //guiButt->setCoords1(width - 180, 1, 26, 12);
+    guiButt->setCoords1(25, height - 12, 20, 12);
 
     volBox->setCoords1(width - 86, height - 10, 60, 10);
-    panBox->setCoords1(width - 149, height - 10, 60, 10);
+    panBox->setCoords1(width - 149, height - 10, 57, 10);
 
     int bw = 11;
 
-    soloButt->setCoords1(width - bw*2, height - bw, bw, bw);
-    muteButt->setCoords1(width - bw, height - bw, bw, bw);
+    soloButt->setCoords1(width - bw*2 - 2, height - bw, bw, bw);
+    muteButt->setCoords1(width - bw - 1, height - bw, bw, bw);
 
-    previewButt->setCoords1(3, 0, 20, 20);
+    previewButt->setCoords1(3, 1, 20, 20);
 
     ivu->setCoords1(0, 1, 3, height - 1);
 

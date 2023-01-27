@@ -198,6 +198,7 @@ public:
             int                 getselnum();
             bool                isselected(Element* el);
             void                recalcElems();
+            Note*               getNoteAt(float tick, int line);
 };
 
 

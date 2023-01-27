@@ -217,6 +217,11 @@ int KeyHandler::mapKeyToNote(int key)
 
 void KeyHandler::handleKeyPressed(char key_code, char c, unsigned flags)
 {
+    static int a = 0;
+    a++;
+    if (a==2)
+        int b = 1;
+
     unsigned k = (key_code > 255) ? 0 : keyMap[key_code];
 
     MCursor->handleKeyOrCharPressed(k != 0 ? k : key_code, c, flags);
@@ -238,6 +243,8 @@ void KeyHandler::handleKeyStateChange(bool key_down)
                 }
             }
         }
+
+        MCursor->releaseChar('a');
     }
 
     MGrid->recalcElems();
@@ -254,7 +261,7 @@ void KeyHandler::handleNoteKey(int key, int note_val, bool press)
 
         if(note == NULL)
         {
-            note = MGrid->putnote(MCursor->getTick(), MCursor->getline(), note_val);
+            note = MGrid->putnote(MCursor->getTick(), MCursor->getLine(), note_val);
 
             MGrid->setactivelem(note);
         }
@@ -284,10 +291,12 @@ void KeyHandler::handleNoteKey(int key, int note_val, bool press)
 
 TextCursor::TextCursor()
 {
-    grid = NULL;
+    currentChar[0] = currentChar[1] = 0;
 
-    tick = 0;
+    grid = NULL;
     line = 0;
+    note = NULL;
+    tick = 0;
 }
 
 void TextCursor::setPos(float newTick, int newLine)
@@ -333,7 +342,7 @@ float TextCursor::getTick()
     return tick;
 }
 
-int TextCursor::getline()
+int TextCursor::getLine()
 {
     return line;
 }
@@ -545,21 +554,49 @@ void TextCursor::handleKeyOrCharPressed(unsigned key, char character, unsigned f
     grid->recalcElems();
 }
 
+void TextCursor::releaseChar(char c)
+{
+    if (note != NULL)
+    {
+        note = NULL;
+
+        MAudio->releaseAllPreviews();
+
+        currentChar[0] = 0;
+    }
+}
+
 void TextCursor::handleChar(char c)
 {
-    char al[2] = {};
+    char newChar[2] = {};
 
-    al[0] = c;
+    newChar[0] = c;
 
-    Instrument* i = MInstrPanel->getInstrByAlias(al);
+    if (newChar[0] == currentChar[0])
+    {
+        return;
+    }
+
+    currentChar[0] = newChar[0];
+
+    Instrument* i = MInstrPanel->getInstrByAlias(currentChar);
 
     if (i != NULL)
     {
+        Note* existingNote = grid->getNoteAt(tick, line);
+
+        while (existingNote != NULL)
+        {
+            grid->setactivelem(existingNote);
+            grid->action(GridAction_Delete, getTick(), getLine());
+            existingNote = grid->getNoteAt(tick, line);
+        }
+
         MInstrPanel->setcurr(i);
 
-        grid->action(GridAction_PutNote, getTick(), getline());
+        grid->action(GridAction_PutNote, getTick(), getLine());
 
-        Note* note = (Note*)grid->updateList.back();
+        note = (Note*)grid->updateList.back();
 
         grid->updateList.clear();
 

@@ -117,10 +117,14 @@ class KeyHandler : public Gobj
 {
 public:
 
+        KeyHandler();
+
+protected:
+
         unsigned        keyMap[KEYNUM];
         KeyNoteMap      keyNoteMap[KEYNUM];
 
-        KeyHandler();
+public:
 
         void            initKeymap();
         void            handleChar(char c);
@@ -135,24 +139,31 @@ class TextCursor : public Gobj
 {
 friend  Grid;
 
-protected:
-
-        float       tick;
-        int         line;
-        Grid*       grid;
-
 public:
 
         TextCursor();
-        void    setPos(float newTick, int newLine);
-        void    updPos();
-        void    drawself(Graphics& g);
-        float   getTick();
-        int     getline();
-        void    handleKey(int key);
-        void    advanceView(float dtick, int dline);
-        void    handleKeyOrCharPressed(unsigned key, char character, unsigned flags);
-        void    handleChar(char c);
+
+protected:
+
+        char        currentChar[2];
+        Grid*       grid;
+        int         line;
+        Note*       note;
+        float       tick;
+
+        void        drawself(Graphics& g);
+        void        updPos();
+
+public:
+
+        void        advanceView(float dtick, int dline);
+        float       getTick();
+        int         getLine();
+        void        handleKey(int key);
+        void        handleKeyOrCharPressed(unsigned key, char character, unsigned flags);
+        void        handleChar(char c);
+        void        releaseChar(char c);
+        void        setPos(float newTick, int newLine);
 };
 
 
