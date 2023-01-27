@@ -98,14 +98,20 @@ void Eff::remap()
 void Eff::drawself(Graphics& g)
 {
     fill(g, .4f);
+
+    setc(g, .3f);
+    fillx(g, 0, 0, width, height/2);
+
     rect(g, .3f);
 
     setc(g, .2f);
     lineH(g, height-1, 0, width-1);
 
-    setc(g, .8f);
     int th = gGetTextHeight(FontSmall);
-    txtfit(g, FontSmall, objName, 1, th - 2, width - 2);
+    setc(g, .0f);
+    txtfit(g, FontSmall, objName, 3, th - 2, width - 2);
+    setc(g, .8f);
+    txtfit(g, FontSmall, objName, 1, th - 4, width - 2);
 }
 
 Eff* Eff::makeClone(Eff* eff)

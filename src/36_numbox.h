@@ -116,14 +116,16 @@ class ParamBox : public NumBox
 friend Parameter;
 
 protected:
-            int th;
-            int tx1;
-            int tx2;
-            int tx3;
-            int tw1;
-            int tw2;
-            int tw3;
-            int defPos;
+            int     defPos;
+            FontId  fontId;
+            int     th;
+            int     tx1;
+            int     tx2;
+            int     tx3;
+            int     tw1;
+            int     tw2;
+            int     tw3;
+            bool    sliderOnly;
 
     virtual void    updValue();
             void    handleMouseWheel(InputEvent& ev);
@@ -134,6 +136,7 @@ protected:
             void    drawself(Graphics& g);
             void    remap();
             void    redraw();
+            void    setSliderOnly(bool so) {sliderOnly = so;}
 
 public:
 

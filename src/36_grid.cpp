@@ -254,13 +254,13 @@ void Grid::updfillerimage()
 
     Graphics imageContext(*(brushImage));
 
-    gSetMonoColor(imageContext, .1f, 1);
+    gSetMonoColor(imageContext, .15f, 1);
 
     imageContext.fillAll();
 
-    float tick = .25f;
-    float beat = .35f;
-    float bar = .42f;
+    float tick = .2f;
+    float beat = .26f;
+    float bar =  .32f;
 
     float divClr = .05f;
 
@@ -389,6 +389,11 @@ void Grid::remap()
     mapElems();
 
     place->update();
+
+    if (MCursor && MCursor->getParent() == this)
+    {
+        MCursor->updPos();
+    }
 }
 
 void Grid::mapElems()
@@ -551,11 +556,6 @@ void Grid::redraw(bool remap_objects, bool refresh_image)
     if(remap_objects)
     {
         remap();
-
-        if (MCursor && MCursor->getParent() == this)
-        {
-            MCursor->updPos();
-        }
 
         //updelimage();
     }

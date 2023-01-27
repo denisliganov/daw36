@@ -226,13 +226,11 @@ void MixChannel::drawself(Graphics& g)
 {
     int baseheight = MixChannelPadHeight;
 
-    fill(g, .25f);
+    fill(g, .15f);
 
-    setc(g, 1.f);
-
-    gTextFit(g, FontSmall, instr->getObjName(), 0, 5, width);
-
-    gText(g, FontSmall, "123", 0, 5);
+    //setc(g, 1.f);
+    //gTextFit(g, FontSmall, instr->getObjName(), 0, 5, width);
+    //gText(g, FontSmall, "123", 0, 5);
 
     if(instr != NULL)
     {

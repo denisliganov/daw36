@@ -42,7 +42,7 @@ protected:
                 instr->setMyColor(g, .6f);
             }
 
-            gText(g, FontInst, "M", x1 + 1, y1 + gGetTextHeight(FontInst) - 1);
+            gText(g, FontVis, "M", x1 + 1, y1 + gGetTextHeight(FontInst) - 1);
         }
 
         void handleMouseDrag(InputEvent & ev)   { parent->handleMouseDrag(ev); }
@@ -70,7 +70,7 @@ protected:
                 instr->setMyColor(g, .6f);
             }
 
-            gText(g, FontInst, "S", x1 + 2, y1 + gGetTextHeight(FontInst) - 1);
+            gText(g, FontVis, "S", x1 + 2, y1 + gGetTextHeight(FontInst) - 1);
         }
 
         void handleMouseDrag(InputEvent & ev)   { parent->handleMouseDrag(ev); }
@@ -314,9 +314,75 @@ void Instrument::addMixChannel()
     mixChannel = MMixer->addMixChannel(this);
 }
 
+// Create self-pattern + note, for previewing
+//
+void Instrument::createSelfPattern()
+{
+    if(selfPattern == NULL)
+    {
+        selfPattern = new Pattern("self", 0.0f, 16.0f, 0, 0, true);
+        selfPattern->ptBase = selfPattern;
+        selfPattern->patt = selfPattern;
+        selfPattern->addInstance(selfPattern);
+
+        MProject.patternList.push_front(selfPattern);
+
+        selfPattern->ptBase = selfPattern;
+    }
+
+    if(selfNote == NULL)
+    {
+        selfNote = Create_Note(0, 0, this, BaseNote, 4, 1, 0, selfPattern);
+
+        selfNote->propagateTriggers(selfPattern);
+    }
+
+    selfPattern->recalc();
+}
+
+ContextMenu* Instrument::createmenu()
+{
+    MInstrPanel->setcurr(this);
+
+    //Menu* menu = new Menu(Obj_MenuPopup);
+
+    ContextMenu* menu = new ContextMenu(this);
+
+    menu->addMenuItem("Clone");
+    menu->addMenuItem("Delete");
+    menu->addMenuItem("Edit Self-Pattern");
+
+    return menu;
+}
+
+Instrument* Instrument::clone()
+{
+    Instrument* instr = NULL;
+
+    switch(type)
+    {
+        case Instr_Sample:
+            // TODO: rework sample cloning to copy from memory
+            instr = (Instrument*)MInstrPanel->addSample(filePath.data());
+            break;
+
+        case Instr_VstPlugin:
+            instr = (Instrument*)MInstrPanel->addVst(NULL, (VstInstr*)this);
+            break;
+    }
+
+    makeClone(instr);
+
+    return instr;
+}
+
 void Instrument::drawself(Graphics& g)
 {
     Gobj::fill(g, .3f);
+
+    setc(g, .25f);
+    fillx(g, 0, 0, width, height/2);
+
     Gobj::setc(g, .1f);
 
     gTextFit(g, FontSmall, objName, x1 + 24, y1 + 9, width - 29);
@@ -479,134 +545,6 @@ void Instrument::deClick(Trigger* tg, long num_frames, long buffframe, long mixb
     }
 }
 
-
-void Instrument::updNotePositions()
-{
-    float   minVal = 127;
-    float   maxVal = 0;
-    float   lastTick = -1;
-
-    for(auto note : notes)
-    {
-        if (note == selfNote || note->isdel())
-            continue;
-
-        lastTick = note->gettick();
-
-        if (note->getNoteValue() > maxVal)
-        {
-            maxVal = (float)note->getNoteValue();
-        }
-
-        if (note->getNoteValue() < minVal)
-        {
-            minVal = (float)note->getNoteValue();
-        }
-
-        //td: upd stacked
-    }
-
-    float range = maxVal - minVal;
-
-    for(auto note : notes)
-    {
-        if (note == selfNote || note->isdel())
-            continue;
-
-        if (range > 0)
-        {
-            note->yPositionAdjust = 1.f - float(note->getNoteValue() - minVal) / range;
-        }
-        else
-        {
-            note->yPositionAdjust = .5f;
-        }
-    }
-}
-
-std::list <Element*> Instrument::getNotesFromRange(float offset, float lastVisibleTick)
-{
-    std::list <Element*> noteList;
-
-    for(auto note : notes)
-    {
-        if(note->getendtick() < offset || note == selfNote)
-        {
-            continue;
-        }
-        else if (note->gettick() > lastVisibleTick)
-        {
-            break;
-        }
-        else if (!note->isdel())
-        {
-            noteList.push_back((Element*)note);
-        }
-    }
-
-    return noteList;
-}
-
-Instrument* Instrument::makeClone(Instrument * instr)
-{
-    auto itr1 = params.begin();
-    auto itr2 = instr->params.begin();
-
-    for(; itr1 != params.end(); itr1++, itr2++)
-    {
-        (*itr2)->setValue((*itr1)->getValue());
-    }
-
-    return instr;
-}
-
-Instrument* Instrument::clone()
-{
-    Instrument* instr = NULL;
-
-    switch(type)
-    {
-        case Instr_Sample:
-            // TODO: rework sample cloning to copy from memory
-            instr = (Instrument*)MInstrPanel->addSample(filePath.data());
-            break;
-
-        case Instr_VstPlugin:
-            instr = (Instrument*)MInstrPanel->addVst(NULL, (VstInstr*)this);
-            break;
-    }
-
-    makeClone(instr);
-
-    return instr;
-}
-
-// Create self-pattern + note, for previewing
-//
-void Instrument::createSelfPattern()
-{
-    if(selfPattern == NULL)
-    {
-        selfPattern = new Pattern("self", 0.0f, 16.0f, 0, 0, true);
-        selfPattern->ptBase = selfPattern;
-        selfPattern->patt = selfPattern;
-        selfPattern->addInstance(selfPattern);
-
-        MProject.patternList.push_front(selfPattern);
-
-        selfPattern->ptBase = selfPattern;
-    }
-
-    if(selfNote == NULL)
-    {
-        selfNote = Create_Note(0, 0, this, BaseNote, 4, 1, 0, selfPattern);
-
-        selfNote->propagateTriggers(selfPattern);
-    }
-
-    selfPattern->recalc();
-}
-
 void Instrument::forceStop()
 {
 restart:
@@ -616,275 +554,6 @@ restart:
         tg->stop();
 
         goto restart;
-    }
-}
-
-void Instrument::generateData(long num_frames, long mixbuffframe)
-{
-    long        frames_remaining;
-    long        frames_to_process;
-    long        actual;
-    long        buffframe;
-    long        mbframe;
-    Trigger*    tgenv;
-
-    memset(outBuff, 0, num_frames*sizeof(float)*2);
-
-    frames_remaining = num_frames;
-    buffframe = 0;
-    mbframe = mixbuffframe;
-
-    while(frames_remaining > 0)
-    {
-        if(frames_remaining > BUFF_CHUNK_SIZE)
-        {
-            frames_to_process = BUFF_CHUNK_SIZE;
-        }
-        else
-        {
-            frames_to_process = frames_remaining;
-        }
-
-        // Process envelopes for this instrument
-        tgenv = envelopes;
-
-        // Rewind to the very first, to provide correct envelopes overriding
-        while(tgenv != NULL && tgenv->group_prev != NULL) 
-        {
-            tgenv = tgenv->group_prev;
-        }
-
-        // Now process them all
-
-        while(tgenv != NULL)
-        {
-            /*
-            env = (Envelope*)tgenv->el;
-            if(env->newbuff && buffframe >= env->last_buffframe)
-            {
-                param = env->param;
-                param->SetValueFromEnvelope(env->buff[mixbuffframe + buffframe], env);
-            }*/
-
-            tgenv = tgenv->group_next;
-        }
-
-        /*
-        // Process activeTriggers for the current chunk
-        tg = tg_first;
-        while(tg != NULL)
-        {
-            tgnext = tg->loc_act_next;
-            // Clean inBuff to ensure obsolete data won't be used
-            memset(inBuff, 0, num_frames*sizeof(float)*2);
-            actual = workTrigger(tg, frames_to_process, frames_remaining, buffframe, mbframe);
-            tg = tgnext;
-        }
-        */
-
-        for(auto itr = activeTriggers.begin(); itr != activeTriggers.end(); )
-        {
-            // Clean inBuff to ensure obsolete data won't be used
-
-            memset(inBuff, 0, num_frames*sizeof(float)*2);
-
-            Trigger* tg = *itr;
-
-            itr++;
-
-            actual = workTrigger(tg, frames_to_process, frames_remaining, buffframe, mbframe);
-        }
-
-        frames_remaining -= frames_to_process;
-        buffframe += frames_to_process;
-        mbframe += frames_to_process;
-    }
-
-    // Send data to assigned mixer channel
-
-    fillMixChannel(num_frames, 0, mixbuffframe);
-}
-
-// Here initialized the stuff that does not change throughout the whole session
-void Instrument::staticInit(Trigger* tg, long num_frames)
-{
-    pan0 = pan1 = pan2 = pan3 = 0;
-
-    volbase = 0;
-    venvphase = 0;
-    endframe = 0;
-
-    /// Init volume base. Volume base consist of volumes, that don't change during the whole filling session.
-    /// it's then multiplied to dynamic tg->vol_val value in postProcessTrigger.
-
-    volbase = 1; // tg->tgPatt->vol->outval; // Pattern static paramSet
-
-    volbase *= DAW_INVERTED_VOL_RANGE;
-
-//    if(type == Instr_Generator)  
-//        volbase *= DAW_INVERTED_VOL_RANGE;
-
-    // Init pans
-    pan1 = 0;
-    pan2 = 0; // tg->tgPatt->pan->outval;     // Pattern's local panning
-    pan3 = pan->outVal;     // Instrument's panning
-}
-
-long Instrument::workTrigger(Trigger * tg, long num_frames, long remaining, long buffframe, long mixbuffframe)
-{
-    staticInit(tg, num_frames);
-
-    long actual_num_frames = processTrigger(tg, num_frames, buffframe);
-
-    if(actual_num_frames > 0)
-    {
-        postProcessTrigger(tg, actual_num_frames, buffframe, mixbuffframe, remaining - actual_num_frames);
-    }
-
-    if(tg->lcount > 0)
-    {
-        for(int ic = 0; ic < actual_num_frames; ic++)
-        {
-            outBuff[(buffframe + ic)*2] += tg->auxbuff[int(rampCount - tg->lcount)*2];
-            outBuff[(buffframe + ic)*2 + 1] += tg->auxbuff[int(rampCount - tg->lcount)*2 + 1];
-
-            tg->lcount--;
-
-            if(tg->lcount == 0)
-            {
-                break;
-            }
-        }
-    }
-
-    // If trigger was finished during processing, deactivate it here
-
-    if(tg->tgState == TS_Finished)
-    {
-        tg->stop();
-    }
-
-    return actual_num_frames;
-}
-
-void Instrument::preProcessTrigger(Trigger* tg, bool* skip, bool* fill, long num_frames, long buffframe)
-{
-    if(tg->broken)
-    {
-        // Per break or mute we could leave filling for two or more times, if there're not enough num_frames
-        // to cover ANTIALIASING_FRAMES number
-
-        if(tg->aaFilledCount >= DECLICK_COUNT)
-        {
-           *fill = false;
-           *skip = true;
-
-            tg->setState(TS_Finished);
-        }
-        else
-        {
-            tg->aaFilledCount += num_frames;
-        }
-    }
-
-    // Check conditions for muting
-    if((muteparam != NULL && muteparam->getOutVal()) || !(SoloInstr == NULL || SoloInstr == this))
-    {
-        // If note just begun then there's nothing to declick. Set aaFilledCount to full for immediate muting
-
-        if(tg->framePhase == 0)
-        {
-            tg->muted = true;
-            tg->aaFilledCount = DECLICK_COUNT;
-        }
-
-        if(tg->muted == false)
-        {
-            // If note was already playig, then need to continue until DECLICK_COUNT number of frames are filled
-
-            tg->muted = true;
-            tg->aaOUT = true;
-            tg->aaCount = DECLICK_COUNT;
-            tg->aaFilledCount = num_frames;
-        }
-        else
-        {
-            if(tg->aaFilledCount >= DECLICK_COUNT)
-            {
-               *fill = false;
-            }
-            else
-            {
-                tg->aaFilledCount += num_frames;
-            }
-        }
-    }
-    else if(*fill == true)
-    {
-        if(tg->muted)
-        {
-            tg->muted = false;
-            tg->aaIN = true;
-            tg->aaCount = DECLICK_COUNT;
-        }
-    }
-}
-
-// Post-process data, generated per trigger. 
-// Apply all high-level params, envelopes and fill corresponding mixcell.
-//
-// [IN]
-//    tg            - trigger being processed.
-//    num_frames    - number of frames to process.
-//    curr_frame    - global timing frame number.
-//    buffframe     - global buffering offset.
-//
-void Instrument::postProcessTrigger(Trigger* tg, long num_frames, long buffframe, long mixbuffframe, long buff_remaining)
-{
-    float       vol, pan;
-    float       volL, volR;
-    long        tc, tc0;
-
-
-    deClick(tg, num_frames, buffframe, mixbuffframe, buff_remaining);
-
-    vol = tg->vol_val*volbase;
-
-    pan0 = tg->pan_val;
-
-    tc = mixbuffframe*2;
-    tc0 = buffframe*2;
-
-    for(long cc = 0; cc < num_frames; cc++)
-    {
-        // pan0 is unchanged
-        // then to pattern/env
-
-        // pan2 is unchanged
-        // then to instrument/env
-
-        pan = (((pan0*(1 - c_abs(pan1)) + pan1)*(1 - c_abs(pan2)) + pan2)*(1 - c_abs(pan3)) + pan3);
-
-        //tg->lastpan = pan;
-        ////PanLinearRule(pan, &volL, &volR);
-        //pan = 0;
-        //volL = volR = 1;
-        //if(pan > 0)
-        //    volL -= pan;
-        //else if(pan < 0)
-        //    volR += pan;
-        //PanConstantRule(pan, &volL, &volR);
-
-        int ai = int((PI_F*(pan + 1)/4)/wt_angletoindex);
-
-        volL = wt_cosine[ai];
-        volR = wt_sine[ai];
-
-        outBuff[tc0] += inBuff[tc0]*vol*volL;
-        outBuff[tc0 + 1] += inBuff[tc0 + 1]*vol*volR;
-
-        tc0++;
-        tc0++;
     }
 }
 
@@ -983,59 +652,135 @@ void Instrument::flowTriggers(Trigger* tgfrom, Trigger* tgto)
     tgto->lcount = (float)rampCount;
 }
 
-void Instrument::save(XmlElement * instrNode)
+void Instrument::generateData(long num_frames, long mixbuffframe)
 {
-    instrNode->setAttribute(T("InstrIndex"), devIdx);
-    instrNode->setAttribute(T("InstrType"), int(type));
-    instrNode->setAttribute(T("InstrName"), String(objName.data()));
-    instrNode->setAttribute(T("InstrPath"), String(filePath.data()));
+    long        frames_remaining;
+    long        frames_to_process;
+    long        actual;
+    long        buffframe;
+    long        mbframe;
+    Trigger*    tgenv;
 
-    instrNode->addChildElement(vol->save());
-    instrNode->addChildElement(pan->save());
+    memset(outBuff, 0, num_frames*sizeof(float)*2);
 
-    /*
-    instrNode->setAttribute(T("Mute"), int(muteparam->getOutVal()));
-    instrNode->setAttribute(T("Solo"), int(soloparam->getOutVal()));
-    */
+    frames_remaining = num_frames;
+    buffframe = 0;
+    mbframe = mixbuffframe;
+
+    while(frames_remaining > 0)
+    {
+        if(frames_remaining > BUFF_CHUNK_SIZE)
+        {
+            frames_to_process = BUFF_CHUNK_SIZE;
+        }
+        else
+        {
+            frames_to_process = frames_remaining;
+        }
+
+        // Process envelopes for this instrument
+        tgenv = envelopes;
+
+        // Rewind to the very first, to provide correct envelopes overriding
+        while(tgenv != NULL && tgenv->group_prev != NULL) 
+        {
+            tgenv = tgenv->group_prev;
+        }
+
+        // Now process them all
+
+        while(tgenv != NULL)
+        {
+            /*
+            env = (Envelope*)tgenv->el;
+            if(env->newbuff && buffframe >= env->last_buffframe)
+            {
+                param = env->param;
+                param->SetValueFromEnvelope(env->buff[mixbuffframe + buffframe], env);
+            }*/
+
+            tgenv = tgenv->group_next;
+        }
+
+        /*
+        // Process activeTriggers for the current chunk
+        tg = tg_first;
+        while(tg != NULL)
+        {
+            tgnext = tg->loc_act_next;
+            // Clean inBuff to ensure obsolete data won't be used
+            memset(inBuff, 0, num_frames*sizeof(float)*2);
+            actual = workTrigger(tg, frames_to_process, frames_remaining, buffframe, mbframe);
+            tg = tgnext;
+        }
+        */
+
+        for(auto itr = activeTriggers.begin(); itr != activeTriggers.end(); )
+        {
+            // Clean inBuff to ensure obsolete data won't be used
+
+            memset(inBuff, 0, num_frames*sizeof(float)*2);
+
+            Trigger* tg = *itr;
+
+            itr++;
+
+            actual = workTrigger(tg, frames_to_process, frames_remaining, buffframe, mbframe);
+        }
+
+        frames_remaining -= frames_to_process;
+        buffframe += frames_to_process;
+        mbframe += frames_to_process;
+    }
+
+    // Send data to assigned mixer channel
+
+    fillMixChannel(num_frames, 0, mixbuffframe);
 }
 
-void Instrument::load(XmlElement * instrNode)
+std::list <Element*> Instrument::getNotesFromRange(float offset, float lastVisibleTick)
 {
-    devIdx = instrNode->getIntAttribute(T("InstrIndex"), -1);
+    std::list <Element*> noteList;
 
-    XmlElement* xmlParam = NULL;
-
-    forEachXmlChildElementWithTagName(*instrNode, xmlParam, T("Parameter"))
+    for(auto note : notes)
     {
-        int idx = xmlParam->getIntAttribute(T("index"), -1);
-
-        if(idx == vol->index)
+        if(note->getendtick() < offset || note == selfNote)
         {
-            vol->load(xmlParam);
+            continue;
         }
-        else if(idx == pan->index)
+        else if (note->gettick() > lastVisibleTick)
         {
-            pan->load(xmlParam);
+            break;
+        }
+        else if (!note->isdel())
+        {
+            noteList.push_back((Element*)note);
         }
     }
 
-    bool mute = (instrNode->getIntAttribute(T("mute")) == 1);
-    muteparam->SetBoolValue(mute);
-
-    bool solo = (instrNode->getIntAttribute(T("Solo")) == 1);
-    soloparam->SetBoolValue(solo);
-
-    if(solo)
-    {
-        SoloInstr = this;
-    }
+    return noteList;
 }
 
-void Instrument::preview(int note)
+void Instrument::handleChildEvent(Gobj * obj, InputEvent& ev)
 {
-    selfNote->setnote(note);
+    //MInstrPanel->setCurrInstr(this);
 
-    selfNote->preview(note);
+    if(obj == guiButt && !ev.clickDown)
+    {
+        MInstrPanel->setcurr(this);
+        showWindow(guiButt->isPressed());
+    }
+    else if (obj == previewButt)
+    {
+        if(previewButt->isPressed())
+        {
+            MInstrPanel->setcurr(this);
+
+            preview(); 
+        }
+    }
+
+    redraw();
 }
 
 void Instrument::handleMouseDown(InputEvent& ev)
@@ -1085,19 +830,177 @@ void Instrument::handleMouseWheel(InputEvent& ev)
     parent->handleMouseWheel(ev);
 }
 
-ContextMenu* Instrument::createmenu()
+void Instrument::load(XmlElement * instrNode)
 {
-    MInstrPanel->setcurr(this);
+    devIdx = instrNode->getIntAttribute(T("InstrIndex"), -1);
 
-    //Menu* menu = new Menu(Obj_MenuPopup);
+    XmlElement* xmlParam = NULL;
 
-    ContextMenu* menu = new ContextMenu(this);
+    forEachXmlChildElementWithTagName(*instrNode, xmlParam, T("Parameter"))
+    {
+        int idx = xmlParam->getIntAttribute(T("index"), -1);
 
-    menu->addMenuItem("Clone");
-    menu->addMenuItem("Delete");
-    menu->addMenuItem("Edit Self-Pattern");
+        if(idx == vol->index)
+        {
+            vol->load(xmlParam);
+        }
+        else if(idx == pan->index)
+        {
+            pan->load(xmlParam);
+        }
+    }
 
-    return menu;
+    bool mute = (instrNode->getIntAttribute(T("mute")) == 1);
+    muteparam->SetBoolValue(mute);
+
+    bool solo = (instrNode->getIntAttribute(T("Solo")) == 1);
+    soloparam->SetBoolValue(solo);
+
+    if(solo)
+    {
+        SoloInstr = this;
+    }
+}
+
+Instrument* Instrument::makeClone(Instrument * instr)
+{
+    auto itr1 = params.begin();
+    auto itr2 = instr->params.begin();
+
+    for(; itr1 != params.end(); itr1++, itr2++)
+    {
+        (*itr2)->setValue((*itr1)->getValue());
+    }
+
+    return instr;
+}
+
+void Instrument::preProcessTrigger(Trigger* tg, bool* skip, bool* fill, long num_frames, long buffframe)
+{
+    if(tg->broken)
+    {
+        // Per break or mute we could leave filling for two or more times, if there're not enough num_frames
+        // to cover ANTIALIASING_FRAMES number
+
+        if(tg->aaFilledCount >= DECLICK_COUNT)
+        {
+           *fill = false;
+           *skip = true;
+
+            tg->setState(TS_Finished);
+        }
+        else
+        {
+            tg->aaFilledCount += num_frames;
+        }
+    }
+
+    // Check conditions for muting
+    if((muteparam != NULL && muteparam->getOutVal()) || !(SoloInstr == NULL || SoloInstr == this))
+    {
+        // If note just begun then there's nothing to declick. Set aaFilledCount to full for immediate muting
+
+        if(tg->framePhase == 0)
+        {
+            tg->muted = true;
+            tg->aaFilledCount = DECLICK_COUNT;
+        }
+
+        if(tg->muted == false)
+        {
+            // If note was already playig, then need to continue until DECLICK_COUNT number of frames are filled
+
+            tg->muted = true;
+            tg->aaOUT = true;
+            tg->aaCount = DECLICK_COUNT;
+            tg->aaFilledCount = num_frames;
+        }
+        else
+        {
+            if(tg->aaFilledCount >= DECLICK_COUNT)
+            {
+               *fill = false;
+            }
+            else
+            {
+                tg->aaFilledCount += num_frames;
+            }
+        }
+    }
+    else if(*fill == true)
+    {
+        if(tg->muted)
+        {
+            tg->muted = false;
+            tg->aaIN = true;
+            tg->aaCount = DECLICK_COUNT;
+        }
+    }
+}
+
+void Instrument::preview(int note)
+{
+    selfNote->setnote(note);
+
+    selfNote->preview(note);
+}
+
+// Post-process data, generated per trigger. 
+// Apply all high-level params, envelopes and fill corresponding mixcell.
+//
+// [IN]
+//    tg            - trigger being processed.
+//    num_frames    - number of frames to process.
+//    curr_frame    - global timing frame number.
+//    buffframe     - global buffering offset.
+//
+void Instrument::postProcessTrigger(Trigger* tg, long num_frames, long buffframe, long mixbuffframe, long buff_remaining)
+{
+    float       vol, pan;
+    float       volL, volR;
+    long        tc, tc0;
+
+
+    deClick(tg, num_frames, buffframe, mixbuffframe, buff_remaining);
+
+    vol = tg->vol_val*volbase;
+
+    pan0 = tg->pan_val;
+
+    tc = mixbuffframe*2;
+    tc0 = buffframe*2;
+
+    for(long cc = 0; cc < num_frames; cc++)
+    {
+        // pan0 is unchanged
+        // then to pattern/env
+
+        // pan2 is unchanged
+        // then to instrument/env
+
+        pan = (((pan0*(1 - c_abs(pan1)) + pan1)*(1 - c_abs(pan2)) + pan2)*(1 - c_abs(pan3)) + pan3);
+
+        //tg->lastpan = pan;
+        ////PanLinearRule(pan, &volL, &volR);
+        //pan = 0;
+        //volL = volR = 1;
+        //if(pan > 0)
+        //    volL -= pan;
+        //else if(pan < 0)
+        //    volR += pan;
+        //PanConstantRule(pan, &volL, &volR);
+
+        int ai = int((PI_F*(pan + 1)/4)/wt_angletoindex);
+
+        volL = wt_cosine[ai];
+        volR = wt_sine[ai];
+
+        outBuff[tc0] += inBuff[tc0]*vol*volL;
+        outBuff[tc0 + 1] += inBuff[tc0 + 1]*vol*volR;
+
+        tc0++;
+        tc0++;
+    }
 }
 
 void Instrument::removeNote(Note * note)
@@ -1118,13 +1021,15 @@ void Instrument::remap()
 {
     //guiButt->setCoords1(width - 180, 1, 26, 12);
 
-    volBox->setCoords1(width - 86, height - 10, 70, 10);
-    panBox->setCoords1(width - 149, height - 10, -1, 10);
+    volBox->setCoords1(width - 86, height - 10, 60, 10);
+    panBox->setCoords1(width - 149, height - 10, 60, 10);
 
-    soloButt->setCoords1(width - 11, 0, 11, height/2);
-    muteButt->setCoords1(width - 11, height/2, 11, height/2);
+    int bw = 11;
 
-    previewButt->setCoords1(3, 0, 20, height/2 + 1);
+    soloButt->setCoords1(width - bw*2, height - bw, bw, bw);
+    muteButt->setCoords1(width - bw, height - bw, bw, bw);
+
+    previewButt->setCoords1(3, 0, 20, 20);
 
     ivu->setCoords1(0, 1, 3, height - 1);
 
@@ -1136,6 +1041,31 @@ void Instrument::remap()
     {
         setHint("");
     }
+}
+
+// Here initialized the stuff that does not change throughout the whole session
+void Instrument::staticInit(Trigger* tg, long num_frames)
+{
+    pan0 = pan1 = pan2 = pan3 = 0;
+
+    volbase = 0;
+    venvphase = 0;
+    endframe = 0;
+
+    /// Init volume base. Volume base consist of volumes, that don't change during the whole filling session.
+    /// it's then multiplied to dynamic tg->vol_val value in postProcessTrigger.
+
+    volbase = 1; // tg->tgPatt->vol->outval; // Pattern static paramSet
+
+    volbase *= DAW_INVERTED_VOL_RANGE;
+
+//    if(type == Instr_Generator)  
+//        volbase *= DAW_INVERTED_VOL_RANGE;
+
+    // Init pans
+    pan1 = 0;
+    pan2 = 0; // tg->tgPatt->pan->outval;     // Pattern's local panning
+    pan3 = pan->outVal;     // Instrument's panning
 }
 
 void Instrument::setIndex(int idx)
@@ -1177,33 +1107,107 @@ void Instrument::setBufferSize(unsigned bufferSize)
     mixChannel->setBufferSize(bufferSize);
 }
 
+void Instrument::save(XmlElement * instrNode)
+{
+    instrNode->setAttribute(T("InstrIndex"), devIdx);
+    instrNode->setAttribute(T("InstrType"), int(type));
+    instrNode->setAttribute(T("InstrName"), String(objName.data()));
+    instrNode->setAttribute(T("InstrPath"), String(filePath.data()));
+
+    instrNode->addChildElement(vol->save());
+    instrNode->addChildElement(pan->save());
+
+    /*
+    instrNode->setAttribute(T("Mute"), int(muteparam->getOutVal()));
+    instrNode->setAttribute(T("Solo"), int(soloparam->getOutVal()));
+    */
+}
+
 void Instrument::setSampleRate(float sampleRate)
 {
     mixChannel->setSampleRate(sampleRate);
 }
 
-void Instrument::handleChildEvent(Gobj * obj, InputEvent& ev)
+void Instrument::updNotePositions()
 {
-    //MInstrPanel->setCurrInstr(this);
+    float   minVal = 127;
+    float   maxVal = 0;
+    float   lastTick = -1;
 
-    if(obj == guiButt && !ev.clickDown)
+    for(auto note : notes)
     {
-        MInstrPanel->setcurr(this);
-        showWindow(guiButt->isPressed());
-    }
-    else if (obj == previewButt)
-    {
-        if(previewButt->isPressed())
+        if (note == selfNote || note->isdel())
+            continue;
+
+        lastTick = note->gettick();
+
+        if (note->getNoteValue() > maxVal)
         {
-            MInstrPanel->setcurr(this);
+            maxVal = (float)note->getNoteValue();
+        }
 
-            preview(); 
+        if (note->getNoteValue() < minVal)
+        {
+            minVal = (float)note->getNoteValue();
+        }
+
+        //td: upd stacked
+    }
+
+    float range = maxVal - minVal;
+
+    for(auto note : notes)
+    {
+        if (note == selfNote || note->isdel())
+            continue;
+
+        if (range > 0)
+        {
+            note->yPositionAdjust = 1.f - float(note->getNoteValue() - minVal) / range;
+        }
+        else
+        {
+            note->yPositionAdjust = .5f;
+        }
+    }
+}
+
+long Instrument::workTrigger(Trigger * tg, long num_frames, long remaining, long buffframe, long mixbuffframe)
+{
+    staticInit(tg, num_frames);
+
+    long actual_num_frames = processTrigger(tg, num_frames, buffframe);
+
+    if(actual_num_frames > 0)
+    {
+        postProcessTrigger(tg, actual_num_frames, buffframe, mixbuffframe, remaining - actual_num_frames);
+    }
+
+    if(tg->lcount > 0)
+    {
+        for(int ic = 0; ic < actual_num_frames; ic++)
+        {
+            outBuff[(buffframe + ic)*2] += tg->auxbuff[int(rampCount - tg->lcount)*2];
+            outBuff[(buffframe + ic)*2 + 1] += tg->auxbuff[int(rampCount - tg->lcount)*2 + 1];
+
+            tg->lcount--;
+
+            if(tg->lcount == 0)
+            {
+                break;
+            }
         }
     }
 
-    redraw();
-}
+    // If trigger was finished during processing, deactivate it here
 
+    if(tg->tgState == TS_Finished)
+    {
+        tg->stop();
+    }
+
+    return actual_num_frames;
+}
 
 
 //}

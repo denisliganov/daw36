@@ -300,16 +300,16 @@ ParamBox::ParamBox(Parameter* param)
 {
     addParam(param);
 
-    th = gGetTextHeight(FontSmall);
+    fontId = FontVis;
 
-    tw1 = gGetTextWidth(FontSmall, param->getName());
-    tw2 = gGetTextWidth(FontSmall, param->getMaxValString());
-    tw3 = gGetTextWidth(FontSmall, param->getUnitStr());
+    th = gGetTextHeight(fontId);
+    tw1 = gGetTextWidth(fontId, param->getName());
+    tw2 = gGetTextWidth(fontId, param->getMaxValString());
+    tw3 = gGetTextWidth(fontId, param->getUnitStr());
 
     height = th + 2;
     width = tw1 + tw2 + tw3;
     width += 20;
-
 }
 
 void ParamBox::remap()
@@ -385,35 +385,38 @@ void ParamBox::drawself(Graphics& g)
 {
     fill(g, 0.16f);
 
-    int txy = y2 - height/2;
-
-    setc(g, 0.7f);
-
-    gTextFit(g, FontSmall, param->getName(), x1 + 2, txy + 2, width/2);
-
-    std::string valstr = param->getValString();
-
-    int sub = 0;
-
-    if(valstr.data()[0] == '-' || 
-       valstr.data()[0] == '+' ||
-       valstr.data()[0] == '<')
+    if (sliderOnly == false)
     {
-        int poffs = gGetTextWidth(FontSmall, valstr.substr(0, 1));
-        gText(g, FontSmall, param->getValString().substr(0, 1), x1 + width/2 - poffs, txy + 2);
-        sub = 1;
+        int txy = y2 - height/2;
+
+        setc(g, 0.7f);
+
+        gTextFit(g, fontId, param->getName(), x1 + 2, txy + 2, width/2);
+
+        std::string valstr = param->getValString();
+
+        int sub = 0;
+
+        if(valstr.data()[0] == '-' || 
+           valstr.data()[0] == '+' ||
+           valstr.data()[0] == '<')
+        {
+            int poffs = gGetTextWidth(fontId, valstr.substr(0, 1));
+            gText(g, fontId, param->getValString().substr(0, 1), x1 + width/2 - poffs, txy + 2);
+            sub = 1;
+        }
+
+        setc(g, .9f);
+
+        //gText(g, FontSmall, param->getSignStr(), x1 + tx2, txy);
+        //gText(g, FontVis, param->getValString(), x1 + tx2 - offs, txy - 3);
+        gText(g, fontId, param->getValString().substr(sub), x1 + width/2, txy + 2);
+
+        setc(g, .7f);
+
+        //gText(g, FontSmall, param->getUnitStr(), x1 + tx3, txy - 2);
+        gText(g, fontId, param->getUnitStr(), x2 - tw3 - 1, txy + 3);
     }
-
-    setc(g, .9f);
-
-    //gText(g, FontSmall, param->getSignStr(), x1 + tx2, txy);
-    //gText(g, FontVis, param->getValString(), x1 + tx2 - offs, txy - 3);
-    gText(g, FontSmall, param->getValString().substr(sub), x1 + width/2, txy + 2);
-
-    setc(g, .7f);
-
-    //gText(g, FontSmall, param->getUnitStr(), x1 + tx3, txy - 2);
-    gText(g, FontSmall, param->getUnitStr(), x2 - tw3 - 1, txy + 3);
 
     float offs = param->getOffset();
     float range = param->getRange();
@@ -437,26 +440,31 @@ void ParamBox::drawself(Graphics& g)
 
     //float nval = param->getNormalizedValue();
     //int w = 1 + int((width - 1)*nval);
-
-
     //setc(g, 0xff303000);
     //fillx(g, xstart, height - 1, w, 1);
 
+    int sh = 2;
+
+    if (sliderOnly)
+    {
+        sh = height;
+    }
+
     setc(g, 0xffB0B000);
     //setc(g, .75f);
-    fillx(g, xstart, height - 2, w, 1);
+    fillx(g, xstart, height - sh, w, sh);
 
     setc(g, 0xff606000);
     //setc(g, .4f);
-    fillx(g, xstart, height - 1, w, 1);
+    fillx(g, xstart, height - sh + 1, w, sh-1);
 
     setc(g, 0xffA0A000);
     //setc(g, .66f);
-    fillx(g, xoffs, height - 2, 1, 3);
+    fillx(g, xoffs, height - sh, 1, sh);
 
     setc(g, 0xffFFFF00);
     //setc(g, 1.f);
-    fillx(g, xval, height - 2, 1, 3);
+    fillx(g, xval, height - sh, 1, sh);
 }
 
 float ParamBox::getMinStep()
