@@ -9,63 +9,56 @@
 
 class Eff : public Device36
 {
-protected:
+public:
+            Eff();
+            virtual ~Eff();
 
+            bool            bypass;
+            Button36*       bypassToggle;
             bool            folded;
             Button36*       foldToggle;
-            Button36*       bypassToggle;
-            Button36*       wndToggle;
+            MixChannel*     mixChannel;
+            int             muteCount;
             Slider36*       sliderAmount;
+            Button36*       wndToggle;
 
-            ContextMenu*    createmenu();
             void            activatemenuitem(std::string item);
-    virtual void            processData(float* in_buff, float* out_buff, int num_frames) {};
-    virtual Eff*            makeClone(Eff* eff);
+            ContextMenu*    createmenu();
+            SubWindow*      createWindow();
+            virtual Eff*    clone();
             void            drawself(Graphics& g);
-            void            remap();
             void            handleMouseUp(InputEvent& ev);
             void            handleMouseDown(InputEvent& ev);
             void            handleMouseDrag(InputEvent& ev);
             void            handleChildEvent(Gobj * obj, InputEvent& ev);
-            SubWindow*      createWindow();
-
-public:
-
-            bool            bypass;
-            MixChannel*     mixChannel;
-            int             muteCount;
-            virtual Eff*    clone();
-            virtual void    save(XmlElement* xmlEff);
             virtual void    load(XmlElement* xmlEff);
-
-            Eff();
-            virtual ~Eff();
+    virtual Eff*            makeClone(Eff* eff);
+    virtual void            processData(float* in_buff, float* out_buff, int num_frames) {};
+    virtual void            process(float* in_buff, float* out_buff, int num_frames);
+            void            remap();
+            virtual void    save(XmlElement* xmlEff);
             virtual void    setMixChannel(MixChannel* ncell);
-            virtual void    process(float* in_buff, float* out_buff, int num_frames);
 };
 
 class BasicLP : public Eff
 {
 public:
-
-            // Filter stuff
-            Parameter*  cutoff;
-            Parameter*  resonance;
-            float   filtCoefTab[5];
-            float   lx1, lx2, ly1, ly2; // Left sample history
-            float   rx1, rx2, ry1, ry2; // Right sample history
-
             BasicLP();
 
-            void    processData(float* in_buff, float* out_buff, int num_frames);
-            void    reset();
-            void    handleParamUpdate(Parameter* param = NULL);
+            Parameter*      cutoff;
+            Parameter*      resonance;
+            float           filtCoefTab[5];
+            float           lx1, lx2, ly1, ly2; // Left sample history
+            float           rx1, rx2, ry1, ry2; // Right sample history
+
+            void            handleParamUpdate(Parameter* param = NULL);
+            void            processData(float* in_buff, float* out_buff, int num_frames);
+            void            reset();
 };
 
 class Filter1 : public Eff
 {
 public:
-
             Filter1();
 
             Parameter*      cutoff;
@@ -78,9 +71,9 @@ public:
             bool            f_master;
             Filter1*        f_next;
 
-            void    processData(float* in_buff, float* out_buff, int num_frames);
-            void    reset();
-            void    handleParamUpdate(Parameter* param = NULL);
+            void            handleParamUpdate(Parameter* param = NULL);
+            void            processData(float* in_buff, float* out_buff, int num_frames);
+            void            reset();
 
             rosic::LadderFilter dspCoreCFilter3;
 };
@@ -88,129 +81,113 @@ public:
 class CChorus : public Eff
 {
 public:
-
             CChorus();
 
-            Parameter*      delay;
-            Parameter*      freq;
             Parameter*      depth;
             Parameter*      drywet;
-
-            void    processData(float* in_buff, float* out_buff, int num_frames);
-            void    reset();
-            void    handleParamUpdate(Parameter* param = NULL);
-
             rosic::Chorus* dspCoreChorus;
+            Parameter*      delay;
+            Parameter*      freq;
+
+            void            handleParamUpdate(Parameter* param = NULL);
+            void            processData(float* in_buff, float* out_buff, int num_frames);
+            void            reset();
 };
 
 class CFlanger : public Eff
 {
 public:
-
             CFlanger();
 
+            Parameter*      depth;
+            rosic::Flanger  dspCoreFlanger;
+            Parameter*      drywet;
+            BoolParam*      invert;
             Parameter*      frequency;
             Parameter*      feedback;
-            Parameter*      modfreq;
-            Parameter*      depth;
-            Parameter*      drywet;
-
-            BoolParam*      invert;
-
             float*          fmemory;
+            Parameter*      modfreq;
 
-            void    processData(float* in_buff, float* out_buff, int num_frames);
-            void    reset();
-            void    handleParamUpdate(Parameter* param = NULL);
-
-            rosic::Flanger dspCoreFlanger;
+            void            handleParamUpdate(Parameter* param = NULL);
+            void            processData(float* in_buff, float* out_buff, int num_frames);
+            void            reset();
 };
 
 class CPhaser : public Eff
 {
 public:
-
             CPhaser();
 
-            Parameter*      frequency;
-            Parameter*      feedback;
-            Parameter*      modfreq;
+            rosic::Phaser   dspCorePhaser;
             Parameter*      depth;
             Parameter*      drywet;
+            Parameter*      frequency;
+            Parameter*      feedback;
+            float*          fmemory;
+            Parameter*      modfreq;
             Parameter*      numstages;
             Parameter*      stereo;
 
-            float*          fmemory;
-
-            void    processData(float* in_buff, float* out_buff, int num_frames);
-            void    reset();
-            void    handleParamUpdate(Parameter* param = NULL);
-
-            rosic::Phaser dspCorePhaser;
+            void            handleParamUpdate(Parameter* param = NULL);
+            void            processData(float* in_buff, float* out_buff, int num_frames);
+            void            reset();
 };
 
 class EQ1 : public Eff
 {
 public:
-
             EQ1();
 
-            Parameter *frequency;	
-            Parameter *gain, *bandwidth;
-
-            void    processData(float* in_buff, float* out_buff, int num_frames);
-            void    reset();
-            void    handleParamUpdate(Parameter* param = NULL);
-
+            Parameter      *bandwidth;
             rosic::TwoPoleFilter dspCoreEq1;
+            Parameter      *frequency;
+            Parameter      *gain;
+
+            void            handleParamUpdate(Parameter* param = NULL);
+            void            processData(float* in_buff, float* out_buff, int num_frames);
+            void            reset();
 };
 
 class GraphicEQ : public Eff
 {
 public:
-
             GraphicEQ();
 
-            Parameter *gain1, *gain2, *gain3, *gain4, *gain5, *gain6, *gain7, *gain8, *gain9;
-            int f1, f2, f3, f4, f5, f6, f7, f8, f9;
-
-            void    processData(float* in_buff, float* out_buff, int num_frames);
-            void    reset();
-            void    handleParamUpdate(Parameter* param = NULL);
-
             rosic::Equalizer dspCoreEqualizer;
+            int             f1, f2, f3, f4, f5, f6, f7, f8, f9;
+            Parameter      *gain1, *gain2, *gain3, *gain4, *gain5, *gain6, *gain7, *gain8, *gain9;
+
+            void            handleParamUpdate(Parameter* param = NULL);
+            void            processData(float* in_buff, float* out_buff, int num_frames);
+            void            reset();
 };
 
 class EQ3 : public Eff
 {
 public:
-
             EQ3();
 
-            Parameter *gain1, *gain2, *gain3, *bandwidth;
-            Parameter *freq1, *freq2, *freq3;
-
-            int f1, f2, f3;
-
-            void    processData(float* in_buff, float* out_buff, int num_frames);
-            void    reset();
-            void    handleParamUpdate(Parameter* param = NULL);
-
             rosic::Equalizer dspCoreEqualizer;
+            Parameter      *freq1, *freq2, *freq3;
+            int             f1, f2, f3;
+            Parameter      *gain1, *gain2, *gain3, *bandwidth;
+
+            void            handleParamUpdate(Parameter* param = NULL);
+            void            processData(float* in_buff, float* out_buff, int num_frames);
+            void            reset();
 };
 
 class XDelay : public Eff
 {
 public:
-
             XDelay();
 
             BoolParam*      ppmode;
             Parameter*      delay;
 
-            void    processData(float* in_buff, float* out_buff, int num_frames);
-            void    reset();
-            void    handleParamUpdate(Parameter* param = NULL);
+            void            handleParamUpdate(Parameter* param = NULL);
+            void            processData(float* in_buff, float* out_buff, int num_frames);
+            void            reset();
 
             rosic::PingPongEcho dspCorePingPongDelay;
 };
@@ -218,105 +195,95 @@ public:
 class CTremolo : public Eff
 {
 public:
-
             CTremolo();
 
-            Parameter*  speed;
-            Parameter*  depth;
-
-            void    processData(float* in_buff, float* out_buff, int num_frames);
-            void    reset();
-            void    handleParamUpdate(Parameter* param = NULL);
-
+            Parameter*      depth;
             rosic::Tremolo dspCoreCTremolo;
+            Parameter*      speed;
+
+            void            handleParamUpdate(Parameter* param = NULL);
+            void            processData(float* in_buff, float* out_buff, int num_frames);
+            void            reset();
 };
 
 class Compressor : public Eff
 {
 public:
-
             Compressor();
-            void    processData(float* in_buff, float* out_buff, int num_frames);
-            void    reset();
-            void    handleParamUpdate(Parameter* param = NULL);
 
             rosic::Compressor dspCoreComp;
+
+            void            handleParamUpdate(Parameter* param = NULL);
+            void            processData(float* in_buff, float* out_buff, int num_frames);
+            void            reset();
 };
 
 class CWahWah : public Eff
 {
 public:
-
             CWahWah();
-            void    processData(float* in_buff, float* out_buff, int num_frames);
-            void    reset();
-            void    handleParamUpdate(Parameter* param = NULL);
 
-            rosic::WahWah dspCoreWah;
+            rosic::WahWah   dspCoreWah;
+
+            void            processData(float* in_buff, float* out_buff, int num_frames);
+            void            reset();
+            void            handleParamUpdate(Parameter* param = NULL);
 };
 
 class CDistort : public Eff
 {
 public:
-
             CDistort();
-            void    processData(float* in_buff, float* out_buff, int num_frames);
-            void    reset();
-            void    handleParamUpdate(Parameter* param = NULL);
 
             rosic::WaveShaper dspCoreDist;
+
+            void            handleParamUpdate(Parameter* param = NULL);
+            void            processData(float* in_buff, float* out_buff, int num_frames);
+            void            reset();
 };
 
 class CBitCrusher : public Eff
 {
 public:
-
             CBitCrusher();
 
+            rosic::BitCrusher dspCoreBC;
             Parameter*      decimation;
             Parameter*      quantization;
 
-            void processData(float* in_buff, float* out_buff, int num_frames);
-            void reset();
-            void handleParamUpdate(Parameter* param = NULL);
-
-            rosic::BitCrusher dspCoreBC;
+            void            processData(float* in_buff, float* out_buff, int num_frames);
+            void            reset();
+            void            handleParamUpdate(Parameter* param = NULL);
 };
 
 class CStereo : public Eff
 {
 public:
-
             CStereo();
 
+            rosic::CombStereoizer dspCoreStereo;
             Parameter*      offset;
 
-            void        processData(float* in_buff, float* out_buff, int num_frames);
-            void        reset();
-            void        handleParamUpdate(Parameter* param = NULL);
-
-            rosic::CombStereoizer dspCoreStereo;
+            void            processData(float* in_buff, float* out_buff, int num_frames);
+            void            reset();
+            void            handleParamUpdate(Parameter* param = NULL);
 };
 
 
 class CReverb : public Eff
 {
-protected:
-
-        // user parameters:
-        Parameter *highCut, *lowCut;
-        Parameter *roomsize, *preDelay, *drywet, *decay;
-        Parameter *lowscale, *highscale;
-        
-        void    processData(float* in_buff, float* out_buff, int num_frames);
-        void    handleParamUpdate(Parameter* param = NULL);
-        void    reset();
-
-        rosic::Reverb dspCoreReverb;
-
 public:
+            CReverb();
 
-        CReverb();
+            // user parameters:
+            rosic::Reverb   dspCoreReverb;
+            Parameter      *highCut, *lowCut;
+            Parameter      *roomsize, *preDelay, *drywet, *decay;
+            Parameter      *lowscale, *highscale;
+
+            void            processData(float* in_buff, float* out_buff, int num_frames);
+            void            handleParamUpdate(Parameter* param = NULL);
+            void            reset();
 };
 
 

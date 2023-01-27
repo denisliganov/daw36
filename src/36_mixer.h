@@ -41,6 +41,7 @@ public:
             MixChannel();
             MixChannel(Instrument* i);
             ~MixChannel();
+
             std::string     chanTitle;
             int             contentheight; 
             Gobj*           dropObj;
@@ -64,6 +65,7 @@ public:
             Slider36*       volslider;
             Knob*           volKnob;
             int             voffs;
+
             void            activateEffectMenuItem(Eff* eff, std::string mi);
             void            activatemenuitem(std::string mi);
             void            addEffect(Eff* eff);
@@ -96,9 +98,11 @@ class Mixer : public Gobj
 public:
             Mixer();
             ~Mixer();
+
             Eff*            currentEffect;
             MixChannel*     masterChannel;
             MixChannel*     sendChannel[NUM_SENDS];
+
             MixChannel*     addMixChannel(Instrument* instr);
             void            cleanBuffers(int num_frames);
             void            drawself(Graphics& g);
