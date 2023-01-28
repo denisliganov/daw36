@@ -800,7 +800,7 @@ void Envelope::markdel(bool del)
     }
 }
 
-void Envelope::drwongrid(Graphics & g,Grid * grid)
+void Envelope::drawOnGrid(Graphics & g,Grid * grid)
 {
     Colour clr = Colour(0xff29295D);
     Colour clr1 = Colour(0xff4A4A7F);

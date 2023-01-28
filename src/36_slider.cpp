@@ -115,7 +115,7 @@ std::string Slider36::getHint()
     return hint;
 }
 
-void Slider36::drawself(Graphics& g)
+void Slider36::drawSelf(Graphics& g)
 {
     Instrument* instr = dynamic_cast<Instrument*>(parent);
     MixChannel* mc = dynamic_cast<MixChannel*>(parent);

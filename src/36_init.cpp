@@ -50,7 +50,7 @@ void ToggleConfigWindow()
         ConfigWindow = MObject->addWindow(new ConfigObject());
     }
 
-    ConfigWindow->setVisibility(!ConfigWindow->isshown());
+    ConfigWindow->setOpen(!ConfigWindow->isOpen());
 }
 
 
@@ -132,7 +132,7 @@ void LoadDefaultInstruments()
     //    MInstrPanel->setCurrInstr(MInstrPanel->instrs.front());
     //}
 
-    MInstrPanel->setcurr(NULL);
+    MInstrPanel->setcurrInstr(NULL);
 }
 
 

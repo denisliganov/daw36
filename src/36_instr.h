@@ -25,10 +25,10 @@ typedef enum InstrType
 
 
 
-class GuiButton;
+class PreviewButt;
 class EnableButton;
 class SoloButton;
-class PreviewButton;
+class GuiButt;
 
 
 
@@ -41,7 +41,6 @@ friend InstrPanel;
 friend Grid;
 
 public:
-
             Instrument();
             ~Instrument();
 
@@ -69,7 +68,7 @@ public:
             std::list<Note*>    notes;
             float               outBuff[MAX_BUFF_SIZE*2];      // Output after postprocessing
             float               pan0, pan1, pan2, pan3;
-            Button36*           previewButt;
+            Button36*           guiButton;
             Parameter*          pan;
             ParamBox*           panBox;
             Knob*               panKnob;
@@ -89,13 +88,13 @@ public:
             long                venvphase;
 
             void                addMixChannel();
-            void                activatemenuitem(std::string item);
+            void                activateMenuItem(std::string item);
             void                addNote(Note* note);
             virtual void        activateTrigger(Trigger* tg);
     virtual void                createSelfPattern();
-            ContextMenu*        createmenu();
+            ContextMenu*        createContextMenu();
 virtual Instrument*             clone();
-            void                drawself(Graphics& g);
+            void                drawSelf(Graphics& g);
             void                drawover(Graphics & g);
         virtual void            deactivateTrigger(Trigger* tg);
         virtual void            deClick(Trigger* tg, long num_frames = 0, long buffframe = 0, long mixbuffframe = 0, long remaining = 0);
@@ -127,7 +126,6 @@ virtual Instrument*             clone();
     virtual void                save(XmlElement* instrNode);
             void                setBufferSize(unsigned bufferSize);
             void                setSampleRate(float sampleRate);
-            void                updNotePositions();
             virtual long        workTrigger(Trigger* tg, long num_frames, long remaining, long buffframe, long mixbuffframe);
 
 };

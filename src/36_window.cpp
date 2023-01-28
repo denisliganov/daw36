@@ -32,6 +32,7 @@ SubWindow*      MsgBox = NULL;
 
 
 
+
 void WinButton::paintButton(Graphics& g, bool isMouseOverButton, bool isButtonDown)
 {
     if(!isButtonDown)
@@ -62,6 +63,15 @@ void WinButton::paintButton(Graphics& g, bool isMouseOverButton, bool isButtonDo
     }
 }
 
+void  CommonWindow::closeButtonPressed() 
+{
+    winObject->handleClose(); 
+}
+
+WinObject* CommonWindow::getWinObject() 
+{ 
+    return winObject; 
+}
 
 MainWindow::MainWindow(JuceComponent* winComp)
 {
@@ -208,11 +218,6 @@ void MainWindow::mouseDoubleClick (const MouseEvent& e)
     }
 }
 
-void MainWindow::closeButtonPressed()
-{
-    winObject->handleClose();
-}
-
 bool MainWindow::keyPressed(const KeyPress& key)
 {
     unsigned int flags = 0;
@@ -262,7 +267,7 @@ void MainWindow::broughtToFront()
 {
     for(auto cw : childs)
     {
-        if(cw->isshown())
+        if(cw->isOpen())
         {
             cw->updFocus = false;
             cw->toFront(false);
@@ -277,7 +282,7 @@ void MainWindow::maximizeChilds()
 {
     for(auto cw : childs)
     {
-        if(cw->isshown())
+        if(cw->isOpen())
         {
             cw->updFocus = false;
             cw->setVisible(true);
@@ -290,7 +295,7 @@ void MainWindow::minimizeChilds()
 {
     for(auto cw : childs)
     {
-        if(cw->isshown())
+        if(cw->isOpen())
         {
             cw->setVisible(false);
         }
@@ -301,7 +306,7 @@ void MainWindow::deleteContextMenu()
 {
     if(MenuWindow && MenuWindow->isVisible())
     {
-        MenuWindow->setVisibility(false);
+        MenuWindow->setOpen(false);
 
         ContextMenu* menu = static_cast<ContextMenu*>(MenuWindow->getWinObject());
 
@@ -325,7 +330,7 @@ void MainWindow::showMenuWindow(WinObject* comp, int x, int y)
     MenuWindow->setColor(0xff000000);
     MenuWindow->parentWindow = this;
     MenuWindow->setBounds(getX() + x, getY() + y + 20, comp->getWidth(), comp->getHeight());
-    MenuWindow->setVisibility(true);
+    MenuWindow->setOpen(true);
 }
 
 bool MainWindow::isContextMenuActive()
@@ -344,9 +349,9 @@ std::string MainWindow::showAlertBox(std::string message, std::string bt1, std::
     MsgBox->setColor(MenuColor);
     MsgBox->parentWindow = this;
     MsgBox->setBounds(getX() + getWidth()/2 - ab->getWidth()/2, getY() + getHeight()/2 - ab->getHeight()/2, ab->getWidth(), ab->getHeight());
-    MsgBox->setVisibility(true);
+    MsgBox->setOpen(true);
     MsgBox->runModalLoop();
-    MsgBox->setVisibility(false);
+    MsgBox->setOpen(false);
 
     std::string choice = ab->getChoice();
 
@@ -524,7 +529,7 @@ SubWindow::SubWindow(bool title_bar)
 
     setResizable(true, true);
 
-    setVisibility(false);
+    setOpen(false);
 
     updFocus = true;
 }
@@ -539,7 +544,7 @@ SubWindow::SubWindow(WinObject* comp, bool title_bar)  : SubWindow(title_bar)
 
     Component::addAndMakeVisible(comp);
 
-    setVisibility(false);
+    setOpen(false);
 }
 
 SubWindow::SubWindow(Component* comp, bool title_bar)  : SubWindow(title_bar)
@@ -600,9 +605,9 @@ void SubWindow::buttonClicked(Button* butt)
     }
 }
 
-void SubWindow::setVisibility(bool vis)
+void SubWindow::setOpen(bool vis)
 {
-    shown = vis;
+    open = vis;
 
     setVisible(vis);
 }
@@ -611,7 +616,7 @@ void SubWindow::closeButtonPressed()
 {
     exitModalState(0);
 
-    setVisibility(false);
+    setOpen(false);
 
     if(winObject)
     {
@@ -1410,7 +1415,7 @@ void WinObject::handleMouseUp(InputEvent& ev)
 
         if(ev.rightClick && dragDistance <= 2)
         {
-            ContextMenu* m = activeObj->createmenu();
+            ContextMenu* m = activeObj->createContextMenu();
 
             if(m != NULL)
             {

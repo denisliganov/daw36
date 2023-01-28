@@ -222,7 +222,7 @@ void ControlPanel::remap()
     }
 }
 
-void ControlPanel::drawself(Graphics& g)
+void ControlPanel::drawSelf(Graphics& g)
 {
     fill(g, 0.35f);
 
@@ -255,7 +255,7 @@ void ControlPanel::drawself(Graphics& g)
     }*/
 }
 
-ContextMenu* ControlPanel::createmenu()
+ContextMenu* ControlPanel::createContextMenu()
 {
     ContextMenu* menu = new ContextMenu(this);
 

@@ -62,7 +62,7 @@ void AlertBox::addButton( std::string buttext )
     }
 }
 
-void AlertBox::drawself(Graphics & g)
+void AlertBox::drawSelf(Graphics & g)
 {
     fill(g, .5f);
 

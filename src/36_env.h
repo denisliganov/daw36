@@ -86,7 +86,7 @@ public:
             long        getFramesRemaining(long frame_phase);
             void        setticklen(float newlen);
             void        markdel(bool del);
-            void        drwongrid(Graphics & g,Grid * grid);
+            void        drawOnGrid(Graphics & g,Grid * grid);
 };
 
 

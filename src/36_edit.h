@@ -25,7 +25,7 @@ protected:
         AuxKeys*            keys1;
 
         void                remap();
-        void                drawself(Graphics& g);
+        void                drawSelf(Graphics& g);
         void                handleChildEvent(Gobj * obj, InputEvent& ev);
         void                drawIntermittentHighlight(Graphics& g, int x, int y, int w, int h, int numBars);
 

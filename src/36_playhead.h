@@ -20,7 +20,7 @@ protected:
             Pattern*    patt;
 
             void        timerCallback();
-            void        drawself(Graphics& g);
+            void        drawSelf(Graphics& g);
 
 public:
 

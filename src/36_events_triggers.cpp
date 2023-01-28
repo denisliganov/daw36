@@ -72,7 +72,7 @@ void Trigger::start(long frame)
             {
                 Note* note = (Note*)el;
 
-                note->getinstr()->activateTrigger(this);
+                note->getInstr()->activateTrigger(this);
             }
 
             break;
@@ -95,9 +95,9 @@ void Trigger::stop()
             case El_SampleNote:
             case El_GenNote:
 
-                if(((Note*)el)->getinstr() != NULL)
+                if(((Note*)el)->getInstr() != NULL)
                 {
-                    ((Note*)el)->getinstr()->deactivateTrigger(this);
+                    ((Note*)el)->getInstr()->deactivateTrigger(this);
                 }
 
                 break;
@@ -238,7 +238,7 @@ void Event::activateTriggers(bool deactonly)
 
                         if(tg->isActive())
                         {
-                            ii->getinstr()->flowTriggers(tg, tg);
+                            ii->getInstr()->flowTriggers(tg, tg);
 
                             if(tg->isActive())  tg->stop();     // it could change 
                         }

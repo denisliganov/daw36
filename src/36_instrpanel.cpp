@@ -40,7 +40,7 @@ sf_count_t                  sf_readf_float(SNDFILE *sndfile, float *ptr, sf_coun
 
 class InstrHighlight : public Gobj
 {
-        void drawself(Graphics& g)
+        void drawSelf(Graphics& g)
         {
             //gSetMonoColor(g, 1, 0.7f);
             //setc(g, 0xffFFC030, 1, .5f);
@@ -179,7 +179,7 @@ void InstrPanel::cloneInstrument(Instrument* i)
 
     // And set it current
 
-    setcurr(i);
+    setcurrInstr(i);
 
     colorizeInstruments();
 
@@ -230,7 +230,7 @@ Instrument* InstrPanel::loadInstrFromBrowser(BrwEntry * be)
 
     if(ni)
     {
-        setcurr(ni);
+        setcurrInstr(ni);
     }
 
     return ni;
@@ -372,7 +372,7 @@ Instrument* InstrPanel::getCurrInstr()
     }
 }
 
-void InstrPanel::setcurr(Instrument* instr)
+void InstrPanel::setcurrInstr(Instrument* instr)
 {
     if(*currInstr == instr)
     {
@@ -393,12 +393,12 @@ void InstrPanel::setcurr(Instrument* instr)
         }
     }
 
+    /*
     if(oldInstr != NULL && oldInstr->isWindowVisible())
     {
         oldInstr->showWindow(false);
-
-        oldInstr->guiButt->release();
-    }
+        oldInstr->previewButton->release();
+    }*/
 
     instr = *currInstr;
 
@@ -414,16 +414,6 @@ void InstrPanel::updateInstrIndexes()
     for(Instrument* instr : instrs)
     {
         instr->setIndex(idx++);
-    }
-}
-
-void InstrPanel::updateInstrNotePositions()
-{
-    int idx = 0;
-
-    for(Instrument* instr : instrs)
-    {
-        instr->updNotePositions();
     }
 }
 
@@ -761,7 +751,7 @@ void InstrPanel::remap()
     instrHighlight->updpos();
 }
 
-void InstrPanel::drawself(Graphics& g)
+void InstrPanel::drawSelf(Graphics& g)
 {
     fill(g, 0.1f);
 

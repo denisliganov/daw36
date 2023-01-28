@@ -17,7 +17,7 @@
 
 
 
-void NumBox::drawself(Graphics& g)
+void NumBox::drawSelf(Graphics& g)
 {
     fill(g, .2f);
 
@@ -82,9 +82,9 @@ BpmBox::BpmBox(float val)
     setHint("BPM");
 }
 
-void BpmBox::drawself(Graphics& g)
+void BpmBox::drawSelf(Graphics& g)
 {
-    NumBox::drawself(g);
+    NumBox::drawSelf(g);
 
     setc(g, 1.f);
 
@@ -151,9 +151,9 @@ MeterBox::MeterBox(int tpb, int bpb)
     setHint("Meter (Ticks Per Beat / Beats Per Bar)");
 }
 
-void MeterBox::drawself(Graphics& g)
+void MeterBox::drawSelf(Graphics& g)
 {
-    NumBox::drawself(g);
+    NumBox::drawSelf(g);
 
     setc(g, 1.f);
 
@@ -233,9 +233,9 @@ void OctaveBox::handleMouseWheel(InputEvent & ev)
     redraw();
 }
 
-void OctaveBox::drawself(Graphics& g)
+void OctaveBox::drawSelf(Graphics& g)
 {
-    NumBox::drawself(g);
+    NumBox::drawSelf(g);
 
     setc(g, 1.f);
 
@@ -253,7 +253,7 @@ TimeScreen::TimeScreen()
     ///
 }
 
-void TimeScreen::drawself(Graphics& g)
+void TimeScreen::drawSelf(Graphics& g)
 {
     fill(g, 0.44f);
 
@@ -381,7 +381,7 @@ void ParamBox::redraw()
     Gobj::redraw();
 }
 
-void ParamBox::drawself(Graphics& g)
+void ParamBox::drawSelf(Graphics& g)
 {
     fill(g, 0.16f);
 

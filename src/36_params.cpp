@@ -495,7 +495,7 @@ void Parameter::setNormalizedValue(float nval)
     setValue(nval*range + offset);
 }
 
-void Parameter::adjustFromControl(Control* ctrl, int step, float nval)
+void Parameter::adjustFromControl(Control* ctrl, int step, float nval, float min_step)
 {
     ctrlUpdatingFrom = ctrl;
 
@@ -514,7 +514,10 @@ void Parameter::adjustFromControl(Control* ctrl, int step, float nval)
             float prevV = getNormalizedValue();
             float newV = prevV;
 
-            newV += step*ctrl->getMinStep();
+            if (ctrl)
+                newV += step * ctrl->getMinStep();
+            else
+                newV += step * min_step;
 
             LIMIT(newV, 0, 1);
 

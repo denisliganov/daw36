@@ -29,7 +29,7 @@ class EnableButton : public Button36
 {
 protected:
 
-        void drawself(Graphics& g)
+        void drawSelf(Graphics& g)
         {
             fill(g, .2f);
 
@@ -57,7 +57,7 @@ class SoloButton : public Button36
 {
 protected:
 
-        void drawself(Graphics& g)
+        void drawSelf(Graphics& g)
         {
             fill(g, .2f);
 
@@ -82,68 +82,59 @@ public:
 };
 
 
-class PreviewButton : public Button36
+class GuiButt : public Button36
 {
 public:
 
-        PreviewButton() : Button36(false) {}
+        GuiButt() : Button36(false) {}
 
 protected:
 
-        void drawself(Graphics& g)
+        void drawSelf(Graphics& g)
         {
             Instrument* instr = (Instrument*)parent;
 
-            if(instr==MInstrPanel->getCurrInstr())
+            if(instr->isWindowVisible())
             {
-                fill(g, .4f, 1);
-
-                rect(g, .8f, 1);
+                uint32 color = 0xffFF9930;
+                uint32 clrDecr = 0x80000000;
+                
+                for (int c = 0; c < 4; c++)
+                {
+                    setc(g, (uint32)color);
+                
+                    rectx(g, 0 + c, 0 + c, width - c, height - c);
+                
+                    color -= clrDecr;
+                    clrDecr /=2;
+                }
             }
             else
             {
-                if(pressed)
-                    fill(g, .4f);
-                else
-                    fill(g, .35f);
+                fill(g, .35f);
             }
 
             int tw = gGetTextWidth(FontInst, instr->getAlias());
             int th = gGetTextHeight(FontInst);
 
             setc(g, .1f);
-            gText(g, FontInst, instr->getAlias(), x1 + width/2 - tw/2 + 2, y2 - height/2 + th/2 + 2);
+            txt(g, FontInst, instr->getAlias(), width/2 - tw/2 + 2, height/2 + th/2 + 2);
 
             setc(g, 1.f);
-            gText(g, FontInst, instr->getAlias(), x1 + width/2 - tw/2, y2 - height/2 + th/2);
+            txt(g, FontInst, instr->getAlias(), width/2 - tw/2, height/2 + th/2);
         }
 
         void handleMouseDrag(InputEvent & ev)   { parent->handleMouseDrag(ev); }
         void handleMouseWheel(InputEvent & ev)   { parent->handleMouseWheel(ev); }
 };
 
-class GuiButton : public Button36
+class PreviewButt : public Button36
 {
 protected:
 
-        void drawself(Graphics& g)
+        void drawSelf(Graphics& g)
         {
-            Instrument* instr = (Instrument*)parent;
-
-            if(pressed)
-            {
-                //instr->setDrawColor(g, 0.6f);
-                //gSetMonoColor(g, .6f);
-                setc(g, 1.f);
-            }
-            else if (undermouse)
-            {
-                setc(g, .6f);
-            }
-            else
-            {
-                setc(g, .15f);
-            }
+            setc(g, .0f);
 
             int yc = 0;
             while (yc < height)
@@ -151,6 +142,11 @@ protected:
                 rectx(g, 0, yc, width, 1);
                 yc += 2;
             }
+
+            //int gap = 3;
+            //gTriangle(g, x1 + gap,y1 + gap, x2 - gap, y1 + height/2, x1 + gap, y2 - gap, clr1, clr1);
+
+            //gTriangle(g, x1,y1, x2, y1 + height/2, x1, y2);
 
             //if(instr == _MInstrPanel->getCurrInstr())
             //    gSetColor(g, 0xffFFDD60);
@@ -168,7 +164,7 @@ protected:
 
 public:
 
-        GuiButton() : Button36(true) {}
+        PreviewButt() : Button36(true) {}
 };
 
 
@@ -201,10 +197,10 @@ Instrument::Instrument()
 
     mixChannel = MMixer->masterChannel;       // Default to master channel
 
-    addObject(previewButt = new PreviewButton());
+    addObject(previewButton = new PreviewButt());
+    addObject(guiButton = new GuiButt());
     addObject(muteButt = new EnableButton());
     addObject(soloButt = new SoloButton());
-    addObject(guiButt = new GuiButton());
 
     addObject(ivu = new InstrVU(), ObjGroup_VU);
     ivu->setEnable(false);
@@ -233,7 +229,7 @@ Instrument::~Instrument()
     ReleaseMutex(MixerMutex);
 }
 
-void Instrument::activatemenuitem(std::string item)
+void Instrument::activateMenuItem(std::string item)
 {
     if(item == "Clone")
     {
@@ -305,8 +301,6 @@ void Instrument::addNote(Note * note)
 
         it++;
     }
-
-    updNotePositions();
 }
 
 void Instrument::addMixChannel()
@@ -340,9 +334,9 @@ void Instrument::createSelfPattern()
     selfPattern->recalc();
 }
 
-ContextMenu* Instrument::createmenu()
+ContextMenu* Instrument::createContextMenu()
 {
-    MInstrPanel->setcurr(this);
+    MInstrPanel->setcurrInstr(this);
 
     //Menu* menu = new Menu(Obj_MenuPopup);
 
@@ -376,7 +370,7 @@ Instrument* Instrument::clone()
     return instr;
 }
 
-void Instrument::drawself(Graphics& g)
+void Instrument::drawSelf(Graphics& g)
 {
     Gobj::fill(g, .3f);
 
@@ -765,18 +759,20 @@ void Instrument::handleChildEvent(Gobj * obj, InputEvent& ev)
 {
     //MInstrPanel->setCurrInstr(this);
 
-    if(obj == guiButt && !ev.clickDown)
+    if(obj == previewButton)
     {
-        MInstrPanel->setcurr(this);
-        showWindow(guiButt->isPressed());
-    }
-    else if (obj == previewButt)
-    {
-        if(previewButt->isPressed())
+        if (ev.clickDown)
         {
-            MInstrPanel->setcurr(this);
+            MInstrPanel->setcurrInstr(this);
 
             preview(); 
+        }
+    }
+    else if (obj == guiButton)
+    {
+        if (ev.clickDown)
+        {
+            showWindow(!isWindowVisible());
         }
     }
 
@@ -787,7 +783,7 @@ void Instrument::handleMouseDown(InputEvent& ev)
 {
     if(ev.leftClick)
     {
-        MInstrPanel->setcurr(this);
+        MInstrPanel->setcurrInstr(this);
 
         //if(ev.keyFlags & kbd_ctrl)
         {
@@ -810,9 +806,7 @@ void Instrument::handleMouseUp(InputEvent& ev)
 {
     MAudio->releaseAllPreviews();
 
-    MInstrPanel->setcurr(this);
-
-    showWindow(!isWindowVisible());
+    MInstrPanel->setcurrInstr(this);
 }
 
 void Instrument::handleMouseDrag(InputEvent& ev)
@@ -821,7 +815,7 @@ void Instrument::handleMouseDrag(InputEvent& ev)
     {
         MObject->dragAdd(this, ev.mouseX, ev.mouseY);
 
-        previewButt->release();
+        guiButton->release();
     }
 }
 
@@ -940,7 +934,7 @@ void Instrument::preProcessTrigger(Trigger* tg, bool* skip, bool* fill, long num
 
 void Instrument::preview(int note)
 {
-    selfNote->setnote(note);
+    selfNote->setNote(note);
 
     selfNote->preview(note);
 }
@@ -1006,8 +1000,6 @@ void Instrument::postProcessTrigger(Trigger* tg, long num_frames, long buffframe
 void Instrument::removeNote(Note * note)
 {
     notes.remove(note);
-
-    updNotePositions();
 }
 
 void Instrument::reinsertNote(Note * note)
@@ -1019,7 +1011,7 @@ void Instrument::reinsertNote(Note * note)
 
 void Instrument::remap()
 {
-    guiButt->setCoords1(25, height - 12, 20, 12);
+    previewButton->setCoords1(25, height - 11, 20, 10);
 
     volBox->setCoords1(width - 86, height - 10, 60, 10);
     panBox->setCoords1(width - 149, height - 10, 57, 10);
@@ -1029,7 +1021,7 @@ void Instrument::remap()
     soloButt->setCoords1(width - bw*2 - 2, height - bw, bw, bw);
     muteButt->setCoords1(width - bw - 1, height - bw, bw, bw);
 
-    previewButt->setCoords1(3, 1, 20, 20);
+    guiButton->setCoords1(3, 1, 20, 20);
 
     ivu->setCoords1(0, 1, 3, height - 1);
 
@@ -1126,50 +1118,6 @@ void Instrument::save(XmlElement * instrNode)
 void Instrument::setSampleRate(float sampleRate)
 {
     mixChannel->setSampleRate(sampleRate);
-}
-
-void Instrument::updNotePositions()
-{
-    float   minVal = 127;
-    float   maxVal = 0;
-    float   lastTick = -1;
-
-    for(auto note : notes)
-    {
-        if (note == selfNote || note->isdel())
-            continue;
-
-        lastTick = note->gettick();
-
-        if (note->getNoteValue() > maxVal)
-        {
-            maxVal = (float)note->getNoteValue();
-        }
-
-        if (note->getNoteValue() < minVal)
-        {
-            minVal = (float)note->getNoteValue();
-        }
-
-        //td: upd stacked
-    }
-
-    float range = maxVal - minVal;
-
-    for(auto note : notes)
-    {
-        if (note == selfNote || note->isdel())
-            continue;
-
-        if (range > 0)
-        {
-            note->yPositionAdjust = 1.f - float(note->getNoteValue() - minVal) / range;
-        }
-        else
-        {
-            note->yPositionAdjust = .5f;
-        }
-    }
 }
 
 long Instrument::workTrigger(Trigger * tg, long num_frames, long remaining, long buffframe, long mixbuffframe)

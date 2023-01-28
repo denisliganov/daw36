@@ -53,7 +53,7 @@ public:
             long            getLastElementFrame();
             void            setNewName(const char* name);
     virtual void            handleMouseUp(InputEvent& ev);
-            void            drwongrid(Graphics& g, Grid* grid);
+            void            drawOnGrid(Graphics& g, Grid* grid);
             double          getPlayTick();
             void            setPlayTick(double tick);
             void            setPatt(Pattern* pPt);

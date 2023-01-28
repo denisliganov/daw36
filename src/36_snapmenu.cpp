@@ -52,7 +52,7 @@ void SnapMenu::updateSnapSize()
         snapSize = 1.f/6.f;
 }
 
-void SnapMenu::activatemenuitem(std::string item)
+void SnapMenu::activateMenuItem(std::string item)
 {
     int idx = 0;
 
@@ -99,7 +99,7 @@ void SnapMenu::handleMouseUp(InputEvent& ev)
     ///
 }
 
-void SnapMenu::drawself(Graphics& g)
+void SnapMenu::drawSelf(Graphics& g)
 {
     fill(g, .3f);
     rect(g, 0.22f);

@@ -40,7 +40,7 @@ public:
             void                cloneInstrument(Instrument* i);
             void                colorizeInstruments();
             void                deleteInstrument(Instrument* i);
-            void                drawself(Graphics& g);
+            void                drawSelf(Graphics& g);
             Instrument*         getInstrByIndex(int index);
             int                 getInstrNum();
             Instrument*         getInstrByAlias(std::string alstr);
@@ -60,10 +60,9 @@ public:
             void                remap();
             void                setSampleRate(float sampleRate);
             void                setBufferSize(unsigned bufferSize);
-            void                setcurr(Instrument* instr);
+            void                setcurrInstr(Instrument* instr);
             void                showFX();
             void                updateWaves();
-            void                updateInstrNotePositions();
             void                updateInstrIndexes();
 };
 

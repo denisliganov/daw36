@@ -62,8 +62,8 @@ public:
 
             void            setCurrentEntry(int index);
             void            setCurrentIndex(int index);
-            void            activatemenuitem(std::string item);
-            ContextMenu*    createmenu();
+            void            activateMenuItem(std::string item);
+            ContextMenu*    createContextMenu();
             bool            checkMouseTouching(int mx, int my);
             void            activateEntry(BrwEntry* be);
             void            handleMouseWheel(InputEvent& ev);
@@ -71,7 +71,7 @@ public:
             void            handleMouseDown(InputEvent& ev);
             void            handleMouseUp(InputEvent& ev);
             void            remap();
-            void            drawself(Graphics& g);
+            void            drawSelf(Graphics& g);
             BrwEntry*       getEntryByIndex(int index);
             void            setMode(BrwMode mode);
             bool            isFileMode();

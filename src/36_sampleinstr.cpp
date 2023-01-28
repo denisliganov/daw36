@@ -179,7 +179,7 @@ bool Sample::checkBounds(SampleNote* samplent, Trigger* tg, long num_frames)
 {
     if(looptype == LoopType_NoLoop)
     {
-        if(samplent->IsOutOfBounds(&tg->wt_pos) == true)
+        if(samplent->isOutOfBounds(&tg->wt_pos) == true)
         {
             tg->setState(TS_Finished);
 
@@ -271,7 +271,7 @@ long Sample::processTrigger(Trigger * tg, long num_frames, long buffframe)
 
         for(cc = 0; cc < num_frames; cc++)
         {
-            if(samplent->IsOutOfBounds(&tg->wt_pos) == true)
+            if(samplent->isOutOfBounds(&tg->wt_pos) == true)
             {
                 break;
             }
@@ -959,10 +959,10 @@ void Sample::updWaveImage()
             frameCount++;
         }
 
-        waveImage = new Image(Image::ARGB, pixels, MGrid->getlh() - 1, true);
+        waveImage = new Image(Image::ARGB, pixels, MGrid->getLineHeight() - 1, true);
 
         Graphics    imageContext(*(waveImage));
-        int         halfHeight = int(float(MGrid->getlh() - 3) / 2);
+        int         halfHeight = int(float(MGrid->getLineHeight() - 3) / 2);
         int         yCenter = halfHeight + 1;
         long        sampleCount = 0;
         float       normFactor = 1.f;

@@ -92,8 +92,8 @@ bool Pattern::checkVisible(Grid* grid)
     int x1 = grid->getXfromTick(gettick());
     int x2 = grid->getXfromTick(getendtick());
 
-    int y1 = grid->getYfromLine(getline()) - grid->getlh()*2;
-    int y2 = grid->getYfromLine(getline()) - grid->getlh();
+    int y1 = grid->getYfromLine(getline()) - grid->getLineHeight()*2;
+    int y2 = grid->getYfromLine(getline()) - grid->getLineHeight();
 
     if(CheckPlaneCrossing(x1, y1, x2, y2, grid->getX1(), grid->getY1(), grid->getX2(), grid->getY2()))
     {
@@ -241,9 +241,9 @@ void Pattern::handleMouseUp(InputEvent& ev)
     Element::handleMouseUp(ev);
 }
 
-void Pattern::drwongrid(Graphics& g, Grid * grid)
+void Pattern::drawOnGrid(Graphics& g, Grid * grid)
 {
-    calcforgrid(grid);
+    calcForGrid(grid);
 
     int gx1 = x1;
     int gy1 = y1;
@@ -255,8 +255,8 @@ void Pattern::drwongrid(Graphics& g, Grid * grid)
     int tH, ptheight;
 
 
-    tH = grid->getlh()*1;
-    ptheight = grid->getlh()*1 - 2;
+    tH = grid->getLineHeight()*1;
+    ptheight = grid->getLineHeight()*1 - 2;
 
     //g.setColour(Colour(0xff000000));
     //gDrawImageRegion(g, ptBase->smallimg, gx1, gy1 - tH + 1, pl, tH + 5);
@@ -277,7 +277,7 @@ void Pattern::drwongrid(Graphics& g, Grid * grid)
         g.setColour(Colour(0xffFFFFFF));
     }
 
-    setDrawAreaDirectly(gx1, gy2 - grid->getlh() + 1, grid->getXfromTick(tick2) - 1, gy2 - 1);
+    setDrawAreaDirectly(gx1, gy2 - grid->getLineHeight() + 1, grid->getXfromTick(tick2) - 1, gy2 - 1);
 }
 
 

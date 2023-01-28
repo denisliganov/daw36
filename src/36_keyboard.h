@@ -151,7 +151,7 @@ protected:
         Note*       note;
         float       tick;
 
-        void        drawself(Graphics& g);
+        void        drawSelf(Graphics& g);
         void        updPos();
 
 public:

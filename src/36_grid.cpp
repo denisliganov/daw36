@@ -37,7 +37,7 @@ protected:
 
         Grid*       grid;
 
-        void        drawself(Graphics& g)
+        void        drawSelf(Graphics& g)
         {
             g.saveState();
             //g.reduceClipRegion(x1, y1, width, height);
@@ -91,9 +91,9 @@ public:
             if (grid->isundermouse())
             {
                 int ly = grid->getYfromLine(line);
-                int lh = grid->getlh();
+                int lh = grid->getLineHeight();
 
-                if (grid->getdispmode() == GridDisplayMode_Bars)
+                if (grid->getDisplayMode() == GridDisplayMode_Bars)
                 {
                     currNote = grid->actnote;
 
@@ -112,9 +112,9 @@ public:
                     else if (grid->mode == GridMode_Default)
                     {
                         int x = grid->getXfromTick(tick) - grid->getX1();
-                        int y = grid->getYfromLine(line) - int(grid->getlh()) - grid->getY1() + 1;
+                        int y = grid->getYfromLine(line) - int(grid->getLineHeight()) - grid->getY1() + 1;
 
-                        setCoords2(x, y, x + grid->snap*grid->getppt() - 1, y + int(grid->getlh()) - 1);
+                        setCoords2(x, y, x + grid->snap*grid->getppt() - 1, y + int(grid->getLineHeight()) - 1);
 
                         setVisible(true);
                     }
@@ -126,7 +126,7 @@ public:
         {
             setVisible(false);
 
-            if((grid->isundermouse()) && grid->getdispmode() == GridDisplayMode_Bars && grid->mode != GridMode_Selecting)
+            if((grid->isundermouse()) && grid->getDisplayMode() == GridDisplayMode_Bars && grid->mode != GridMode_Selecting)
             {
                 if (grid->alignLine >= 0)
                 {
@@ -135,7 +135,7 @@ public:
             }
         }
 
-        void drawself(Graphics& g)
+        void drawSelf(Graphics& g)
         {
             if (currNote && !currNote->isdel())
             {
@@ -299,17 +299,17 @@ void Grid::updfillerimage()
     // horiz bottom line
     gSetMonoColor(imageContext, divClr);
 
-    gLineHorizontal(imageContext, getlh() - 1, 0, imgWidth);
+    gLineHorizontal(imageContext, getLineHeight() - 1, 0, imgWidth);
 
     if (dispmode != GridDisplayMode_Pans)
     {
      //   gSetMonoColor(imageContext, .12f);
-     //   gLineHorizontal(imageContext, float(getlh() - 1)*(1 - DAW_INVERTED_VOL_RANGE), 0, imgWidth);
+     //   gLineHorizontal(imageContext, float(getLineHeight() - 1)*(1 - DAW_INVERTED_VOL_RANGE), 0, imgWidth);
     }
     else
     {
         gSetMonoColor(imageContext, .12f);
-        gLineHorizontal(imageContext, getlh()*.5f - 1, 0, imgWidth);
+        gLineHorizontal(imageContext, getLineHeight()*.5f - 1, 0, imgWidth);
     }
 }
 
@@ -463,7 +463,7 @@ void Grid::mapElems()
 
                     it--;
 
-                    el->calcforgrid(this);
+                    el->calcForGrid(this);
                 }
             }
         }
@@ -480,7 +480,7 @@ void Grid::drawelems(Graphics& g)
         {
             Element* el = *it;
 
-            el->drwongrid(g, this);
+            el->drawOnGrid(g, this);
 
             it++;
         }
@@ -515,7 +515,7 @@ void Grid::drawelems(Graphics& g)
 */
 }
 
-void Grid::drawself(Graphics& g)
+void Grid::drawSelf(Graphics& g)
 {
     if(mainimg != NULL)
     {
@@ -628,7 +628,7 @@ void Grid::updtransport()
         {
             el->recalc();
 
-            el->calcforgrid(this);
+            el->calcForGrid(this);
         }
     }
 
@@ -652,7 +652,7 @@ float Grid::getppt()
     return pixpertick;
 }
 
-int Grid::getlh()
+int Grid::getLineHeight()
 {
     return lheight;
 }
@@ -988,7 +988,7 @@ void Grid::handleMouseDown(InputEvent& ev)
 
                             actnote->preview(-1, true);
 
-                            MInstrPanel->setcurr(actnote->getinstr());
+                            MInstrPanel->setcurrInstr(actnote->getInstr());
 
                             if (dispmode == GridDisplayMode_Steps)
                             {
@@ -1173,7 +1173,7 @@ void Grid::handleMouseWheel(InputEvent& ev)
 {
     newEvent = ev;
 
-    if (place->currNote != NULL )
+    if (place->currNote != NULL && ev.keyFlags & kbd_alt)
     {
         if (selected.size() > 0)
         {
@@ -1185,13 +1185,7 @@ void Grid::handleMouseWheel(InputEvent& ev)
 
             if (note)
             {
-                float fraction = 1.f/(getlh() - 1);
-
-                float newVal = note->vol->getValue();
-
-                newVal += fraction*ev.wheelDelta;
-
-                note->vol->setValue(newVal);
+                note->getVol()->adjustFromControl(NULL, ev.wheelDelta, 0, 1.f/(getLineHeight() - 1));
 
                 redraw(true);
             }
@@ -1337,9 +1331,9 @@ bool Grid::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
 
         Note* n = i->selfNote;
 
-        n->setpos(tick, line);
+        n->setPos(tick, line);
 
-        n->calcforgrid(this);
+        n->calcForGrid(this);
 
         drag.setCoords1(n->x1, n->y1, n->width, n->height);
 
@@ -1377,7 +1371,7 @@ bool Grid::drawDraggedObject(Graphics & g,Gobj * obj)
 
     if(i != NULL)
     {
-        i->selfNote->drwongrid(g, this);
+        i->selfNote->drawOnGrid(g, this);
 
         return true;
     }
@@ -1565,7 +1559,7 @@ void Grid::reassign()
         if (note)
         {
             Instrument* instrNew = MInstrPanel->getInstrFromLine(note->getline());
-            Instrument* instrOld = note->getinstr();
+            Instrument* instrOld = note->getInstr();
 
             if (instrOld != instrNew)
             {
@@ -1602,7 +1596,7 @@ Note* Grid::putnote(float tick, int line, int noteVal)
 
     if(instr != NULL)
     {
-        MInstrPanel->setcurr(instr);
+        MInstrPanel->setcurrInstr(instr);
 
         Note* newNote = _Create_Note(tick, line, instr, noteVal > 0 ? noteVal : instr->lastNoteVal, 
                                         instr->lastNoteLength, instr->lastNoteVol, instr->lastNotePan, getpatt());
@@ -1682,7 +1676,7 @@ void Grid::action(GridAction act, float dTick, int dLine)
                     {
                         el = activeElem->clone();
 
-                        el->setpos(xtick, actionLine);
+                        el->setPos(xtick, actionLine);
                     }
                     else
                     {
@@ -1731,15 +1725,7 @@ void Grid::action(GridAction act, float dTick, int dLine)
 
             if (note)
             {
-                //float range = note->vol->getRange();
-
-                float fraction = 1.f/(getlh() - 1);
-
-                float newVal = note->vol->getValue();
-
-                newVal += fraction*newEvent.wheelDelta;
-
-                note->vol->setValue(newVal);
+                note->getVol()->adjustFromControl(NULL, newEvent.wheelDelta, 0, 1.f/(getLineHeight() - 1));
             }
         }
 
@@ -1774,8 +1760,6 @@ void Grid::action(GridAction act, float dTick, int dLine)
 
             MHistory->addNewAction(HistAction_DeleteGroup, clipboard);
 
-            MInstrPanel->updateInstrNotePositions();
-
             redraw(true);
         }
     }
@@ -1806,8 +1790,6 @@ void Grid::action(GridAction act, float dTick, int dLine)
             updateList = elem;
 
             MHistory->addNewAction(HistAction_DeleteGroup, elem);
-
-            MInstrPanel->updateInstrNotePositions();
 
             redraw(true);
         }
@@ -2213,7 +2195,7 @@ bool Grid::isselected(Element* el)
     return false;
 }
 
-ContextMenu* Grid::createmenu()
+ContextMenu* Grid::createContextMenu()
 {
     if(wasSelecting)
     {
@@ -2243,7 +2225,7 @@ ContextMenu* Grid::createmenu()
     return menu;
 }
 
-void Grid::activatemenuitem(std::string item)
+void Grid::activateMenuItem(std::string item)
 {
     if(item == "Paste")
     {

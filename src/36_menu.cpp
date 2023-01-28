@@ -55,7 +55,7 @@ public:
             }
         }
 
-        void drawself(Graphics& g)
+        void drawSelf(Graphics& g)
         {
             if(itemstr == "")   //  delimiter
             {
@@ -86,7 +86,7 @@ public:
         void handleMouseLeave(InputEvent & ev)  { redraw(); }
         void handleMouseDown(InputEvent& ev)
         {
-            parent->activatemenuitem(itemstr);
+            parent->activateMenuItem(itemstr);
         }
 };
 
@@ -146,12 +146,12 @@ void ContextMenu::remap()
     Component::setBounds(Component::getX(), Component::getY(), width, height);
 }
 
-void ContextMenu::activatemenuitem(std::string item)
+void ContextMenu::activateMenuItem(std::string item)
 {
-    menuObject->activatemenuitem(item);
+    menuObject->activateMenuItem(item);
 }
 
-void ContextMenu::drawself(Graphics & g)
+void ContextMenu::drawSelf(Graphics & g)
 {
     fill(g, .5f);
 }

@@ -494,7 +494,7 @@ bool Project36::loadProjectData(File chosenFile, LoadThread* thread)
 
             loadElementsFromNode(xmlMainNode, NULL);
 
-            MInstrPanel->setcurr(NULL);
+            MInstrPanel->setcurrInstr(NULL);
         }
     }
 

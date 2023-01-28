@@ -20,7 +20,7 @@ protected:
 
             void            updPosition();
             void            drawButtonBase(Graphics& g);
-            void            drawself(Graphics& g);
+            void            drawSelf(Graphics& g);
             void            handleMouseWheel(InputEvent& ev);
 
 public:

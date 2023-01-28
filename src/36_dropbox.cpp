@@ -28,9 +28,9 @@ void DropBox::addItem(std::string item)
     menuItems.push_back(item);
 }
 
-void DropBox::activatemenuitem(std::string item)
+void DropBox::activateMenuItem(std::string item)
 {
-    parent->activatemenuitem(item);
+    parent->activateMenuItem(item);
 
     deactivate();
 
@@ -97,7 +97,7 @@ void DropBox::handleMouseUp(InputEvent& ev)
     //
 }
 
-void DropBox::drawself(Graphics& g)
+void DropBox::drawSelf(Graphics& g)
 {
     if (undermouse)
     {

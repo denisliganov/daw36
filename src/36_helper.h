@@ -14,7 +14,7 @@ protected:
 
         Scroller*   vScroller;
 
-        void        drawself(Graphics& g);
+        void        drawSelf(Graphics& g);
 
 public:
 

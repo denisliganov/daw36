@@ -27,7 +27,7 @@ protected:
             void        drawVerticalKey(Graphics& g, bool vert, int coord1, int coord2, int length, int key, bool pressed);
             void        drawVerticalKeys(Graphics& g, int x, int y, int w, int h);
             void        drawHorizontalKeys(Graphics& g, int x, int y, int w, int h);
-            void        drawself(Graphics& g);
+            void        drawSelf(Graphics& g);
             int         getNote(int mx, int my);
 
 public:

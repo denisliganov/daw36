@@ -617,19 +617,25 @@ void Device36::showWindow(bool show)
     {
         if (show)
         {
-            guiWindow->setVisibility(true);
+            guiWindow->setOpen(true);
         }
         else
         {
             // aeffEditClose();
-            guiWindow->setVisibility(false);
+            guiWindow->setOpen(false);
         }
     }
-}
 
+    redraw();
+}
 
 bool Device36::isWindowVisible()
 {
-    return (guiWindow != NULL && guiWindow->isVisible());
+    return (guiWindow != NULL && guiWindow->isOpen());
+}
+
+void Device36::handleWindowClosed()
+{
+    redraw();
 }
 

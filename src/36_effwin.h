@@ -6,18 +6,16 @@
 #include "36_window.h"
 
 
-class EffParamObject : public WinObject
+class DevParamObject : public WinObject
 {
-protected:
-
-        Eff*        eff;
-
-        void        drawself(Graphics& g);
-        void        handleChildEvent(Gobj * obj,InputEvent & ev);
-
 public:
-
-        EffParamObject(Eff* eff);
+        DevParamObject(Device36* eff);
+protected:
+        Device36*   device;
+        void        drawSelf(Graphics& g);
+        void        handleChildEvent(Gobj * obj,InputEvent & ev);
+        void        handleClose();
+virtual void        initAll();
 };
 
 

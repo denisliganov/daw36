@@ -13,51 +13,47 @@ friend  Lane;
 friend  Instrument;
 friend  Pattern;
 
-protected:
+public:
+            Note();
+            Note(Instrument* i, int note_val);
+    virtual ~Note();
+    virtual Note*           clone(Instrument* newInstr = NULL);
+            Element*        clone();
+            void            calcForGrid(Grid* grid);
+            void            drawOnGrid(Graphics& g, Grid* grid);
+            int             getNoteValue() { return noteValue; }
+            Parameter*      getVol() {return vol;}
+            Parameter*      getPan() {return pan;}
+       Instrument*          getInstr() { return instr; }
+            float           getFreq() { return freq; }
+       Parameter*           getParamByDisplayMode(GridDisplayMode mode);
+            void            handleMouseUp(InputEvent& ev);
+            void            handleMouseDown(InputEvent& ev);
+            bool            isNote() {return true;}
+            void            preview(int note = -1, bool update_instr = false);
+            void            releasePreview();
+            void            recalc();
+            void            setInstr(Instrument* i) { instr = i; }
+            void            setNote(int note_value);
+            void            setPos(float tick,int line);
 
-            int             noteValue;
-            Instrument*     instr;
-            int             yBase;
-            int             volHeight;
+protected:
 
             int             barStart;
             int             barDraw;
-
-            float           yPositionAdjust;
+            float           freq;
+            Instrument*     instr;
+            int             noteValue;
+            Parameter*      pan;
+            Parameter*      vol;
+            int             yBase;
 
             void            propagateTriggers(Pattern* pt);
             void            unpropagateTriggers(Pattern* pt);
             void            move(float dtick, int dtrack);
             void            save(XmlElement* xmlNode);
             void            load(XmlElement* xmlNode);
-            void            handleMouseUp(InputEvent& ev);
-            void            handleMouseDown(InputEvent& ev);
-            void            drwongrid(Graphics& g, Grid* grid);
-            void            calcforgrid(Grid* grid);
     virtual void            calcfreq();
-
-public:
-
-            Parameter*      vol;
-            Parameter*      pan;
-            float           freq;
-
-            Note();
-            Note(Instrument* i, int note_val);
-            const Note& operator= (const Note& other);
-    virtual ~Note();
-    virtual Note*           clone(Instrument* newInstr = NULL);
-            Element*        clone();
-            void            preview(int note = -1, bool update_instr = false);
-            void            releasePreview();
-            bool            isNote() {return true;}
-            void            setnote(int note_value);
-            int             getNoteValue() { return noteValue; }
-      Instrument*           getinstr() { return instr; }
-            void            setInstr(Instrument* i) { instr = i; }
-            Parameter*      getParamByDisplayMode(GridDisplayMode mode);
-            void            recalc();
-            void            setpos(float tick,int line);
 };
 
 
@@ -65,32 +61,25 @@ class SampleNote : public Note
 {
 friend Sample;
 
+public:
+            SampleNote(Sample* smp, int note_val);
+            SampleNote*     clone(Instrument* new_instr);
+            void            calcfreq();
+            bool            isOutOfBounds(double* cursor);
+            bool            initCursor(double* cursor);
+            void            load(XmlElement* xmlNode);
+            void            recalc();
+            void            setticklen(float tick_length);
+            void            settickdelta(float tick_delta);
+            void            save(XmlElement* xmlNode);
+            void            updateSampleBounds();
+            void            drawOnGrid(Graphics& g, Grid* grid);
 protected:
-
-            Sample*         sample;
+            float           dataStep;
             long            leftmostFrame;
             long            rightmostFrame;
             bool            reversed;
-            float           dataStep;
             long            sampleFrameLength;
-
-
-            void            drwongrid(Graphics& g, Grid* grid);
-
-public:
-
-            SampleNote(Sample* smp, int note_val);
-            //const SampleNote& operator= (const SampleNote&);
-
-            SampleNote*     clone(Instrument* new_instr);
-            void            calcfreq();
-            bool            IsOutOfBounds(double* cursor);
-            void            updateSampleBounds();
-            bool            initCursor(double* cursor);
-            void            save(XmlElement* xmlNode);
-            void            load(XmlElement* xmlNode);
-            void            setticklen(float tick_length);
-            void            recalc();
-            void            settickdelta(float tick_delta);
+            Sample*         sample;
 };
 

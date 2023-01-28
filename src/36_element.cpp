@@ -91,7 +91,7 @@ bool Element::checkVisible(Grid* grid)
 {
     int x1 = grid->getXfromTick(gettick());
     int x2 = grid->getXfromTick(getendtick());
-    int y1 = grid->getYfromLine(getline()) - grid->getlh();
+    int y1 = grid->getYfromLine(getline()) - grid->getLineHeight();
     int y2 = grid->getYfromLine(getline());
 
     if(CheckPlaneCrossing(x1, y1, x2, y2, grid->getX1(), grid->getY1(), grid->getX2(), grid->getY2()))
@@ -102,7 +102,7 @@ bool Element::checkVisible(Grid* grid)
     return false;
 }
 
-void Element::setpos(float tick, int ln)
+void Element::setPos(float tick, int ln)
 {
     if(tick != tick1 || ln != line)
     {
@@ -134,7 +134,7 @@ void Element::setpos(float tick, int ln)
 
 void Element::move(float dtick, int dtrack)
 {
-    setpos(tick1 + dtick, line + dtrack);
+    setPos(tick1 + dtick, line + dtrack);
 }
 
 void Element::handleMouseDown(InputEvent& ev)
@@ -329,7 +329,7 @@ Pattern* Element::getbasepatt()
     return patt;
 }
 
-void Element::calcforgrid(Grid* grid)
+void Element::calcForGrid(Grid* grid)
 {
     x1 = grid->getXfromTick(gettick());
     y1 = grid->getYfromLine(getline());

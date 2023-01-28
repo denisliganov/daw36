@@ -19,7 +19,7 @@ public:
             Button36*         guibutt;
 
             VstEffect*  clone(MixChannel* mc);
-            void        drawself(Graphics& g);
+            void        drawSelf(Graphics& g);
             void        processData(float* in_buff, float* out_buff, int num_frames);
             void        processEvents(VstEvents *pEvents);
             void        extractParams();

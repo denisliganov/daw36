@@ -47,7 +47,7 @@ BrwEntry::BrwEntry(Device36* preset_dev) : dev(preset_dev)
 {
 }
 
-ContextMenu* BrwEntry::createmenu()
+ContextMenu* BrwEntry::createContextMenu()
 {
     return NULL;
 /*
@@ -63,7 +63,7 @@ ContextMenu* BrwEntry::createmenu()
     */
 }
 
-void BrwEntry::activatemenuitem(std::string item)
+void BrwEntry::activateMenuItem(std::string item)
 {
     if(item == "Open location")
     {
@@ -108,7 +108,7 @@ void BrwEntry::drawFileEntry(Graphics& g, int x, int y, int w)
     }
 }
 
-void BrwEntry::drawself(Graphics & g)
+void BrwEntry::drawSelf(Graphics & g)
 {
     g.saveState();
     g.reduceClipRegion(dx1, dy1, dwidth, dheight);

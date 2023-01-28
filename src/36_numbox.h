@@ -25,7 +25,7 @@ protected:
     virtual void    handleMouseDown(InputEvent& ev);
     virtual void    handleMouseUp(InputEvent& ev);
     virtual void    handleMouseDrag(InputEvent& ev);
-            void    drawself(Graphics& g);
+            void    drawSelf(Graphics& g);
 
     virtual void    handleNumDrag(int count) {}
     virtual void    updAfterDrag() {}
@@ -40,7 +40,7 @@ class BpmBox : public NumBox
 {
 protected:
 
-            void    drawself(Graphics& g);
+            void    drawSelf(Graphics& g);
             void    handleNumDrag(int count);
             void    updAfterDrag();
             void    handleMouseWheel(InputEvent& ev);
@@ -58,7 +58,7 @@ protected:
         int             bpbVal;
 
 
-        void    drawself(Graphics& g);
+        void    drawSelf(Graphics& g);
         void    handleNumDrag(int count);
         void    updAfterDrag();
         void    handleMouseWheel(InputEvent& ev);
@@ -81,7 +81,7 @@ protected:
 
         void    handleMouseWheel(InputEvent & ev);
         void    handleNumDrag(int count);
-        void    drawself(Graphics& g);
+        void    drawSelf(Graphics& g);
 
 public:
 
@@ -101,7 +101,7 @@ protected:
 
         ChanVU*             vu;
 
-        void    drawself(Graphics& g);
+        void    drawSelf(Graphics& g);
         void    handleNumDrag(int count);
         void    handleMouseWheel(InputEvent& ev);
 
@@ -133,7 +133,7 @@ protected:
             void    handleMouseDown(InputEvent & ev);
             void    handleMouseDrag(InputEvent & ev);
             void    handleMouseUp(InputEvent& ev);
-            void    drawself(Graphics& g);
+            void    drawSelf(Graphics& g);
             void    remap();
             void    redraw();
             void    setSliderOnly(bool so) {sliderOnly = so;}

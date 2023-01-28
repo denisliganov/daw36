@@ -67,12 +67,12 @@ public:
             int             voffs;
 
             void            activateEffectMenuItem(Eff* eff, std::string mi);
-            void            activatemenuitem(std::string mi);
+            void            activateMenuItem(std::string mi);
             void            addEffect(Eff* eff);
             Eff*            addEffectFromBrowser(BrwEntry* de);
-            ContextMenu*    createmenu();
+            ContextMenu*    createContextMenu();
             ContextMenu*    createContextMenuForEffect(Eff* eff);
-            void            drawself(Graphics& g);
+            void            drawSelf(Graphics& g);
             void            doSend(float * sendbuff, float amount, int num_frames);
             void            deleteEffect(Eff* eff);
             void            handleMouseWheel(InputEvent& ev);
@@ -105,7 +105,7 @@ public:
 
             MixChannel*     addMixChannel(Instrument* instr);
             void            cleanBuffers(int num_frames);
-            void            drawself(Graphics& g);
+            void            drawSelf(Graphics& g);
             Eff*            getCurrentEffect() { return currentEffect; }
             void            handleChildEvent(Gobj * obj, InputEvent& ev);
             void            init();

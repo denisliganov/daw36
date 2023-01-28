@@ -73,7 +73,7 @@ protected:
             DropBox*            brwMenu;
 
             void                handleChildEvent(Gobj* obj, InputEvent& ev);
-            void                drawself(Graphics& g);
+            void                drawSelf(Graphics& g);
             void                remap();
 
 public:
@@ -85,7 +85,7 @@ public:
             SnapMenu&           getSnapMenu()   { return *snapMenu; } 
             TimeScreen&         getTimeScreen()     { return *timeScreen; } 
             Scroller&           getScroller()       { return *gridScroller; } 
-            ContextMenu*        createmenu();
+            ContextMenu*        createContextMenu();
 
             bool                wavesAreVisible();
             bool                isDarkGrid() { return true; }

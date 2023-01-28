@@ -185,7 +185,7 @@ public:
 
     virtual void                redraw(bool change = true);
     virtual void                drawloop(Graphics& g);
-    virtual void                drawself(Graphics& g) {};
+    virtual void                drawSelf(Graphics& g) {};
     virtual void                drawover(Graphics& g) {};
 
             // Drawing methods
@@ -207,8 +207,8 @@ public:
             void                txtfit(Graphics& g, FontId fontId, std::string str, int x, int y, int maxwidth);
 
     // context menu suppott
-    virtual ContextMenu*        createmenu() {return NULL;};
-    virtual void                activatemenuitem(std::string item) {};
+    virtual ContextMenu*        createContextMenu() {return NULL;};
+    virtual void                activateMenuItem(std::string item) {};
             void                deactivateDropBoxById(int dropbox_id);
 
     virtual void                setMyColor(Graphics& g, float brightness=-1.f, float saturation = -1.f, float alpha=1.f);

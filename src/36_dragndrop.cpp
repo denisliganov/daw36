@@ -14,7 +14,7 @@ DropHighlight::DropHighlight(bool vert)
 //    setrelative(false);
 }
 
-void DropHighlight::drawself(Graphics & g)
+void DropHighlight::drawSelf(Graphics & g)
 {
     uint32 color = 0xffFF9930;
     uint32 clrDecr = 0x80000000;
@@ -124,7 +124,7 @@ void DragAndDrop::drop(int mx,int my,unsigned int flags)
     reset();
 }
 
-void DragAndDrop::drawself(Graphics & g)
+void DragAndDrop::drawSelf(Graphics & g)
 {
     if(targetObj)
     {

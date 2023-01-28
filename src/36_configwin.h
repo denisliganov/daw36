@@ -20,7 +20,7 @@ protected:
         Parameter*  saturation;
         Parameter*  brightness;
 
-        void    drawself(Graphics& g);
+        void    drawSelf(Graphics& g);
         void    handleChildEvent(Gobj * obj,InputEvent & ev);
         void    handleParamUpdate(Parameter * param = NULL);
 

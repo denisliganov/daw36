@@ -37,7 +37,7 @@ public:
         void        adjoffs(float delta);
         float       getoffs() { return offset; }
         float       getvisible() { return visiblepart; }
-        void        drawself(Graphics & g);
+        void        drawSelf(Graphics & g);
         int         getpos(InputEvent& ev, int& offset_on_bar);
         void        gotostart();
         void        gotoend();

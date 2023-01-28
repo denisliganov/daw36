@@ -138,7 +138,7 @@ void Browser::handleChildEvent(Gobj * obj, InputEvent& ev)
     }
 }
 
-void Browser::drawself(Graphics& g)
+void Browser::drawSelf(Graphics& g)
 {
     setc(g, 0.2f);
 
@@ -156,7 +156,7 @@ void Browser::drawself(Graphics& g)
     {
         if (be->isshown())
         {
-            be->drawself(g);
+            be->drawSelf(g);
         }
     }
 
@@ -734,7 +734,7 @@ void Browser::handleMouseWheel(InputEvent& ev)
     setVoffs(getVoffs() + offsdelta);
 }
 
-ContextMenu* Browser::createmenu()
+ContextMenu* Browser::createContextMenu()
 {
     if(browsingMode == Browse_Presets)
     {
@@ -789,7 +789,7 @@ ContextMenu* Browser::createmenu()
     }
 }
 
-void Browser::activatemenuitem(std::string item)
+void Browser::activateMenuItem(std::string item)
 {
     if(item == "Load as instrument")
     {

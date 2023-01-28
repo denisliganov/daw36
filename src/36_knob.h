@@ -14,7 +14,7 @@ public:
             void            updPosition();
             void            TweakByWheel(int delta, int mouse_x, int mouse_y);
             void            handleMouseDrag(InputEvent& ev);
-            void            drawself(Graphics& g);
+            void            drawSelf(Graphics& g);
             void            handleMouseDown(InputEvent & ev);
             void            handleMouseUp(InputEvent & ev);
             void            remap();

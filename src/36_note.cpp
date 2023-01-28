@@ -43,20 +43,13 @@ Note::Note(Instrument* i, int note_val)
     vol = new Parameter("Volume", Param_Vol, 1.f, 0.f, DAW_VOL_RANGE);
     pan = new Parameter("Panning", Param_Pan, 0.f, -1.f, 2.f);
 
-    setnote(note_val);
+    setNote(note_val);
 
     ticklen = (float)MTransp->getTicksPerBeat();
 
     tick2 = tick1 + ticklen;
 
-    yPositionAdjust = .5f;
-
     instr->addNote(this);
-}
-
-const Note& Note::operator= (const Note& other)
-{
-    return *this;
 }
 
 Note::~Note()
@@ -85,14 +78,14 @@ Element* Note::clone()
 
 void Note::move(float dtick, int dtrack)
 {
-    Element::setpos(tick1 + dtick, line + dtrack);
+    Element::setPos(tick1 + dtick, line + dtrack);
 
     instr->reinsertNote(this);
 }
 
-void Note::setpos(float tick,int line)
+void Note::setPos(float tick,int line)
 {
-    Element::setpos(tick, line);
+    Element::setPos(tick, line);
 
     instr->reinsertNote(this);
 }
@@ -161,16 +154,16 @@ void Note::preview(int note, bool update_instr)
     }
 }
 
-void Note::calcforgrid(Grid* grid)
+void Note::calcForGrid(Grid* grid)
 {
      x1 = grid->getXfromTick(tick1);
      yBase = grid->getYfromLine(line)- 1;
 
-     float lHeight = float(grid->getlh() - 1);
+     float lHeight = float(grid->getLineHeight() - 1);
 
-     if (grid->getdispmode() == GridDisplayMode_Bars)
+     if (grid->getDisplayMode() == GridDisplayMode_Bars)
      {
-         Parameter* param = getParamByDisplayMode(grid->getdispmode());
+         Parameter* param = getParamByDisplayMode(grid->getDisplayMode());
 
          float mul = param == NULL ? DAW_INVERTED_VOL_RANGE : param->getEditorValue();
 
@@ -178,9 +171,9 @@ void Note::calcforgrid(Grid* grid)
 
          y1 = yBase - height;
      }
-     else if (grid->getdispmode() == GridDisplayMode_Volumes || grid->getdispmode() == GridDisplayMode_Pans)
+     else if (grid->getDisplayMode() == GridDisplayMode_Volumes || grid->getDisplayMode() == GridDisplayMode_Pans)
      {
-         Parameter* param = getParamByDisplayMode(grid->getdispmode());
+         Parameter* param = getParamByDisplayMode(grid->getDisplayMode());
 
          int start = int(lHeight*((0.f - param->getOffset())/param->getRange()));
 
@@ -196,14 +189,14 @@ void Note::calcforgrid(Grid* grid)
     setDrawAreaDirectly(x1, y1, x2, y2);
 }
 
-void Note::drwongrid(Graphics& g, Grid* grid)
+void Note::drawOnGrid(Graphics& g, Grid* grid)
 {
-    if (grid->getdispmode() == GridDisplayMode_Bars)
+    if (grid->getDisplayMode() == GridDisplayMode_Bars)
     {
         FontId fnt = FontSmall;
 
         fill(g, 1.f, .3f);
-        setc(g, 1.f);
+        setc(g, 1.f, .8f);
         lineH(g, 0, 0, width);
 
         //setc(g, .0f, .25f);
@@ -221,7 +214,7 @@ void Note::drwongrid(Graphics& g, Grid* grid)
             rect(g, 1.f, .9f);
         }
     }
-    else if (grid->getdispmode() == GridDisplayMode_Volumes || grid->getdispmode() == GridDisplayMode_Pans)
+    else if (grid->getDisplayMode() == GridDisplayMode_Volumes || grid->getDisplayMode() == GridDisplayMode_Pans)
     {
         if(issel())
         {
@@ -255,11 +248,9 @@ void Note::drwongrid(Graphics& g, Grid* grid)
     //gTextFit(g, FontSmall, instr->objName.data(), x1, y2 - 1, width);
 }
 
-void Note::setnote(int note_value)
+void Note::setNote(int note_value)
 {
     noteValue = note_value;
-
-    instr->updNotePositions();
 }
 
 void Note::calcfreq()
@@ -288,7 +279,7 @@ void Note::handleMouseDown(InputEvent & ev)
         preview();
     }
 
-    MInstrPanel->setcurr(instr);
+    MInstrPanel->setcurrInstr(instr);
 }
 
 void Note::propagateTriggers(Pattern* sonPatt)
@@ -369,7 +360,7 @@ void SampleNote::setticklen(float tick_length)
     }
 }
 
-bool SampleNote::IsOutOfBounds(double* cursor)
+bool SampleNote::isOutOfBounds(double* cursor)
 {
     if(*cursor > rightmostFrame || *cursor < leftmostFrame)
     {
@@ -552,14 +543,14 @@ void SampleNote::load(XmlElement * xmlNode)
     reversed = xmlNode->getBoolAttribute(T("Reversed"));
 }
 
-void SampleNote::drwongrid(Graphics& g, Grid* grid)
+void SampleNote::drawOnGrid(Graphics& g, Grid* grid)
 {
     if(sample->waveImage == NULL)
     {
         sample->updWaveImage();
     }
 
-    if (grid->getdispmode() == GridDisplayMode_Bars && MCtrllPanel->wavesAreVisible() && sample->waveImage != NULL)
+    if (grid->getDisplayMode() == GridDisplayMode_Bars && MCtrllPanel->wavesAreVisible() && sample->waveImage != NULL)
     {
         setc(g, 1.f, 0.4f);
 
@@ -569,7 +560,7 @@ void SampleNote::drwongrid(Graphics& g, Grid* grid)
         g.restoreState();
     }
 
-    Note::drwongrid(g, grid);
+    Note::drawOnGrid(g, grid);
 
     //g.setColour(Colour(instr->getColor()).withBrightness(1.f).withAlpha(0.8f));
     //gText(g, FontSmall, instr->instrAlias, x1 + 2, y1 + 13);

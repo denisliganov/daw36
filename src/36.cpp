@@ -246,7 +246,7 @@ void MainWinObject::remap()
     redraw();
 }
 
-void MainWinObject::drawself(Graphics& g)
+void MainWinObject::drawSelf(Graphics& g)
 {
     g.fillAll(Colours::black);
 

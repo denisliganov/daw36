@@ -22,11 +22,11 @@ public:
             Slider36*       sliderAmount;
             Button36*       wndToggle;
 
-            void            activatemenuitem(std::string item);
-            ContextMenu*    createmenu();
+            void            activateMenuItem(std::string item);
+            ContextMenu*    createContextMenu();
             SubWindow*      createWindow();
             virtual Eff*    clone();
-            void            drawself(Graphics& g);
+            void            drawSelf(Graphics& g);
             void            handleMouseUp(InputEvent& ev);
             void            handleMouseDown(InputEvent& ev);
             void            handleMouseDrag(InputEvent& ev);

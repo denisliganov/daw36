@@ -34,7 +34,7 @@ class EffGuiButton : public Button36
 {
 protected:
 
-        void drawself(Graphics& g)
+        void drawSelf(Graphics& g)
         {
             Instrument* instr = (Instrument*)parent;
 
@@ -78,7 +78,7 @@ Eff::Eff()
     wnd_toggle->SetHint("Show editor window");
 */
 
-    addObject(guiButt = new EffGuiButton(), MixChanWidth - 21, 0, 20, 15);
+    addObject(previewButton = new EffGuiButton(), MixChanWidth - 21, 0, 20, 15);
 
     //addParamWithControl(new Parameter(1, 0, 1), "", sliderAmount = new Slider36(false));
 }
@@ -90,12 +90,12 @@ Eff::~Eff()
 
 void Eff::remap()
 {
-    //guiButt->setCoords1(width - 13, 0, 12, 12);
+    //previewButton->setCoords1(width - 13, 0, 12, 12);
 
     //sliderAmount->setCoords2(4, height - 12, 30, height - 4);
 }
 
-void Eff::drawself(Graphics& g)
+void Eff::drawSelf(Graphics& g)
 {
     fill(g, .4f);
 
@@ -107,9 +107,27 @@ void Eff::drawself(Graphics& g)
     setc(g, .2f);
     lineH(g, height-1, 0, width-1);
 
+    if (guiWindow && guiWindow->isOpen())
+    {
+        uint32 color = 0xffFF9930;
+        uint32 clrDecr = 0x80000000;
+
+        for (int c = 0; c < 4; c++)
+        {
+            setc(g, (uint32)color);
+
+            rectx(g, 0 + c, 0 + c, width - c, height - c);
+
+            color -= clrDecr;
+            clrDecr /=2;
+        }
+    }
+
     int th = gGetTextHeight(FontSmall);
+
     setc(g, .0f);
     txtfit(g, FontSmall, objName, 3, th - 2, width - 2);
+
     setc(g, .8f);
     txtfit(g, FontSmall, objName, 1, th - 4, width - 2);
 }
@@ -132,12 +150,12 @@ Eff* Eff::clone()
     return makeClone(CreateEffect(objId));
 }
 
-ContextMenu* Eff::createmenu()
+ContextMenu* Eff::createContextMenu()
 {
     return mixChannel->createContextMenuForEffect(this);
 }
 
-void Eff::activatemenuitem(std::string item)
+void Eff::activateMenuItem(std::string item)
 {
     mixChannel->activateEffectMenuItem(this, item);
 }
@@ -259,15 +277,15 @@ void Eff::handleMouseDrag(InputEvent& ev)
 
 void Eff::handleChildEvent(Gobj * obj, InputEvent& ev)
 {
-    if(obj == guiButt)
+    if(obj == previewButton)
     {
-        showWindow(guiButt->isPressed());
+        showWindow(previewButton->isPressed());
     }
 }
 
 SubWindow* Eff::createWindow()
 {
-    SubWindow* win =  window->addWindow(new EffParamObject(this));
+    SubWindow* win =  window->addWindow(new DevParamObject(this));
 
     //int xb = window->getLastEvent().mouseX + 20;
     //int yb = window->getLastEvent().mouseY - guiWindow->getHeight()/2;

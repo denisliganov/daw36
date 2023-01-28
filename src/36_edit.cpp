@@ -52,7 +52,7 @@ MainEdit::MainEdit()
     MCursor = new TextCursor();
 }
 
-void MainEdit::drawself(Graphics& g)
+void MainEdit::drawSelf(Graphics& g)
 {
     //setc(g, 0.2f);
     //fillx(g, 0, 0, LineNumWidth, height);
@@ -165,10 +165,10 @@ Note* Create_Note(float tick, int line, Instrument* instr, int note_val, float l
         newNote = new Note(instr, note_val);
     }
 
-    newNote->setpos(tick, line);
+    newNote->setPos(tick, line);
 
-    newNote->vol->setValue(vol);
-    newNote->pan->setValue(pan);
+    newNote->getVol()->setValue(vol);
+    newNote->getPan()->setValue(pan);
 
     newNote->setticklen(length);
 

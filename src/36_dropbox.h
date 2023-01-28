@@ -22,8 +22,8 @@ protected:
 
         std::vector<std::string>    menuItems;
 
-        void        drawself(Graphics& g);
-        void        activatemenuitem(std::string item);
+        void        drawSelf(Graphics& g);
+        void        activateMenuItem(std::string item);
         void        handleMouseDown(InputEvent& ev);
         void        handleMouseUp(InputEvent & ev);
         void        handleMouseWheel(InputEvent & ev);

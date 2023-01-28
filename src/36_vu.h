@@ -22,7 +22,7 @@ protected:
 
         float       getL();
         float       getR();
-        void        drawself(Graphics & g);
+        void        drawSelf(Graphics & g);
 
 public:
 
@@ -37,7 +37,7 @@ class InstrVU : public ChanVU
 {
 protected:
 
-        void    drawself(Graphics & g);
+        void    drawSelf(Graphics & g);
 
 public:
 

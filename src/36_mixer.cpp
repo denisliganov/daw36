@@ -222,7 +222,7 @@ void MixChannel::remap()
 */
 }
 
-void MixChannel::drawself(Graphics& g)
+void MixChannel::drawSelf(Graphics& g)
 {
     int baseheight = MixChannelPadHeight;
 
@@ -659,7 +659,7 @@ void MixChannel::load(XmlElement * xmlNode)
     }
 }
 
-ContextMenu* MixChannel::createmenu()
+ContextMenu* MixChannel::createContextMenu()
 {
     ContextMenu* menu = new ContextMenu(this);
 
@@ -698,7 +698,7 @@ void MixChannel::activateEffectMenuItem(Eff * eff, std::string mi)
     }
 }
 
-void MixChannel::activatemenuitem(std::string mi)
+void MixChannel::activateMenuItem(std::string mi)
 {
     Eff* eff = NULL;
 
@@ -814,7 +814,7 @@ void MixChannel::handleMouseDown(InputEvent& ev)
 {
     if(instr != NULL)
     {
-        MInstrPanel->setcurr(instr);
+        MInstrPanel->setcurrInstr(instr);
 
         if(ev.keyFlags & kbd_ctrl && ev.mouseY < y1 + MixerTopHeight)
         {
@@ -1163,7 +1163,7 @@ void Mixer::remap()
     */
 }
 
-void Mixer::drawself(Graphics& g)
+void Mixer::drawSelf(Graphics& g)
 {
     fill(g, .1f);
 /*

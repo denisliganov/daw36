@@ -60,7 +60,7 @@ protected:
         void            handleWindowResize(int wx, int wh);
         void            setMode(DragMode m) { mode = m; }
         DragMode        getMode() { return mode; }
-        void            drawself(Graphics& g);
+        void            drawSelf(Graphics& g);
         void            handleClose();
         void            handleChildEvent(Gobj * obj,InputEvent & ev);
 

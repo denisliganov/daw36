@@ -415,7 +415,7 @@ void Gobj::drawloop(Graphics& g)
     g.saveState();
     g.reduceClipRegion(dx1, dy1, dwidth, dheight);
 
-    drawself(g);
+    drawSelf(g);
 
     // Draw child objects
 

@@ -28,7 +28,7 @@ protected:
             void    handleMouseLeave() { redraw(); };
             void    handleMouseWheel(InputEvent& ev);
             void    remap();
-            void    drawself(Graphics& g);
+            void    drawSelf(Graphics& g);
 
 public:
 

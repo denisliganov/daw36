@@ -31,7 +31,7 @@ public:
 
         void        drawBar(Graphics& g, Element* el, int cx, bool sel, int divHgt);
         void        drawBars(Graphics& g);
-        void        drawself(Graphics& g);
+        void        drawSelf(Graphics& g);
         void        handleMouseDrag(InputEvent& ev);
         void        handleMouseDown(InputEvent& ev);
         void        handleMouseUp(InputEvent& ev);
@@ -49,7 +49,7 @@ public:
         AuxKeys*    keys;
         LaneType    laneType;
 
-        void        drawself(Graphics& g);
+        void        drawSelf(Graphics& g);
         void        remap();
         void        setType(LaneType ltype);
 };

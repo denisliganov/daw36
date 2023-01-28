@@ -15,7 +15,31 @@ class Device36 : public Gobj
 friend InstrPanel;
 
 public:
-    
+            Device36();
+    virtual ~Device36();
+
+    virtual void                forceStop() {};
+    virtual void                addParam(Parameter* param);
+    virtual void                removeParam(Parameter* param);
+    virtual void                handleParamUpdate(Parameter* param = NULL) {};
+            void                handleWindowClosed();
+    virtual void                addParamWithControl(Parameter* param, std::string ctrl_name = "", Control* ctrl = NULL);
+    virtual Parameter*          getParamByName(char *param_name);
+    virtual Parameter*          getParamByIndex(int devIdx);
+    virtual void                setParamLock(bool lock) { paramLocked = lock; };
+    virtual bool                getParamLock() { return paramLocked; };
+    virtual void                scanForPresets();
+    virtual void                setBPM(float bpm) {};
+    virtual void                setBufferSize(unsigned bufferSize) {};
+    virtual void                setSampleRate(float sampleRate) {};
+    virtual void                reset() { }
+            void                enqueueParamEnvelope(Trigger* tgenv);
+            void                dequeueParamEnvelope(Trigger* tgenv);
+
+    virtual SubWindow*          createWindow() { return NULL;  }
+    virtual void                showWindow(bool show);
+            bool                isWindowVisible();
+
             std::list<BrwEntry*>        presets;
             std::list<Parameter*>       params;
 
@@ -34,33 +58,10 @@ public:
             BrwEntry*           currPreset;
 
 
-            Device36();
-    virtual ~Device36();
-    virtual void                forceStop() {};
-    virtual void                addParam(Parameter* param);
-    virtual void                removeParam(Parameter* param);
-    virtual void                handleParamUpdate(Parameter* param = NULL) {};
-    virtual void                addParamWithControl(Parameter* param, std::string ctrl_name = "", Control* ctrl = NULL);
-    virtual Parameter*          getParamByName(char *param_name);
-    virtual Parameter*          getParamByIndex(int devIdx);
-    virtual void                setParamLock(bool lock) { paramLocked = lock; };
-    virtual bool                getParamLock() { return paramLocked; };
-    virtual void                scanForPresets();
-    virtual void                setBPM(float bpm) {};
-    virtual void                setBufferSize(unsigned bufferSize) {};
-    virtual void                setSampleRate(float sampleRate) {};
-    virtual void                reset() { }
-            void                enqueueParamEnvelope(Trigger* tgenv);
-            void                dequeueParamEnvelope(Trigger* tgenv);
-
 protected:
 
             SubWindow*          guiWindow;
-            Button36*           guiButt;
-
-    virtual SubWindow*          createWindow() { return NULL;  }
-    virtual void                showWindow(bool show);
-            bool                isWindowVisible();
+            Button36*           previewButton;
 
     // preset handling
     virtual void                savePreset();

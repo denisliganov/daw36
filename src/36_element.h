@@ -52,7 +52,7 @@ public:
     virtual void            recalc();
     virtual bool            checkVisible(Grid* grid);
             bool            isPointed(int mx, int my, Grid* grid);
-    virtual void            calcforgrid(Grid* grid);
+    virtual void            calcForGrid(Grid* grid);
     virtual void            save(XmlElement* xmlNode);
     virtual void            load(XmlElement* xmlNode);
     virtual void            preview(int key) {}
@@ -72,7 +72,7 @@ public:
 
             int             getline();
     virtual void            setline(int tkl);
-    virtual void            setpos(float tk, int ln);
+    virtual void            setPos(float tk, int ln);
     virtual void            setendtick(float et);
     virtual void            setticklen(float tl);
     virtual void            settickdelta(float tick_delta);
@@ -83,7 +83,7 @@ public:
     virtual float           getendtick();
     virtual float           getticklen();
             Pattern*        getbasepatt();
-    virtual void            drwongrid(Graphics& g, Grid* grid) {}
+    virtual void            drawOnGrid(Graphics& g, Grid* grid) {}
             void            softdel();
 };
 

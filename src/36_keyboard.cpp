@@ -267,7 +267,7 @@ void KeyHandler::handleNoteKey(int key, int note_val, bool press)
         }
         else
         {
-            note->setnote(note_val);
+            note->setNote(note_val);
         }
 
         note->recalc();
@@ -317,14 +317,14 @@ void TextCursor::updPos()
 
     if (grid)
     {
-        if (grid->getdispmode() == GridDisplayMode_Bars)
+        if (grid->getDisplayMode() == GridDisplayMode_Bars)
         {
             //if (grid->mode == GridMode_Default)
             {
                 int x = grid->getXfromTick(tick) - grid->getX1();
-                int y = grid->getYfromLine(line) - int(grid->getlh()) - grid->getY1() + 1;
+                int y = grid->getYfromLine(line) - int(grid->getLineHeight()) - grid->getY1() + 1;
 
-                setCoords2(x, y, x, y + int(grid->getlh()) - 1);
+                setCoords2(x, y, x, y + int(grid->getLineHeight()) - 1);
 
                 setVisible(true);
             }
@@ -332,7 +332,7 @@ void TextCursor::updPos()
     }
 }
 
-void TextCursor::drawself(Graphics& g)
+void TextCursor::drawSelf(Graphics& g)
 {
     fill(g, 1.f);
 }
@@ -473,11 +473,11 @@ void TextCursor::handleKeyOrCharPressed(unsigned key, char character, unsigned f
             
                 case key_tab:
                 {
-                    if (grid->getdispmode() == GridDisplayMode_Steps)
+                    if (grid->getDisplayMode() == GridDisplayMode_Steps)
                     {
                         grid->setdispmode(GridDisplayMode_Bars);
                     }
-                    else if (grid->getdispmode() == GridDisplayMode_Bars)
+                    else if (grid->getDisplayMode() == GridDisplayMode_Bars)
                     {
                         grid->setdispmode(GridDisplayMode_Steps);
                     }
@@ -490,27 +490,27 @@ void TextCursor::handleKeyOrCharPressed(unsigned key, char character, unsigned f
                 {
                     SubWindow* wc = MObject->addWindow(new ConfigObject());
             
-                    wc->setVisibility(true);
+                    wc->setOpen(true);
             
                     wc = MObject->addLegacyWindow(new ConfigComponent());
             
-                    wc->setVisibility(true);
+                    wc->setOpen(true);
             
                     wc = MObject->addLegacyWindow(new RenderComponent());
             
-                    wc->setVisibility(true);
+                    wc->setOpen(true);
             
                     wc = MObject->addLegacyWindow(new AboutComponent());
             
-                    wc->setVisibility(true);
+                    wc->setOpen(true);
             
                     wc = MObject->addLegacyWindow(new HelpComponent());
             
-                    wc->setVisibility(true);
+                    wc->setOpen(true);
             
                     wc = MObject->addLegacyWindow(new SampleComponent());
             
-                    wc->setVisibility(true);
+                    wc->setOpen(true);
                 }
                 break;
             
@@ -592,7 +592,7 @@ void TextCursor::handleChar(char c)
             existingNote = grid->getNoteAt(tick, line);
         }
 
-        MInstrPanel->setcurr(i);
+        MInstrPanel->setcurrInstr(i);
 
         grid->action(GridAction_PutNote, getTick(), getLine());
 
@@ -619,7 +619,7 @@ void TextCursor::advanceView(float dtick, int dline)
 
     if(dline != 0)
     {
-        grid->setVoffs(grid->getVoffs() + dline*grid->getlh());
+        grid->setVoffs(grid->getVoffs() + dline*grid->getLineHeight());
     }
 
     grid->redraw(false);

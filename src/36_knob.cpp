@@ -98,7 +98,7 @@ void Knob::remap()
     parentImage = NULL;
 }
 
-void Knob::drawself(Graphics& g)
+void Knob::drawSelf(Graphics& g)
 {
 /*
     if(parentImage == NULL)

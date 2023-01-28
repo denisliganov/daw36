@@ -147,11 +147,11 @@ protected:
             void                updelimage();
             void                drawintermittent(Graphics& g, int xh, int yh, int wh, int hh, int numBars);
             bool                drawDraggedObject(Graphics& g, Gobj* obj);
-            void                drawself(Graphics & g);
+            void                drawSelf(Graphics & g);
             void                drawelems(Graphics& g);
             void                updcursor(InputEvent & ev);
-            ContextMenu*        createmenu();
-            void                activatemenuitem(std::string item);
+            ContextMenu*        createContextMenu();
+            void                activateMenuItem(std::string item);
             void                remap();
             void                mapElems();
             float               getticksnap(float val);
@@ -188,10 +188,10 @@ public:
             int                 getYfromLine(int line);
             int                 getLineFromY(int y);
             float               getppt();
-            int                 getlh();
+            int                 getLineHeight();
             void                delacross(int mx1, int my1, int mx2, int my2);
             void                setdispmode( GridDisplayMode display_mode );
-            GridDisplayMode     getdispmode() { return dispmode; }
+            GridDisplayMode     getDisplayMode() { return dispmode; }
             void                updtransport();
             void                selReset(bool deselect = true);
     virtual void                handleModifierKeys(unsigned flags);

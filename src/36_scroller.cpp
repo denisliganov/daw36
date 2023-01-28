@@ -161,7 +161,7 @@ void Scroller::updlimits(float full_span, float visible_span, float offs)
     redraw();
 }
 
-void Scroller::drawself(Graphics & g)
+void Scroller::drawSelf(Graphics & g)
 {
     fill(g, .22f);
 

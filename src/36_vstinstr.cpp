@@ -13,6 +13,7 @@
 #include "36_browser.h"
 #include "36_vstwin.h"
 #include "36_paramswin.h"
+#include "36_effwin.h"
 
 
 
@@ -83,7 +84,7 @@ long VstInstr::processTrigger(Trigger* tg, long num_frames, long buffframe)
 
     float vol = 1; // tg->tgPatt->vol->val
 
-    vol *= gnote->vol->value;
+    vol *= gnote->getVol()->getValue();
 
     if(!tg->previewTrigger)
     {
@@ -590,7 +591,7 @@ SubWindow* VstInstr::createWindow()
     }
     else
     {
-        return window->addWindow(new ParamObject());
+        return window->addWindow(new DevParamObject(this));
     }
 }
 
