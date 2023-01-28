@@ -132,7 +132,7 @@ void LoadDefaultInstruments()
     //    MInstrPanel->setCurrInstr(MInstrPanel->instrs.front());
     //}
 
-    MInstrPanel->setcurrInstr(NULL);
+    MInstrPanel->setCurrInstr(NULL);
 }
 
 

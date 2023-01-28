@@ -814,7 +814,7 @@ void MixChannel::handleMouseDown(InputEvent& ev)
 {
     if(instr != NULL)
     {
-        MInstrPanel->setcurrInstr(instr);
+        MInstrPanel->setCurrInstr(instr);
 
         if(ev.keyFlags & kbd_ctrl && ev.mouseY < y1 + MixerTopHeight)
         {

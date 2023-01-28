@@ -179,7 +179,7 @@ void InstrPanel::cloneInstrument(Instrument* i)
 
     // And set it current
 
-    setcurrInstr(i);
+    setCurrInstr(i);
 
     colorizeInstruments();
 
@@ -207,13 +207,12 @@ Instrument* InstrPanel::getInstrByIndex(int index)
 
 Instrument* InstrPanel::loadInstrFromBrowser(BrwEntry * be)
 {
-    if (instrs.size() >= 36)
+    if (getNumInstrs() >= 36)
     {
         MWindow->showAlertBox("Can't load more than instruments ;)");
 
         return NULL;
     }
-
 
     Instrument* ni = NULL;
 
@@ -230,7 +229,7 @@ Instrument* InstrPanel::loadInstrFromBrowser(BrwEntry * be)
 
     if(ni)
     {
-        setcurrInstr(ni);
+        setCurrInstr(ni);
     }
 
     return ni;
@@ -238,7 +237,7 @@ Instrument* InstrPanel::loadInstrFromBrowser(BrwEntry * be)
 
 void InstrPanel::colorizeInstruments()
 {
-    int num = getInstrNum();
+    int num = getNumInstrs();
 
     float periodAngle = float(PI * 2 * .75f/num);
 
@@ -372,7 +371,7 @@ Instrument* InstrPanel::getCurrInstr()
     }
 }
 
-void InstrPanel::setcurrInstr(Instrument* instr)
+void InstrPanel::setCurrInstr(Instrument* instr)
 {
     if(*currInstr == instr)
     {
@@ -548,9 +547,17 @@ void Add_SoundFont(const char* path, const char* name, const char* alias)
 }
 */
 
-int InstrPanel::getInstrNum()
+int InstrPanel::getNumInstrs()
 {
-    return instrs.size();
+    int num = 0;
+
+    for(Instrument* instr : instrs)
+    {
+        if (instr->previewOnly == false)
+            num++;
+    }
+
+    return num;
 }
 
 void InstrPanel::setSampleRate(float sampleRate)
@@ -696,14 +703,14 @@ void InstrPanel::remap()
 
     masterVolBox->setCoords1(width - 120, 6, -1, 16);
 
-    int instrListY = MainLineHeight - 1;
-    int instrListHeight = (height - instrListY - BottomPadHeight - 1);
-    int yoffs =0;
+    int instrListY = MainLineHeight + 1;
+    int instrListHeight = height - (instrListY + BottomPadHeight);
 
     confine(0, instrListY, width, instrListY + instrListHeight - 1);
 
-    int num = instrs.size();
-    int ih = 32;
+    int num = getNumInstrs();
+
+    int ih = 33;
 
     while (num*(ih + 1) > instrListHeight)
     {
@@ -711,6 +718,8 @@ void InstrPanel::remap()
     }
 
     InstrHeight = ih;
+
+    int yoffs =0;
 
     for (Instrument* i : instrs)
     {
@@ -754,14 +763,11 @@ void InstrPanel::remap()
 void InstrPanel::drawSelf(Graphics& g)
 {
     fill(g, 0.1f);
-
     setc(g, .25f);
-    fillx(g, 0, 0, width, MainLineHeight - 2);
+    fillx(g, 0, 0, width, MainLineHeight);
 
-    setc(g, 0.1f);
-    gLineHorizontal(g, y1 + MainLineHeight - 2, x1, x2 + 1);
-
-    gPanelRect(g, 0, y2 - BottomPadHeight + 1, x2, y2);
+    //setc(g, 0.1f);
+    //gLineHorizontal(g, y1 + MainLineHeight - 2, x1, x2 + 1);
 }
 
 void InstrPanel::updateWaves()

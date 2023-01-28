@@ -592,7 +592,7 @@ void TextCursor::handleChar(char c)
             existingNote = grid->getNoteAt(tick, line);
         }
 
-        MInstrPanel->setcurrInstr(i);
+        MInstrPanel->setCurrInstr(i);
 
         grid->action(GridAction_PutNote, getTick(), getLine());
 

@@ -344,7 +344,7 @@ void Instrument::createSelfPattern()
 
 ContextMenu* Instrument::createContextMenu()
 {
-    MInstrPanel->setcurrInstr(this);
+    MInstrPanel->setCurrInstr(this);
 
     //Menu* menu = new Menu(Obj_MenuPopup);
 
@@ -771,7 +771,7 @@ void Instrument::handleChildEvent(Gobj * obj, InputEvent& ev)
     {
         if (ev.clickDown)
         {
-            MInstrPanel->setcurrInstr(this);
+            MInstrPanel->setCurrInstr(this);
 
             preview(); 
         }
@@ -791,7 +791,7 @@ void Instrument::handleMouseDown(InputEvent& ev)
 {
     if(ev.leftClick)
     {
-        MInstrPanel->setcurrInstr(this);
+        MInstrPanel->setCurrInstr(this);
 
         //if(ev.keyFlags & kbd_ctrl)
         {
@@ -814,7 +814,7 @@ void Instrument::handleMouseUp(InputEvent& ev)
 {
     MAudio->releaseAllPreviews();
 
-    MInstrPanel->setcurrInstr(this);
+    MInstrPanel->setCurrInstr(this);
 }
 
 void Instrument::handleMouseDrag(InputEvent& ev)

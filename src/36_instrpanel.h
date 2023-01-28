@@ -42,7 +42,7 @@ public:
             void                deleteInstrument(Instrument* i);
             void                drawSelf(Graphics& g);
             Instrument*         getInstrByIndex(int index);
-            int                 getInstrNum();
+            int                 getNumInstrs();
             Instrument*         getInstrByAlias(std::string alstr);
             void                generateAll(long num_frames, long mixbuffframe);
             Instrument*         getInstrFromLine(int trkLine);
@@ -60,7 +60,7 @@ public:
             void                remap();
             void                setSampleRate(float sampleRate);
             void                setBufferSize(unsigned bufferSize);
-            void                setcurrInstr(Instrument* instr);
+            void                setCurrInstr(Instrument* instr);
             void                showFX();
             void                updateWaves();
             void                updateInstrIndexes();

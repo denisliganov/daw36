@@ -988,7 +988,7 @@ void Grid::handleMouseDown(InputEvent& ev)
 
                             actnote->preview(-1, true);
 
-                            MInstrPanel->setcurrInstr(actnote->getInstr());
+                            MInstrPanel->setCurrInstr(actnote->getInstr());
 
                             if (dispmode == GridDisplayMode_Steps)
                             {
@@ -1112,7 +1112,7 @@ void Grid::handleMouseDrag(InputEvent& ev)
 
     getpos(ev.mouseX, ev.mouseY, &alignTick, &alignLine);
 
-    if (alignLine >= MInstrPanel->getInstrNum())
+    if (alignLine >= MInstrPanel->getNumInstrs())
     {
         alignLine = -1;
     }
@@ -1596,7 +1596,7 @@ Note* Grid::putnote(float tick, int line, int noteVal)
 
     if(instr != NULL)
     {
-        MInstrPanel->setcurrInstr(instr);
+        MInstrPanel->setCurrInstr(instr);
 
         Note* newNote = _Create_Note(tick, line, instr, noteVal > 0 ? noteVal : instr->lastNoteVal, 
                                         instr->lastNoteLength, instr->lastNoteVol, instr->lastNotePan, getpatt());

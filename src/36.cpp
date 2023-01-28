@@ -115,7 +115,7 @@ MainWinObject::MainWinObject()
     InstrHeight =           32;
     MainLineHeight =        30;
     LeftGap =               26;
-    BottomPadHeight =       16;
+    BottomPadHeight =       0; //16;
     AuxCtrlWidth =          0;
     FxPanelMaxWidth =       360;
     InstrControlWidth =     220;

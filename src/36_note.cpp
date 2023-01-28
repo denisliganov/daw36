@@ -279,7 +279,7 @@ void Note::handleMouseDown(InputEvent & ev)
         preview();
     }
 
-    MInstrPanel->setcurrInstr(instr);
+    MInstrPanel->setCurrInstr(instr);
 }
 
 void Note::propagateTriggers(Pattern* sonPatt)

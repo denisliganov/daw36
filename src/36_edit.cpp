@@ -54,6 +54,8 @@ MainEdit::MainEdit()
 
 void MainEdit::drawSelf(Graphics& g)
 {
+    //fill(g, 0.0f);
+
     //setc(g, 0.2f);
     //fillx(g, 0, 0, LineNumWidth, height);
 
@@ -78,28 +80,31 @@ void MainEdit::drawSelf(Graphics& g)
         lineH(g, grid->getY() + lH*line - offs - 1, 0, LineNumWidth - 2);
     }*/
 
+/*
     setc(g, 0.35f);
     fillx(g, 0, height - BottomPadHeight, width, height);
     setc(g, 0.4f);
     lineH(g, height - BottomPadHeight, 0, width);
+    */
+
+    setc(g, 0.0f);
+    lineH(g, MainLineHeight, 0, width);
 }
 
 void MainEdit::remap()
 {
     confine();
 
-    int yGrid = MainLineHeight - 1;
-
-    timeline->setCoords2(0, 0, width - GridScrollWidth - 1, yGrid - 2);
+    timeline->setCoords2(0, 0, width - GridScrollWidth - 1, MainLineHeight - 1);
 
     //keys->setCoords1(LeftGap, MainLineHeight, 100, height - MainLineHeight - 1);
     //keys1->setCoords2(LeftGap+100, height - 1 - 100, width - GridScrollWidth - 1, height - 1);
 
-    grid->vscr->setCoords2(width - GridScrollWidth, MainLineHeight, width - 1, height - 1 - BottomPadHeight - 1);
+    grid->vscr->setCoords2(width - GridScrollWidth, MainLineHeight, width - 1, height - 1);
 
-    grid->setCoords2(0, yGrid, width - GridScrollWidth - 1, height - 1 - BottomPadHeight - 1);
+    grid->setCoords2(0, MainLineHeight + 1, width - GridScrollWidth - 1, height - 1);
 
-    confine(0, 0, width - GridScrollWidth - 1, height - 1 - BottomPadHeight - 1);
+    confine(0, 0, width - GridScrollWidth - 1, height - 1);
 
     playHead->updatePosFromFrame();
 }
