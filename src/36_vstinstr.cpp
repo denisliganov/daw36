@@ -13,7 +13,7 @@
 #include "36_browser.h"
 #include "36_vstwin.h"
 #include "36_paramswin.h"
-#include "36_effwin.h"
+#include "36_devwin.h"
 
 
 
@@ -30,18 +30,26 @@ VstInstr::VstInstr(char* fullpath, VstInstr* vst)
     muteCount = 0;
 
     if(fullpath != NULL)
+    {
         vst2 = VstHost->loadModuleFromFile(fullpath);
+    }
     else
+    {
         vst2 = VstHost->loadModuleFromFile((char*)vst->filePath.data());
+    }
 
     if (vst2 != NULL)
     {
         uniqueId = vst2->aeff->uniqueID;
 
         if (fullpath)
+        {
             filePath = fullpath;
+        }
         else
+        {
             filePath = vst2->vstpath;
+        }
 
         objName = ToUpperCase(vst2->objName);
 
@@ -587,7 +595,7 @@ SubWindow* VstInstr::createWindow()
 {
     if(vst2->hasGui())
     {
-        return window->addWindow(new VstComponent(vst2));
+        return window->addWindow(new VstComponent(vst2, this));
     }
     else
     {

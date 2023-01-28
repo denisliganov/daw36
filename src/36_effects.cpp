@@ -25,7 +25,7 @@
 #include "36_slider.h"
 #include "36_macros.h"
 #include "36.h"
-#include "36_effwin.h"
+#include "36_devwin.h"
 
 
 
@@ -99,7 +99,7 @@ void Eff::drawSelf(Graphics& g)
 {
     fill(g, .4f);
 
-    setc(g, .3f);
+    setc(g, .35f);
     fillx(g, 0, 0, width, height/2);
 
     rect(g, .3f);
@@ -116,7 +116,7 @@ void Eff::drawSelf(Graphics& g)
         {
             setc(g, (uint32)color);
 
-            rectx(g, 0 + c, 0 + c, width - c, height - c);
+            rectx(g, 0 + c, 0 + c, width - c*2, height - c*2);
 
             color -= clrDecr;
             clrDecr /=2;
@@ -128,7 +128,7 @@ void Eff::drawSelf(Graphics& g)
     setc(g, .0f);
     txtfit(g, FontSmall, objName, 3, th - 2, width - 2);
 
-    setc(g, .8f);
+    setc(g, 1.f);
     txtfit(g, FontSmall, objName, 1, th - 4, width - 2);
 }
 

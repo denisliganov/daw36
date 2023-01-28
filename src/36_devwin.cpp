@@ -1,6 +1,6 @@
 
 #include "36_params.h"
-#include "36_effwin.h"
+#include "36_devwin.h"
 #include "36_draw.h"
 #include "36_numbox.h"
 #include "36_vstinstr.h"
@@ -17,14 +17,12 @@ DevParamObject::DevParamObject(Device36* dev)
 
 void DevParamObject::initAll()
 {
-    int border = 16;
+    int border = 12;
     int boxWidth = 130;
-    int boxHeight = border;
+    int boxHeight = 22;
 
-    int x = 4;
+    int x = border;
     int y = border;
-
-    ParamBox* box = NULL;
 
     int txs1=0, txs2=0, txs3=0;
     int tx1=0, tx2=0, tx3=0;
@@ -47,12 +45,17 @@ void DevParamObject::initAll()
         showParams = device->params;
     }
 
+    ParamBox* box = NULL;
+
     for(Parameter* param : showParams)
     {
         if (param->type != Param_Bool)
         {
             addObject(box = new ParamBox(param), x, y, boxWidth, boxHeight, "eff.param");
-            y += boxHeight + 2;
+
+            //box->setSliderOnly(true);
+
+            y += boxHeight + 3;
         }
     }
 
@@ -63,7 +66,7 @@ void DevParamObject::initAll()
 
 void DevParamObject::drawSelf(Graphics& g)
 {
-    fill(g, 0.35f);
+    fill(g, 0.3f);
 }
 
 void DevParamObject::handleChildEvent(Gobj * obj,InputEvent & ev)

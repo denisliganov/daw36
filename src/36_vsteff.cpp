@@ -74,7 +74,9 @@ VstEffect::VstEffect(char* path)
 VstEffect::~VstEffect()
 {
     if (vst2 != NULL)
+    {
         VstHost->removeModule(vst2);
+    }
 }
 
 void VstEffect::drawSelf(Graphics & g)
@@ -85,10 +87,29 @@ void VstEffect::drawSelf(Graphics & g)
     setc(g, (uint32)0x30FFFFFF);
     rectx(g, 0, 0, width, height);
 
+    if (guiWindow && guiWindow->isOpen())
+    {
+        uint32 color = 0xffFF9930;
+        uint32 clrDecr = 0x80000000;
+
+        for (int c = 0; c < 4; c++)
+        {
+            setc(g, (uint32)color);
+
+            rectx(g, 0 + c, 0 + c, width - c*2, height - c*2);
+
+            color -= clrDecr;
+            clrDecr /=2;
+        }
+    }
+
+    setc(g, .0f);
+    txtfit(g, FontBold, vst2->objName, 3, 11, 91);
+
     setc(g, 0xffCFEFFF);
     //gSetColor((0xff46FFB4));
 
-    gTextFit(g, FontBold, vst2->objName, x1 + 2, y1 + 10, 91);
+    txtfit(g, FontBold, vst2->objName, 2, 10, 91);
 }
 
 VstEffect* VstEffect::clone(MixChannel* mc)
@@ -240,7 +261,7 @@ SubWindow* VstEffect::createWindow()
 {
     if(vst2->hasGui())
     {
-        return window->addWindow(new VstComponent(vst2));
+        return window->addWindow(new VstComponent(vst2, this));
     }
     else
     {

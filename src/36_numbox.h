@@ -115,6 +115,12 @@ class ParamBox : public NumBox
 {
 friend Parameter;
 
+public:
+            ParamBox(Parameter* param);
+
+            float   getMinStep();
+            void    setSliderOnly(bool so) { sliderOnly = so; }
+
 protected:
             int     defPos;
             FontId  fontId;
@@ -127,21 +133,14 @@ protected:
             int     tw3;
             bool    sliderOnly;
 
-    virtual void    updValue();
+            void    drawSelf(Graphics& g);
             void    handleMouseWheel(InputEvent& ev);
             void    handleNumDrag(int dragCount);
             void    handleMouseDown(InputEvent & ev);
             void    handleMouseDrag(InputEvent & ev);
             void    handleMouseUp(InputEvent& ev);
-            void    drawSelf(Graphics& g);
             void    remap();
             void    redraw();
-            void    setSliderOnly(bool so) {sliderOnly = so;}
-
-public:
-
-            ParamBox(Parameter* param);
-            float   getMinStep();
 };
 
 

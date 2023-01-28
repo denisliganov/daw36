@@ -94,34 +94,39 @@ protected:
         {
             Instrument* instr = (Instrument*)parent;
 
-            if(instr->isWindowVisible())
+            fill(g, .35f);
+
+            bool wvis = instr->isWindowVisible();
+
+            uint32 colorHL = 0xffFF9930;
+            uint32 hlDecr = 0x80000000;
+
+            if(wvis)
             {
-                uint32 color = 0xffFF9930;
-                uint32 clrDecr = 0x80000000;
                 
                 for (int c = 0; c < 4; c++)
                 {
-                    setc(g, (uint32)color);
-                
-                    rectx(g, 0 + c, 0 + c, width - c, height - c);
-                
-                    color -= clrDecr;
-                    clrDecr /=2;
+                    setc(g, (uint32)colorHL);
+
+                    rectx(g, 0 + c, 0 + c, width - c*2, height - c*2);
+
+                    colorHL -= hlDecr;
+                    hlDecr /=2;
                 }
-            }
-            else
-            {
-                fill(g, .35f);
             }
 
             int tw = gGetTextWidth(FontInst, instr->getAlias());
             int th = gGetTextHeight(FontInst);
 
             setc(g, .1f);
-            txt(g, FontInst, instr->getAlias(), width/2 - tw/2 + 2, height/2 + th/2 + 2);
+            txt(g, FontInst, instr->getAlias(), width/2 - tw/2 + 2, height/2 + th/2 + 1);
 
-            setc(g, 1.f);
-            txt(g, FontInst, instr->getAlias(), width/2 - tw/2, height/2 + th/2);
+            if (wvis)
+                setc(g, (uint32)0xffFF9930);
+            else
+                setc(g, 1.f);
+
+            txt(g, FontInst, instr->getAlias(), width/2 - tw/2, height/2 + th/2 - 1);
         }
 
         void handleMouseDrag(InputEvent & ev)   { parent->handleMouseDrag(ev); }
@@ -134,9 +139,10 @@ protected:
 
         void drawSelf(Graphics& g)
         {
-            setc(g, .0f);
+            setc(g, .1f);
 
             int yc = 0;
+
             while (yc < height)
             {
                 rectx(g, 0, yc, width, 1);
@@ -189,7 +195,9 @@ Instrument::Instrument()
     addParam(pan = new Parameter("PAN", Param_Pan, 0.f, -1.f, 2.f, Units_Percent));
     
     addObject(volBox = new ParamBox(vol));
+    volBox->setSliderOnly(true);
     addObject(panBox = new ParamBox(pan));
+    panBox->setSliderOnly(true);
 
     //addParamWithControl(muteparam = new BoolParam(false), "tg.mute", mute = new Button36(true));
 
@@ -1011,7 +1019,7 @@ void Instrument::reinsertNote(Note * note)
 
 void Instrument::remap()
 {
-    previewButton->setCoords1(25, height - 11, 20, 10);
+    previewButton->setCoords1(31, height - 10, 20, 10);
 
     volBox->setCoords1(width - 86, height - 10, 60, 10);
     panBox->setCoords1(width - 149, height - 10, 57, 10);

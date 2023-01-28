@@ -16,9 +16,10 @@ class VstComponent   : //public AudioProcessorEditor,
 {
 public:
 
-    VstComponent(Vst2Plugin *pPlug)
+    VstComponent(Vst2Plugin *pPlug, Device36* parent_dev)
     {
         vstPlugin = pPlug;
+        parentDevice = parent_dev;
         isOpen = false;
         wasShowing = false;
         pluginRefusesToResize = false;
@@ -92,6 +93,11 @@ public:
         openPluginWindow();
     }
 
+    void handleClose() 
+    {
+        parentDevice->redraw();
+    }
+
     bool keyStateChanged()
     {
         return pluginWantsKeys;
@@ -161,7 +167,8 @@ public:
 
 private:
 
-    Vst2Plugin * vstPlugin;
+    Vst2Plugin* vstPlugin;
+    Device36*   parentDevice;
 
     bool        isOpen, wasShowing, recursiveResize;
     bool        pluginWantsKeys, pluginRefusesToResize, alreadyInside;
