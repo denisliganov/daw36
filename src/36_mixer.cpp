@@ -1104,7 +1104,7 @@ void Mixer::remap()
 
     for(Instrument* instr : MInstrPanel->instrs)
     {
-        if(!instr->previewOnly)
+        if(!instr->isPreviewOnly())
         {
             if((yCh + InstrHeight > 0) && yCh < getH())
             {

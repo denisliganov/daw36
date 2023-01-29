@@ -1111,17 +1111,7 @@ void Hintbox::timerCallback()
 
         if(text.length() > 0)
         {
-            int gap = 15;
-
-            int tw = gGetTextWidth(font, (std::string)text);
-            int th = gGetTextHeight(font);
-
-            int w = tw + int(gap*1.5f);
-            int h = th + gap;
-
-            setBounds(x, y, w, h);
-
-            setText(text, w/2 - tw/2, int(h/2 + th/2) - 2);
+            setText(text, x, y);
 
             // Block redraw for 100 ms, to w/a occasional glitch
 
@@ -1138,14 +1128,24 @@ void Hintbox::timerCallback()
     ReleaseMutex(winObject->guiMutex);
 }
 
-void Hintbox::setText(String & newtext, int text_x, int text_y)
+void Hintbox::setText(std::string new_text, int xc, int yc)
 {
-    text = newtext;
+    text = new_text;
+
+    int gap = 10;
+    
+    int tw = gGetTextWidth(font, (std::string)text);
+    int th = gGetTextHeight(font);
+    
+    int w = tw + int(gap*1.5f);
+    int h = th + gap;
+
+    tx = w/2 - tw/2;
+    ty = int(h/2 + th/2) - 2;
+
+    setBounds(xc, yc, w, h);
 
     setVisible(true);
-
-    tx = text_x;
-    ty = text_y;
 
     repaint();
 }
@@ -1168,14 +1168,14 @@ void Hintbox::stop()
 
 void Hintbox::paint(Graphics& g)
 {
-    gSetColor2(g, 0xffFFE0D0, 0.55f, 1);
+    gSetColor2(g, 0xffFFE000, 1.f, 1);
     gFillRect(g, 0, 0, getWidth() - 1, getHeight() - 1);
 
-    gSetColor2(g, 0xffFFE0C0, 0.58f, 1);
+    gSetColor2(g, 0xffFFE000, 0.9f, 1);
     gDrawRect(g, 0, 0, getWidth() - 1, getHeight() - 1);
 
-    gSetColor2(g, 0xffFFF0E0, .9f, 1);
-    gText(g, font, (std::string)text, tx, ty);
+    gSetColor2(g, 0xffFFF000, .3f, 1);
+    gText(g, font, text, tx, ty);
 }
 
 void Hintbox::mouseEnter(const MouseEvent &e)
@@ -1300,6 +1300,29 @@ void WinObject::updateHint(InputEvent& ev)
         return;
     }
 
+    int hintX = ev.mouseX + 20;
+    int hintY = ev.mouseY;
+
+    Rectangle r = getBounds();
+
+    hintX += r.getX();
+    hintY += r.getY();
+
+    r = getParentComponent()->getBounds();
+
+    hintX += r.getX();
+    hintY += r.getY();
+
+    if (activeObj && activeObj->getClickHint() != "")
+    {
+        if (ev.leftClick || ev.wheelDelta != 0)
+        {
+            hintBox->setText(activeObj->getClickHint(), hintX, hintY);
+        }
+
+        return;
+    }
+
     if (ev.leftClick || ev.rightClick)
     {
         hintBox->stop();
@@ -1309,25 +1332,12 @@ void WinObject::updateHint(InputEvent& ev)
 
     if(!hintBox->isBlocked())
     {
-        int x = ev.mouseX;
-        int y = ev.mouseY + 20;
-
-        Rectangle r = getBounds();
-
-        x += r.getX();
-        y += r.getY();
-
-        r = getParentComponent()->getBounds();
-
-        x += r.getX();
-        y += r.getY();
-
         hintBox->setVisible(false);
         hintBox->stopTimer();
 
         if(activeObj)
         {
-            hintBox->restart(activeObj, x, y);
+            hintBox->restart(activeObj, hintX, hintY);
         }
     }
 }

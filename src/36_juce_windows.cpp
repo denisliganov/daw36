@@ -270,7 +270,7 @@ ParamComponent::ParamComponent(Device36* dev)
 
     setName(mdev->getObjName().data());
 
-    if(mdev->params.size() > 0)
+    if(mdev->getParams().size() > 0)
     {
         int x = 2;
         int y = 2;
@@ -284,7 +284,7 @@ ParamComponent::ParamComponent(Device36* dev)
 
         char paramname[MAX_NAME_LENGTH];
 
-        for(Parameter* param : mdev->params)
+        for(Parameter* param : mdev->getParams())
         {
             strcpy(paramname, param->getName().data());
 
@@ -414,7 +414,7 @@ ParamComponent::ParamComponent(Device36* dev)
 
 void ParamComponent::buttonClicked(Button * button)
 {
-    for(Parameter* param : mdev->params)
+    for(Parameter* param : mdev->getParams())
     {
         if(param->type == Param_Bool)
         {
@@ -434,7 +434,7 @@ void ParamComponent::sliderValueChanged(ASlider* slider)
 {
     int idx = slider->getParamIndex();
 
-    for(Parameter* param : mdev->params)
+    for(Parameter* param : mdev->getParams())
     {
         if(param->index == idx)
         {
@@ -456,7 +456,7 @@ VSTParamComponent::VSTParamComponent(Vst2Plugin* vst)
 {
     dev = (Device36*)vst;
 
-    if(dev->params.size() > 0)
+    if(dev->getParams().size() > 0)
     {
         int x = 2;
         int y = 2;
@@ -467,7 +467,7 @@ VSTParamComponent::VSTParamComponent(Vst2Plugin* vst)
 
         //Paramcell* pcell;
 
-        int num = dev->params.size();
+        int num = dev->getParams().size();
 
         int cnum = num;
         int hgt = cnum*25;
@@ -481,7 +481,7 @@ VSTParamComponent::VSTParamComponent(Vst2Plugin* vst)
 
         char paramname[MAX_NAME_LENGTH];
 
-        for(Parameter* param : dev->params)
+        for(Parameter* param : dev->getParams())
         {
             strcpy(paramname, param->getName().data());
 
@@ -544,7 +544,7 @@ void VSTParamComponent::sliderValueChanged(ASlider* slider)
 {
     int idx = slider->getParamIndex();
 
-    for(Parameter* param : dev->params)
+    for(Parameter* param : dev->getParams())
     {
         if(param->index == idx)
         {

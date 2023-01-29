@@ -112,8 +112,9 @@ public:
             float               getOffset()     { return offset; };
             float               getOutVal()     { return outVal; }
             float               getValue()      { return value; }
-            float               getDefaultVal() { return defaultValue; }
-            float               getNormalizedValue();
+            float               getDefaultValue() { return defaultValue; }
+            float               getValueNormalized();
+            float               getDefaultValueNormalized();
             float               getEditorValue();
             float               adjustForEditor(float val);
 

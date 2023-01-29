@@ -323,7 +323,7 @@ void Lane::process(bool leftbt, int mx, int my, unsigned flags)
 
                     if (setDefault)
                     {
-                        newVal = locvol->getDefaultVal();
+                        newVal = locvol->getDefaultValue();
                     }
 
                     //locvol->SetNormalValue(newVal*locvol->getRange() + locvol->getOffset());
@@ -338,7 +338,7 @@ void Lane::process(bool leftbt, int mx, int my, unsigned flags)
 
                     if (setDefault)
                     {
-                        newVal = locpan->getDefaultVal();
+                        newVal = locpan->getDefaultValue();
                     }
 
                     //locpan->SetNormalValue(1 - newVal*2);

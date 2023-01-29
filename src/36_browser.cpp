@@ -520,9 +520,9 @@ void Browser::updateEntries()
         {
             dev->scanForPresets();
 
-            auto it = dev->presets.begin();
+            auto it = dev->getPresets().begin();
 
-            for(BrwEntry* pe : dev->presets)
+            for(BrwEntry* pe : dev->getPresets())
             {
                 addEntry(pe);
 
@@ -554,7 +554,7 @@ void Browser::updateCurrentHighlight()
             {
                 for(BrwEntry* be : entries[browsingMode])
                 {
-                    if (be != NULL && be == dev->currPreset)
+                    if (be != NULL && be == dev->getCurrPreset())
                     {
                         currIndex = be->listIndex;
                         break;
@@ -764,7 +764,7 @@ ContextMenu* Browser::createContextMenu()
             {
                 Device36* module = (Device36*)(prd->dev);
 
-                if(module->internal)
+                if(module->isInternal())
                 {
                     menu->addMenuItem("deleteObject preset");
                 }

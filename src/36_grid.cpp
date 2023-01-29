@@ -1489,7 +1489,7 @@ void Grid::editbars(InputEvent& ev)
 
                 if (setDefault)
                 {
-                    newVal = param->getDefaultVal();
+                    newVal = param->getDefaultValue();
                 }
                 else
                 {

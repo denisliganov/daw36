@@ -34,15 +34,15 @@ void DevParamObject::initAll()
 
     if (vsti)
     {
-        showParams = vsti->vst2->params;
+        showParams = vsti->vst2->getParams();
     }
     else if (vste)
     {
-        showParams = vste->vst2->params;
+        showParams = vste->vst2->getParams();
     }
     else
     {
-        showParams = device->params;
+        showParams = device->getParams();
     }
 
     ParamBox* box = NULL;
@@ -53,7 +53,7 @@ void DevParamObject::initAll()
         {
             addObject(box = new ParamBox(param), x, y, boxWidth, boxHeight, "eff.param");
 
-            //box->setSliderOnly(true);
+            box->setSliderOnly(true);
 
             y += boxHeight + 3;
         }

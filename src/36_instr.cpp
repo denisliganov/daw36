@@ -139,7 +139,7 @@ protected:
 
         void drawSelf(Graphics& g)
         {
-            setc(g, .1f);
+            setc(g, .4f);
 
             int yc = 0;
 

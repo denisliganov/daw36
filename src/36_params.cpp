@@ -511,7 +511,7 @@ void Parameter::adjustFromControl(Control* ctrl, int step, float nval, float min
         }
         else
         {
-            float prevV = getNormalizedValue();
+            float prevV = getValueNormalized();
             float newV = prevV;
 
             if (ctrl)
@@ -543,7 +543,7 @@ void Parameter::adjustFromControl(Control* ctrl, int step, float nval, float min
 
     blockEnvAffect();  // Block this param update from currently working envelopes
 
-    handleRecordingFromControl(getNormalizedValue());
+    handleRecordingFromControl(getValueNormalized());
 
     MProject.setChange();
 }
@@ -551,20 +551,25 @@ void Parameter::adjustFromControl(Control* ctrl, int step, float nval, float min
 
 // Normalize to 0-1 range
 
-float Parameter::getNormalizedValue()
+float Parameter::getValueNormalized()
 {
     return (value - offset)/range;
+}
+
+float Parameter::getDefaultValueNormalized()
+{
+    return (defaultValue - offset)/range;
 }
 
 float Parameter::getEditorValue()
 {
     if(type == Param_Pan)
     {
-        return 1.f - getNormalizedValue();
+        return 1.f - getValueNormalized();
     }
     else
     {
-        return getNormalizedValue();
+        return getValueNormalized();
     }
 }
 
@@ -617,6 +622,8 @@ float Parameter::calcOutputValue(float val)
 void Parameter::setValue(float val)
 {
     value = val;
+
+    LIMIT(value, offset, offset + range);
 
     if(interval > 0)
     {

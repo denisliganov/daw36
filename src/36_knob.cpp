@@ -36,7 +36,7 @@ void Knob::updPosition()
 {
     if (param != NULL)
     {
-        positionAngle = float((1 - param->getNormalizedValue()) * angleRange);
+        positionAngle = float((1 - param->getValueNormalized()) * angleRange);
     }
     else
     {

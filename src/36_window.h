@@ -207,7 +207,7 @@ public:
             Hintbox(WinObject* wobj);
             ~Hintbox() {};
 
-            void        setText(String & newtext, int text_x, int text_y);
+            void        setText(std::string new_text, int xc, int yc);
             void        restart(Gobj* obj, int xc, int yc);
             void        stop();
             bool        isBlocked() { return blocked; }
@@ -215,7 +215,7 @@ public:
 protected:
 
             Gobj*       activeObj;
-            String      text;
+            std::string text;
             int         x;
             int         y;
             int         tx;

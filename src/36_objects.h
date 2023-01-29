@@ -115,6 +115,7 @@ public:
     std::string                 getObjName()                       { return objName; }
     void                        setObjName(std::string title)      { objName = title; }
     virtual std::string         getHint()           { return hint; };
+    virtual std::string         getClickHint()       { return ""; };
             void                setHint(std::string h)              { hint = h; };
 
             int                 getX()              { return xRel; };

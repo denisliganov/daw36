@@ -316,11 +316,7 @@ ParamBox::ParamBox(Parameter* param)
 
 void ParamBox::remap()
 {
-    float offs = param->getOffset();
-    float range = param->getRange();
-    float val = param->getValue();
-
-    defPos = int(float(width-1)*((val - offs)/range));
+    defPos = int(float(width-1)*param->getDefaultValueNormalized());
 }
 
 void ParamBox::handleNumDrag(int dragCount)
@@ -334,7 +330,7 @@ void ParamBox::handleMouseDown(InputEvent & ev)
 {
     if (abs(defPos - (ev.mouseX - x1)) < 2)
     {
-        param->setValue(param->getDefaultVal());
+        param->setValue(param->getDefaultValue());
     }
     else
     {
@@ -344,11 +340,23 @@ void ParamBox::handleMouseDown(InputEvent & ev)
     redraw();
 }
 
+std::string ParamBox::getClickHint()
+{
+    if (sliderOnly)
+    {
+        return param->getName() + ":  " + param->getValString() + " " + param->getUnitStr();
+    }
+    else
+    {
+        return "";
+    }
+}
+
 void ParamBox::handleMouseDrag(InputEvent & ev)
 {
     if (abs(defPos - (ev.mouseX - x1)) < 2)
     {
-        param->setValue(param->getDefaultVal());
+        param->setValue(param->getDefaultValue());
     }
     else
     {
@@ -409,7 +417,6 @@ void ParamBox::drawSelf(Graphics& g)
 
         setc(g, .7f);
 
-        //gText(g, FontSmall, param->getUnitStr(), x1 + tx3, txy - 2);
         txt(g, fontId, param->getUnitStr(), width - tw3 - 2, txty);
     }
 
@@ -419,12 +426,10 @@ void ParamBox::drawSelf(Graphics& g)
     float offs = param->getOffset();
     float range = param->getRange();
     float val = param->getValue();
+    float baseVal = (offs <= 0 ? 0 : offs);
 
-    float defval = (offs <= 0 ? 0 : offs);
-
-    int xoffs = int(float(width-1)*((defval - offs)/range));
+    int xoffs = int(float(width-1)*((baseVal - offs)/range));
     int xval = int(float(width-1)*((val - offs)/range));
-
     int xstart = xoffs;
     int xend = xval;
 
@@ -436,12 +441,10 @@ void ParamBox::drawSelf(Graphics& g)
 
     int w = xend - xstart;
 
-    //float nval = param->getNormalizedValue();
-    //int w = 1 + int((width - 1)*nval);
-    //setc(g, 0xff303000);
-    //fillx(g, xstart, height - 1, w, 1);
-
     int sh = height - txy;
+
+    setc(g, 0.f);
+    fillx(g, defPos, height - sh, 1, sh);
 
     setc(g, 0xffB0B000);
     //setc(g, .75f);

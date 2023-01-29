@@ -94,7 +94,7 @@ void Note::save(XmlElement * xmlNode)
 {
     Element::save(xmlNode);
 
-    xmlNode->setAttribute(T("InstrIndex"), instr->devIdx);
+    xmlNode->setAttribute(T("InstrIndex"), instr->getIndex());
     xmlNode->setAttribute(T("Volume"), vol->value);
     xmlNode->setAttribute(T("Panning"), pan->value);
 }

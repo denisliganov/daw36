@@ -118,16 +118,14 @@ friend Parameter;
 public:
             ParamBox(Parameter* param);
 
-            float   getMinStep();
-            void    setSliderOnly(bool so) { sliderOnly = so; }
+            std::string     getClickHint();
+            float           getMinStep();
+            void            setSliderOnly(bool so) { sliderOnly = so; }
 
 protected:
             int     defPos;
             FontId  fontId;
             int     th;
-            int     tx1;
-            int     tx2;
-            int     tx3;
             int     tw1;
             int     tw2;
             int     tw3;
