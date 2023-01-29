@@ -41,7 +41,6 @@ public:
 
 
             Element();
-            //const Element& operator= (const Element&);
     virtual ~Element();
     virtual Element*        clone();
     virtual Element*        clone(Pattern* newPtBase);

@@ -40,7 +40,7 @@ public:
         {
             itemstr = str;
 
-            fontId = FontInst;
+            fontId = FontBold;
 
             tw = gGetTextWidth(fontId, itemstr);
             th = gGetTextHeight(fontId);
@@ -59,26 +59,23 @@ public:
         {
             if(itemstr == "")   //  delimiter
             {
-                gSetMonoColor(g, .55f);
-                gLineHorizontal(g, y1 + height/2 - 1, float(x1 + MenuItemIndent), float(x1 + width - 1));
-
-                //gSetMonoColor(g, .6f);
-                //gLineHorizontal(g, y1 + height/2, float(x1 + 5), float(x1 + width - 1 - 5));
+                setc(g, .55f);
+                lineH(g, height/2 - 1, float(MenuItemIndent), float(width - 1));
             }
             else
             {
                 if(undermouse)
                 {
-                    fill(g, 0.6f);
+                    fill(g, 0.5f);
                 }
                 else
                 {
-                    fill(g, 0.5f);
+                    fill(g, 0.4f);
                 }
 
                 setc(g, 1.f);
 
-                gText(g, fontId, itemstr, x1 + MenuItemIndent, y1 + height/2 + th/2 - 2);
+                txt(g, fontId, itemstr, MenuItemIndent, height/2 + th/2 - 2);
             }
         }
 
@@ -97,14 +94,6 @@ ContextMenu::ContextMenu(Gobj* obj, DropBox* drop_box)
 
     width = 30;
     itemHeight = MenuItemHeight;
-}
-
-void ContextMenu::handleClose()
-{
-    if (dropBox != NULL)
-    {
-        dropBox->handleContextMenuClosed();
-    }
 }
 
 void ContextMenu::addMenuItem( std::string item_str )
@@ -132,6 +121,19 @@ void ContextMenu::addMenuItem( std::string item_str )
     setCoords1(0, 0, width, mHeight);
 }
 
+void ContextMenu::drawSelf(Graphics & g)
+{
+    fill(g, .4f);
+}
+
+void ContextMenu::handleClose()
+{
+    if (dropBox != NULL)
+    {
+        dropBox->handleContextMenuClosed();
+    }
+}
+
 void ContextMenu::remap()
 {
     int itemY = MenuItemsGap;
@@ -149,11 +151,6 @@ void ContextMenu::remap()
 void ContextMenu::activateMenuItem(std::string item)
 {
     menuObject->activateMenuItem(item);
-}
-
-void ContextMenu::drawSelf(Graphics & g)
-{
-    fill(g, .5f);
 }
 
 

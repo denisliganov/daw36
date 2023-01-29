@@ -400,6 +400,7 @@ Filter1::Filter1()
 
     addParamWithControl(cutoff = new Parameter("CUT", Param_Freq, 0.6f, 0.f, 1.f, Units_Hz));
     addParamWithControl(resonance = new Parameter("RES", 0.f, 0.0f, .97f, Units_Percent));
+
     //addParamWithControl(bandwidth = new Parameter("BW", 1.f, 0.25f, 3.75f, Units_Octave));
 
     //Q = new Parameter(0.f, 0.f, 50.f, Param_Default);
@@ -804,6 +805,7 @@ Compressor::Compressor()
 
 
     //addParamWithControl(mode = new BoolParam(false, "MODE", "LIMITER MODE"));
+
     addParamWithControl(new Parameter("THRESH", 0.f, -60.0f, 60.0f, Units_dB));
     addParamWithControl(new Parameter("RATIO", 1.0f, 1.0f, 30.0f));
     addParamWithControl(new Parameter("KNEE", 0.f, 0.0f, 48.0f, Units_dB));

@@ -53,7 +53,7 @@ void DevParamObject::initAll()
         {
             addObject(box = new ParamBox(param), x, y, boxWidth, boxHeight, "eff.param");
 
-            box->setSliderOnly(true);
+            box->setSliderOnly(false);
 
             y += boxHeight + 3;
         }

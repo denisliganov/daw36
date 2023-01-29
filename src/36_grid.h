@@ -80,6 +80,45 @@ friend  PlaceHighlight;
 friend  TextCursor;
 friend  ControlPanel;
 
+public:
+
+            Grid(float step_width, int line_height, Pattern* pt, Timeline* tl);
+            ~Grid() {}
+            void                adjustscale(int delta, int mouseRefX = -1);
+            void                action(GridAction act, float dTick = 0, int dLine = 0);
+            void                delacross(int mx1, int my1, int mx2, int my2);
+            void                editbars(InputEvent& ev);
+            void                grabcursor(float tick, int line);
+            Pattern*            getpatt();
+            Element*            getActiveElement()  { return activeElem; };
+            GridActionMode      getActionMode()   { return mode; };
+            float               getFramesPerPixel() { return framesperpix; }
+            float               getSnapSize()   { return snap; }
+            int                 getXfromTick(float tick);
+            float               getTickFromX(int x);
+            int                 getYfromLine(int line);
+            int                 getLineFromY(int y);
+            float               getppt();
+            int                 getLineHeight();
+            Note*               getNoteAt(float tick, int line);
+            GridDisplayMode     getDisplayMode() { return dispmode; }
+            int                 getselnum();
+    virtual void                handleModifierKeys(unsigned flags);
+            bool                isselected(Element* el);
+            Note*               putnote(float tick, int line, int noteVal);
+            void                removeelem(Element* el);
+            void                recalcElems();
+            void                reassign();
+            void                redraw(bool remap_objects, bool refresh_image = false);
+            void                selall(bool select);
+            void                setdispmode( GridDisplayMode display_mode );
+            void                setactivelem(Element* el);
+            void                setmode(GridActionMode md);
+            void                setlineheight(int newLH);
+            void                setppt(float tick_width, int mouseRefX = -1);
+            void                selReset(bool deselect = true);
+            void                updBounds();
+            void                updtransport();
 
 protected:
 
@@ -155,50 +194,9 @@ protected:
             void                remap();
             void                mapElems();
             float               getticksnap(float val);
-            void                getpos(int mx, int my, float* tick, int* line);
+            void                getPos(int mx, int my, float* tick, int* line);
             void                checkElementsAtPos(InputEvent & ev);
             void                clickscroll(InputEvent& ev);
- 
-public:
-
-            Grid(float step_width, int line_height, Pattern* pt, Timeline* tl);
-            ~Grid() {}
-            void                grabcursor(float tick, int line);
-            void                updBounds();
-            void                removeelem(Element* el);
-            void                setactivelem(Element* el);
-            void                setmode(GridActionMode md);
-
-            void                setlineheight(int newLH);
-            void                adjustscale(int delta, int mouseRefX = -1);
-            void                setppt(float tick_width, int mouseRefX = -1);
-            void                redraw(bool remap_objects, bool refresh_image = false);
-            Note*               putnote(float tick, int line, int noteVal);
-            void                selall(bool select);
-            void                editbars(InputEvent& ev);
-            void                reassign();
-            void                action(GridAction act, float dTick = 0, int dLine = 0);
-            Pattern*            getpatt();
-            Element*            getActiveElement()  { return activeElem; };
-            GridActionMode      getActionMode()   { return mode; };
-            float               getFramesPerPixel() { return framesperpix; }
-            float               getSnapSize()   { return snap; }
-            int                 getXfromTick(float tick);
-            float               getTickFromX(int x);
-            int                 getYfromLine(int line);
-            int                 getLineFromY(int y);
-            float               getppt();
-            int                 getLineHeight();
-            void                delacross(int mx1, int my1, int mx2, int my2);
-            void                setdispmode( GridDisplayMode display_mode );
-            GridDisplayMode     getDisplayMode() { return dispmode; }
-            void                updtransport();
-            void                selReset(bool deselect = true);
-    virtual void                handleModifierKeys(unsigned flags);
-            int                 getselnum();
-            bool                isselected(Element* el);
-            void                recalcElems();
-            Note*               getNoteAt(float tick, int line);
-};
+ };
 
 

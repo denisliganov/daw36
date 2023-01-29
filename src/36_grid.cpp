@@ -759,7 +759,7 @@ void Grid::checkElementsAtPos(InputEvent & ev)
 
 void Grid::updpos(InputEvent & ev)
 {
-    getpos(ev.mouseX, ev.mouseY, &alignTick, &alignLine);
+    getPos(ev.mouseX, ev.mouseY, &alignTick, &alignLine);
 
     currTick = getTickFromX(ev.mouseX);
 
@@ -1110,7 +1110,7 @@ void Grid::handleMouseDrag(InputEvent& ev)
         return;
     }
 
-    getpos(ev.mouseX, ev.mouseY, &alignTick, &alignLine);
+    getPos(ev.mouseX, ev.mouseY, &alignTick, &alignLine);
 
     if (alignLine >= MInstrPanel->getNumInstrs())
     {
@@ -1294,7 +1294,7 @@ float Grid::getticksnap(float val)
     return float(int(val/snap))*snap;
 }
 
-void Grid::getpos(int mx, int my, float* tick, int* line)
+void Grid::getPos(int mx, int my, float* tick, int* line)
 {
     snap = MCtrllPanel->getSnapMenu().getSnapSize();
 
@@ -1319,7 +1319,7 @@ bool Grid::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
         float tick;
         int line;
 
-        getpos(mx, my, &tick, &line);
+        getPos(mx, my, &tick, &line);
 
 /*
         if((tick - tickOffset)/visibleTickSpan > 0.9f)
@@ -1352,7 +1352,7 @@ bool Grid::handleObjDrop(Gobj * obj,int mx,int my, unsigned flags)
         float tick;
         int line;
 
-        getpos(mx, my, &tick, &line);
+        getPos(mx, my, &tick, &line);
 
         action(GridAction_PutNote, tick, line);
         action(GridAction_Release);

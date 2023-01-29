@@ -215,6 +215,19 @@ OctaveBox::OctaveBox(int val)
     setHint("Octave (upper row)");
 }
 
+void OctaveBox::drawSelf(Graphics& g)
+{
+    NumBox::drawSelf(g);
+
+    setc(g, 1.f);
+
+    std::string str = String::formatted(T("%d"), value);
+
+    int tw = gGetTextWidth(FontBig, str);
+
+    gText(g, FontBig, str, x1 + width/2 - tw/2, y2 - height/2 + 7);
+}
+
 void OctaveBox::handleNumDrag(int count)
 {
     value -= count;
@@ -231,19 +244,6 @@ void OctaveBox::handleMouseWheel(InputEvent & ev)
     LIMIT(value, 1, 8);
 
     redraw();
-}
-
-void OctaveBox::drawSelf(Graphics& g)
-{
-    NumBox::drawSelf(g);
-
-    setc(g, 1.f);
-
-    std::string str = String::formatted(T("%d"), value);
-
-    int tw = gGetTextWidth(FontBig, str);
-
-    gText(g, FontBig, str, x1 + width/2 - tw/2, y2 - height/2 + 7);
 }
 
 
@@ -312,75 +312,6 @@ ParamBox::ParamBox(Parameter* param)
     height = th + 2;
     width = tw1 + tw2 + tw3;
     width += 20;
-}
-
-void ParamBox::remap()
-{
-    defPos = int(float(width-1)*param->getDefaultValueNormalized());
-}
-
-void ParamBox::handleNumDrag(int dragCount)
-{
-    param->adjustFromControl(this, -(float)dragCount);
-
-    redraw();
-}
-
-void ParamBox::handleMouseDown(InputEvent & ev)
-{
-    if (abs(defPos - (ev.mouseX - x1)) < 2)
-    {
-        param->setValue(param->getDefaultValue());
-    }
-    else
-    {
-        param->adjustFromControl(this, 0, float(ev.mouseX - x1)/width);
-    }
-
-    redraw();
-}
-
-std::string ParamBox::getClickHint()
-{
-    if (sliderOnly)
-    {
-        return param->getName() + ":  " + param->getValString() + " " + param->getUnitStr();
-    }
-    else
-    {
-        return "";
-    }
-}
-
-void ParamBox::handleMouseDrag(InputEvent & ev)
-{
-    if (abs(defPos - (ev.mouseX - x1)) < 2)
-    {
-        param->setValue(param->getDefaultValue());
-    }
-    else
-    {
-        param->adjustFromControl(this, 0, float(ev.mouseX - x1)/width);
-    }
-
-    redraw();
-}
-
-void ParamBox::handleMouseUp(InputEvent & ev)
-{
-    
-}
-
-void ParamBox::handleMouseWheel(InputEvent & ev)
-{
-    param->adjustFromControl(this, (float)ev.wheelDelta);
-
-    redraw();
-}
-
-void ParamBox::redraw()
-{
-    Gobj::redraw();
 }
 
 void ParamBox::drawSelf(Graphics& g)
@@ -467,3 +398,73 @@ float ParamBox::getMinStep()
 {
     return 1.f/width;
 }
+
+std::string ParamBox::getClickHint()
+{
+    if (sliderOnly)
+    {
+        return param->getName() + ":  " + param->getValString() + " " + param->getUnitStr();
+    }
+    else
+    {
+        return "";
+    }
+}
+
+void ParamBox::handleNumDrag(int dragCount)
+{
+    param->adjustFromControl(this, -(float)dragCount);
+
+    redraw();
+}
+
+void ParamBox::handleMouseDown(InputEvent & ev)
+{
+    if (abs(defPos - (ev.mouseX - x1)) < 2)
+    {
+        param->setValue(param->getDefaultValue());
+    }
+    else
+    {
+        param->adjustFromControl(this, 0, float(ev.mouseX - x1)/width);
+    }
+
+    redraw();
+}
+
+void ParamBox::handleMouseDrag(InputEvent & ev)
+{
+    if (abs(defPos - (ev.mouseX - x1)) < 2)
+    {
+        param->setValue(param->getDefaultValue());
+    }
+    else
+    {
+        param->adjustFromControl(this, 0, float(ev.mouseX - x1)/width);
+    }
+
+    redraw();
+}
+
+void ParamBox::handleMouseUp(InputEvent & ev)
+{
+    
+}
+
+void ParamBox::handleMouseWheel(InputEvent & ev)
+{
+    param->adjustFromControl(this, (float)ev.wheelDelta);
+
+    redraw();
+}
+
+void ParamBox::remap()
+{
+    defPos = int(float(width-1)*param->getDefaultValueNormalized());
+}
+
+void ParamBox::redraw()
+{
+    Gobj::redraw();
+}
+

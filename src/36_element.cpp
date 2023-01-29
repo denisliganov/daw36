@@ -122,13 +122,14 @@ void Element::setPos(float tick, int ln)
             line = 0;
         }
 
+/*
         if (patt)
         {
             if (line >= patt->numlines)
             {
                 line = patt->numlines - 1;
             }
-        }
+        }*/
     }
 }
 

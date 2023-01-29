@@ -98,7 +98,9 @@ void LoadDefaultInstruments()
     MInstrPanel->addSample("Samples\\Horn Hit.wav");
     MInstrPanel->addSample("Samples\\Timbale 2.wav");
     MInstrPanel->addSample("Samples\\Closed Hat.wav");
-    MInstrPanel->addSample("Samples\\Dark Hat.wav");
+    //MInstrPanel->addSample("Samples\\Dark Hat.wav");
+
+    MInstrPanel->addSample("Samples\\Cymatics - Light Free Sample Pack\\Bonus Samples\\Drum Loops\\Cymatics - San Holo Free Full Drum Loop 2 - 120 BPM.wav");
 
 /*
     MInstrPanel->addSample("Samples\\Jazzy Hat.wav");

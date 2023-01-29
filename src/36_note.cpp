@@ -87,7 +87,7 @@ void Note::setPos(float tick,int line)
 {
     Element::setPos(tick, line);
 
-    instr->reinsertNote(this);
+    //instr->reinsertNote(this);
 }
 
 void Note::save(XmlElement * xmlNode)
