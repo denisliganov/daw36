@@ -148,11 +148,37 @@ protected:
             std::list<Control*> controls;
 };
 
-class ParamOnOff
+class ParamToggle
 {
 public:
 
-            ParamOnOff();
+            ParamToggle(std::string name, bool def_val) {prmName = name; value = def_val;}
+
+            bool                getValue()  { return value; }
+            void                setOn()     { value = true; }
+            void                setOff()    { value = false; }
+            void                toggle()    { value = !value; }
+
+protected:
+
+            bool                value;
+            std::string         prmName;
+};
+
+class ParamSwitch
+{
+public:
+
+            ParamSwitch(std::string name);
+
+            void                addOption(std::string opt);
+            void                setCurrent(std::string opt);
+
+protected:
+
+            std::list<std::string>  options;
+            std::string             prmName;
+            int                     currentOption;
 };
 
 class ParamSelector
@@ -160,13 +186,6 @@ class ParamSelector
 public:
 
             ParamSelector();
-};
-
-class ParamRadio
-{
-public:
-
-            ParamRadio();
 };
 
 class BoolParam : public Parameter

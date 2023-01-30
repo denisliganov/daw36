@@ -84,7 +84,7 @@ public:
 
             Grid(float step_width, int line_height, Pattern* pt, Timeline* tl);
             ~Grid() {}
-            void                adjustscale(int delta, int mouseRefX = -1);
+            void                adjustScale(int delta, int mouseRefX = -1);
             void                action(GridAction act, float dTick = 0, int dLine = 0);
             void                changeBars(InputEvent& ev);
             void                deleteAcross(int mx1, int my1, int mx2, int my2);
@@ -115,7 +115,7 @@ public:
             void                setActivElement(Element* el);
             void                setActionMode(GridActionMode md);
             void                setLineHeight(int newLH);
-            void                setppt(float tick_width, int mouseRefX = -1);
+            void                setPixelsPerTick(float tick_width, int mouseRefX = -1);
             void                selReset(bool deselect = true);
             void                updBounds();
             void                updTransport();

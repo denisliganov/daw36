@@ -13,31 +13,31 @@ public:
             Eff();
             virtual ~Eff();
 
-            bool            bypass;
-            Button36*       bypassToggle;
-            bool            folded;
-            Button36*       foldToggle;
-            MixChannel*     mixChannel;
-            int             muteCount;
-            Slider36*       sliderAmount;
-            Button36*       wndToggle;
+            bool                bypass;
+            Button36*           bypassToggle;
+            bool                folded;
+            Button36*           foldToggle;
+            MixChannel*         mixChannel;
+            int                 muteCount;
+            Slider36*           sliderAmount;
+            Button36*           wndToggle;
 
-            void            activateMenuItem(std::string item);
-            ContextMenu*    createContextMenu();
-            SubWindow*      createWindow();
-            virtual Eff*    clone();
-            void            drawSelf(Graphics& g);
-            void            handleMouseUp(InputEvent& ev);
-            void            handleMouseDown(InputEvent& ev);
-            void            handleMouseDrag(InputEvent& ev);
-            void            handleChildEvent(Gobj * obj, InputEvent& ev);
-            virtual void    load(XmlElement* xmlEff);
-    virtual Eff*            makeClone(Eff* eff);
-    virtual void            processData(float* in_buff, float* out_buff, int num_frames) {};
-    virtual void            process(float* in_buff, float* out_buff, int num_frames);
-            void            remap();
-            virtual void    save(XmlElement* xmlEff);
-            virtual void    setMixChannel(MixChannel* ncell);
+            void                activateMenuItem(std::string item);
+            ContextMenu*        createContextMenu();
+            SubWindow*          createWindow();
+            virtual Eff*        clone();
+            void                drawSelf(Graphics& g);
+            void                handleMouseUp(InputEvent& ev);
+            void                handleMouseDown(InputEvent& ev);
+            void                handleMouseDrag(InputEvent& ev);
+            void                handleChildEvent(Gobj * obj, InputEvent& ev);
+            virtual void        load(XmlElement* xmlEff);
+    virtual Eff*                makeClone(Eff* eff);
+    virtual void                processData(float* in_buff, float* out_buff, int num_frames) {};
+    virtual void                process(float* in_buff, float* out_buff, int num_frames);
+            void                remap();
+            virtual void        save(XmlElement* xmlEff);
+            virtual void        setMixChannel(MixChannel* ncell);
 };
 
 class BasicLP : public Eff
@@ -45,15 +45,15 @@ class BasicLP : public Eff
 public:
             BasicLP();
 
-            Parameter*      cutoff;
-            Parameter*      resonance;
-            float           filtCoefTab[5];
-            float           lx1, lx2, ly1, ly2; // Left sample history
-            float           rx1, rx2, ry1, ry2; // Right sample history
+            Parameter*          cutoff;
+            Parameter*          resonance;
+            float               filtCoefTab[5];
+            float               lx1, lx2, ly1, ly2; // Left sample history
+            float               rx1, rx2, ry1, ry2; // Right sample history
 
-            void            handleParamUpdate(Parameter* param = NULL);
-            void            processData(float* in_buff, float* out_buff, int num_frames);
-            void            reset();
+            void                handleParamUpdate(Parameter* param = NULL);
+            void                processData(float* in_buff, float* out_buff, int num_frames);
+            void                reset();
 };
 
 class Filter1 : public Eff

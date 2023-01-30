@@ -299,7 +299,7 @@ void ControlPanel::handleChildEvent(Gobj* obj, InputEvent& ev)
         {
             while (ev.wheelDelta > 0)
             {
-                MGrid->adjustscale(1, -1);
+                MGrid->adjustScale(1, -1);
 
                 ev.wheelDelta--;
             }
@@ -308,7 +308,7 @@ void ControlPanel::handleChildEvent(Gobj* obj, InputEvent& ev)
         {
             while (ev.wheelDelta < 0)
             {
-                MGrid->adjustscale(-1, -1);
+                MGrid->adjustScale(-1, -1);
 
                 ev.wheelDelta++;
             }
@@ -344,15 +344,15 @@ void ControlPanel::handleChildEvent(Gobj* obj, InputEvent& ev)
             }
             else if (obj == btScale1)
             {
-                MGrid->setppt(2);
+                MGrid->setPixelsPerTick(2);
             }
             else if (obj == btScale2)
             {
-                MGrid->setppt(10);
+                MGrid->setPixelsPerTick(10);
             }
             else if (obj == btScale3)
             {
-                MGrid->setppt(32);
+                MGrid->setPixelsPerTick(32);
             }
             else if(obj == btHome)
             {
@@ -364,11 +364,11 @@ void ControlPanel::handleChildEvent(Gobj* obj, InputEvent& ev)
             }
             else if(obj == btZoomIn)
             {
-                MGrid->adjustscale(1);
+                MGrid->adjustScale(1);
             }
             else if(obj == btZoomOut)
             {
-                MGrid->adjustscale(-1);
+                MGrid->adjustScale(-1);
             }
             else if (obj == btScrollBack)
             {

@@ -777,7 +777,7 @@ void Grid::action(GridAction act, float dTick, int dLine)
     lastAction = act;
 }
 
-void Grid::adjustscale(int delta, int mouseRefX)
+void Grid::adjustScale(int delta, int mouseRefX)
 {
     float midTick = getTickFromX(getX1() + getW()/2);
 
@@ -804,7 +804,7 @@ void Grid::adjustscale(int delta, int mouseRefX)
         }
     }
 
-    setppt(val, mouseRefX);
+    setPixelsPerTick(val, mouseRefX);
 }
 
 ContextMenu* Grid::createContextMenu()
@@ -1637,7 +1637,7 @@ void Grid::handleMouseWheel(InputEvent& ev)
             {
                 while(ev.wheelDelta > 0)
                 {
-                    adjustscale(1, ev.mouseX);
+                    adjustScale(1, ev.mouseX);
 
                     ev.wheelDelta--;
                 }
@@ -1646,7 +1646,7 @@ void Grid::handleMouseWheel(InputEvent& ev)
             {
                 while(ev.wheelDelta < 0)
                 {
-                    adjustscale(-1, ev.mouseX);
+                    adjustScale(-1, ev.mouseX);
 
                     ev.wheelDelta++;
                 }
@@ -1991,7 +1991,7 @@ void Grid::setActionMode(GridActionMode md)
     mode = md;
 }
 
-void Grid::setppt(float ppt, int mouseRefX)
+void Grid::setPixelsPerTick(float ppt, int mouseRefX)
 {
     pixpertick = ppt;
 

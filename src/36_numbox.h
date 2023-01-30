@@ -72,21 +72,21 @@ class OctaveBox : public NumBox
 {
 public:
 
-        OctaveBox(int val);
+            OctaveBox(int val);
 
-        int     getValue() { return value; }
+            int     getValue() { return value; }
 
 protected:
 
-        int         value;
-        int         ySet;
-        int         xOld;
-        int         yOld;
-        bool        dragging;
+            int             value;
+            int             ySet;
+            int             xOld;
+            int             yOld;
+            bool            dragging;
 
-        void    drawSelf(Graphics& g);
-        void    handleMouseWheel(InputEvent & ev);
-        void    handleNumDrag(int count);
+            void            drawSelf(Graphics& g);
+            void            handleMouseWheel(InputEvent & ev);
+            void            handleNumDrag(int count);
 };
 
 

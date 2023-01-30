@@ -190,7 +190,7 @@ void Project36::deleteProject()
 
     // Position cursor, playback pos and mainbar
 
-    MGrid->setppt(6);
+    MGrid->setPixelsPerTick(6);
 
     // Reset scrollers here (todo)
 
