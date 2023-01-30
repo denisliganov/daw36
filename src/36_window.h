@@ -23,55 +23,53 @@ class WinObject;
 class CommonWindow  : public DocumentWindow
 {
 public:
-        CommonWindow() : DocumentWindow(T(""), Colours::white, 0, true) {}
+            CommonWindow() : DocumentWindow(T(""), Colours::white, 0, true) {}
 
-        void            closeButtonPressed();
-        WinObject*      getWinObject();
+            void                closeButtonPressed();
+            WinObject*          getWinObject();
 
 protected:
 
-        WinObject*          winObject;
+            WinObject*          winObject;
 };
 
 class MainWindow  : public CommonWindow
 {
-protected:
-
-        std::list<SubWindow*>   childs;
-
-        int xMouseDrag;
-        int yMouseDrag;
-
-
 public:
 
-        MainWindow(JuceComponent* winComp);
-        ~MainWindow();
+            MainWindow(JuceComponent* winComp);
+            ~MainWindow();
 
+            void                activeWindowStatusChanged();
+            void                broughtToFront();
+            SubWindow*          createChildWindowFromComponent(Component* comp, int x = -1, int y = -1);
+            SubWindow*          createChildWindowFromWinObject(WinObject* comp, int x = -1, int y = -1);
+            void                deleteChildWindow(SubWindow* cw);
+            void                deleteContextMenu();
+            void                minimizeChilds();
+            void                maximizeChilds();
+            bool                isContextMenuActive();
+            bool                isKeyDown(int keyCode);
+            bool                keyPressed(const KeyPress& key);
+            bool                keyStateChanged(bool isKeyDown);
+            void                lookAndFeelChanged();
+            void                mouseDrag(const MouseEvent & e);
+            void                mouseDoubleClick(const MouseEvent& e);
+            void                mouseDown(const MouseEvent& e);
+            void                minimisationStateChanged (bool isNowMinimised);
+            void                paint(Graphics& g);
+            void                resized();
+            void                showMenuWindow(WinObject* comp, int x, int y);
+            std::string         showAlertBox(std::string message, std::string bt1 = "OK", std::string bt2 = "", std::string bt3 = "");
+            void                setFocusToChild(SubWindow* sw);
+            void                updateTitle();
 
-        void        updateTitle();
-        void        minimizeChilds();
-        void        maximizeChilds();
-        void        showMenuWindow(WinObject* comp, int x, int y);
-        bool        isContextMenuActive();
-        void        deleteContextMenu();
-        std::string showAlertBox(std::string message, std::string bt1 = "OK", std::string bt2 = "", std::string bt3 = "");
-        SubWindow*  createChildWindowFromComponent(Component* comp, int x = -1, int y = -1);
-        SubWindow*  createChildWindowFromWinObject(WinObject* comp, int x = -1, int y = -1);
-        void        deleteChildWindow(SubWindow* cw);
-        void        setFocusToChild(SubWindow* sw);
-        void        mouseDoubleClick(const MouseEvent& e);
-        void        mouseDown(const MouseEvent& e);
-        bool        keyPressed(const KeyPress& key);
-        void        activeWindowStatusChanged();
-        void        broughtToFront();
-        void        paint(Graphics& g);
-        void        minimisationStateChanged (bool isNowMinimised);
-        void        lookAndFeelChanged();
-        void        resized();
-        void        mouseDrag(const MouseEvent & e);
-        bool        keyStateChanged(bool isKeyDown);
-        bool        isKeyDown(int keyCode);
+protected:
+
+            std::list<SubWindow*>   childs;
+
+            int                 xMouseDrag;
+            int                 yMouseDrag;
 };
 
 class WinButton  : public Button
@@ -93,36 +91,36 @@ friend  MainWindow;
 
 public:
 
-        SubWindow(bool title_bar = true);
-        SubWindow(Component* comp, bool title_bar = true);
-        SubWindow(WinObject* wo, bool title_bar = true);
-        ~SubWindow();
+            SubWindow(bool title_bar = true);
+            SubWindow(Component* comp, bool title_bar = true);
+            SubWindow(WinObject* wo, bool title_bar = true);
+            ~SubWindow();
 
-        bool            isOpen()   { return open; }
-        void            setOpen(bool vis);
-        void            updateTitle();
-        void            setColor(uint32 clr) { color = clr; }
+            bool                isOpen()   { return open; }
+            void                setOpen(bool vis);
+            void                setColor(uint32 clr) { color = clr; }
 
 protected:
 
-        bool            updFocus;
-        bool            open;
-        Component*      cc;
-        WinButton*      closeButton;
-        MainWindow*     parentWindow;
-        int             xcoffs;
-        int             ycoffs;
-        uint32          color;
+            uint32              color;
+            Component*          cc;
+            WinButton*          closeButton;
+            bool                open;
+            MainWindow*         parentWindow;
+            int                 xcoffs;
+            int                 ycoffs;
+            bool                updFocus;
 
-        void            broughtToFront();
-        void            parentHierarchyChanged();
-        void            mouseDown(const MouseEvent& e);
-        void            paint(Graphics& g);
-        void            buttonClicked(Button* butt);
-        void            resized();
-        void            lookAndFeelChanged();
-        void            closeButtonPressed();
-        int             getDesktopWindowStyleFlags() const;
+            void                buttonClicked(Button* butt);
+            void                broughtToFront();
+            void                closeButtonPressed();
+            int                 getDesktopWindowStyleFlags() const;
+            void                lookAndFeelChanged();
+            void                mouseDown(const MouseEvent& e);
+            void                parentHierarchyChanged();
+            void                paint(Graphics& g);
+            void                resized();
+            void                updateTitle();
 };
 
 
@@ -140,29 +138,28 @@ typedef enum CursorType
 }CursorType;
 
 
-
 class JuceListener : public Component, public Timer
 {
 friend  JuceComponent;
 
 protected:
 
-            JuceComponent*  mainComp;
-            WinObject*      winObject;
+            JuceComponent*      mainComp;
+            WinObject*          winObject;
 
-            unsigned    getFlags(const MouseEvent& e);
-            void        mouseUp(const MouseEvent& e);
-            void        mouseDown(const MouseEvent& e);
-            void        mouseMove(const MouseEvent& e);
-            void        mouseDrag(const MouseEvent& e);
-            void        mouseExit(const MouseEvent& e);
-            void        mouseEnter(const MouseEvent& e);
-            void        mouseWheelMove(const MouseEvent& e, float wheelIncrementX, float wheelIncrementY);
-            void        redrawPerAction();
-            void        timerCallback();
-            void        paint(Graphics& g);
-    virtual void        modifierKeysChanged (const ModifierKeys& modifiers);
-            bool        iamOnMenu();
+            unsigned            getFlags(const MouseEvent& e);
+            bool                iamOnMenu();
+            void                mouseUp(const MouseEvent& e);
+            void                mouseDown(const MouseEvent& e);
+            void                mouseMove(const MouseEvent& e);
+            void                mouseDrag(const MouseEvent& e);
+            void                mouseExit(const MouseEvent& e);
+            void                mouseEnter(const MouseEvent& e);
+            void                mouseWheelMove(const MouseEvent& e, float wheelIncrementX, float wheelIncrementY);
+    virtual void                modifierKeysChanged (const ModifierKeys& modifiers);
+            void                paint(Graphics& g);
+            void                redrawPerAction();
+            void                timerCallback();
 
 public:
 
@@ -179,24 +176,24 @@ friend  WinObject;
 
 protected:
 
-            JuceListener*           listen;
-            WinObject*              winObject;
+            JuceListener*       listen;
+            WinObject*          winObject;
 
 public:
 
             JuceComponent(WinObject* win);
             ~JuceComponent();
 
-            void        paint(Graphics& g);
-            void        resized();
-            void        buttonClicked(Button* button);
-            void        repaintObject(Gobj* obj);
-            void        makeSnapshot(Image** img, int x, int y, int w, int h, Image* otherimg = NULL);
-            void        addRepaint(int x, int y, int w, int h);
-            void        addChangedObject(Gobj* obj);
-            void        setCursor(CursorType cur_type);
-    virtual void        handleWindowResize(int wx, int wh) {}
-            WinObject&  getWinObject() { return *winObject; }
+            void                addRepaint(int x, int y, int w, int h);
+            void                addChangedObject(Gobj* obj);
+            void                buttonClicked(Button* button);
+            WinObject&          getWinObject() { return *winObject; }
+    virtual void                handleWindowResize(int wx, int wh) {}
+            void                makeSnapshot(Image** img, int x, int y, int w, int h, Image* otherimg = NULL);
+            void                paint(Graphics& g);
+            void                resized();
+            void                repaintObject(Gobj* obj);
+            void                setCursor(CursorType cur_type);
 };
 
 
@@ -207,28 +204,27 @@ public:
             Hintbox(WinObject* wobj);
             ~Hintbox() {};
 
-            void        setText(std::string new_text, int xc, int yc);
-            void        restart(Gobj* obj, int xc, int yc);
-            void        stop();
-            bool        isBlocked() { return blocked; }
+            void                setText(std::string new_text, int xc, int yc);
+            void                restart(Gobj* obj, int xc, int yc);
+            void                stop();
+            bool                isBlocked() { return blocked; }
 
 protected:
 
-            Gobj*       activeObj;
-            std::string text;
-            int         x;
-            int         y;
-            int         tx;
-            int         ty;
-            bool        blocked;
-            FontId      font;
-            WinObject*  winObject;
+            Gobj*               activeObj;
+            std::string         text;
+            int                 x;
+            int                 y;
+            int                 tx;
+            int                 ty;
+            bool                blocked;
+            FontId              font;
+            WinObject*          winObject;
 
-            void        mouseEnter(const MouseEvent& e);
-            void        timerCallback();
-            void        paint(Graphics& g);
-            int         getDesktopWindowStyleFlags() const;
-
+            int                 getDesktopWindowStyleFlags() const;
+            void                mouseEnter(const MouseEvent& e);
+            void                paint(Graphics& g);
+            void                timerCallback();
 };
 
 class WinObject : public Gobj, public JuceComponent
@@ -245,20 +241,15 @@ public:
 
             WinObject();
             ~WinObject();
-            void                deleteWindow(SubWindow* sw);
             SubWindow*          addWindow(WinObject* comp);
             SubWindow*          addLegacyWindow(Component* comp);
             bool                canDrag(Gobj* obj);
-            void                dragAdd(Gobj* drag_obj, int mx, int my);
-            void                setCursor(CursorType cur_type);
-            void                setMousePosition(int x, int y);
-            Gobj*               getActiveObj() { return activeObj; }
-            void                refreshActiveObject();
-            InputEvent&         getLastEvent() { return lastEvent; }
             Image*              createSnapshot(int x, int y, int width, int height);
-            void                registerObject(Gobj* obj);
-            void                unregisterObject(Gobj* obj);
-            bool                isDragging();
+            void                dragDrop(int mouse_x, int mouse_y, unsigned int flags);
+            void                deleteWindow(SubWindow* sw);
+            void                dragAdd(Gobj* drag_obj, int mx, int my);
+            Gobj*               getActiveObj() { return activeObj; }
+            InputEvent&         getLastEvent() { return lastEvent; }
     virtual void                handleClose() {}
             void                handleMouseEnter(InputEvent& ev);
             void                handleMouseLeave(InputEvent& ev);
@@ -267,29 +258,34 @@ public:
             void                handleMouseUp(InputEvent& ev);
             void                handleMouseDown(InputEvent& ev);
             void                handleMouseDrag(InputEvent& ev);
+            bool                isDragging();
+            void                refreshActiveObject();
+            void                registerObject(Gobj* obj);
+            void                setCursor(CursorType cur_type);
+            void                setMousePosition(int x, int y);
             void                showMenu(ContextMenu* menu, int x, int y);
-            void                dragDrop(int mouse_x, int mouse_y, unsigned int flags);
-            void                updateHint(InputEvent& ev);
             void                setWidthHeight(int wnew,int hnew);
+            void                unregisterObject(Gobj* obj);
 
 protected:
 
-            HANDLE                  guiMutex;
-            std::list<Gobj*>        changedObjects;
-            std::list<Gobj*>        highlights;
-            std::list<Rect*>        repaints;
-            std::list<Gobj*>        vus;
-
-            CommonWindow*       holderWindow;
-            DragAndDrop*        drag;
-            Gobj*               lastActiveObj;
             Gobj*               activeObj;
+            DragAndDrop*        drag;
+            int                 dragDistance;
+            CommonWindow*       holderWindow;
             Hintbox*            hintBox;
             Gobj*               hintObj;
+            Gobj*               lastActiveObj;
             InputEvent          lastEvent;
-            int                 dragDistance;
 
+            std::list<Gobj*>    changedObjects;
+            HANDLE              guiMutex;
+            std::list<Gobj*>    highlights;
+            std::list<Rect*>    repaints;
+            std::list<Gobj*>    vus;
+    
     virtual void                updActiveObject(InputEvent& ev);
+            void                updateHint(InputEvent& ev);
 };
 
 

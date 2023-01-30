@@ -12,6 +12,10 @@
 
 class NumBox : public Control
 {
+public:
+
+        NumBox() {}
+
 protected:
 
             int         ySet;
@@ -22,55 +26,56 @@ protected:
 
             float       value;
 
+            void    drawSelf(Graphics& g);
     virtual void    handleMouseDown(InputEvent& ev);
     virtual void    handleMouseUp(InputEvent& ev);
     virtual void    handleMouseDrag(InputEvent& ev);
-            void    drawSelf(Graphics& g);
 
     virtual void    handleNumDrag(int count) {}
     virtual void    updAfterDrag() {}
-
-public:
-
-        NumBox() {}
 };
 
 
 class BpmBox : public NumBox
 {
+public:
+
+            BpmBox(float val);
+
 protected:
 
             void    drawSelf(Graphics& g);
             void    handleNumDrag(int count);
-            void    updAfterDrag();
             void    handleMouseWheel(InputEvent& ev);
-
-public:
-
-            BpmBox(float val);
+            void    updAfterDrag();
 };
 
 class MeterBox : public NumBox
 {
+public:
+
+        MeterBox(int tpb, int bpb);
+
 protected:
 
         int             tpbVal;
         int             bpbVal;
 
-
         void    drawSelf(Graphics& g);
         void    handleNumDrag(int count);
-        void    updAfterDrag();
         void    handleMouseWheel(InputEvent& ev);
-
-public:
-
-        MeterBox(int tpb, int bpb);
+        void    updAfterDrag();
 };
 
 
 class OctaveBox : public NumBox
 {
+public:
+
+        OctaveBox(int val);
+
+        int     getValue() { return value; }
+
 protected:
 
         int         value;
@@ -79,15 +84,9 @@ protected:
         int         yOld;
         bool        dragging;
 
+        void    drawSelf(Graphics& g);
         void    handleMouseWheel(InputEvent & ev);
         void    handleNumDrag(int count);
-        void    drawSelf(Graphics& g);
-
-public:
-
-        OctaveBox(int val);
-
-        int     getValue() { return value; }
 };
 
 
@@ -97,17 +96,17 @@ class TimeScreen : public NumBox
 friend ControlPanel;
 friend Audio36;
 
+public:
+
+        TimeScreen();
+
 protected:
 
-        ChanVU*             vu;
+        ChanVU* vu;
 
         void    drawSelf(Graphics& g);
         void    handleNumDrag(int count);
         void    handleMouseWheel(InputEvent& ev);
-
-public:
-
-        TimeScreen();
 };
 
 
@@ -117,7 +116,6 @@ friend Parameter;
 
 public:
             ParamBox(Parameter* param);
-
             std::string     getClickHint();
             float           getMinStep();
             void            setSliderOnly(bool so) { sliderOnly = so; }

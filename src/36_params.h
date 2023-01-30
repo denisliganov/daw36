@@ -148,6 +148,27 @@ protected:
             std::list<Control*> controls;
 };
 
+class ParamOnOff
+{
+public:
+
+            ParamOnOff();
+};
+
+class ParamSelector
+{
+public:
+
+            ParamSelector();
+};
+
+class ParamRadio
+{
+public:
+
+            ParamRadio();
+};
+
 class BoolParam : public Parameter
 {
 public:

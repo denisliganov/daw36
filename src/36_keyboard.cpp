@@ -492,9 +492,10 @@ void TextCursor::handleKeyOrCharPressed(unsigned key, char character, unsigned f
             
                     wc->setOpen(true);
             
-                    wc = MObject->addLegacyWindow(new ConfigComponent());
-            
-                    wc->setOpen(true);
+                    //wc = MObject->addLegacyWindow(new ConfigComponent());
+                    //wc->setOpen(true);
+                    
+                    /*
             
                     wc = MObject->addLegacyWindow(new RenderComponent());
             
@@ -510,7 +511,7 @@ void TextCursor::handleKeyOrCharPressed(unsigned key, char character, unsigned f
             
                     wc = MObject->addLegacyWindow(new SampleComponent());
             
-                    wc->setOpen(true);
+                    wc->setOpen(true);*/
                 }
                 break;
             
