@@ -247,7 +247,7 @@ void KeyHandler::handleKeyStateChange(bool key_down)
         MCursor->releaseChar('a');
     }
 
-    MGrid->recalcElems();
+    MGrid->recalcElements();
 }
 
 void KeyHandler::handleNoteKey(int key, int note_val, bool press)
@@ -261,9 +261,9 @@ void KeyHandler::handleNoteKey(int key, int note_val, bool press)
 
         if(note == NULL)
         {
-            note = MGrid->putnote(MCursor->getTick(), MCursor->getLine(), note_val);
+            note = MGrid->putNote(MCursor->getTick(), MCursor->getLine(), note_val);
 
-            MGrid->setactivelem(note);
+            MGrid->setActivElement(note);
         }
         else
         {
@@ -361,7 +361,7 @@ void TextCursor::handleKeyOrCharPressed(unsigned key, char character, unsigned f
         {
             if(key == 'A')
             {
-                grid->selall(true);
+                grid->selectAll(true);
             }
             else if(key == 'C')
             {
@@ -475,11 +475,11 @@ void TextCursor::handleKeyOrCharPressed(unsigned key, char character, unsigned f
                 {
                     if (grid->getDisplayMode() == GridDisplayMode_Steps)
                     {
-                        grid->setdispmode(GridDisplayMode_Bars);
+                        grid->setEditMode(GridDisplayMode_Bars);
                     }
                     else if (grid->getDisplayMode() == GridDisplayMode_Bars)
                     {
-                        grid->setdispmode(GridDisplayMode_Steps);
+                        grid->setEditMode(GridDisplayMode_Steps);
                     }
             
                     grid->redraw(true);
@@ -551,7 +551,7 @@ void TextCursor::handleKeyOrCharPressed(unsigned key, char character, unsigned f
 
     MHistory->newGroup();
 
-    grid->recalcElems();
+    grid->recalcElements();
 }
 
 void TextCursor::releaseChar(char c)
@@ -583,13 +583,13 @@ void TextCursor::handleChar(char c)
 
     if (i != NULL)
     {
-        Note* existingNote = grid->getNoteAt(tick, line);
+        Note* existingNote = grid->getNoteAtPos(tick, line);
 
         while (existingNote != NULL)
         {
-            grid->setactivelem(existingNote);
+            grid->setActivElement(existingNote);
             grid->action(GridAction_Delete, getTick(), getLine());
-            existingNote = grid->getNoteAt(tick, line);
+            existingNote = grid->getNoteAtPos(tick, line);
         }
 
         MInstrPanel->setCurrInstr(i);
@@ -600,7 +600,7 @@ void TextCursor::handleChar(char c)
 
         grid->updateList.clear();
 
-        grid->setactivelem(note);
+        grid->setActivElement(note);
 
         note->recalc();
 

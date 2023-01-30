@@ -97,42 +97,6 @@ Sample::~Sample()
 ///
 }
 
-void Sample::save(XmlElement * instrNode)
-{
-    Instrument::save(instrNode);
-
-    instrNode->setAttribute(T("Normalized"), normalized ? 1 : 0);
-    instrNode->setAttribute(T("LoopStart"), String(lp_start));
-    instrNode->setAttribute(T("LoopEnd"), String(lp_end));
-    instrNode->setAttribute(T("LoopType"), int(looptype));
-
-    // XmlElement * envX = envVol->save("SmpEnv");
-    // instrNode->addChildElement(envX);
-}
-
-void Sample::load(XmlElement * instrNode)
-{
-    Instrument::load(instrNode);
-
-    bool norm = instrNode->getBoolAttribute(T("Normalized"));
-
-    if(normalized != norm)
-    {
-        toggleNormalize();
-    }
-
-    lp_start = (long)instrNode->getStringAttribute(T("LoopStart")).getLargeIntValue();
-    lp_end = (long)instrNode->getStringAttribute(T("LoopEnd")).getLargeIntValue();
-    looptype = (LoopType)instrNode->getIntAttribute(T("LoopType"));
-
-    XmlElement * envX = instrNode->getChildByName(T("SmpEnv"));
-
-    if(envX != NULL)
-    {
-        envVol->load(envX);
-    }
-}
-
 void Sample::activateTrigger(Trigger* tg)
 {
     SampleNote* samplent = (SampleNote*)tg->el;
@@ -161,8 +125,8 @@ void Sample::activateTrigger(Trigger* tg)
             tg->freq_incr_base = calcSampleFreqIncrement(tg->noteVal - BaseNote);
         }
 
-        tg->volBase = samplent->vol->outVal;
-        tg->panBase = samplent->pan->outVal;
+        tg->volBase = samplent->vol->getOutVal();
+        tg->panBase = samplent->pan->getOutVal();
 
         tg->ep1 = envVol->points.front();
 
@@ -173,6 +137,29 @@ void Sample::activateTrigger(Trigger* tg)
 
         activeTriggers.push_back(tg);
     }
+}
+
+void Sample::copyDataToClonedInstrument(Instrument * instr)
+{
+    Instrument::makeClone(instr);
+    Sample* nsample = (Sample*)instr;
+
+    delete nsample->envVol;
+
+    nsample->envVol = envVol->clone();
+
+    if(normalized != nsample->normalized)
+    {
+        nsample->toggleNormalize();
+    }
+
+    nsample->setLoopPoints(lp_start, lp_end);
+    nsample->looptype = looptype;
+}
+
+float Sample::calcSampleFreqIncrement(int semitones)
+{
+    return rateDown*(CalcFreqRatio(semitones));
 }
 
 bool Sample::checkBounds(SampleNote* samplent, Trigger* tg, long num_frames)
@@ -249,197 +236,18 @@ bool Sample::checkBounds(SampleNote* samplent, Trigger* tg, long num_frames)
     return false;
 }
 
-long Sample::processTrigger(Trigger * tg, long num_frames, long buffframe)
+SubWindow* Sample::createWindow()
 {
-    SampleNote* samplent = (SampleNote*)tg->el;
-    fill = true;
-    skip = false;
-
-    // Initial stuff
-
-    tg->freq_incr_active = tg->freq_incr_base;
-
-    tg->vol_val = tg->volBase;
-    tg->pan_val = tg->panBase;
-
-    preProcessTrigger(tg, &skip, &fill, num_frames, buffframe);
-
-    if(!skip)
-    {
-        long cc, tc0 = buffframe*2;
-        float sd1, sd2;
-
-        for(cc = 0; cc < num_frames; cc++)
-        {
-            if(samplent->isOutOfBounds(&tg->wt_pos) == true)
-            {
-                break;
-            }
-
-            if(fill)
-            {
-                if(1 == sample_info.channels) // Mono sample
-                {
-                    getMonoData(tg->wt_pos, &sd1);
-
-                    inBuff[tc0++] = sd1*tg->envVal1;
-                    inBuff[tc0++] = sd1*tg->envVal1;
-                }
-                else if(2 == sample_info.channels) // Stereo sample
-                {
-                    getStereoData(tg->wt_pos, &sd1, &sd2);
-
-                    inBuff[tc0++] = sd1*tg->envVal1;
-                    inBuff[tc0++] = sd2*tg->envVal1;
-                }
-            }
-
-            tg->env_phase1 += MAudio->getInvertedSampleRate();
-
-            /*
-            while(tg->ep1->next != NULL && (tg->env_phase1 >= tg->ep1->next->tick || tg->ep1->next->tick == tg->ep1->tick))
-            {
-                tg->ep1 = tg->ep1->next;
-            }
-
-            if(tg->ep1->next != NULL && (tg->ep1->next->tick > tg->ep1->tick))
-            {
-                tg->envVal1 = Interpolate_Line(tg->ep1->tick, tg->ep1->y_norm, tg->ep1->next->tick, tg->ep1->next->y_norm, tg->env_phase1); //tg->ep1->cf*one_divided_per_sample_rate;
-                tg->envVal1 = GetVolOutput(tg->envVal1);
-            }*/
-
-            //ebuff1[buffframe + ic] = tg->envV1;
-
-            tg->envVal1 = 1;
-
-            tg->wt_pos += tg->freq_incr_sgn*tg->freq_incr_active;
-
-            if(tg->freq_incr_sgn == 1 && tg->wt_pos >= lp_end)
-            {
-                if(looptype == LoopType_ForwardLoop)
-                {
-                    tg->wt_pos = lp_start;
-                }
-                else if(looptype == LoopType_PingPongLoop)
-                {
-                    tg->freq_incr_sgn = -1;
-
-                    tg->wt_pos = lp_end;
-                }
-            }
-            else if(tg->freq_incr_sgn == -1 && tg->wt_pos <= lp_start)
-            {
-                if(looptype == LoopType_ForwardLoop)
-                {
-                    tg->wt_pos = lp_end;
-                }
-                else if(looptype == LoopType_PingPongLoop)
-                {
-                    tg->freq_incr_sgn = 1;
-
-                    tg->wt_pos = lp_start;
-                }
-            }
-
-            tg->framePhase++;
-        }
-
-        checkBounds(samplent, tg, cc);
-
-        return cc;
-    }
-    else
-    {
-        return 0;
-    }
+    return window->addWindow(new SampleObject());
 }
 
-void Sample::updateNormalizeFactor()
+// Return pixel length for a number of frames, depending on sample rate and current tick width
+
+int Sample::calcPixLength(long num_frames, long sample_rate, float tickwidth)
 {
-    float dmax = 0;
-    float dcurr;
-    long dc = 0;
-    long total = long(numFrames*sample_info.channels);
+    float rate = (float)MAudio->getSampleRate()/sample_info.samplerate;
 
-    while(dc < total)
-    {
-        dcurr = fabs(sampleData[dc]);
-
-        if(dcurr > dmax)
-        {
-            dmax = dcurr;
-        }
-
-        dc++;
-    }
-
-    if(dmax > 0)
-    {
-        normFactor = 1.0f/dmax;
-    }
-}
-
-void Sample::toggleNormalize()
-{
-    if(normFactor != 0)
-    {
-        normalized = !normalized;
-        float mult;
-
-        if(normalized == true)
-        {
-            mult = normFactor;
-        }
-        else
-        {
-            mult = 1.0f/normFactor;
-        }
-
-        long dc = 0;
-        long total = long(numFrames*sample_info.channels);
-
-        while(dc < total)
-        {
-            sampleData[dc] *= mult;
-
-            dc++;
-        }
-    }
-}
-
-void Sample::setLoopStart(long start)
-{
-    lp_start = start;
-}
-
-void Sample::setLoopEnd(long end)
-{
-    lp_end = end;
-}
-
-void Sample::setLoopPoints(long start, long end)
-{
-    lp_start = start;
-
-    lp_end = end;
-}
-
-void Sample::copyDataToClonedInstrument(Instrument * instr)
-{
-    Instrument::makeClone(instr);
-    Sample* nsample = (Sample*)instr;
-
-    delete nsample->envVol;
-
-    nsample->envVol = envVol->clone();
-
-    if(normalized != nsample->normalized)
-    {
-        nsample->toggleNormalize();
-    }
-
-    nsample->setLoopPoints(lp_start, lp_end);
-    nsample->looptype = looptype;
+    return RoundDouble(((double)numFrames/(double)MAudio->getSampleRate())/MTransp->getSecondsPerTick()*MGrid->getPixelsPerTick()*rate);
 }
 
 void Sample::dumpData()
@@ -453,49 +261,6 @@ void Sample::dumpData()
     os->write(sampleData, int(numFrames*sample_info.channels*sizeof(float)));
 
     delete os;
-}
-
-
-inline float Sample::gaussInterpolation(float* Yi, float dX)
-{
-    float ret_val = 0;
-
-    dX += 2;
-
-    ret_val = (float)((((((-1.0/12.0*Yi[2]-1.0/120.0*Yi[0]+1.0/24.0*Yi[1]+1.0/120.0*Yi[5]+1.0/12.0*Yi[3]-1.0/24.0*Yi[4])*dX + \
-                       (13.0/12.0*Yi[2]+1.0/8.0*Yi[0]-7.0/12.0*Yi[1]-1.0/12.0*Yi[5]-Yi[3]+11.0/24.0*Yi[4]))*dX + \
-                       (-59.0/12.0*Yi[2]-17.0/24.0*Yi[0]+71.0/24.0*Yi[1]+7.0/24.0*Yi[5]+49.0/12.0*Yi[3]-41.0/24.0*Yi[4]))*dX + \
-                       (107.0/12.0*Yi[2]+15.0/8.0*Yi[0]-77.0/12.0*Yi[1]-5.0/12.0*Yi[5]-13.0/2.0*Yi[3]+61.0/24.0*Yi[4]))*dX + \
-                       (-137.0/60.0*Yi[0]+5.0*Yi[1]-5.0*Yi[2]+10.0/3.0*Yi[3]-5.0/4.0*Yi[4]+1.0/5.0*Yi[5]))*dX + Yi[0]);
-
-    return ret_val;
-}
-
-inline double Sample::sinc(double a)
-{
-    return sin(PI*a)/(PI*a);
-}
-
-inline double Sample::sincWindowedBlackman(double a, double b, unsigned int num)
-{
-    return sinc(a)*(0.42 - 0.5*cos((2.f*PI*b)/((float)num)) + 0.08*cos((4.f*PI*b)/((float)num)));
-}
-
-inline float Sample::sincInterpolate(float* Yi, double dX, unsigned int num)
-{
-    double ret_val = 0;
-    unsigned char mid = num/2;
-    int j = (int)(0 - mid);
-    unsigned int i = 0;
-
-    for (; i < num; ++i)
-    {
-        ret_val += Yi[i]*sincWindowedBlackman((double)(j - dX), (double) (i - dX), num);
-
-        ++j;
-    }
-
-    return (float)ret_val;
 }
 
 inline void Sample::getMonoData(double cursor_pos, float* dataLR)
@@ -858,18 +623,257 @@ inline void Sample::getStereoData(double cursor_pos, float* dataL, float* dataR)
     }
 }
 
-SubWindow* Sample::createWindow()
+inline float Sample::gaussInterpolation(float* Yi, float dX)
 {
-    return window->addWindow(new SampleObject());
+    float ret_val = 0;
+
+    dX += 2;
+
+    ret_val = (float)((((((-1.0/12.0*Yi[2]-1.0/120.0*Yi[0]+1.0/24.0*Yi[1]+1.0/120.0*Yi[5]+1.0/12.0*Yi[3]-1.0/24.0*Yi[4])*dX + \
+                       (13.0/12.0*Yi[2]+1.0/8.0*Yi[0]-7.0/12.0*Yi[1]-1.0/12.0*Yi[5]-Yi[3]+11.0/24.0*Yi[4]))*dX + \
+                       (-59.0/12.0*Yi[2]-17.0/24.0*Yi[0]+71.0/24.0*Yi[1]+7.0/24.0*Yi[5]+49.0/12.0*Yi[3]-41.0/24.0*Yi[4]))*dX + \
+                       (107.0/12.0*Yi[2]+15.0/8.0*Yi[0]-77.0/12.0*Yi[1]-5.0/12.0*Yi[5]-13.0/2.0*Yi[3]+61.0/24.0*Yi[4]))*dX + \
+                       (-137.0/60.0*Yi[0]+5.0*Yi[1]-5.0*Yi[2]+10.0/3.0*Yi[3]-5.0/4.0*Yi[4]+1.0/5.0*Yi[5]))*dX + Yi[0]);
+
+    return ret_val;
 }
 
-// Return pixel length for a number of frames, depending on sample rate and current tick width
-
-int Sample::calcPixLength(long num_frames, long sample_rate, float tickwidth)
+void Sample::load(XmlElement * instrNode)
 {
-    float rate = (float)MAudio->getSampleRate()/sample_info.samplerate;
+    Instrument::load(instrNode);
 
-    return RoundDouble(((double)numFrames/(double)MAudio->getSampleRate())/MTransp->getSecondsPerTick()*MGrid->getppt()*rate);
+    bool norm = instrNode->getBoolAttribute(T("Normalized"));
+
+    if(normalized != norm)
+    {
+        toggleNormalize();
+    }
+
+    lp_start = (long)instrNode->getStringAttribute(T("LoopStart")).getLargeIntValue();
+    lp_end = (long)instrNode->getStringAttribute(T("LoopEnd")).getLargeIntValue();
+    looptype = (LoopType)instrNode->getIntAttribute(T("LoopType"));
+
+    XmlElement * envX = instrNode->getChildByName(T("SmpEnv"));
+
+    if(envX != NULL)
+    {
+        envVol->load(envX);
+    }
+}
+
+long Sample::processTrigger(Trigger * tg, long num_frames, long buffframe)
+{
+    SampleNote* samplent = (SampleNote*)tg->el;
+    fill = true;
+    skip = false;
+
+    // Initial stuff
+
+    tg->freq_incr_active = tg->freq_incr_base;
+
+    tg->vol_val = tg->volBase;
+    tg->pan_val = tg->panBase;
+
+    preProcessTrigger(tg, &skip, &fill, num_frames, buffframe);
+
+    if(!skip)
+    {
+        long cc, tc0 = buffframe*2;
+        float sd1, sd2;
+
+        for(cc = 0; cc < num_frames; cc++)
+        {
+            if(samplent->isOutOfBounds(&tg->wt_pos) == true)
+            {
+                break;
+            }
+
+            if(fill)
+            {
+                if(1 == sample_info.channels) // Mono sample
+                {
+                    getMonoData(tg->wt_pos, &sd1);
+
+                    inBuff[tc0++] = sd1*tg->envVal1;
+                    inBuff[tc0++] = sd1*tg->envVal1;
+                }
+                else if(2 == sample_info.channels) // Stereo sample
+                {
+                    getStereoData(tg->wt_pos, &sd1, &sd2);
+
+                    inBuff[tc0++] = sd1*tg->envVal1;
+                    inBuff[tc0++] = sd2*tg->envVal1;
+                }
+            }
+
+            tg->env_phase1 += MAudio->getInvertedSampleRate();
+
+            /*
+            while(tg->ep1->next != NULL && (tg->env_phase1 >= tg->ep1->next->tick || tg->ep1->next->tick == tg->ep1->tick))
+            {
+                tg->ep1 = tg->ep1->next;
+            }
+
+            if(tg->ep1->next != NULL && (tg->ep1->next->tick > tg->ep1->tick))
+            {
+                tg->envVal1 = Interpolate_Line(tg->ep1->tick, tg->ep1->y_norm, tg->ep1->next->tick, tg->ep1->next->y_norm, tg->env_phase1); //tg->ep1->cf*one_divided_per_sample_rate;
+                tg->envVal1 = GetVolOutput(tg->envVal1);
+            }*/
+
+            //ebuff1[buffframe + ic] = tg->envV1;
+
+            tg->envVal1 = 1;
+
+            tg->wt_pos += tg->freq_incr_sgn*tg->freq_incr_active;
+
+            if(tg->freq_incr_sgn == 1 && tg->wt_pos >= lp_end)
+            {
+                if(looptype == LoopType_ForwardLoop)
+                {
+                    tg->wt_pos = lp_start;
+                }
+                else if(looptype == LoopType_PingPongLoop)
+                {
+                    tg->freq_incr_sgn = -1;
+
+                    tg->wt_pos = lp_end;
+                }
+            }
+            else if(tg->freq_incr_sgn == -1 && tg->wt_pos <= lp_start)
+            {
+                if(looptype == LoopType_ForwardLoop)
+                {
+                    tg->wt_pos = lp_end;
+                }
+                else if(looptype == LoopType_PingPongLoop)
+                {
+                    tg->freq_incr_sgn = 1;
+
+                    tg->wt_pos = lp_start;
+                }
+            }
+
+            tg->framePhase++;
+        }
+
+        checkBounds(samplent, tg, cc);
+
+        return cc;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+void Sample::setLoopStart(long start)
+{
+    lp_start = start;
+}
+
+void Sample::setLoopEnd(long end)
+{
+    lp_end = end;
+}
+
+void Sample::setLoopPoints(long start, long end)
+{
+    lp_start = start;
+
+    lp_end = end;
+}
+
+inline double Sample::sinc(double a)
+{
+    return sin(PI*a)/(PI*a);
+}
+
+inline double Sample::sincWindowedBlackman(double a, double b, unsigned int num)
+{
+    return sinc(a)*(0.42 - 0.5*cos((2.f*PI*b)/((float)num)) + 0.08*cos((4.f*PI*b)/((float)num)));
+}
+
+inline float Sample::sincInterpolate(float* Yi, double dX, unsigned int num)
+{
+    double ret_val = 0;
+    unsigned char mid = num/2;
+    int j = (int)(0 - mid);
+    unsigned int i = 0;
+
+    for (; i < num; ++i)
+    {
+        ret_val += Yi[i]*sincWindowedBlackman((double)(j - dX), (double) (i - dX), num);
+
+        ++j;
+    }
+
+    return (float)ret_val;
+}
+
+void Sample::save(XmlElement * instrNode)
+{
+    Instrument::save(instrNode);
+
+    instrNode->setAttribute(T("Normalized"), normalized ? 1 : 0);
+    instrNode->setAttribute(T("LoopStart"), String(lp_start));
+    instrNode->setAttribute(T("LoopEnd"), String(lp_end));
+    instrNode->setAttribute(T("LoopType"), int(looptype));
+
+    // XmlElement * envX = envVol->save("SmpEnv");
+    // instrNode->addChildElement(envX);
+}
+
+void Sample::toggleNormalize()
+{
+    if(normFactor != 0)
+    {
+        normalized = !normalized;
+        float mult;
+
+        if(normalized == true)
+        {
+            mult = normFactor;
+        }
+        else
+        {
+            mult = 1.0f/normFactor;
+        }
+
+        long dc = 0;
+        long total = long(numFrames*sample_info.channels);
+
+        while(dc < total)
+        {
+            sampleData[dc] *= mult;
+
+            dc++;
+        }
+    }
+}
+
+void Sample::updateNormalizeFactor()
+{
+    float dmax = 0;
+    float dcurr;
+    long dc = 0;
+    long total = long(numFrames*sample_info.channels);
+
+    while(dc < total)
+    {
+        dcurr = fabs(sampleData[dc]);
+
+        if(dcurr > dmax)
+        {
+            dmax = dcurr;
+        }
+
+        dc++;
+    }
+
+    if(dmax > 0)
+    {
+        normFactor = 1.0f/dmax;
+    }
 }
 
 void Sample::updWaveImage()
@@ -884,8 +888,8 @@ void Sample::updWaveImage()
     //int pixlen = (int)(((double)sample_info.frames/(double)_MAudio->getSampleRate())/MainClock->getSecondsPerTick()*_MGrid->getPixelsPerTick());
 
     double ticks = (double)numFrames*rateUp/MTransp->getFramesPerTick();
-    int pixels = ticks*MGrid->getppt();
-    float ppf = rateUp*(MGrid->getppt()/MTransp->getFramesPerTick());
+    int pixels = ticks*MGrid->getPixelsPerTick();
+    float ppf = rateUp*(MGrid->getPixelsPerTick()/MTransp->getFramesPerTick());
 
     if (pixels > 0)
     {
@@ -1022,9 +1026,5 @@ void Sample::updWaveImage()
     */
 }
 
-float Sample::calcSampleFreqIncrement(int semitones)
-{
-    return rateDown*(CalcFreqRatio(semitones));
-}
 
 

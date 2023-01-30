@@ -47,46 +47,6 @@ class Parameter
 {
 public:
 
-            ParamType           type;
-            UnitsType           unitsType;
-            int                 sign;
-
-            int                 globalindex;
-            int                 index;
-
-            float               defaultValue;
-            float               outVal;
-            float               value;
-            float               offset;
-            float               range;
-            float               logoffset;
-            float               logRange;
-            float               interval;
-            float               lastval;  // used for ramping
-
-            bool                grouped;
-            bool                reversed;
-            bool                recording;
-            bool                envaffect;
-            bool                envdirect;
-            bool                envtweaked;
-            bool                presetable;
-            long                lastsetframe;
-            Device36*           module;
-            Trigger*            envelopes;
-            Envelope*           autoenv;
-            Envelope*           env;
-            EnvPoint*           lastrecpoint;
-            Control*            ctrlUpdatingFrom;
-
-            float               declickCount;
-            float               declickCoeff;
-
-            std::string         prmName;
-            std::string         prmValString;
-            std::list<Control*> controls;
-
-
             Parameter();
             Parameter(float def_val, float offs, float rng);
             Parameter(float def_val, float offs, float rng, ParamType ptype);
@@ -94,20 +54,23 @@ public:
             Parameter(std::string param_name, float def_val, float offs, float rng, UnitsType vt = Units_Default);
             Parameter(int p_value);
             Parameter(float def_val);
+            virtual ~Parameter();
 
-    virtual ~Parameter();
-
-            void                setName(std::string name)   { prmName = name; };
+            void                adjustFromControl(Control* ctrl, int step, float nval=-1, float min_step=0.1f);
+            float               adjustForEditor(float val);
+            void                addControl(Control* ct);
+            void                blockEnvAffect() { envaffect = false; }
+            std::string         calcValStr(float uv);
+            void                dequeueEnvelopeTrigger(Trigger* tg);
+            void                enqueueEnvelopeTrigger(Trigger* tg);
+            void                finishRecording();
+            int                 getIndex()      { return index; }
+            ParamType           getType()       { return type; }
             std::string         getName()                   { return prmName; };
-            void                setValString(std::string str);
             std::string         getValString();
             std::string         getMaxValString();
             std::string         getUnitStr();
             std::string         getSignStr();
-            std::string         calcValStr(float uv);
-    virtual void                reset();
-    virtual void                resetToInitial();
-    virtual void                updateControls();
             float               getRange()      { return range; };
             float               getOffset()     { return offset; };
             float               getOutVal()     { return outVal; }
@@ -116,39 +79,73 @@ public:
             float               getValueNormalized();
             float               getDefaultValueNormalized();
             float               getEditorValue();
-            float               adjustForEditor(float val);
-
-    virtual float               calcOutputValue(float val);
+            bool                getReversed() { return reversed; }
+            bool                getEnvDirect();
+            float               getInterval() { return interval; } 
+            void                handleRecordingFromControl(float ctrlval);
+            bool                isRecording() { return recording; }
+            void                load(XmlElement* xmlParamNode);
+            void                load4Preset(XmlElement* xmlParamNode);
+    virtual void                reset();
+            void                removeControl(Control* ct);
+            void                setIndex(int idx)  { index = idx; }
+            void                setName(std::string name)   { prmName = name; };
     virtual void                setValue(float val);
     virtual void                setNormalizedValue(float nval);
     virtual void                setDirectValueFromControl(float ctrlval);
     virtual void                setValueFromEnvelope(float envval, Envelope* env);
-            void                adjustFromControl(Control* ctrl, int step, float nval=-1, float min_step=0.1f);
             void                setDefValue(float initial);
             void                setInterval(float newint) { interval = newint; }
-            float               getInterval() { return interval; } 
-
-            void                paramInit(std::string name, ParamType ptype, float def_val, float offs, float rng, UnitsType vt);
-            void                addControl(Control* ct);
-            void                removeControl(Control* ct);
-
-            void                enqueueEnvelopeTrigger(Trigger* tg);
-            void                dequeueEnvelopeTrigger(Trigger* tg);
-            void                handleRecordingFromControl(float ctrlval);
-
-            void                finishRecording();
-            void                blockEnvAffect() { envaffect = false; }
-            void                unblockEnvAffect() { envaffect = true;}
-            bool                isRecording() { return recording; }
+            void                setValString(std::string str);
             void                setReversed(bool rev) { reversed = rev; }
-            bool                getReversed() { return reversed; }
             void                setEnvDirect(bool envdir);
-            bool                getEnvDirect();
             void                setLastVal(float lval);
+            void                setDevice(Device36* dev) { module = dev; };
         XmlElement*             save();
-            void                load(XmlElement* xmlParamNode);
         XmlElement*             save4Preset();
-            void                load4Preset(XmlElement* xmlParamNode);
+    virtual void                updateControls();
+            void                unblockEnvAffect() { envaffect = true;}
+
+            float               lastValue;  // used for ramping
+            float               declickCount;
+            float               declickCoeff;
+            Trigger*            envelopes;
+            Envelope*           autoenv;
+            Envelope*           env;
+            bool                envaffect;
+            bool                envtweaked;
+            long                lastsetframe;
+            EnvPoint*           lastrecpoint;
+            bool                grouped;
+
+protected:
+
+    virtual float               calcOutputValue(float val);
+            void                paramInit(std::string name, ParamType ptype, float def_val, float offs, float rng, UnitsType vt);
+
+            Control*            ctrlUpdatingFrom;
+            float               defaultValue;
+            bool                envdirect;
+            int                 globalindex;
+            int                 index;
+            float               interval;
+            float               logoffset;
+            float               logRange;
+            Device36*           module;
+            float               outVal;
+            float               offset;
+            bool                presetable;
+            float               range;
+            bool                reversed;
+            bool                recording;
+            int                 sign;
+            ParamType           type;
+            UnitsType           unitsType;
+            float               value;
+
+            std::string         prmName;
+            std::string         prmValString;
+            std::list<Control*> controls;
 };
 
 class BoolParam : public Parameter
@@ -156,7 +153,6 @@ class BoolParam : public Parameter
 public:
 
             bool                outval;
-
             AToggleButton*      atoggle;
 
             BoolParam(bool state);

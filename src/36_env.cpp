@@ -396,7 +396,7 @@ bool Envelope::processBuffer1(long      curr_frame,
     if(num_frames > 0 && param != NULL && param->getEnvDirect())
     {
         param->setValueFromEnvelope(useval, this);
-        param->setLastVal(param->outVal);
+        param->setLastVal(param->getOutVal());
     }
 
     // Trigger phase can exceed number of frames, but it shouldn't
@@ -654,14 +654,14 @@ void Envelope::check(int mouse_x, int mouse_y)
     {
         if((abs(mouse_x - (x1 + width)) <= 3)&&(mouse_y >= y1 - 12)&&(mouse_y <= (y1 + height)))
         {
-            MGrid->setmode(GridMode_ElemResizing);
+            MGrid->setActionMode(GridMode_ElemResizing);
 
             MGrid->resizeEdge = Resize_Right;
             MGrid->activeElem = (Element*)this;
         }
         else if((abs(mouse_y - (y1 + height)) <= 2)&&(mouse_x >= x1)&&(mouse_x <= x1 + width))
         {
-            MGrid->setmode(GridMode_ElemResizing);
+            MGrid->setActionMode(GridMode_ElemResizing);
 
             MGrid->resizeEdge = Resize_Bottom;
             MGrid->activeElem = (Element*)this;
@@ -823,7 +823,7 @@ void Envelope::drawOnGrid(Graphics & g,Grid * grid)
         gLineHorizontal(g, RoundFloat(y1 + (float)height/2), x1, x1 + width);
     }
 
-    float scale = grid->getppt();
+    float scale = grid->getPixelsPerTick();
 
     if(type != CmdEnv_PanEnv)
     {

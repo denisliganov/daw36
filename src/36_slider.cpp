@@ -127,12 +127,12 @@ void Slider36::drawSelf(Graphics& g)
     if (vertical)
     {
         int ypos = y2 - 1 - slLen;
-        int ycenter = y2 - 1 - RoundFloat((float)length * ((0 - param->offset) / param->range));
+        int ycenter = y2 - 1 - RoundFloat((float)length * ((0 - param->getOffset()) / param->getRange()));
         int ysl = ypos;
         int ysl2 = y2 - 1;
         int ythumb = ysl2;
 
-        if (param->offset < 0)
+        if (param->getOffset() < 0)
         {
             if (ypos >= ycenter)
             {
@@ -152,7 +152,7 @@ void Slider36::drawSelf(Graphics& g)
 
         // Draw thumb for signed params
 
-        if (abs(param->offset) > (abs(param->range) / 10.f))
+        if (abs(param->getOffset()) > (abs(param->getRange()) / 10.f))
         {
             setc(g, .8f);
         }

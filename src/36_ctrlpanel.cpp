@@ -320,25 +320,25 @@ void ControlPanel::handleChildEvent(Gobj* obj, InputEvent& ev)
         {
             if(obj == btVols)
             {
-                MGrid->setdispmode(GridDisplayMode_Volumes);
+                MGrid->setEditMode(GridDisplayMode_Volumes);
 
                 MObject->switchBrowser(false);
             }
             else if(obj == btPans)
             {
-                MGrid->setdispmode(GridDisplayMode_Pans);
+                MGrid->setEditMode(GridDisplayMode_Pans);
 
                 MObject->switchBrowser(false);
             }
             else if(obj == btStepMode)
             {
-                MGrid->setdispmode(GridDisplayMode_Steps);
+                MGrid->setEditMode(GridDisplayMode_Steps);
 
                 MObject->switchBrowser(false);
             }
             else if(obj == btBarMode)
             {
-                MGrid->setdispmode(GridDisplayMode_Bars);
+                MGrid->setEditMode(GridDisplayMode_Bars);
 
                 MObject->switchBrowser(false);
             }

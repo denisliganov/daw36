@@ -74,8 +74,8 @@ Pattern* Pattern::clone()
 
 void Pattern::copyParams(Pattern* newPatt)
 {
-    newPatt->vol->setValue(vol->value);
-    newPatt->pan->setValue(pan->value);
+    newPatt->vol->setValue(vol->getValue());
+    newPatt->pan->setValue(pan->getValue());
     newPatt->patt = patt;
     newPatt->muted = muted;
 }
@@ -207,8 +207,8 @@ void Pattern::save(XmlElement * xmlNode)
 {
     Element::save(xmlNode);
 
-    xmlNode->setAttribute(T("Volume"), vol->value);
-    xmlNode->setAttribute(T("Panning"), pan->value);
+    xmlNode->setAttribute(T("Volume"), vol->getValue());
+    xmlNode->setAttribute(T("Panning"), pan->getValue());
     xmlNode->setAttribute(T("Muted"), muted ? 1 : 0);
 }
 
@@ -251,7 +251,7 @@ void Pattern::drawOnGrid(Graphics& g, Grid * grid)
     int gx2 = grid->getXfromTick(getendtick());
     int gy2 = grid->getYfromLine(line + numlines - 1);
 
-    int pl = (int)(ticklen*grid->getppt());
+    int pl = (int)(ticklen*grid->getPixelsPerTick());
     int tH, ptheight;
 
 
@@ -684,7 +684,7 @@ void Pattern::preInitTriggers(long frame, bool activate_env, bool paraminit)
 
             if(param->envtweaked)
             {
-                param->resetToInitial();
+                param->reset();
             }
         }
     }

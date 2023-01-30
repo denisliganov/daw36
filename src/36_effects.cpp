@@ -314,8 +314,8 @@ BasicLP::BasicLP()
 
 void BasicLP::handleParamUpdate(Parameter* param)
 {
-    cutoff->setValString(cutoff->calcValStr((float)(cutoff->outVal/1000.0f)));
-    resonance->setValString(resonance->calcValStr(((resonance->outVal - 1.0f)/10.0f*100)));
+    cutoff->setValString(cutoff->calcValStr((float)(cutoff->getOutVal()/1000.0f)));
+    resonance->setValString(resonance->calcValStr(((resonance->getOutVal() - 1.0f)/10.0f*100)));
 
     reset();
 }
@@ -325,10 +325,10 @@ void BasicLP::reset()
     float alpha, omega, sn, cs;
     float a0, a1, a2, b0, b1, b2;
 
-    omega = (float)(2.0f*PI*cutoff->outVal/MAudio->getSampleRate());
+    omega = (float)(2.0f*PI*cutoff->getOutVal()/MAudio->getSampleRate());
     sn = sin (omega); 
     cs = cos (omega);
-    alpha = sn/resonance->outVal;
+    alpha = sn/resonance->getOutVal();
     b0 = (1.0f - cs)/2.0f;
     b1 = 1.0f - cs;
     b2 = (1.0f - cs)/2.0f;
@@ -453,16 +453,16 @@ void Filter1::handleParamUpdate(Parameter* param)
             dspCoreCFilter3.setMode(rosic::LadderFilterParameters::BANDPASS_12_12);
         }
     }
-    else if(param->prmName == "CUT")
+    else if(param->getName() == "CUT")
     {
-        dspCoreCFilter3.setCutoff((double)cutoff->outVal);
+        dspCoreCFilter3.setCutoff((double)cutoff->getOutVal());
     }
-    else if(param->prmName == "RES")
+    else if(param->getName() == "RES")
     {
-        dspCoreCFilter3.setResonance((double)resonance->outVal);
-        resonance->setValString(resonance->calcValStr((resonance->outVal/.97f*100.0f))); // /66.0f*100.0f
+        dspCoreCFilter3.setResonance((double)resonance->getOutVal());
+        resonance->setValString(resonance->calcValStr((resonance->getOutVal()/.97f*100.0f))); // /66.0f*100.0f
     }
-    else if(param->prmName == "BW")
+    else if(param->getName() == "BW")
     {
         //dspCoreCFilter2.setBandwidth(bandwidth->outval);
         //v_bandwidth->SetValue(bandwidth->outval);
@@ -548,15 +548,15 @@ void EQ1::handleParamUpdate(Parameter* param)
 {
     if( param == frequency )
     {
-        dspCoreEq1.setFrequency(frequency->outVal);
+        dspCoreEq1.setFrequency(frequency->getOutVal());
     }
     else if( param == gain )
     {
-        dspCoreEq1.setGain(gain->outVal);
+        dspCoreEq1.setGain(gain->getOutVal());
     }
     else if( param == bandwidth )
     {
-        dspCoreEq1.setBandwidth(bandwidth->outVal);
+        dspCoreEq1.setBandwidth(bandwidth->getOutVal());
     }
 }
 
@@ -615,31 +615,31 @@ void GraphicEQ::handleParamUpdate(Parameter* param)
 {
     if(param == gain5)
     {
-        dspCoreEqualizer.setBandGain(f5, gain5->outVal);
+        dspCoreEqualizer.setBandGain(f5, gain5->getOutVal());
     }
     else if(param == gain6)
     {
-        dspCoreEqualizer.setBandGain(f6, gain6->outVal);
+        dspCoreEqualizer.setBandGain(f6, gain6->getOutVal());
     }
     else if(param == gain1)
     {
-        dspCoreEqualizer.setBandGain(f1, gain1->outVal);
+        dspCoreEqualizer.setBandGain(f1, gain1->getOutVal());
     }
     else if(param == gain2)
     {
-        dspCoreEqualizer.setBandGain(f2, gain2->outVal);
+        dspCoreEqualizer.setBandGain(f2, gain2->getOutVal());
     }
     else if(param == gain3)
     {
-        dspCoreEqualizer.setBandGain(f3, gain3->outVal);
+        dspCoreEqualizer.setBandGain(f3, gain3->getOutVal());
     }
     else if(param == gain4)
     {
-        dspCoreEqualizer.setBandGain(f4, gain4->outVal);
+        dspCoreEqualizer.setBandGain(f4, gain4->getOutVal());
     }
     else if(param == gain9)
     {
-        dspCoreEqualizer.setBandGain(f9, gain9->outVal);
+        dspCoreEqualizer.setBandGain(f9, gain9->getOutVal());
     }
 }
 
@@ -702,31 +702,31 @@ void EQ3::handleParamUpdate(Parameter* param)
 {
     if(param == gain1)
     {
-        dspCoreEqualizer.setBandGain(f1, gain1->outVal);
+        dspCoreEqualizer.setBandGain(f1, gain1->getOutVal());
     }
     else if(param == gain2)
     {
-        dspCoreEqualizer.setBandGain(f2, gain2->outVal);
+        dspCoreEqualizer.setBandGain(f2, gain2->getOutVal());
     }
     else if(param == gain3)
     {
-        dspCoreEqualizer.setBandGain(f3, gain3->outVal);
+        dspCoreEqualizer.setBandGain(f3, gain3->getOutVal());
     }
     else if(param == freq1)
     {
-        dspCoreEqualizer.setBandFrequency(f1, freq1->outVal);
+        dspCoreEqualizer.setBandFrequency(f1, freq1->getOutVal());
     }
     else if(param == freq2)
     {
-        dspCoreEqualizer.setBandFrequency(f2, freq2->outVal);
+        dspCoreEqualizer.setBandFrequency(f2, freq2->getOutVal());
     }
     else if(param == freq3)
     {
-        dspCoreEqualizer.setBandFrequency(f3, freq3->outVal);
+        dspCoreEqualizer.setBandFrequency(f3, freq3->getOutVal());
     }
     else if(param == bandwidth)
     {
-        dspCoreEqualizer.setBandBandwidth(f2, bandwidth->outVal);
+        dspCoreEqualizer.setBandBandwidth(f2, bandwidth->getOutVal());
     }
 }
 
@@ -767,11 +767,11 @@ void CTremolo::handleParamUpdate(Parameter* param)
 {
     if(param == speed)
     {
-        dspCoreCTremolo.setCycleLength(speed->outVal);
+        dspCoreCTremolo.setCycleLength(speed->getOutVal());
     }
     else if(param == depth)
     {
-        dspCoreCTremolo.setDepth(depth->outVal);
+        dspCoreCTremolo.setDepth(depth->getOutVal());
     }
 }
 
@@ -842,29 +842,29 @@ void Compressor::handleParamUpdate(Parameter* param)
         }
     }
     else  */
-    if(param->prmName == "THRESH")
+    if(param->getName() == "THRESH")
     {
-        dspCoreComp.setThreshold((double)param->outVal);
+        dspCoreComp.setThreshold((double)param->getOutVal());
     }
-    else if(param->prmName == "KNEE")
+    else if(param->getName() == "KNEE")
     {
-        dspCoreComp.setThreshold((double)param->outVal);
+        dspCoreComp.setThreshold((double)param->getOutVal());
     }
-    else if(param->prmName == "RATIO")
+    else if(param->getName() == "RATIO")
     {
-        dspCoreComp.setRatio((double)param->outVal);
+        dspCoreComp.setRatio((double)param->getOutVal());
     }
-    else if(param->prmName == "GAIN")
+    else if(param->getName() == "GAIN")
     {
-        dspCoreComp.setOutputGain((double)param->outVal);
+        dspCoreComp.setOutputGain((double)param->getOutVal());
     }
-    else if(param->prmName == "ATTACK")
+    else if(param->getName() == "ATTACK")
     {
-        dspCoreComp.setAttackTime(param->outVal);
+        dspCoreComp.setAttackTime(param->getOutVal());
     }
-    else if(param->prmName == "RELEASE")
+    else if(param->getName() == "RELEASE")
     {
-        dspCoreComp.setReleaseTime(param->outVal);
+        dspCoreComp.setReleaseTime(param->getOutVal());
     }
 }
 
@@ -917,13 +917,13 @@ void CWahWah::handleParamUpdate(Parameter* param)
         dspCoreWah.setFrequency(frequency->outval);
     }
     else */
-    if(param->prmName == "MODFREQ")
+    if(param->getName() == "MODFREQ")
     {
-        dspCoreWah.setCycleLength(1.f/param->outVal);
+        dspCoreWah.setCycleLength(1.f/param->getOutVal());
     }
-    else if(param->prmName == "DEPTH")
+    else if(param->getName() == "DEPTH")
     {
-        dspCoreWah.setDepth(param->outVal);
+        dspCoreWah.setDepth(param->getOutVal());
     }
 }
 
@@ -968,17 +968,17 @@ CDistort::CDistort()
 
 void CDistort::handleParamUpdate(Parameter* param)
 {
-    if(param->prmName == "DRIVE")
+    if(param->getName() == "DRIVE")
     {
-        dspCoreDist.setDrive(param->outVal);
+        dspCoreDist.setDrive(param->getOutVal());
     }
-    else if(param->prmName == "POSTGAIN")
+    else if(param->getName() == "POSTGAIN")
     {
-        dspCoreDist.setOutputLevel(param->outVal);
+        dspCoreDist.setOutputLevel(param->getOutVal());
     }
-    else if(param->prmName == "SLOPE")
+    else if(param->getName() == "SLOPE")
     {
-        dspCoreDist.setPenticSlopeAtZero(param->outVal);
+        dspCoreDist.setPenticSlopeAtZero(param->getOutVal());
     }
 }
 
@@ -1023,11 +1023,11 @@ void CBitCrusher::handleParamUpdate(Parameter* param)
 {
     if(param == decimation)
     {
-        dspCoreBC.setDecimationFactor(int(decimation->outVal));
+        dspCoreBC.setDecimationFactor(int(decimation->getOutVal()));
     }
     else if(param == quantization)
     {
-        dspCoreBC.setQuantizationInterval(0.001f*pow(1000.0f, quantization->outVal));
+        dspCoreBC.setQuantizationInterval(0.001f*pow(1000.0f, quantization->getOutVal()));
     }
 }
 
@@ -1066,7 +1066,7 @@ void CStereo::handleParamUpdate(Parameter* param)
 {
     if(param == offset)
     {
-        dspCoreStereo.delayLine.setDelayInMilliseconds(offset->outVal);
+        dspCoreStereo.delayLine.setDelayInMilliseconds(offset->getOutVal());
     }
 }
 
@@ -1130,37 +1130,37 @@ void XDelay::handleParamUpdate(Parameter* param)
         dspCorePingPongDelay.setStereoSwap(ppmode->getOutVal());
         dspCorePingPongDelay.setPan((ppmode->getOutVal() ? -1 : 1)*param->getOutVal());
     }
-    else if(param->prmName == "AMOUNT")
+    else if(param->getName() == "AMOUNT")
     {
         //dspCorePingPongDelay.setGlobalGainFactor(ggain->outval); // old, obsolete
         dspCorePingPongDelay.setWetLevel(amp2dB(param->getOutVal()));
         param->setValString(param->calcValStr(int(100*param->getOutVal())));
     }
     /*
-    else if( param->prmName == "High.cut" )
+    else if( param->getName() == "High.cut" )
     {
         dspCorePingPongDelay.setLowDamp(param->outval);
     }
     */
-    else if(param->prmName == "DELAY")
+    else if(param->getName() == "DELAY")
     {
-        dspCorePingPongDelay.setDelayTime(param->outVal/MTransp->getTicksPerBeat());
+        dspCorePingPongDelay.setDelayTime(param->getOutVal()/MTransp->getTicksPerBeat());
     }
-    else if( param->prmName == "DRY/WET" )
+    else if( param->getName() == "DRY/WET" )
     {
-        dspCorePingPongDelay.setDryWetRatio((float)(param->outVal));
+        dspCorePingPongDelay.setDryWetRatio((float)(param->getOutVal()));
     }
-    else if( param->prmName == "FEEDBACK" )
+    else if( param->getName() == "FEEDBACK" )
     {
-        dspCorePingPongDelay.setFeedbackInPercent(param->outVal);
+        dspCorePingPongDelay.setFeedbackInPercent(param->getOutVal());
     }
-    else if( param->prmName == "PAN" )
+    else if( param->getName() == "PAN" )
     {
-        dspCorePingPongDelay.setPan((ppmode->outval == true ? -1 : 1)*param->outVal);
+        dspCorePingPongDelay.setPan((ppmode->outval == true ? -1 : 1)*param->getOutVal());
     }
-    else if( param->prmName == "LOWCUT" )
+    else if( param->getName() == "LOWCUT" )
     {
-        dspCorePingPongDelay.setHighDamp(param->outVal);
+        dspCorePingPongDelay.setHighDamp(param->getOutVal());
     }
 }
 
@@ -1210,35 +1210,35 @@ void CReverb::handleParamUpdate(Parameter* param)
 {
     if(param == roomsize)
     {
-        dspCoreReverb.setReferenceDelayTime(roomsize->outVal);
+        dspCoreReverb.setReferenceDelayTime(roomsize->getOutVal());
     }
     else if(param == preDelay)
     {
-        dspCoreReverb.setPreDelay(preDelay->outVal);
+        dspCoreReverb.setPreDelay(preDelay->getOutVal());
     }
     else if(param == drywet)
     {
-        dspCoreReverb.setDryWetRatio((float)(drywet->outVal));
+        dspCoreReverb.setDryWetRatio((float)(drywet->getOutVal()));
     }
     else if(param == decay)
     {
-        dspCoreReverb.setMidReverbTime(decay->outVal);
+        dspCoreReverb.setMidReverbTime(decay->getOutVal());
     }
     else if(param == highCut)
     {
-        dspCoreReverb.setWetHighpassCutoff(highCut->outVal);
+        dspCoreReverb.setWetHighpassCutoff(highCut->getOutVal());
     }
     else if(param == lowCut)
     {
-        dspCoreReverb.setWetLowpassCutoff(lowCut->outVal);
+        dspCoreReverb.setWetLowpassCutoff(lowCut->getOutVal());
     }
     else if(param == highscale)
     {
-        dspCoreReverb.setHighReverbTimeScale(highscale->outVal);
+        dspCoreReverb.setHighReverbTimeScale(highscale->getOutVal());
     }
     else if(param == lowscale)
     {
-        dspCoreReverb.setLowReverbTimeScale(lowscale->outVal);
+        dspCoreReverb.setLowReverbTimeScale(lowscale->getOutVal());
     }
 }
 
@@ -1283,19 +1283,19 @@ void CChorus::handleParamUpdate(Parameter* param)
 {
     if(param == drywet)
     {
-        dspCoreChorus->setDryWetRatio(drywet->outVal);
+        dspCoreChorus->setDryWetRatio(drywet->getOutVal());
     }
     else if(param == delay)
     {
-        dspCoreChorus->setAverageDelayTime(delay->outVal);
+        dspCoreChorus->setAverageDelayTime(delay->getOutVal());
     }
     else if(param == freq)
     {
-        dspCoreChorus->setCycleLength(1.f/freq->outVal);
+        dspCoreChorus->setCycleLength(1.f/freq->getOutVal());
     }
     else if(param == depth)
     {
-        dspCoreChorus->setDepth(depth->outVal);
+        dspCoreChorus->setDepth(depth->getOutVal());
     }
 }
 
@@ -1353,25 +1353,25 @@ void CFlanger::handleParamUpdate(Parameter* param)
 {
     if(param == drywet)
     {
-        dspCoreFlanger.setDryWetRatio(drywet->outVal);
+        dspCoreFlanger.setDryWetRatio(drywet->getOutVal());
     }
     else if(param == frequency)
     {
-        dspCoreFlanger.setFrequency(frequency->outVal);
+        dspCoreFlanger.setFrequency(frequency->getOutVal());
 
-        frequency->setValString(frequency->calcValStr(1.f/frequency->outVal*1000));
+        frequency->setValString(frequency->calcValStr(1.f/frequency->getOutVal()*1000));
     }
     else if(param == modfreq)
     {
-        dspCoreFlanger.setCycleLength(modfreq->outVal);
+        dspCoreFlanger.setCycleLength(modfreq->getOutVal());
     }
     else if(param == depth)
     {
-        dspCoreFlanger.setDepth(depth->outVal);
+        dspCoreFlanger.setDepth(depth->getOutVal());
     }
     else if(param == feedback)
     {
-        dspCoreFlanger.setFeedbackFactor(feedback->outVal);
+        dspCoreFlanger.setFeedbackFactor(feedback->getOutVal());
     }
     else if(param == invert)
     {
@@ -1432,33 +1432,33 @@ void CPhaser::handleParamUpdate(Parameter* param)
 {
     if(param == drywet)
     {
-        dspCorePhaser.setDryWetRatio(drywet->outVal);
+        dspCorePhaser.setDryWetRatio(drywet->getOutVal());
     }
     else if(param == frequency)
     {
-        dspCorePhaser.setFrequency(frequency->outVal);
+        dspCorePhaser.setFrequency(frequency->getOutVal());
 
-        frequency->setValString(frequency->calcValStr(1.f/frequency->outVal*1000));
+        frequency->setValString(frequency->calcValStr(1.f/frequency->getOutVal()*1000));
     }
     else if(param == modfreq)
     {
-        dspCorePhaser.setCycleLength(modfreq->outVal);
+        dspCorePhaser.setCycleLength(modfreq->getOutVal());
     }
     else if(param == depth)
     {
-        dspCorePhaser.setDepth(depth->outVal);
+        dspCorePhaser.setDepth(depth->getOutVal());
     }
     else if(param == feedback)
     {
-        dspCorePhaser.setFeedbackFactor(feedback->outVal);
+        dspCorePhaser.setFeedbackFactor(feedback->getOutVal());
     }
     else if(param == numstages)
     {
-        dspCorePhaser.setNumStages(int(numstages->outVal));
+        dspCorePhaser.setNumStages(int(numstages->getOutVal()));
     }
     else if(param == stereo)
     {
-        dspCorePhaser.setStereoPhaseOffsetInDegrees((stereo->outVal));
+        dspCorePhaser.setStereoPhaseOffsetInDegrees((stereo->getOutVal()));
         dspCorePhaser.resetOscillatorPhases();
     }
 }

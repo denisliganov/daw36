@@ -49,7 +49,7 @@ void DevParamObject::initAll()
 
     for(Parameter* param : showParams)
     {
-        if (param->type != Param_Bool)
+        if (param->getType() != Param_Bool)
         {
             addObject(box = new ParamBox(param), x, y, boxWidth, boxHeight, "eff.param");
 

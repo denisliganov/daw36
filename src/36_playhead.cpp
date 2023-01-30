@@ -22,7 +22,7 @@ Playhead::Playhead(Grid* grd)
     grid = grd;
     posX = absX = relX = 0;
 
-    patt = grid->getpatt();
+    patt = grid->getPattern();
 }
 
 void Playhead::timerCallback()
@@ -60,7 +60,7 @@ void Playhead::updatePosFromFrame()
 
     absX = int(patt->getFrame()/grid->getFramesPerPixel());
 
-    relX = absX - RoundFloat(grid->getHoffs() * grid->getppt());
+    relX = absX - RoundFloat(grid->getHoffs() * grid->getPixelsPerTick());
 
     posX = grid->getX() + relX;
 
@@ -93,13 +93,13 @@ bool Playhead::handleAutomationRecording(float currStep)
 
             EnvPoint* newpnt;
 
-            if(recparam->type == Param_Vol)
+            if(recparam->getType() == Param_Vol)
             {
-                newpnt = recparam->autoenv->addPoint(x, recparam->value*DAW_INVERTED_VOL_RANGE, false);
+                newpnt = recparam->autoenv->addPoint(x, recparam->getValue() *DAW_INVERTED_VOL_RANGE, false);
             }
             else
             {
-                newpnt = recparam->autoenv->addPoint(x, (recparam->value - recparam->offset)/recparam->range, false);
+                newpnt = recparam->autoenv->addPoint(x, (recparam->getValue() - recparam->getOffset())/recparam->getRange(), false);
             }
 
 /*

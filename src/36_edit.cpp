@@ -212,7 +212,7 @@ void ScrollTimer::timerCallback()
 
         // Scroll deltas for x and y axes
 
-        float xDelta = (float)grid->getW()/grid->getppt()*.05f;
+        float xDelta = (float)grid->getW()/grid->getPixelsPerTick()*.05f;
         float yDelta = grid->getH()*.08f;
 
         bool moved = false;

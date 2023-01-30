@@ -199,22 +199,22 @@ void Audio36::mixMaster(const void* inputBuffer, void* outputBuffer, long totalF
 
     float vol = MInstrPanel->masterVolume->getOutVal(); //MasterVol->outVal;
 
-    if(MasterVol->lastval == -1)
+    if(MasterVol->lastValue == -1)
     {
-        MasterVol->setLastVal(MasterVol->outVal);
+        MasterVol->setLastVal(MasterVol->getOutVal());
     }
-    else if(MasterVol->lastval != MasterVol->outVal)
+    else if(MasterVol->lastValue != MasterVol->getOutVal())
     {
         if(MasterVol->declickCount == 0)
         {
             MasterVol->declickCount = DECLICK_COUNT;
-            MasterVol->declickCoeff = float(MasterVol->outVal - MasterVol->lastval)/DECLICK_COUNT;
+            MasterVol->declickCoeff = float(MasterVol->getOutVal() - MasterVol->lastValue) / DECLICK_COUNT;
 
-            vol = MasterVol->lastval;
+            vol = MasterVol->lastValue;
         }
         else
         {
-            vol = MasterVol->lastval + (DECLICK_COUNT - MasterVol->declickCount)*MasterVol->declickCoeff;
+            vol = MasterVol->lastValue + (DECLICK_COUNT - MasterVol->declickCount)*MasterVol->declickCoeff;
         }
     }
     else if(MasterVol->declickCount > 0) // (params->vol->lastval == params->vol->outval)
@@ -238,7 +238,7 @@ void Audio36::mixMaster(const void* inputBuffer, void* outputBuffer, long totalF
                 if(offset == mvenv->last_buffframe_end - 1)
                 {
                     MasterVol->setValueFromEnvelope(mvenv->buff[offset], mvenv);
-                    MasterVol->setLastVal(MasterVol->outVal);
+                    MasterVol->setLastVal(MasterVol->getOutVal());
                 }
             }
 
@@ -247,7 +247,7 @@ void Audio36::mixMaster(const void* inputBuffer, void* outputBuffer, long totalF
                 vol += MasterVol->declickCoeff;
                 MasterVol->declickCount--;
 
-                if(MasterVol->declickCount == 0)  MasterVol->setLastVal(MasterVol->outVal);
+                if(MasterVol->declickCount == 0)  MasterVol->setLastVal(MasterVol->getOutVal());
             }
 
             outL = MMixer->masterChannel->inbuff[bc++]*vol;

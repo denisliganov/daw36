@@ -58,7 +58,7 @@ Note::~Note()
 
     patt->removeElement(this);
 
-    MGrid->removeelem(this);
+    MGrid->removeElement(this);
 
     instr->removeNote(this);
 
@@ -68,7 +68,7 @@ Note::~Note()
 
 Note* Note::clone(Instrument* new_instr)
 {
-    return _Create_Note(tick1, line, new_instr == NULL ? instr : new_instr, noteValue, ticklen, vol->value, pan->value, patt);
+    return _Create_Note(tick1, line, new_instr == NULL ? instr : new_instr, noteValue, ticklen, vol->getValue(), pan->getValue(), patt);
 }
 
 Element* Note::clone()
@@ -95,8 +95,8 @@ void Note::save(XmlElement * xmlNode)
     Element::save(xmlNode);
 
     xmlNode->setAttribute(T("InstrIndex"), instr->getIndex());
-    xmlNode->setAttribute(T("Volume"), vol->value);
-    xmlNode->setAttribute(T("Panning"), pan->value);
+    xmlNode->setAttribute(T("Volume"), vol->getValue());
+    xmlNode->setAttribute(T("Panning"), pan->getValue());
 }
 
 void Note::load(XmlElement * xmlNode)
@@ -181,7 +181,7 @@ void Note::calcForGrid(Grid* grid)
          barStart = yBase - start;
      }
 
-     width = (int)(ticklen*grid->getppt());
+     width = (int)(ticklen*grid->getPixelsPerTick());
 
      y2 = y1 + height - 1;
      x2 = x1 + width - 1;

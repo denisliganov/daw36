@@ -103,7 +103,6 @@ protected:
 
             if(wvis)
             {
-                
                 for (int c = 0; c < 4; c++)
                 {
                     setc(g, (uint32)colorHL);
@@ -259,8 +258,8 @@ void Instrument::activateTrigger(Trigger* tg)
     tg->broken = false;
     tg->framePhase = 0;
     tg->auCount = 0;
-    tg->volBase = note->vol->outVal;
-    tg->panBase = note->pan->outVal;
+    tg->volBase = note->vol->getOutVal();
+    tg->panBase = note->pan->getOutVal();
 
     tg->setState(TS_Sustain);
 
@@ -561,25 +560,25 @@ restart:
 
 void Instrument::fillMixChannel(long num_frames, long buffframe, long mixbuffframe)
 {
-    float volval = vol->outVal;
+    float volval = vol->getOutVal();
 
-    if(vol->lastval == -1)
+    if(vol->lastValue == -1)
     {
-        vol->setLastVal(vol->outVal);
+        vol->setLastVal(vol->getOutVal());
     }
-    else if(vol->lastval != vol->outVal)
+    else if(vol->lastValue != vol->getOutVal())
     {
         if(rampCounterV == 0)
         {
-            cfsV = float(vol->outVal - vol->lastval)/DECLICK_COUNT;
+            cfsV = float(vol->getOutVal() - vol->lastValue)/DECLICK_COUNT;
 
-            volval = vol->lastval;
+            volval = vol->lastValue;
 
             rampCounterV = DECLICK_COUNT;
         }
         else
         {
-            volval = vol->lastval + (DECLICK_COUNT - rampCounterV)*cfsV;
+            volval = vol->lastValue + (DECLICK_COUNT - rampCounterV)*cfsV;
         }
     }
     else if(rampCounterV > 0) // (paramSet->vol->lastval == paramSet->vol->outval)
@@ -604,7 +603,7 @@ void Instrument::fillMixChannel(long num_frames, long buffframe, long mixbufffra
 
             if(rampCounterV == 0)
             {
-                vol->setLastVal(vol->outVal);
+                vol->setLastVal(vol->getOutVal());
             }
         }
 
@@ -842,11 +841,11 @@ void Instrument::load(XmlElement * instrNode)
     {
         int idx = xmlParam->getIntAttribute(T("index"), -1);
 
-        if(idx == vol->index)
+        if(idx == vol->getIndex())
         {
             vol->load(xmlParam);
         }
-        else if(idx == pan->index)
+        else if(idx == pan->getIndex())
         {
             pan->load(xmlParam);
         }
@@ -1065,7 +1064,7 @@ void Instrument::staticInit(Trigger* tg, long num_frames)
     // Init pans
     pan1 = 0;
     pan2 = 0; // tg->tgPatt->pan->outval;     // Pattern's local panning
-    pan3 = pan->outVal;     // Instrument's panning
+    pan3 = pan->getOutVal();     // Instrument's panning
 }
 
 void Instrument::setIndex(int idx)

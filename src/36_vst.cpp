@@ -786,7 +786,7 @@ void Vst2Plugin::extractParams()
 
             param->setValString(label);
 
-            param->index = index; // for VST purpose
+            param->setIndex(index);      // for VST purpose
 
             addParamWithControl(param);
 
@@ -815,15 +815,15 @@ void Vst2Plugin::handleParamUpdate(Parameter* param)
 {
     if (param != NULL && getParamLock() == false)
     {
-        setParam(param->index, param->value);
+        setParam(param->getIndex(), param->getValue());
 
         // Update units string for the parameter
         {
             char      *dispVal    = NULL;
             char      *paramLabel = NULL;
 
-            getDisplayValue(param->index,&dispVal);
-            getParamLabel(param->index, &paramLabel);
+            getDisplayValue(param->getIndex(),&dispVal);
+            getParamLabel(param->getIndex(), &paramLabel);
 
             char label[MAX_NAME_LENGTH] = {};
             strncpy(label, dispVal, min(MAX_NAME_LENGTH-strlen(paramLabel),strlen(dispVal)));
@@ -850,7 +850,7 @@ bool Vst2Plugin::onSetParameterAutomated(long index,float value)
 {
     for(Parameter* param : params)
     {
-        if (param->index == index)
+        if (param->getIndex() == index)
         {
             setParamLock(true);
             param->adjustFromControl(NULL, 0, value);
@@ -869,7 +869,7 @@ void Vst2Plugin::updParamsFromPlugin()
 
     for(Parameter* param : params)
     {
-        float fVal = getParam(param->index);
+        float fVal = getParam(param->getIndex());
 
         if(fVal < 0)
         {

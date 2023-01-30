@@ -288,7 +288,7 @@ ParamComponent::ParamComponent(Device36* dev)
         {
             strcpy(paramname, param->getName().data());
 
-            if(param->type == Param_Bool)
+            if(param->getType() == Param_Bool)
             {
                 if(tgroup == NULL)
                 {
@@ -345,10 +345,10 @@ ParamComponent::ParamComponent(Device36* dev)
                 ASlider* slider;
                 addAndMakeVisible(slider = new ASlider(T("")));
 
-                slider->setRange(param->offset, param->range + param->offset);
+                //slider->setRange(param->offset, param->range + param->offset);
                 slider->setPopupMenuEnabled (true);
                 //pBufferSlider->setValue(Random::getSystemRandom().nextDouble() * 100, false, false);
-                slider->setValue(param->value, false, false);
+                //slider->setValue(param->value, false, false);
 
                 slider->setSliderStyle(ASlider::LinearHorizontal);
                 slider->setTextBoxStyle(ASlider::TextBoxPositioned, true, 150, 20);
@@ -365,7 +365,7 @@ ParamComponent::ParamComponent(Device36* dev)
                 slider->setTextColour(Colour(170, 185, 195));
                 slider->setTextBoxXY(ti->getStringWidth(str1) + 3, -2);
                 slider->setBounds(x + 4, y + 5, 115, 22);
-                slider->setParamIndex(param->index);
+                slider->setParamIndex(param->getIndex());
                 slider->setParameter(param);
                 slider->addListener(this);
                 //param->aslider = slider;
@@ -416,7 +416,7 @@ void ParamComponent::buttonClicked(Button * button)
 {
     for(Parameter* param : mdev->getParams())
     {
-        if(param->type == Param_Bool)
+        if(param->getType() == Param_Bool)
         {
             BoolParam* bp = (BoolParam*)param;
 
@@ -436,6 +436,7 @@ void ParamComponent::sliderValueChanged(ASlider* slider)
 
     for(Parameter* param : mdev->getParams())
     {
+        /*
         if(param->index == idx)
         {
             float val = (float)slider->getValue();
@@ -448,7 +449,7 @@ void ParamComponent::sliderValueChanged(ASlider* slider)
             slider->setText(String(param->getValString().data()), false);
 
             break;
-        }
+        }*/
     }
 }
 
@@ -490,7 +491,7 @@ VSTParamComponent::VSTParamComponent(Vst2Plugin* vst)
             addAndMakeVisible(slider = new ASlider(T("BufferSlider")));
 
             slider->setRange(0, 1);
-            slider->setValue(param->outVal, false, false);
+            slider->setValue(param->getOutVal(), false, false);
             slider->setSliderStyle(ASlider::LinearHorizontal);
             slider->setTextBoxStyle(ASlider::TextBoxPositioned, true, 150, 20);
             slider->setTextBoxIsEditable(false);
@@ -510,7 +511,7 @@ VSTParamComponent::VSTParamComponent(Vst2Plugin* vst)
             slider->setTextColour(Colour(170, 185, 195));
             slider->setTextBoxXY(ti->getStringWidth(str1) + 3, -2);
             slider->setBounds(x + 4, y + 5, 125, 22);
-            slider->setParamIndex(param->index);
+            slider->setParamIndex(param->getIndex());
             slider->setParameter(param);
             slider->addListener(this);
             //param->aslider = slider;
@@ -546,6 +547,7 @@ void VSTParamComponent::sliderValueChanged(ASlider* slider)
 
     for(Parameter* param : dev->getParams())
     {
+        /*
         if(param->index == idx)
         {
             float val = (float)slider->getValue();
@@ -558,7 +560,7 @@ void VSTParamComponent::sliderValueChanged(ASlider* slider)
             slider->setText(String(param->getValString().data()).trim(), false);
 
             break;
-        }
+        }*/
     }
 }
 
@@ -597,6 +599,7 @@ ASlider* CComponent::PlaceSliderWithLabel(char* txt, Parameter* param, int x, in
 
     if(param != NULL)
     {
+        /*
         //param->aslider = slider;
         if(param->interval <= 0)
         {
@@ -611,7 +614,7 @@ ASlider* CComponent::PlaceSliderWithLabel(char* txt, Parameter* param, int x, in
         slider->setParamIndex(param->index);
         slider->setParameter(param);
 
-        slider->setText(param->getValString().data(), false);
+        slider->setText(param->getValString().data(), false);*/
     }
 
     ALabel* label;

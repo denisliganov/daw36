@@ -412,25 +412,25 @@ void MixChannel::process(int num_frames, float* out_buff)
                     ///penv = (Envelope*)((Command*)panParam->envelopes->el)->paramedit;
                 }
 
-                volv = volParam->outVal;
+                volv = volParam->getOutVal();
 
-                if(volParam->lastval == -1)
+                if(volParam->lastValue == -1)
                 {
-                    volParam->setLastVal(volParam->outVal);
+                    volParam->setLastVal(volParam->getOutVal());
                 }
-                else if(volParam->lastval != volParam->outVal)
+                else if(volParam->lastValue != volParam->getOutVal())
                 {
                     if(volParam->declickCount == 0)
                     {
-                        volParam->declickCoeff = float(volParam->outVal - volParam->lastval)/DECLICK_COUNT;
+                        volParam->declickCoeff = float(volParam->getOutVal() - volParam->lastValue)/DECLICK_COUNT;
 
-                        volv = volParam->lastval;
+                        volv = volParam->lastValue;
 
                         volParam->declickCount = DECLICK_COUNT;
                     }
                     else
                     {
-                        volv = volParam->lastval + (DECLICK_COUNT - volParam->declickCount)*volParam->declickCoeff;
+                        volv = volParam->lastValue + (DECLICK_COUNT - volParam->declickCount)*volParam->declickCoeff;
                     }
                 }
                 else if(volParam->declickCount > 0) // (params->volparam->lastval == params->volparam->outval)
@@ -439,7 +439,7 @@ void MixChannel::process(int num_frames, float* out_buff)
                     volParam->declickCoeff = 0;
                 }
 
-                panv = panParam->outVal;
+                panv = panParam->getOutVal();
             }
             else
             {
@@ -472,7 +472,7 @@ void MixChannel::process(int num_frames, float* out_buff)
 
                     if(volParam->declickCount == 0)
                     {
-                        volParam->setLastVal(volParam->outVal);
+                        volParam->setLastVal(volParam->getOutVal());
                     }
                 }
 

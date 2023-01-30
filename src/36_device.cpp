@@ -156,7 +156,7 @@ void Device36::scanForPresets()
 
 void Device36::addParam(Parameter* param)
 {
-    param->module = this;
+    param->setDevice(this);
     param->setEnvDirect(false);
 
     params.push_back(param);
@@ -177,7 +177,7 @@ void Device36::addParamWithControl(Parameter* param, std::string oname, Control*
     {
         if(oname == "")
         {
-            if(param->type == Param_Bool)
+            if(param->getType() == Param_Bool)
             {
                 oname = "tg.eff";
             }
@@ -496,7 +496,7 @@ Parameter* Device36::getParamByIndex(int index)
 {
     for(Parameter* param : params)
     {
-        if(param->index == index)  return param;
+        if(param->getIndex() == index)  return param;
     }
 
     return NULL;
@@ -589,7 +589,7 @@ void Device36::enqueueParamEnvelope(Trigger* tg)
     envelopes = tg;
 
     Parameter* param = ((Envelope*)tg->el)->param;
-    tg->prev_value = (param->value - param->offset)/param->range;
+    tg->prev_value = param->getValueNormalized();
 
     // New envelopes unblock the param ability to be changed by envelope
     param->unblockEnvAffect();

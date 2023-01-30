@@ -75,7 +75,7 @@ void Parameter::paramInit(std::string name, ParamType pt, float def_val, float o
     defaultValue = def_val;
     outVal = 0;
     interval = -1;
-    lastval = -1;
+    lastValue = -1;
     declickCount = 0;
     declickCoeff = 0;
     sign = 0;
@@ -657,15 +657,10 @@ void Parameter::updateControls()
 
 void Parameter::setLastVal(float lval)
 {
-    lastval = lval;
+    lastValue = lval;
 }
 
 void Parameter::reset()
-{
-    setValue(defaultValue);
-}
-
-void Parameter::resetToInitial()
 {
     setValue(defaultValue);
 }

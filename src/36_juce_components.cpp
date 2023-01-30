@@ -4714,7 +4714,7 @@ void  ASlider::handleMessage(const Message & message)
 
         //if(!param->aslider_updating)
         {
-            setValue(param->value, false, false);
+            setValue(param->getValue(), false, false);
         }
 
        //setText(String(param->getLabel()), false);

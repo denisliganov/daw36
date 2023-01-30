@@ -131,7 +131,7 @@ void VstInstr::postProcessTrigger(Trigger* tg, long num_frames, long buffframe, 
     long        tc, tc0;
     int         ai;
 
-    panVal = pan->outVal;
+    panVal = pan->getOutVal();
 
     // PanConstantRule(pan, &volL, &volR);
     // Calculate constant rule directly here to improve performance

@@ -160,7 +160,7 @@ void Lane::drawBars(Graphics& g)
 
     // First draw non-selected elements, then selected ones over them
 
-    for(Element* el : grid->getpatt()->ptBase->elems)
+    for(Element* el : grid->getPattern()->ptBase->elems)
     {
         if (!el->isdel() && el->isNote())
         {
@@ -170,7 +170,7 @@ void Lane::drawBars(Graphics& g)
 
     for (Element* el : grid->selected)
     {
-        if (!el->isdel() && el->patt == grid->getpatt() && el->isNote())
+        if (!el->isdel() && el->patt == grid->getPattern() && el->isNote())
         {
             drawBar(g, el, grid->getXfromTick(el->gettick()), true, divHgt);
         }
@@ -193,7 +193,7 @@ void Lane::drawSelf(Graphics& g)
     float xOffset;
     int xTick;
 
-    xOffset = (grid->getHoffs() - (int)grid->getHoffs()) * grid->getppt();
+    xOffset = (grid->getHoffs() - (int)grid->getHoffs()) * grid->getPixelsPerTick();
     xTick = (int)grid->getHoffs();
 
     float xtt = 0;
@@ -237,7 +237,7 @@ void Lane::drawSelf(Graphics& g)
 
         xTick++;
 
-        xtt += grid->getppt();
+        xtt += grid->getPixelsPerTick();
     }
 
     g.saveState();
@@ -272,7 +272,7 @@ void Lane::process(bool leftbt, int mx, int my, unsigned flags)
         processSelectedOnly = true;
     }
 
-    for(Element* el : grid->getpatt()->ptBase->elems)
+    for(Element* el : grid->getPattern()->ptBase->elems)
     {
         int cx = grid->getXfromTick(el->gettick());
 

@@ -39,7 +39,7 @@ Button36::Button36(bool stick, std::string title)
 
 void Button36::addParam(Parameter* prm)
 {
-    if (prm->type == Param_Bool)
+    if (prm->getType() == Param_Bool)
     {
         param = prm;
 

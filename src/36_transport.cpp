@@ -246,7 +246,7 @@ void Transport::propagate()
 
     if(MGrid)
     {
-        MGrid->updtransport();
+        MGrid->updTransport();
     }
 
     if(MEdit)
@@ -264,7 +264,7 @@ void Transport::propagate()
 
 void Transport::adjustTime(int min,int sec,int ms)
 {
-    Pattern* mainPlayer = MGrid->getpatt();
+    Pattern* mainPlayer = MGrid->getPattern();
     double  currTick = mainPlayer->getPlayTick();
     float   timeInSeconds = (currTick/(ticksPerBeat*beatsPerMinute))*60;
 
@@ -290,7 +290,7 @@ void Transport::updTimeFromFrame()
 
     if (MGrid)
     {
-        Pattern* mainPlayer = MGrid->getpatt();
+        Pattern* mainPlayer = MGrid->getPattern();
 
         float   fsec = (float)mainPlayer->getFrame() / sr;
 
