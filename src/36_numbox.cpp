@@ -485,4 +485,13 @@ RadioBox::RadioBox(ParamRadio* param_radio)
     prmRad = param_radio;
 }
 
+ListBoxx::ListBoxx(std::string name)
+{
+    setObjName(name);
+}
+
+void ListBoxx::SetList( std::list <std::string> entries_list)
+{
+    entriesList = entries_list;
+}
 

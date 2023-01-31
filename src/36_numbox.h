@@ -6,6 +6,7 @@
 #include "36_globals.h"
 #include "36_controls.h"
 #include "36_config.h"
+#include "36_scroller.h"
 
 
 
@@ -18,21 +19,20 @@ public:
 
 protected:
 
-            int         ySet;
-            int         xOld;
-            int         yOld;
-            int         xDrag;
-            int         count;
+            int                 count;
+            int                 xOld;
+            int                 xDrag;
+            int                 yOld;
+            int                 ySet;
 
-            float       value;
+            float               value;
 
-            void    drawSelf(Graphics& g);
-    virtual void    handleMouseDown(InputEvent& ev);
-    virtual void    handleMouseUp(InputEvent& ev);
-    virtual void    handleMouseDrag(InputEvent& ev);
-
-    virtual void    handleNumDrag(int count) {}
-    virtual void    updAfterDrag() {}
+            void                drawSelf(Graphics& g);
+    virtual void                handleMouseDown(InputEvent& ev);
+    virtual void                handleMouseUp(InputEvent& ev);
+    virtual void                handleMouseDrag(InputEvent& ev);
+    virtual void                handleNumDrag(int count) {}
+    virtual void                updAfterDrag() {}
 };
 
 
@@ -169,5 +169,17 @@ public:
 protected:
 
             ParamToggle*        prmToggle;
+};
+
+
+class ListBoxx : public Scrolled
+{
+public:
+            ListBoxx(std::string name);
+            void SetList(std::list<std::string>  entries_list);
+
+protected:
+
+            std::list<std::string>  entriesList;
 };
 
