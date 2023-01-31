@@ -73,7 +73,7 @@ class Instrument;
 class MixChannel;
 class TextCursor;
 class ParamToggle;
-class ParamSwitch;
+class ParamRadio;
 class KeyHandler;
 class EditHistory;
 class HelperPanel;

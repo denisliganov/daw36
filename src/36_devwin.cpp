@@ -45,19 +45,42 @@ void DevParamObject::initAll()
         showParams = device->getParams();
     }
 
-    ParamBox* box = NULL;
-
     for(Param* param : showParams)
     {
-        Parameter* prm = dynamic_cast<Parameter*>(param);
+        Parameter*      prm = dynamic_cast<Parameter*>(param);
+        ParamRadio*     prmRad = dynamic_cast<ParamRadio*>(param);
+        ParamSelector*  prmSel = dynamic_cast<ParamSelector*>(param);
+        ParamToggle*    prmTg = dynamic_cast<ParamToggle*>(param);
 
         if (prm)
         {
-            addObject(box = new ParamBox(prm), x, y, boxWidth, boxHeight, "eff.param");
+            ParamBox* box = NULL;
+            addObject(box = new ParamBox(prm), x, y, boxWidth, boxHeight);
 
             box->setSliderOnly(false);
 
             y += boxHeight + 3;
+        }
+        else if (prmRad)
+        {
+            RadioBox* box = NULL;
+            addObject(box = new RadioBox(prmRad), x, y);
+
+            y += box->getH() + 3;
+        }
+        else if (prmSel)
+        {
+            SelectorBox* box = NULL;
+            addObject(box = new SelectorBox(prmSel), x, y);
+
+            y += box->getH() + 3;
+        }
+        else if (prmTg)
+        {
+            ToggleBox* box = NULL;
+            addObject(box = new ToggleBox(prmTg), x, y);
+
+            y += box->getH() + 3;
         }
     }
 

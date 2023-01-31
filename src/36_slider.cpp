@@ -14,6 +14,7 @@
 Slider36::Slider36(bool vert)
 {
     vertical = vert;
+    prm = NULL;
 
     slLen = 0;
     length = 0;

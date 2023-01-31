@@ -166,9 +166,12 @@ void Device36::addParamWithControl(Param* param, std::string oname, Control* ctr
 {
     addParam(param);
 
-    param->addControl(ctrl);
+    if (ctrl)
+    {
+        param->addControl(ctrl);
 
-    addObject(ctrl);
+        addObject(ctrl);
+    }
 
     handleParamUpdate(param);
 }

@@ -112,8 +112,6 @@ protected:
 
 class ParamBox : public NumBox
 {
-friend Parameter;
-
 public:
             ParamBox(Parameter* param);
             std::string         getClickHint();
@@ -140,4 +138,36 @@ protected:
             void                redraw();
 };
 
+
+class RadioBox : public NumBox
+{
+public:
+            RadioBox(ParamRadio* param_radio);
+
+protected:
+
+            ParamRadio*         prmRad;
+};
+
+
+class SelectorBox : public NumBox
+{
+public:
+            SelectorBox(ParamSelector* param_sel);
+
+protected:
+
+            ParamSelector*      prmSelector;
+};
+
+
+class ToggleBox : public NumBox
+{
+public:
+            ToggleBox(ParamToggle* param_tg);
+
+protected:
+
+            ParamToggle*        prmToggle;
+};
 

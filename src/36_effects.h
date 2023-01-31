@@ -45,6 +45,8 @@ class Filter1 : public Eff
 public:
             Filter1();
 
+            ParamRadio*        filterType;
+            ParamToggle*        x2toggle;
             Parameter*          cutoff;
             Parameter*          resonance;
             Parameter*          bandwidth;

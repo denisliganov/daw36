@@ -470,3 +470,19 @@ void ParamBox::redraw()
     Gobj::redraw();
 }
 
+ToggleBox::ToggleBox(ParamToggle* param_tg)
+{
+    prmToggle = param_tg;
+}
+
+SelectorBox::SelectorBox(ParamSelector* param_sel)
+{
+    prmSelector = param_sel;
+}
+
+RadioBox::RadioBox(ParamRadio* param_radio)
+{
+    prmRad = param_radio;
+}
+
+

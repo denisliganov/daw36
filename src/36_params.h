@@ -174,14 +174,14 @@ protected:
             bool                value;
 };
 
-class ParamSwitch : public Param
+class ParamRadio : public Param
 {
 public:
 
-            ParamSwitch(std::string name);
+            ParamRadio(std::string name) { prmName = name; }
 
-            void                addOption(std::string opt);
-            void                setCurrent(std::string opt);
+            void                addOption(std::string opt) { options.push_back(opt); }
+            void                setCurrent(int curr) { currentOption = curr;}
 
 protected:
 

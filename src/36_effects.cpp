@@ -316,6 +316,15 @@ Filter1::Filter1()
     //Q->AddValueString(Units_Default);
     //AddParamWithParamcell(Q);
 
+    addParam(filterType = new ParamRadio("Type"));
+
+    filterType->addOption("LowPass");
+    filterType->addOption("HighPass");
+    filterType->addOption("BandPass");
+    filterType->setCurrent(0);
+
+    addParam(x2toggle = new ParamToggle("X2", false));
+
 /*
     // Create radiobuttons set
     AddObj(ftype = new Radio36(&scope));
