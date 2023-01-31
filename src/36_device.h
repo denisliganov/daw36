@@ -18,26 +18,26 @@ public:
             Device36();
     virtual ~Device36();
 
-    virtual void                addParam(Parameter* param);
-    virtual void                addParamWithControl(Parameter* param, std::string ctrl_name = "", Control* ctrl = NULL);
+    virtual void                addParam(Param* param);
+    virtual void                addParamWithControl(Param* param, std::string ctrl_name = "", Control* ctrl = NULL);
     virtual SubWindow*          createWindow() { return NULL;  }
             void                dequeueParamEnvelope(Trigger* tgenv);
             void                enqueueParamEnvelope(Trigger* tgenv);
     virtual void                forceStop() {};
             int                 getIndex() { return devIdx; }
-    virtual Parameter*          getParamByName(char *param_name);
-    virtual Parameter*          getParamByIndex(int devIdx);
+    virtual Param*              getParamByName(char *param_name);
+    virtual Param*              getParamByIndex(int devIdx);
     virtual bool                getParamLock() { return paramLocked; };
-            std::list<Parameter*>   getParams() { return params; }
+            std::list<Param*>   getParams() { return params; }
             std::list<BrwEntry*>   getPresets() { return presets; }
             BrwEntry*           getCurrPreset() { return currPreset; }
-    virtual void                handleParamUpdate(Parameter* param = NULL) {};
+    virtual void                handleParamUpdate(Param* param = NULL) {};
             void                handleWindowClosed();
             bool                isWindowVisible();
             bool                isPreviewOnly() { return previewOnly; }
             bool                isInternal()    { return internal; }
     virtual void                reset() { }
-    virtual void                removeParam(Parameter* param);
+    virtual void                removeParam(Param* param);
     virtual void                setParamLock(bool lock) { paramLocked = lock; };
     virtual void                scanForPresets();
     virtual void                setBPM(float bpm) {};
@@ -61,9 +61,10 @@ protected:
             std::string         presetPath;
             Button36*           previewButton;
             bool                previewOnly;
-            std::list<BrwEntry*>        presets;
-            std::list<Parameter*>       params;
             long                uniqueId;
+
+            std::list<BrwEntry*>        presets;
+            std::list<Param*>       params;
 
             void                deletePresets();
             BrwEntry*           getPreset(char* objName);

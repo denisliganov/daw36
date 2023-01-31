@@ -43,14 +43,207 @@ char *              WorkDirectory;
 
 
 
-void ToggleConfigWindow()
+void        GetCurrentDir();
+void        LoadCursorImages();
+void        StartEditor();
+
+
+void ExitProgram()
 {
-    if(ConfigWindow == NULL)
+    //_MProject.SaveSettings();
+
+    MProject.releaseAllOnExit();
+
+    delete MAudio;
+
+    // delete _MainObject;        // Not needed, Juce will delete content component
+
+    if (MWindow != NULL)
     {
-        ConfigWindow = MObject->addWindow(new ConfigObject());
+        delete MWindow;
     }
 
-    ConfigWindow->setOpen(!ConfigWindow->isOpen());
+    JUCEApplication::quit();
+}
+
+void HandleCommandLine(const String& arg_str)
+{
+    // Remove quotes first, as they can prevent from loading
+
+    char* fn = (char*)malloc(arg_str.length());
+    arg_str.copyToBuffer(fn, arg_str.length());
+
+    char* k = fn;
+    char* a = strchr(fn, '\"');
+
+    while(a != NULL)
+    {
+        if(a == fn)  k += 1;
+    
+       *a = 0;
+        a = strchr(k, '\"');
+    }
+
+    File f(k);
+
+    if(f.exists())
+    {
+        MProject.loadProject(&f);
+    }
+}
+
+void HandleAnotherInstance(const String& command_line)
+{
+    MWindow->showAlertBox("Restriction warning");
+
+    File f(command_line);
+
+    if(f.exists())
+    {
+        MProject.loadProject(&f);
+    }
+}
+
+void HandleSystremQuitRequest()
+{
+    MProject.askAndSave();
+    MProject.saveSettings();
+}
+
+void InitializeAndStartProgram()
+{
+    //Splash_Create();
+
+    GetCurrentDir();
+
+    gInitGraphics();
+
+    LoadCursorImages();
+
+    InitWavetables();
+
+    MKeys = new KeyHandler();
+
+    MTransp = new Transport(120, 4, 4);
+
+    MAudio = new Audio36(DEFAULT_SAMPLE_RATE);
+
+    MObject = new MainWinObject();
+
+    MWindow = new MainWindow(MObject);
+
+    WinHWND = (HWND)MWindow->getWindowHandle();
+
+    VstHost = new Vst2Host(WinHWND);
+
+    MTransp->propagate();
+
+    InitComplete = true;
+
+    MObject->resized();
+
+    // Splash_Delete();
+
+    StartEditor();
+}
+
+void InitDirectories()
+{
+    if(WorkDirectory[0] >= 0x61)
+    {
+        WorkDirectory[0] -= 0x20;
+    }
+
+    SetCurrentDirectory(WorkDirectory);
+
+    // Create required subdirectories if they don't exist
+
+    File frendered(String((const char*)WorkDirectory) + T("Rendered"));
+    File fprojects(String((const char*)WorkDirectory) + T("Projects"));
+    File fplugins(String((const char*)WorkDirectory) + T("Plugins"));
+    File fpresets(String((const char*)WorkDirectory) + T("Presets"));
+    File fsamples(String((const char*)WorkDirectory) + T("Samples"));
+
+    if(!frendered.exists())
+    {
+        frendered.createDirectory();
+    }
+
+    if(!fprojects.exists())
+    {
+        fprojects.createDirectory();
+    }
+
+    if(!fplugins.exists())
+    {
+        fplugins.createDirectory();
+    }
+
+    if(!fpresets.exists())
+    {
+        fpresets.createDirectory();
+    }
+
+    if(!fsamples.exists())
+    {
+        fsamples.createDirectory();
+    }
+}
+
+void GetCurrentDir()
+{
+    //First, lets check how long is our working path
+
+    int length = ::GetCurrentDirectory(0, NULL);
+
+    WorkDirectory = NULL;
+
+    if (length != 0)
+    {
+        WorkDirectory = (char*)malloc(length + 1);
+    }
+
+    if (WorkDirectory != NULL)
+    {
+        ::GetCurrentDirectory(length, WorkDirectory);
+    }
+
+    strcat(WorkDirectory, "\\");
+}
+
+void GetStartupDir()
+{
+    //ExtractFilePath(Application->ExeName);
+    //GetFullPathName(szWorkingDirectory, );
+
+    char name[2222];
+    GetModuleFileName(NULL, name, 2222);
+
+    WorkDirectory = (char*)malloc(strlen(name));
+
+    char* sc;
+    char* last_sc;
+
+    sc = last_sc = name;
+
+    while(sc != NULL)
+    {
+        sc = strchr(sc, '\\');
+
+        if(sc != NULL)
+        {
+            last_sc = sc;
+            sc++;
+        }
+    }
+
+    if(last_sc != name)
+    {
+        last_sc++;
+       *last_sc = 0;
+    }
+
+    strcpy(WorkDirectory, name);
 }
 
 
@@ -137,126 +330,6 @@ void LoadDefaultInstruments()
     MInstrPanel->setCurrInstr(NULL);
 }
 
-
-void GetStartupDir()
-{
-    //ExtractFilePath(Application->ExeName);
-    //GetFullPathName(szWorkingDirectory, );
-
-    char name[2222];
-    GetModuleFileName(NULL, name, 2222);
-
-    WorkDirectory = (char*)malloc(strlen(name));
-
-    char* sc;
-    char* last_sc;
-
-    sc = last_sc = name;
-
-    while(sc != NULL)
-    {
-        sc = strchr(sc, '\\');
-
-        if(sc != NULL)
-        {
-            last_sc = sc;
-            sc++;
-        }
-    }
-
-    if(last_sc != name)
-    {
-        last_sc++;
-       *last_sc = 0;
-    }
-
-    strcpy(WorkDirectory, name);
-}
-
-void InitDirectories()
-{
-    if(WorkDirectory[0] >= 0x61)
-    {
-        WorkDirectory[0] -= 0x20;
-    }
-
-    SetCurrentDirectory(WorkDirectory);
-
-    // Create required subdirectories if they don't exist
-
-	File frendered(String((const char*)WorkDirectory) + T("Rendered"));
-    File fprojects(String((const char*)WorkDirectory) + T("Projects"));
-    File fplugins(String((const char*)WorkDirectory) + T("Plugins"));
-    File fpresets(String((const char*)WorkDirectory) + T("Presets"));
-    File fsamples(String((const char*)WorkDirectory) + T("Samples"));
-
-    if(!frendered.exists())
-    {
-        frendered.createDirectory();
-    }
-
-    if(!fprojects.exists())
-    {
-        fprojects.createDirectory();
-    }
-
-    if(!fplugins.exists())
-    {
-        fplugins.createDirectory();
-    }
-
-    if(!fpresets.exists())
-    {
-        fpresets.createDirectory();
-    }
-
-    if(!fsamples.exists())
-    {
-        fsamples.createDirectory();
-    }
-}
-
-void ExitProgram()
-{
-    //_MProject.SaveSettings();
-
-    MProject.releaseAllOnExit();
-
-    delete MAudio;
-
-    // delete _MainObject;        // Not needed, Juce will delete content component
-
-    if (MWindow != NULL)
-    {
-        delete MWindow;
-    }
-
-    JUCEApplication::quit();
-}
-
-
-
-void GetCurrentDirectory()
-{
-    //First, lets check how long is our working path
-
-    int length = ::GetCurrentDirectory(0, NULL);
-
-    WorkDirectory = NULL;
-
-    if (length != 0)
-    {
-        WorkDirectory = (char*)malloc(length + 1);
-    }
-
-    if (WorkDirectory != NULL)
-    {
-        ::GetCurrentDirectory(length, WorkDirectory);
-    }
-
-    strcat(WorkDirectory, "\\");
-}
-
 void LoadCursorImages()
 {
     // Initialize arrow cursors
@@ -288,85 +361,14 @@ void StartEditor()
     MProject.init();
 }
 
-void InitializeAndStartProgram()
+
+void ToggleConfigWindow()
 {
-    //Splash_Create();
-
-    GetCurrentDirectory();
-
-    gInitGraphics();
-
-    LoadCursorImages();
-
-    InitWavetables();
-
-    MKeys = new KeyHandler();
-
-    MTransp = new Transport(120, 4, 4);
-
-    MAudio = new Audio36(DEFAULT_SAMPLE_RATE);
-
-    MObject = new MainWinObject();
-
-    MWindow = new MainWindow(MObject);
-
-    WinHWND = (HWND)MWindow->getWindowHandle();
-
-    VstHost = new Vst2Host(WinHWND);
-
-    MTransp->propagate();
-
-    InitComplete = true;
-
-    MObject->resized();
-
-    // Splash_Delete();
-
-    StartEditor();
-}
-
-void HandleCommandLine(const String& arg_str)
-{
-    // Remove quotes first, as they can prevent from loading
-
-    char* fn = (char*)malloc(arg_str.length());
-    arg_str.copyToBuffer(fn, arg_str.length());
-
-    char* k = fn;
-    char* a = strchr(fn, '\"');
-
-    while(a != NULL)
+    if(ConfigWindow == NULL)
     {
-        if(a == fn)  k += 1;
-    
-       *a = 0;
-        a = strchr(k, '\"');
+        ConfigWindow = MObject->addWindow(new ConfigObject());
     }
 
-    File f(k);
-
-    if(f.exists())
-    {
-        MProject.loadProject(&f);
-    }
+    ConfigWindow->setOpen(!ConfigWindow->isOpen());
 }
-
-void HandleAnotherInstance(const String& command_line)
-{
-    MWindow->showAlertBox("Restriction warning");
-
-    File f(command_line);
-
-    if(f.exists())
-    {
-        MProject.loadProject(&f);
-    }
-}
-
-void HandleSystremQuitRequest()
-{
-    MProject.askAndSave();
-    MProject.saveSettings();
-}
-
 

@@ -27,7 +27,7 @@ void DevParamObject::initAll()
     int txs1=0, txs2=0, txs3=0;
     int tx1=0, tx2=0, tx3=0;
 
-    std::list<Parameter*>  showParams;
+    std::list<Param*>  showParams;
 
     VstInstr*  vsti = dynamic_cast<VstInstr*>(device);
     VstEffect* vste = dynamic_cast<VstEffect*>(device);
@@ -47,11 +47,13 @@ void DevParamObject::initAll()
 
     ParamBox* box = NULL;
 
-    for(Parameter* param : showParams)
+    for(Param* param : showParams)
     {
-        if (param->getType() != Param_Bool)
+        Parameter* prm = dynamic_cast<Parameter*>(param);
+
+        if (prm)
         {
-            addObject(box = new ParamBox(param), x, y, boxWidth, boxHeight, "eff.param");
+            addObject(box = new ParamBox(prm), x, y, boxWidth, boxHeight, "eff.param");
 
             box->setSliderOnly(false);
 

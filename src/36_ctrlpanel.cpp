@@ -127,19 +127,8 @@ ControlPanel::ControlPanel()
     addObject(btZoomOut = new Button36(false), "bt.zoomout");
     addObject(btZoomIn = new Button36(false), "bt.zoomin");
 
-    /*
-    addObject(btScale1 = new Button36(false), "bt.scale1");
-    addObject(btScale2 = new Button36(false), "bt.scale2");
-    addObject(btScale3 = new Button36(false), "bt.scale3");
-    btScale1->setLedType(true);
-    btScale2->setLedType(true);
-    btScale3->setLedType(true);
-    */
-
     addObject(btScrollBack = new Button36(false), "bt.navback");
     addObject(btScrollForth = new Button36(false), "bt.navforth");
-
-    //addObject(gridScroller = new Scroller(false), "maingrid.hscroll");
 }
 
 bool ControlPanel::wavesAreVisible()

@@ -188,12 +188,12 @@ void Element::load(XmlElement * xmlNode)
 
 void Element::softdel()
 {
-    markdel(true);
+    markDeleted(true);
 
     marksel(false);
 }
 
-void Element::markdel(bool del)
+void Element::markDeleted(bool del)
 {
     deleted = del;
 }

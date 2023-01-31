@@ -35,13 +35,13 @@ void Scroller::handleMouseDrag(InputEvent& ev)
     {
         event = ev;
 
-        setoffs(float(mouseRef - barpos - (*coordref + 1))/ratio);
+        setOffs(float(mouseRef - barpos - (*coordref + 1))/ratio);
     }
 }
 
 void Scroller::handleMouseDown(InputEvent& ev)
 {
-    currpos = getpos(ev, barpos);
+    currpos = getPos(ev, barpos);
 
     if(currpos != 0)
     {
@@ -50,7 +50,7 @@ void Scroller::handleMouseDown(InputEvent& ev)
 
         event = ev;
         //setOffset(offset + (visiblepart*0.9f)*currpos);
-        setoffs(float(ref)/ratio - float(barpixlen*0.5f)/ratio);
+        setOffs(float(ref)/ratio - float(barpixlen*0.5f)/ratio);
 
         int barRef = (*coordref + 1 + offsetpix);
         barpos = mouseRef - barRef;
@@ -58,7 +58,7 @@ void Scroller::handleMouseDown(InputEvent& ev)
     }
 }
 
-int Scroller::getpos(InputEvent& ev, int& offset_on_bar)
+int Scroller::getPos(InputEvent& ev, int& offset_on_bar)
 {
     int pos = 0;
     int mouseRef = vertical ? ev.mouseY : ev.mouseX;
@@ -82,12 +82,12 @@ int Scroller::getpos(InputEvent& ev, int& offset_on_bar)
     return pos;
 }
 
-void Scroller::adjoffs(float delta)
+void Scroller::adjOffs(float delta)
 {
-    setoffs(offset + delta);
+    setOffs(offset + delta);
 }
 
-void Scroller::setoffs(float offs)
+void Scroller::setOffs(float offs)
 {
     offset = offs;
 
@@ -120,10 +120,10 @@ void Scroller::handleMouseWheel(InputEvent& ev)
 
     event = ev;
 
-    setoffs(offset - ofsDelta);
+    setOffs(offset - ofsDelta);
 }
 
-void Scroller::updlimits(float full_span, float visible_span, float offs)
+void Scroller::updBounds(float full_span, float visible_span, float offs)
 {
     fullspan = full_span;
     visiblepart = visible_span;
@@ -184,16 +184,16 @@ void Scroller::drawSelf(Graphics & g)
     }
 }
 
-void Scroller::gotostart()
+void Scroller::gotoStart()
 {
     event = {};
-    setoffs(0);
+    setOffs(0);
 }
 
-void Scroller::gotoend()
+void Scroller::gotoEnd()
 {
     event = {};
-    setoffs(fullspan - visiblepart);
+    setOffs(fullspan - visiblepart);
 }
 
 Scrolled::Scrolled()
@@ -209,7 +209,7 @@ float Scrolled::getHoffs()
 
 void Scrolled::setHoffs(float offs)
 {
-    hscr->setoffs(offs);
+    hscr->setOffs(offs);
 }
 
 float Scrolled::getVoffs()
@@ -219,6 +219,6 @@ float Scrolled::getVoffs()
 
 void Scrolled::setVoffs(float offs)
 {
-    vscr->setoffs(offs);
+    vscr->setOffs(offs);
 }
 

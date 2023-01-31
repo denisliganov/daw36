@@ -133,7 +133,7 @@ void GoToEnd()
 
     MTransp->updTimeFromFrame();
 
-    MCtrllPanel->getScroller().gotoend();
+    MGrid->vscr->gotoEnd();
 
     MGrid->redraw(false, false);
 }

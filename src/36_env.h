@@ -47,25 +47,7 @@ class Envelope : public Element
 {
 public:
 
-            std::list  <EnvPoint*>  points;
-
-            EnvType     envType;
-            Parameter*  param;
-            float       lastValue;
-            int         aaCount;
-            float       aaBaseValue;
-            long        last_buffframe;
-            long        last_buffframe_end;
-            EnvPoint*   activePoint;
-            EnvAction   envAction;
-            float       env_xstart;
-            bool        verticalDragOnly;
-            float       buff[MAX_BUFF_SIZE];
-            float       buffoutval[MAX_BUFF_SIZE];
-
-
             Envelope(EnvType ct);
-
             Envelope*   clone(Element* el);
             Envelope*   clone();
     virtual bool        processBuffer1(long curr_frame, long buffframe, long num_frames, int step, long start_frame, Trigger* tgenv = NULL, Trigger* tgi = NULL);
@@ -85,8 +67,25 @@ public:
             bool        isOutOfBounds(long frame_phase);
             long        getFramesRemaining(long frame_phase);
             void        setticklen(float newlen);
-            void        markdel(bool del);
+            void        markDeleted(bool del);
             void        drawOnGrid(Graphics & g,Grid * grid);
+
+            std::list  <EnvPoint*>  points;
+
+            EnvType     envType;
+            Parameter*  param;
+            float       lastValue;
+            int         aaCount;
+            float       aaBaseValue;
+            long        last_buffframe;
+            long        last_buffframe_end;
+            EnvPoint*   activePoint;
+            EnvAction   envAction;
+            float       env_xstart;
+            bool        verticalDragOnly;
+            float       buff[MAX_BUFF_SIZE];
+            float       buffoutval[MAX_BUFF_SIZE];
+
 };
 
 

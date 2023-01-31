@@ -785,7 +785,7 @@ void Envelope::setticklen(float tl)
     updateLastValue();
 }
 
-void Envelope::markdel(bool del)
+void Envelope::markDeleted(bool del)
 {
     deleted = del;
 

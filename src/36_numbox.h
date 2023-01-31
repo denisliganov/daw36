@@ -116,27 +116,28 @@ friend Parameter;
 
 public:
             ParamBox(Parameter* param);
-            std::string     getClickHint();
-            float           getMinStep();
-            void            setSliderOnly(bool so) { sliderOnly = so; }
+            std::string         getClickHint();
+            float               getMinStep();
+            void                setSliderOnly(bool so) { sliderOnly = so; }
 
 protected:
-            int     defPos;
-            FontId  fontId;
-            int     th;
-            int     tw1;
-            int     tw2;
-            int     tw3;
-            bool    sliderOnly;
+            int                 defPos;
+            FontId              fontId;
+            int                 th;
+            int                 tw1;
+            int                 tw2;
+            int                 tw3;
+            bool                sliderOnly;
+            Parameter*          prm;
 
-            void    drawSelf(Graphics& g);
-            void    handleMouseWheel(InputEvent& ev);
-            void    handleNumDrag(int dragCount);
-            void    handleMouseDown(InputEvent & ev);
-            void    handleMouseDrag(InputEvent & ev);
-            void    handleMouseUp(InputEvent& ev);
-            void    remap();
-            void    redraw();
+            void                drawSelf(Graphics& g);
+            void                handleMouseWheel(InputEvent& ev);
+            void                handleNumDrag(int dragCount);
+            void                handleMouseDown(InputEvent & ev);
+            void                handleMouseDrag(InputEvent & ev);
+            void                handleMouseUp(InputEvent& ev);
+            void                remap();
+            void                redraw();
 };
 
 

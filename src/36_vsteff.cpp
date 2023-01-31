@@ -174,7 +174,7 @@ void VstEffect::processEvents(VstEvents *pEvents)
     vst2->processEvents(pEvents);
 }
 
-void VstEffect::handleParamUpdate(Parameter* param)
+void VstEffect::handleParamUpdate(Param* param)
 {
     vst2->handleParamUpdate(param);
 }

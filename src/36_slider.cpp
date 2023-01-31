@@ -21,19 +21,19 @@ Slider36::Slider36(bool vert)
 
 void Slider36::updValue()
 {
-    if (param != NULL && length != 0)
+    if (prm != NULL && length != 0)
     {
-        param->adjustFromControl(this, 0, (float)slLen/length);
+        prm->adjustFromControl(this, 0, (float)slLen/length);
     }
 }
 
 void Slider36::updPosition()
 {
-    if (param != NULL)
+    if (prm != NULL)
     {
-        slLen = RoundFloat((float)length * param->getValueNormalized());
+        slLen = RoundFloat((float)length * prm->getValueNormalized());
 
-        slMul = (float)length * param->getValue();
+        slMul = (float)length * prm->getValue();
     }
 
     redraw();
@@ -107,10 +107,10 @@ void Slider36::remap()
 
 std::string Slider36::getHint()
 {
-    std::string hint = param->getName().data();
+    std::string hint = prm->getName().data();
 
     hint += ": ";
-    hint += param->getValString();
+    hint += prm->getValString();
 
     return hint;
 }
@@ -127,12 +127,12 @@ void Slider36::drawSelf(Graphics& g)
     if (vertical)
     {
         int ypos = y2 - 1 - slLen;
-        int ycenter = y2 - 1 - RoundFloat((float)length * ((0 - param->getOffset()) / param->getRange()));
+        int ycenter = y2 - 1 - RoundFloat((float)length * ((0 - prm->getOffset()) / prm->getRange()));
         int ysl = ypos;
         int ysl2 = y2 - 1;
         int ythumb = ysl2;
 
-        if (param->getOffset() < 0)
+        if (prm->getOffset() < 0)
         {
             if (ypos >= ycenter)
             {
@@ -150,16 +150,16 @@ void Slider36::drawSelf(Graphics& g)
 
         fillx(g, 1, ysl - y1, width - 2, ysl2 - y1 - 1);
 
-        // Draw thumb for signed params
+        // Draw thumb for signed prms
 
-        if (abs(param->getOffset()) > (abs(param->getRange()) / 10.f))
+        if (abs(prm->getOffset()) > (abs(prm->getRange()) / 10.f))
         {
             setc(g, .8f);
         }
     }
     else
     {
-        int xstart = int((length)*((0.f - param->getOffset())/param->getRange()));
+        int xstart = int((length)*((0.f - prm->getOffset())/prm->getRange()));
         int xpos = slLen;
 
         int xfrom = xstart;
@@ -182,7 +182,7 @@ void Slider36::drawSelf(Graphics& g)
             rectx(g, xfrom, 0, xwidth, height);
         }
 
-        // Draw thumb for signed params
+        // Draw thumb for signed prms
 /*
         if (abs(param->offset) > (abs(param->range) / 10.f))
         {

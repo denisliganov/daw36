@@ -844,11 +844,11 @@ void Grid::clickScroll(InputEvent& ev)
 
     if(click < area)
     {
-        hscr->adjoffs(-(area - click)*hscr->getvisible());
+        hscr->adjOffs(-(area - click)*hscr->getvisible());
     }
     else if(click > (1 - area))
     {
-        hscr->adjoffs((click - (1 - area))*hscr->getvisible());
+        hscr->adjOffs((click - (1 - area))*hscr->getvisible());
     }
 
 /*
@@ -1664,7 +1664,7 @@ void Grid::handleMouseWheel(InputEvent& ev)
             //setTickOffset(getHoffs() - ofsDelta);
             
             // Vertical
-            vscr->setoffs(vscr->getoffs() - ev.wheelDelta * (lheight*1.5f));
+            vscr->setOffs(vscr->getoffs() - ev.wheelDelta * (lheight*1.5f));
             //vscr->setOffset(vscr->getOffset() - ev.wheelDelta*(lheight*.5f));
 
             //MInstrPanel->setOffset((int)(MInstrPanel->getOffset() - ev.wheelDelta*int(InstrHeight*1.1f)));
@@ -2098,7 +2098,7 @@ void Grid::updBounds()
             full = (1.1f*width)/getPixelsPerTick();
         }
 
-        hscr->updlimits(full, visiblepart, getHoffs());
+        hscr->updBounds(full, visiblepart, getHoffs());
     }
 
     if(vscr)
@@ -2110,7 +2110,7 @@ void Grid::updBounds()
             full = 1.1f*height;
         }
 
-        vscr->updlimits(full, height, getVoffs());
+        vscr->updBounds(full, height, getVoffs());
     }
 }
 

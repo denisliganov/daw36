@@ -41,7 +41,7 @@ Device36::~Device36()
 {
     while(params.size() > 0)
     {
-        Parameter* param = params.front();
+        Param* param = params.front();
 
         params.remove(param);
 
@@ -61,7 +61,7 @@ Device36::~Device36()
 
 void Device36::removeElements()
 {
-    // If some envelopes were extracted from this effect, disable them
+    // If some envelopes were extracted, disable them
 
 restart:
 
@@ -154,7 +154,7 @@ void Device36::scanForPresets()
     }
 }
 
-void Device36::addParam(Parameter* param)
+void Device36::addParam(Param* param)
 {
     param->setDevice(this);
     param->setEnvDirect(false);
@@ -162,53 +162,22 @@ void Device36::addParam(Parameter* param)
     params.push_back(param);
 }
 
-void Device36::removeParam(Parameter* param)
-{
-    params.remove(param);
-
-    delete param;
-}
-
-void Device36::addParamWithControl(Parameter* param, std::string oname, Control* ctrl)
+void Device36::addParamWithControl(Param* param, std::string oname, Control* ctrl)
 {
     addParam(param);
-
-    if(ctrl == NULL)
-    {
-        if(oname == "")
-        {
-            if(param->getType() == Param_Bool)
-            {
-                oname = "tg.eff";
-            }
-            else
-            {
-                oname = "sl.eff";
-            }
-        }
-
-        if(oname == "sl.eff")
-        {
-            Slider36* slider = new Slider36(false);
-            ctrl = (Control*)slider;
-        }
-        else if(oname == "tg.eff")
-        {
-            Button36* button = new Button36(true);
-            ctrl = (Control*)button;
-        }
-
-        //ctrl->height = 8; //rand()%3 + 20;
-       // ctrl->height += rand()%3;
-    }
-
-    //ctrl->setObjName(oname);
 
     param->addControl(ctrl);
 
     addObject(ctrl);
 
     handleParamUpdate(param);
+}
+
+void Device36::removeParam(Param* param)
+{
+    params.remove(param);
+
+    delete param;
 }
 
 // BRIEF:
@@ -243,10 +212,10 @@ void Device36::saveStateData(XmlElement & xmlParentNode, char* preset_name, bool
         xmlStateNode->setAttribute(T("PresetEntry"), "default");
     }
 
-    for(Parameter* param : params)
+    for(Param* param : params)
     {
-        XmlElement * xmlParam = (global == true ? param->save() : param->save4Preset());
-        xmlStateNode->addChildElement(xmlParam);
+        //XmlElement * xmlParam = (global == true ? param->save() : param->save4Preset());
+        //xmlStateNode->addChildElement(xmlParam);
     }
 
     //Now let the child-class a chance to save anything it wants as a custom tag
@@ -265,8 +234,8 @@ void Device36::saveStateData(XmlElement & xmlParentNode, char* preset_name, bool
 //    none
 void Device36::restoreStateData(XmlElement & xmlStateNode, bool global)
 {
-    Device36* pChildEffect = NULL;
-    Parameter*   param;
+    Device36*   pChildEffect = NULL;
+    Param*      param;
 
     char         szName[MAX_NAME_LENGTH];
     XmlElement*  xmlChildNode = xmlStateNode.getFirstChildElement();
@@ -292,11 +261,11 @@ void Device36::restoreStateData(XmlElement & xmlStateNode, bool global)
             {
                 if(global)
                 {
-                    param->load(xmlChildNode);
+                    //param->load(xmlChildNode);
                 }
                 else
                 {
-                    param->load4Preset(xmlChildNode);
+                    //param->load4Preset(xmlChildNode);
                 }
             }
         }
@@ -479,9 +448,9 @@ bool Device36::setPresetByName(BrwEntry* preset)
     return false;
 }
 
-Parameter* Device36::getParamByName(char *param_name)
+Param* Device36::getParamByName(char *param_name)
 {
-    for(Parameter* param : params)
+    for(Param* param : params)
     {
         if(_stricmp(param->getName().data(), param_name) == 0)
         {
@@ -492,9 +461,9 @@ Parameter* Device36::getParamByName(char *param_name)
     return NULL;
 }
 
-Parameter* Device36::getParamByIndex(int index)
+Param* Device36::getParamByIndex(int index)
 {
-    for(Parameter* param : params)
+    for(Param* param : params)
     {
         if(param->getIndex() == index)  return param;
     }
@@ -588,11 +557,11 @@ void Device36::enqueueParamEnvelope(Trigger* tg)
 
     envelopes = tg;
 
-    Parameter* param = ((Envelope*)tg->el)->param;
-    tg->prev_value = param->getValueNormalized();
+    Parameter* prm = ((Envelope*)tg->el)->param;
+    tg->prev_value = prm->getValueNormalized();
 
     // New envelopes unblock the param ability to be changed by envelope
-    param->unblockEnvAffect();
+    prm->unblockEnvAffect();
 }
 
 void Device36::dequeueParamEnvelope(Trigger* tg)

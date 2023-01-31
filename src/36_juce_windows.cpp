@@ -284,8 +284,13 @@ ParamComponent::ParamComponent(Device36* dev)
 
         char paramname[MAX_NAME_LENGTH];
 
-        for(Parameter* param : mdev->getParams())
+        for(Param* p : mdev->getParams())
         {
+            Parameter* param = dynamic_cast<Parameter*>(p);
+
+            if (param == NULL)
+                continue;
+
             strcpy(paramname, param->getName().data());
 
             if(param->getType() == Param_Bool)
@@ -414,8 +419,13 @@ ParamComponent::ParamComponent(Device36* dev)
 
 void ParamComponent::buttonClicked(Button * button)
 {
-    for(Parameter* param : mdev->getParams())
+    for(Param* p : mdev->getParams())
     {
+        Parameter* param = dynamic_cast<Parameter*>(p);
+
+        if (param == NULL)
+            continue;
+
         if(param->getType() == Param_Bool)
         {
             BoolParam* bp = (BoolParam*)param;
@@ -434,8 +444,13 @@ void ParamComponent::sliderValueChanged(ASlider* slider)
 {
     int idx = slider->getParamIndex();
 
-    for(Parameter* param : mdev->getParams())
+    for(Param* p : mdev->getParams())
     {
+        Parameter* param = dynamic_cast<Parameter*>(p);
+
+        if (param == NULL)
+            continue;
+
         /*
         if(param->index == idx)
         {
@@ -482,8 +497,13 @@ VSTParamComponent::VSTParamComponent(Vst2Plugin* vst)
 
         char paramname[MAX_NAME_LENGTH];
 
-        for(Parameter* param : dev->getParams())
+        for(Param* p : dev->getParams())
         {
+            Parameter* param = dynamic_cast<Parameter*>(p);
+
+            if (param == NULL)
+                continue;
+
             strcpy(paramname, param->getName().data());
 
             strcat(paramname, ":");
@@ -545,8 +565,13 @@ void VSTParamComponent::sliderValueChanged(ASlider* slider)
 {
     int idx = slider->getParamIndex();
 
-    for(Parameter* param : dev->getParams())
+    for(Param* p : dev->getParams())
     {
+        Parameter* param = dynamic_cast<Parameter*>(p);
+
+        if (param == NULL)
+            continue;
+
         /*
         if(param->index == idx)
         {

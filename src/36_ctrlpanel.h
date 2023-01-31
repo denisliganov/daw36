@@ -57,8 +57,8 @@ protected:
 
             Button36*           btWaveMode;
             Button36*           btMouseMode;
-
             Button36*           btPreviewOn;
+            Button36*           btPlay;
 
             BpmBox*             bpmBox;
             MeterBox*           meterBox;
@@ -78,14 +78,13 @@ protected:
 
 public:
 
-            Button36*           btPlay;
-
 
             ControlPanel();
             SnapMenu&           getSnapMenu()   { return *snapMenu; } 
             TimeScreen&         getTimeScreen()     { return *timeScreen; } 
             Scroller&           getScroller()       { return *gridScroller; } 
             ContextMenu*        createContextMenu();
+            Button36&           getPlayButton()       { return *btPlay; } 
 
             bool                wavesAreVisible();
             bool                isDarkGrid() { return true; }

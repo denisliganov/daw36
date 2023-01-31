@@ -42,7 +42,7 @@ void ConfigObject::handleChildEvent(Gobj * obj,InputEvent & ev)
     int a = 1;
 }
 
-void ConfigObject::handleParamUpdate(Parameter * param)
+void ConfigObject::handleParamUpdate(Param * param)
 {
     if(param == hue)
     {

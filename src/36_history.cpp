@@ -233,7 +233,7 @@ void EditHistory::perform(HistoryAction* act, bool forward)
                 }
                 else
                 {
-                    el->markdel(false);
+                    el->markDeleted(false);
                 }
             }
         }break;
@@ -244,7 +244,7 @@ void EditHistory::perform(HistoryAction* act, bool forward)
             {
                 if(forward)
                 {
-                    el->markdel(false);
+                    el->markDeleted(false);
                 }
                 else
                 {

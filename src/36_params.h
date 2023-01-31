@@ -43,10 +43,39 @@ typedef enum UnitsType
     Units_Default
 }UnitsType;
 
-class Parameter
+
+class Param
 {
 public:
+            Param();
+            void                addControl(Control* ct);
+            std::string         getName()           { return prmName; };
+            int                 getIndex()          { return index; }
+            bool                getEnvDirect();
+            ParamType           getType()       { return type; }
+            void                removeControl(Control* ct);
+    virtual void                reset() {}
+            void                setIndex(int idx)   { index = idx; }
+            void                setName(std::string name)   { prmName = name; };
+            void                setEnvDirect(bool envdir);
+            void                setDevice(Device36* dev) { module = dev; };
 
+protected:
+
+            Control*            ctrlUpdatingFrom;
+            bool                envdirect;
+            int                 globalindex;
+            int                 index;
+            Device36*           module;
+            std::string         prmName;
+            ParamType           type;
+
+            std::list<Control*> controls;
+};
+
+class Parameter : public Param
+{
+public:
             Parameter();
             Parameter(float def_val, float offs, float rng);
             Parameter(float def_val, float offs, float rng, ParamType ptype);
@@ -58,15 +87,11 @@ public:
 
             void                adjustFromControl(Control* ctrl, int step, float nval=-1, float min_step=0.1f);
             float               adjustForEditor(float val);
-            void                addControl(Control* ct);
             void                blockEnvAffect() { envaffect = false; }
             std::string         calcValStr(float uv);
             void                dequeueEnvelopeTrigger(Trigger* tg);
             void                enqueueEnvelopeTrigger(Trigger* tg);
             void                finishRecording();
-            int                 getIndex()      { return index; }
-            ParamType           getType()       { return type; }
-            std::string         getName()                   { return prmName; };
             std::string         getValString();
             std::string         getMaxValString();
             std::string         getUnitStr();
@@ -80,30 +105,23 @@ public:
             float               getDefaultValueNormalized();
             float               getEditorValue();
             bool                getReversed() { return reversed; }
-            bool                getEnvDirect();
             float               getInterval() { return interval; } 
             void                handleRecordingFromControl(float ctrlval);
             bool                isRecording() { return recording; }
             void                load(XmlElement* xmlParamNode);
             void                load4Preset(XmlElement* xmlParamNode);
     virtual void                reset();
-            void                removeControl(Control* ct);
-            void                setIndex(int idx)  { index = idx; }
-            void                setName(std::string name)   { prmName = name; };
     virtual void                setValue(float val);
     virtual void                setNormalizedValue(float nval);
-    virtual void                setDirectValueFromControl(float ctrlval);
     virtual void                setValueFromEnvelope(float envval, Envelope* env);
             void                setDefValue(float initial);
             void                setInterval(float newint) { interval = newint; }
             void                setValString(std::string str);
             void                setReversed(bool rev) { reversed = rev; }
-            void                setEnvDirect(bool envdir);
             void                setLastVal(float lval);
-            void                setDevice(Device36* dev) { module = dev; };
         XmlElement*             save();
         XmlElement*             save4Preset();
-    virtual void                updateControls();
+    virtual void                updateLinks();
             void                unblockEnvAffect() { envaffect = true;}
 
             float               lastValue;  // used for ramping
@@ -123,15 +141,10 @@ protected:
     virtual float               calcOutputValue(float val);
             void                paramInit(std::string name, ParamType ptype, float def_val, float offs, float rng, UnitsType vt);
 
-            Control*            ctrlUpdatingFrom;
             float               defaultValue;
-            bool                envdirect;
-            int                 globalindex;
-            int                 index;
             float               interval;
             float               logoffset;
             float               logRange;
-            Device36*           module;
             float               outVal;
             float               offset;
             bool                presetable;
@@ -139,16 +152,13 @@ protected:
             bool                reversed;
             bool                recording;
             int                 sign;
-            ParamType           type;
             UnitsType           unitsType;
             float               value;
 
-            std::string         prmName;
             std::string         prmValString;
-            std::list<Control*> controls;
 };
 
-class ParamToggle
+class ParamToggle : public Param
 {
 public:
 
@@ -162,10 +172,9 @@ public:
 protected:
 
             bool                value;
-            std::string         prmName;
 };
 
-class ParamSwitch
+class ParamSwitch : public Param
 {
 public:
 
@@ -176,16 +185,26 @@ public:
 
 protected:
 
+            int                 currentOption;
+
             std::list<std::string>  options;
-            std::string             prmName;
-            int                     currentOption;
 };
 
 class ParamSelector
 {
 public:
 
-            ParamSelector();
+            ParamSelector(std::string name);
+            void                addOption(std::string opt);
+            void                setOn(std::string option);
+            void                setOff(std::string option);
+
+protected:
+
+            int                 currentOption;
+            std::string         prmName;
+
+            std::list<std::string>  options;
 };
 
 class BoolParam : public Parameter
@@ -200,7 +219,7 @@ public:
             BoolParam(std::string name, bool state, const char* unitsStr);
             void                SetBoolValue(bool bval);
             bool                getOutVal();
-            void                updateControls();
+            void                updateLinks();
 };
 
 

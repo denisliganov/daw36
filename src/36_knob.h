@@ -20,10 +20,10 @@ public:
             void            remap();
 
 protected:
-
-            float           positionAngle;    // in radians
             float           angleRange;       // in radians too
             float           angleOffset;      // in radians too
+            Parameter*      prm;
+            float           positionAngle;    // in radians
             int             ys;
 };
 

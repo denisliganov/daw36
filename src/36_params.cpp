@@ -21,6 +21,39 @@
 #include "stdio.h"
 
 
+
+Param::Param()
+{
+    index = 0;
+    envdirect = true;
+    module = NULL;
+    ctrlUpdatingFrom = NULL;
+}
+
+void Param::addControl(Control* ct)
+{
+    controls.push_back(ct);
+
+    ct->addParam(this);
+
+}
+
+void Param::removeControl(Control* ctrl)
+{
+    controls.remove(ctrl);
+}
+
+bool Param::getEnvDirect()
+{
+    return envdirect;
+}
+
+void Param::setEnvDirect(bool envdir)
+{
+    envdirect = envdir;
+}
+
+
 Parameter::Parameter()
 {
     paramInit("", Param_Default, 0, 0, 1, Units_Default);
@@ -365,19 +398,6 @@ void Parameter::handleRecordingFromControl(float ctrlval)
     }
 }
 
-void Parameter::addControl(Control* ct)
-{
-    controls.push_back(ct);
-
-    ct->addParam(this);
-
-}
-
-void Parameter::removeControl(Control* ctrl)
-{
-    controls.remove(ctrl);
-}
-
 void Parameter::enqueueEnvelopeTrigger(Trigger* tg)
 {
     tg->tgworking = true;
@@ -414,31 +434,15 @@ XmlElement* Parameter::save4Preset()
     xmlParam->setAttribute(T("index"), index);
     xmlParam->setAttribute(T("value"), defaultValue);
 
-    if(type == Param_Bool)
-    {
-        BoolParam* bp = (BoolParam*)this;
-
-        xmlParam->setAttribute(T("bval"), bp->outval ? 1 : 0);
-    }
-
     return xmlParam;
 }
 
 void Parameter::load4Preset(XmlElement* xmlNode)
 {
-    if(type == Param_Bool)
-    {
-        BoolParam* bp = (BoolParam*)this;
+    float fval = (float)xmlNode->getDoubleAttribute(T("value"), defaultValue);
 
-        bp->SetBoolValue(xmlNode->getBoolAttribute(T("bval"), bp->outval));
-    }
-    else
-    {
-        float fval = (float)xmlNode->getDoubleAttribute(T("value"), defaultValue);
-
-        setValue(fval);
-        setDefValue(fval);
-    }
+    setValue(fval);
+    setDefValue(fval);
 }
 
 XmlElement* Parameter::save()
@@ -448,15 +452,7 @@ XmlElement* Parameter::save()
     xmlParam->setAttribute(T("GlobalIndex"), globalindex);
     xmlParam->setAttribute(T("index"), index);
 
-    if(type == Param_Bool)
-    {
-        BoolParam* bp = (BoolParam*)this;
-        xmlParam->setAttribute(T("bval"), bp->outval ? 1 : 0);
-    }
-    else
-    {
-        xmlParam->setAttribute(T("value"), defaultValue);
-    }
+    xmlParam->setAttribute(T("value"), defaultValue);
 
     return xmlParam;
 }
@@ -634,10 +630,10 @@ void Parameter::setValue(float val)
 
     setValString(calcValStr(outVal));
 
-    updateControls();
+    updateLinks();
 }
 
-void Parameter::updateControls()
+void Parameter::updateLinks()
 {
     for(Control* ctrl : controls)
     {
@@ -672,22 +668,6 @@ void Parameter::setDefValue(float initial)
     envtweaked = false;
 }
 
-// The only difference between the above function and below is that below sets passed value directly, without
-// actualizing it with range and offset
-
-void Parameter::setDirectValueFromControl(float ctrlval)
-{
-    setValue(ctrlval);
-
-    setDefValue(ctrlval);
-
-    blockEnvAffect();  // Block this param update from currently working envelopes
-
-    handleRecordingFromControl(ctrlval);
-
-    MProject.setChange();
-}
-
 void Parameter::setValueFromEnvelope(float envval, Envelope * env)
 {
     if(envaffect == true && env != autoenv)
@@ -705,16 +685,6 @@ void Parameter::setValueFromEnvelope(float envval, Envelope * env)
 
         //setLastVal(outVal);
     }
-}
-
-void Parameter::setEnvDirect(bool envdir)
-{
-    envdirect = envdir;
-}
-
-bool Parameter::getEnvDirect()
-{
-    return envdirect;
 }
 
 
@@ -753,7 +723,7 @@ void BoolParam::SetBoolValue(bool bval)
 {
     outval = bval;
 
-    updateControls();
+    updateLinks();
 }
 
 bool BoolParam::getOutVal()
@@ -761,9 +731,9 @@ bool BoolParam::getOutVal()
     return outval;
 }
 
-void BoolParam::updateControls()
+void BoolParam::updateLinks()
 {
-    Parameter::updateControls();
+    Parameter::updateLinks();
 
     if(atoggle != NULL)
     {

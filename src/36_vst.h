@@ -110,8 +110,8 @@ public:
             void                    setPresetName(char *new_name);
             void                    updatePresets();
             void                    extractParams();
-            void                    updateVString(Parameter* param);
-            void                    handleParamUpdate(Parameter* param);
+            void                    updateVString(Param* param);
+            void                    handleParamUpdate(Param* param);
             bool                    onSetParameterAutomated(long index,float value);
             void                    updParamsFromPlugin();
             bool                    setPresetByName(char* nm);
@@ -207,19 +207,19 @@ friend class Vst2Plugin;
 public:
             Vst2Host(void* main_window);
            ~Vst2Host();
-      Vst2Plugin*           loadModuleFromFile(char* path);
-            void            removeAllModules();
-            void            removeModule(Vst2Plugin *plug);
-            bool            checkModule(char *path, bool *is_generator, char* name);
-            void            setSampleRate(float fSampleRate);
-            void            setBufferSize(int size);
-            void            setBPM(float bpm);
-            long            onAudioMasterCallback(AEffect *effect, long opcode, long index, long value, void *ptr, float opt);
-    virtual bool            onCanDo(const char *ptr);
-    virtual bool            onGetVendorString(char *text);
-    virtual long            onGetHostVendorVersion();
-    virtual bool            onGetProductString(char *text);
-            int             getBuffSize() { return buffSize; };
+      Vst2Plugin*                   loadModuleFromFile(char* path);
+            void                    removeAllModules();
+            void                    removeModule(Vst2Plugin *plug);
+            bool                    checkModule(char *path, bool *is_generator, char* name);
+            void                    setSampleRate(float fSampleRate);
+            void                    setBufferSize(int size);
+            void                    setBPM(float bpm);
+            long                    onAudioMasterCallback(AEffect *effect, long opcode, long index, long value, void *ptr, float opt);
+    virtual bool                    onCanDo(const char *ptr);
+    virtual bool                    onGetVendorString(char *text);
+    virtual long                    onGetHostVendorVersion();
+    virtual bool                    onGetProductString(char *text);
+            int                     getBuffSize() { return buffSize; };
 
 protected:
 
@@ -227,13 +227,13 @@ protected:
 
             std::vector<Vst2Plugin*> plugins;
 
-            void*           ParentHWND;
-            HANDLE          vstMutex;
-            VstTimeInfo     vstTimeInfo;
-            float           fSampleRate;
-            int             buffSize;
+            void*                   ParentHWND;
+            HANDLE                  vstMutex;
+            VstTimeInfo             vstTimeInfo;
+            float                   fSampleRate;
+            int                     buffSize;
 
-            void            calcTimeInfo(long mask = -1);
+            void                    calcTimeInfo(long mask = -1);
 };
 
 

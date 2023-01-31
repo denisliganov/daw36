@@ -870,7 +870,7 @@ Instrument* Instrument::makeClone(Instrument * instr)
 
     for(; itr1 != params.end(); itr1++, itr2++)
     {
-        (*itr2)->setValue((*itr1)->getValue());
+        ((Parameter*)(*itr2))->setValue(((Parameter*)(*itr1))->getValue());
     }
 
     return instr;

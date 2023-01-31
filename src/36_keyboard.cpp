@@ -355,7 +355,7 @@ void TextCursor::handleKeyOrCharPressed(unsigned key, char character, unsigned f
         {
             TogglePlayback();
 
-            MCtrllPanel->btPlay->toggle();
+            MCtrllPanel->getPlayButton().toggle();
         }
         else if(flags & kbd_ctrl)
         {

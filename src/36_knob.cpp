@@ -15,6 +15,8 @@ Knob::Knob(Parameter* par)
 {
     param = par;
 
+    prm = par;
+
     angleRange = PI * 1.9f;
 
     angleOffset = float(2*PI - angleRange)*.5f;
@@ -24,9 +26,9 @@ Knob::Knob(Parameter* par)
 
 void Knob::updValue()
 {
-    if (param != NULL)
+    if (prm != NULL)
     {
-        param->adjustFromControl(this, 0, (1 - positionAngle/angleRange));
+        prm->adjustFromControl(this, 0, (1 - positionAngle/angleRange));
     }
 
     redraw();
@@ -34,9 +36,9 @@ void Knob::updValue()
 
 void Knob::updPosition()
 {
-    if (param != NULL)
+    if (prm != NULL)
     {
-        positionAngle = float((1 - param->getValueNormalized()) * angleRange);
+        positionAngle = float((1 - prm->getValueNormalized()) * angleRange);
     }
     else
     {
@@ -130,9 +132,9 @@ void Knob::drawSelf(Graphics& g)
 
     gEllipseFill(g, x1 + 3, y1 + 3, width-6, height-6);
 
-    if(param->getOffset() < 0)
+    if(prm->getOffset() < 0)
     {
-        float o = param->getOffset() / param->getRange();
+        float o = prm->getOffset() / prm->getRange();
         float oa = abs(o*angleRange);
 
         float rad = float(width-2)/2;

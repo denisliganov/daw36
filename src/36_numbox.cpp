@@ -300,12 +300,14 @@ ParamBox::ParamBox(Parameter* param)
 {
     addParam(param);
 
+    prm = param;
+
     fontId = FontSmall;
 
     th = gGetTextHeight(fontId);
-    tw1 = gGetTextWidth(fontId, param->getName());
-    tw2 = gGetTextWidth(fontId, param->getMaxValString());
-    tw3 = gGetTextWidth(fontId, param->getUnitStr());
+    tw1 = gGetTextWidth(fontId, prm->getName());
+    tw2 = gGetTextWidth(fontId, prm->getMaxValString());
+    tw3 = gGetTextWidth(fontId, prm->getUnitStr());
 
     sliderOnly = false;
 
@@ -327,9 +329,9 @@ void ParamBox::drawSelf(Graphics& g)
 
         setc(g, 0.7f);
 
-        txtfit(g, fontId, param->getName(), 2, txty, width/2);
+        txtfit(g, fontId, prm->getName(), 2, txty, width/2);
 
-        std::string valstr = param->getValString();
+        std::string valstr = prm->getValString();
 
         int sub = 0;
 
@@ -338,25 +340,25 @@ void ParamBox::drawSelf(Graphics& g)
            valstr.data()[0] == '<')
         {
             int poffs = gGetTextWidth(fontId, valstr.substr(0, 1));
-            txt(g, fontId, param->getValString().substr(0, 1), width/2 - poffs, txty);
+            txt(g, fontId, prm->getValString().substr(0, 1), width/2 - poffs, txty);
             sub = 1;
         }
 
         setc(g, .9f);
 
-        txt(g, fontId, param->getValString().substr(sub), width/2, txty);
+        txt(g, fontId, prm->getValString().substr(sub), width/2, txty);
 
         setc(g, .7f);
 
-        txt(g, fontId, param->getUnitStr(), width - tw3 - 2, txty);
+        txt(g, fontId, prm->getUnitStr(), width - tw3 - 2, txty);
     }
 
     setc(g, 0.2f);
     fillx(g, 0, txy, width, height - txy);
 
-    float offs = param->getOffset();
-    float range = param->getRange();
-    float val = param->getValue();
+    float offs = prm->getOffset();
+    float range = prm->getRange();
+    float val = prm->getValue();
     float baseVal = (offs <= 0 ? 0 : offs);
 
     int xoffs = int(float(width-1)*((baseVal - offs)/range));
@@ -403,7 +405,7 @@ std::string ParamBox::getClickHint()
 {
     if (sliderOnly)
     {
-        return param->getName() + ":  " + param->getValString() + " " + param->getUnitStr();
+        return prm->getName() + ":  " + prm->getValString() + " " + prm->getUnitStr();
     }
     else
     {
@@ -413,7 +415,7 @@ std::string ParamBox::getClickHint()
 
 void ParamBox::handleNumDrag(int dragCount)
 {
-    param->adjustFromControl(this, -(float)dragCount);
+    prm->adjustFromControl(this, -(float)dragCount);
 
     redraw();
 }
@@ -422,11 +424,11 @@ void ParamBox::handleMouseDown(InputEvent & ev)
 {
     if (abs(defPos - (ev.mouseX - x1)) < 2)
     {
-        param->setValue(param->getDefaultValue());
+        prm->setValue(prm->getDefaultValue());
     }
     else
     {
-        param->adjustFromControl(this, 0, float(ev.mouseX - x1)/width);
+        prm->adjustFromControl(this, 0, float(ev.mouseX - x1)/width);
     }
 
     redraw();
@@ -436,11 +438,11 @@ void ParamBox::handleMouseDrag(InputEvent & ev)
 {
     if (abs(defPos - (ev.mouseX - x1)) < 2)
     {
-        param->setValue(param->getDefaultValue());
+        prm->setValue(prm->getDefaultValue());
     }
     else
     {
-        param->adjustFromControl(this, 0, float(ev.mouseX - x1)/width);
+        prm->adjustFromControl(this, 0, float(ev.mouseX - x1)/width);
     }
 
     redraw();
@@ -453,14 +455,14 @@ void ParamBox::handleMouseUp(InputEvent & ev)
 
 void ParamBox::handleMouseWheel(InputEvent & ev)
 {
-    param->adjustFromControl(this, (float)ev.wheelDelta);
+    prm->adjustFromControl(this, (float)ev.wheelDelta);
 
     redraw();
 }
 
 void ParamBox::remap()
 {
-    defPos = int(float(width-1)*param->getDefaultValueNormalized());
+    defPos = int(float(width-1)*prm->getDefaultValueNormalized());
 }
 
 void ParamBox::redraw()

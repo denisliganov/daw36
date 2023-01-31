@@ -112,29 +112,169 @@ Browser::~Browser()
     ///
 }
 
-void Browser::handleChildEvent(Gobj * obj, InputEvent& ev)
+void Browser::activateMenuItem(std::string item)
 {
-    if (obj == btDevices || obj == btPlugins || obj == btSamples)
+    if(item == "Load as instrument")
     {
-        if(obj == btDevices)
-            MBrowser->setMode(Browse_InternalDevs);
-        else if(obj == btPlugins)
-            MBrowser->setMode(Browse_ExternalDevs);
-        else if(obj == btSamples)
-            MBrowser->setMode(Browse_Samples);
-
-        /*
-        if (_MainObject->showFX->isshown())
-        {
-           if(ev.clickDown)
-               _MainObject->showFX->handleMouseDown(ev);
-           else
-               _MainObject->showFX->handleMouseUp(ev);
-        }*/
+        MInstrPanel->loadInstrFromBrowser(currEntry);
     }
-    else if (obj == vscr)
+    else if(item == "Rescan plugins")
     {
-        remapAndRedraw();
+        rescanDevices();
+    }
+    else if(item == "deleteObject project")
+    {
+        File f(currEntry->path.data());
+
+        f.deleteFile();
+
+        update();
+    }
+    else if(item == "Open project")
+    {
+        File f(currEntry->path.data());
+
+        MProject.loadProject(&f);
+    }
+}
+
+void Browser::addEntry(BrwEntry* entry)
+{
+    addObject(entry);
+
+    entries[browsingMode].push_back(entry);
+}
+
+void Browser::addSearchDir(std::string dir)
+{
+    directories.push_back(dir);
+}
+
+BrwEntry* Browser::addEntry(DevClass ec, std::string name, std::string path, std::string alias)
+{
+    BrwEntry* entry = new BrwEntry(ec, name, path, alias);
+
+    addEntry(entry);
+
+    return entry;
+}
+
+void Browser::activateEntry(BrwEntry* be)
+{
+    if(isFileMode())
+    {
+        if (be->ftype == FType_Projects)
+        {
+            MProject.loadProject(&(File(be->path.data())));
+        }
+        else if (be->ftype == FType_Wave)
+        {
+            MInstrPanel->loadInstrFromBrowser(be);
+        }
+    }
+    else if (isDevMode())
+    {
+        BrwEntry* entry = (BrwEntry*)(be);
+
+        //if (entry->devclass == DevClass_GenInternal || entry->devclass == DevClass_GenVst)
+        {
+            MInstrPanel->loadInstrFromBrowser(be);
+        }
+    }
+}
+
+void Browser::cleanEntries()
+{
+    setVoffs(0);
+
+    while(entries[browsingMode].size() > 0)
+    {
+        BrwEntry* be = entries[browsingMode].front();
+
+        entries[browsingMode].remove(be);
+    }
+
+    currIndex = -1;
+    currEntry = NULL;
+}
+
+bool Browser::checkMouseTouching(int mx,int my)
+{
+    bool val =  Gobj::checkMouseTouching(mx, my);
+
+    //if(val)  brwindex = (my - y1 - MainLineHeight - (int)mainoffs)/BrwEntryHeight;
+
+    for(auto entry : entries[browsingMode])
+    {
+        if(entry->checkMouseTouching(mx, my))
+        {
+            brwIndex = entry->listIndex;
+        }
+    }
+
+    return val;
+}
+
+void Browser::clearVstFile()
+{
+    char   list_path[MAX_PATH_LENGTH] = {0};
+    // Check whether file-list of already scanned plugins exists
+    sprintf(list_path, "%s%s", ".\\", PLUGIN_LIST_FILENAME);
+    DeleteFile(list_path);
+}
+
+ContextMenu* Browser::createContextMenu()
+{
+    if(browsingMode == Browse_Presets)
+    {
+        return NULL;
+    }
+    else
+    {
+        redraw();
+
+        setCurrentEntry(brwIndex);
+
+        ContextMenu* menu = new ContextMenu(this);
+
+        if(browsingMode == Browse_ExternalDevs)
+        {
+            menu->addMenuItem("Rescan Plugins");
+        }
+        else if(browsingMode == Browse_Samples)
+        {
+            menu->addMenuItem("Load as instrument");
+        }
+        else if(browsingMode == Browse_Presets && entries[browsingMode].size() > 0)
+        {
+            BrwEntry* prd = getEntryByIndex(brwIndex);
+
+            if(prd != NULL)
+            {
+                Device36* module = (Device36*)(prd->dev);
+
+                if(module->isInternal())
+                {
+                    menu->addMenuItem("deleteObject preset");
+                }
+            }
+        }
+        else if(browsingMode == Browse_Projects && entries[browsingMode].size() > 0)
+        {
+            if(getEntryByIndex(brwIndex) != NULL)
+            {
+                menu->addMenuItem("Open project");
+                menu->addMenuItem("deleteObject project");
+            }
+        }
+        else
+        {
+            delete menu;
+
+            menu = NULL;
+        }
+
+        return menu;
     }
 }
 
@@ -170,6 +310,329 @@ void Browser::disableAllEntries()
         for(auto be : entries[i])
         {
             be->setVisible(false);
+        }
+    }
+}
+
+void Browser::devScanProc(ScanThread* thread)
+{
+    char            temppath[MAX_PATH_LENGTH]         = {0};
+    // char          working_directory[MAX_PATH_STRING] = {0};
+    // int           drive                              = _getdrive();
+    BrwEntry       *entry                              = NULL;
+    FILE*           fhandle                            = 0;
+    char            mode                               = 0; // 0 - reading+ writing; 1 - writing;
+    bool            updlist                     = false;
+    char           *envpath                           = NULL;
+    char            regpath[MAX_PATH_LENGTH]           = {0};
+    DWORD           rPathSize                          = MAX_PATH_LENGTH - 1;
+    DWORD           rType                              = REG_SZ;
+    HKEY            hResult                            = 0;
+
+
+    fhandle = rescanFromVstFile();
+
+    //for some reason, file with plugins wasn't created - return immediately
+
+    if(fhandle == 0)
+    {
+        MessageBox(NULL, "Cannot create/open file", "System error", MB_OK | MB_ICONERROR);
+        return ;
+    }
+
+    /* scan local plugin folder */
+    //_getdcwd(drive, working_directory, MAX_PATH_STRING - 1 );
+    //sprintf_s(temppath, MAX_PATH_STRING, "%s%s", szWorkingDirectory, LOCAL_PLUGIN_FOLDER);
+
+    sprintf_s(temppath, MAX_PATH_LENGTH, "%s", LOCAL_PLUGIN_FOLDER);
+
+    scanDirForDevs(temppath, mode, fhandle, thread);
+
+    /* Check whether environment has VST_PATH variable set*/
+    envpath = getenv( "VST_PATH" );
+
+    if (envpath != NULL)
+    {
+        memset(temppath, 0, sizeof(temppath));
+        sprintf(temppath,"%s%s", envpath, "\\");
+
+        if ( (_stricmp(temppath, VST_EXT_PATH_1) != 0) && (_stricmp(temppath, VST_EXT_PATH_2) != 0) )
+        {
+            scanDirForDevs(temppath, mode, fhandle, thread);
+        }
+    }
+
+    /* Scan special Steinberg's folder for plugins */
+    // SHGetValue(HKEY_LOCAL_MACHINE, "Software\\VST","VSTPluginsPath",&rType,&regpath, &rPathSize);
+    // RegGetValue(HKEY_LOCAL_MACHINE, "Software\\VST", "VSTPluginsPath",RRF_RT_ANY,NULL, &regpath, &rPathSize);
+
+    RegOpenKey(HKEY_LOCAL_MACHINE, "Software\\VST", &hResult);
+
+    if (hResult != 0)
+    {
+        RegQueryValueEx(hResult, "VSTPluginsPath", NULL, NULL, (LPBYTE)&regpath, &rPathSize);
+        RegCloseKey(hResult);
+    }
+
+    if ( (rPathSize != 0) && (regpath[0] != 0) )
+    {
+        memset(temppath, 0, sizeof(temppath));
+        sprintf(temppath,"%s%s", regpath, "\\");
+
+        if ( (_stricmp(temppath, VST_EXT_PATH_1) != 0) && (_stricmp(temppath, VST_EXT_PATH_2) != 0) )
+        {
+            scanDirForDevs(temppath, mode, fhandle, thread);
+        }
+    }
+
+    // Last place to check for VST
+
+    memset(temppath, 0, sizeof(temppath));
+
+    strcpy(temppath, VST_EXT_PATH_1);
+
+    scanDirForDevs(temppath, mode, fhandle, thread);
+
+    memset(temppath, 0, sizeof(temppath));
+
+    strcpy(temppath, VST_EXT_PATH_2);
+
+    scanDirForDevs(temppath, mode, fhandle, thread);
+
+    fclose(fhandle);
+
+    fhandle = 0;
+
+    _chdir(WorkDirectory);
+
+    // Phase 2: go through the list and remove old plugins which don't exist
+
+start:
+
+    for(auto entry : entries[browsingMode])
+    {
+        if(entry->isExternal())
+        {
+            if ((fhandle = fopen(entry->path.data(), "rb")) == 0 )
+            {
+                removeEntry(entry);
+
+                updlist = true;
+
+                goto start;
+            }
+            else
+            {
+                fclose(fhandle);
+                fhandle = 0;
+            }
+        }
+    }
+
+    // Now re-write list-file with new list
+
+    if (updlist)
+    {
+        fhandle = fopen(PLUGIN_LIST_FILENAME, "wb+");
+
+        if (fhandle != NULL)
+        {
+            for(BrwEntry* entry : entries[browsingMode])
+            {
+                if (entry->path.rfind("internal://") == std::string::npos)
+                {
+                     fwrite(entry, sizeof(BrwEntry),1, fhandle);
+                }
+            }
+
+            fclose(fhandle);
+        }
+    }
+}
+
+
+BrwEntry* Browser::getEntryByIndex(int index)
+{
+    for(BrwEntry* be : entries[browsingMode])
+    {
+        if(be->listIndex == index)
+        {
+            return be;
+        }
+    }
+
+    return NULL;
+}
+
+BrwEntry* Browser::getEntryByPath(char* path)
+{
+    for(auto entry : entries[browsingMode])
+    {
+        if (entry->path == path)
+        {
+            return entry;
+        }
+    }
+
+    return NULL;
+}
+
+void Browser::handleChildEvent(Gobj * obj, InputEvent& ev)
+{
+    if (obj == btDevices || obj == btPlugins || obj == btSamples)
+    {
+        if(obj == btDevices)
+            MBrowser->setMode(Browse_InternalDevs);
+        else if(obj == btPlugins)
+            MBrowser->setMode(Browse_ExternalDevs);
+        else if(obj == btSamples)
+            MBrowser->setMode(Browse_Samples);
+
+        /*
+        if (_MainObject->showFX->isshown())
+        {
+           if(ev.clickDown)
+               _MainObject->showFX->handleMouseDown(ev);
+           else
+               _MainObject->showFX->handleMouseUp(ev);
+        }*/
+    }
+    else if (obj == vscr)
+    {
+        remapAndRedraw();
+    }
+}
+
+void Browser::handleMouseUp(InputEvent& ev)
+{
+    if( browsingMode == Browse_Samples)
+    {
+        prreviewSample(false);
+    }
+}
+
+void Browser::handleMouseDown(InputEvent& ev)
+{
+    if(browsingMode == Browse_ExternalDevs ||
+       browsingMode == Browse_InternalDevs ||
+       browsingMode == Browse_Samples ||
+       browsingMode == Browse_Projects)
+    {
+        BrwEntry* be = getEntryByIndex(brwIndex);
+
+        if(be  != NULL)
+        {
+            if(ev.doubleClick && currIndex == brwIndex)     // double click
+            {
+                activateEntry(be );
+            }
+            else
+            {
+                setCurrentEntry(brwIndex);
+
+                if(browsingMode == Browse_Samples)  prreviewSample(true);
+            }
+        }
+    }
+    else if (browsingMode == Browse_Presets)
+    {
+        setCurrentEntry(brwIndex);
+
+        BrwEntry* prd = getEntryByIndex(brwIndex);
+
+        if(prd != NULL)
+        {
+            activateEntry(prd);
+        }
+    }
+}
+
+void Browser::handleMouseWheel(InputEvent& ev)
+{
+    float offsdelta = -(float)ev.wheelDelta*(BrwEntryHeight*2 + 3);
+
+    setVoffs(getVoffs() + offsdelta);
+}
+
+void Browser::handleMouseDrag(InputEvent& ev)
+{
+    if(isFileMode() || isDevMode())
+    {
+        if(brwIndex >= 0 && MObject->canDrag(this))
+        {
+            if(isFileMode())
+            {
+                if(currEntry != NULL)
+                {
+                    MObject->dragAdd(currEntry, ev.mouseX, ev.mouseY);
+                }
+            }
+            else if (isDevMode())
+            {
+                MObject->dragAdd(currEntry, ev.mouseX, ev.mouseY);
+            }
+        }
+    }
+}
+
+
+void Browser::initInternalDevices()
+{
+    addEntry(DevClass_EffInternal, "1-band Equalizer",  "",     "eff.eq1");
+    addEntry(DevClass_EffInternal, "3-band Equalizer",  "",     "eff.eq3");
+    addEntry(DevClass_EffInternal, "Graphic Equalizer", "",     "eff.grapheq");
+    addEntry(DevClass_EffInternal, "Delay",             "",     "eff.delay");
+    addEntry(DevClass_EffInternal, "Compressor",        "",     "eff.comp");
+    addEntry(DevClass_EffInternal, "Reverb",            "",     "eff.reverb");
+    addEntry(DevClass_EffInternal, "Chorus",            "",     "eff.chorus");
+    addEntry(DevClass_EffInternal, "Flanger",           "",     "eff.flanger");
+    addEntry(DevClass_EffInternal, "Phaser",            "",     "eff.phaser");
+    addEntry(DevClass_EffInternal, "WahWah",            "",     "eff.wah");
+    addEntry(DevClass_EffInternal, "Distortion",        "",     "eff.dist");
+    addEntry(DevClass_EffInternal, "BitCrusher",        "",     "eff.bitcrush");
+    addEntry(DevClass_EffInternal, "Stereoizer",        "",     "eff.stereo");
+    addEntry(DevClass_EffInternal, "Filter1",           "",     "eff.filter1");
+    addEntry(DevClass_EffInternal, "Tremolo",           "",     "eff.tremolo");
+
+    //addEntry(EffClass_Generator, EffType_Synth1, "internal://synth1", "D36 Synthesizer");
+}
+
+bool Browser::isFileMode()
+{
+    return (browsingMode == Browse_Samples || browsingMode == Browse_Projects);
+}
+
+bool Browser::isDevMode()
+{
+    return (browsingMode == Browse_InternalDevs || browsingMode == Browse_ExternalDevs);
+}
+
+
+void Browser::prreviewSample(bool down)
+{
+    if(down)
+    {
+        BrwEntry* entry = getEntryByIndex(brwIndex);
+
+        if(entry->ftype == FType_Wave)
+        {
+            ipreview = (Instrument*)MInstrPanel->addSample((char*)entry->path.data(), true);
+
+            if(ipreview != NULL)
+            {
+                ipreview->selfNote->preview();
+            }
+        }
+    }
+    else
+    {
+        if(ipreview != NULL)
+        {
+            MAudio->releaseAllPreviews();
+
+            MInstrPanel->deleteInstrument(ipreview);
+
+            ipreview = NULL;
         }
     }
 }
@@ -218,37 +681,11 @@ void Browser::remap()
 
     vscr->setCoords1(width - BrwScrollerWidth + 1, cy, BrwScrollerWidth - 2, visibleSpan);
 
-    vscr->updlimits(fullSpan, float(visibleSpan), vscr->getoffs());
+    vscr->updBounds(fullSpan, float(visibleSpan), vscr->getoffs());
 
     // dbg file browsing
     //ShowFiles->SetXYWH(0, 0, bwidth, bheight);
     //SetupFolders->SetXYWH(FxPanelMaxWidth - bwidth - tabX, tabY, bwidth, bheight);
-}
-
-bool Browser::isFileMode()
-{
-    return (browsingMode == Browse_Samples || browsingMode == Browse_Projects);
-}
-
-bool Browser::isDevMode()
-{
-    return (browsingMode == Browse_InternalDevs || browsingMode == Browse_ExternalDevs);
-}
-
-void Browser::addEntry(BrwEntry* entry)
-{
-    addObject(entry);
-
-    entries[browsingMode].push_back(entry);
-}
-
-BrwEntry* Browser::addEntry(DevClass ec, std::string name, std::string path, std::string alias)
-{
-    BrwEntry* entry = new BrwEntry(ec, name, path, alias);
-
-    addEntry(entry);
-
-    return entry;
 }
 
 void Browser::removeEntry(BrwEntry * entry)
@@ -258,27 +695,90 @@ void Browser::removeEntry(BrwEntry * entry)
     deleteObject(entry);
 }
 
-void Browser::cleanEntries()
+void Browser::rescanDevices( )
 {
-    setVoffs(0);
+    //Stop_PortAudio();
 
-    while(entries[browsingMode].size() > 0)
-    {
-        BrwEntry* be = entries[browsingMode].front();
+    //clearVstFile();
 
-        entries[browsingMode].remove(be);
-    }
+    ScanThread PlugScan;
 
-    currIndex = -1;
-    currEntry = NULL;
+    PlugScan.runThread();
+
+    //Start_PortAudio();
 }
 
-void Browser::update()
+void Browser::removeSearchDir(std::string dir)
 {
-    if(entries[browsingMode].size() == 0)
+    directories.remove(dir);
+}
+
+FILE* Browser::rescanFromVstFile()
+{
+    FILE*       fhandle                            = 0;
+    char        listpath[MAX_PATH_LENGTH]         = {0};
+    char        mode                               = 0; // 0 - reading+ writing; 1 - writing;
+
+    BrwEntry    listentry ;
+    BrwEntry   *tmpentry                         = NULL;
+
+    // Check whether file-list of already scanned plugins exists
+    sprintf(listpath, "%s%s", ".\\", PLUGIN_LIST_FILENAME);
+
+    if ((fhandle = fopen(listpath, "rb+")) == 0) //opens for reading and writing
     {
-        updateEntries();
+        //Opens for writing
+        fhandle = fopen(listpath, "wb+");
+
+        mode = 1;
     }
+    else if (fhandle != 0)
+    {
+    /*
+        // Let's read all plugin records from the file
+        while (fread(&listentry, sizeof(BrwEntry), 1, fhandle) != 0)
+        {
+            tmpentry = new BrwEntry;
+            memcpy(tmpentry, &listentry, sizeof(BrwEntry));
+            addEntry(tmpentry);
+        }
+*/
+
+        //initialize file and variable for further usage
+        tmpentry = NULL;
+
+        fseek(fhandle, 0, SEEK_END);
+    }
+
+    return fhandle;
+}
+
+void Browser::setCurrentEntry(int index)
+{
+    for(BrwEntry* be : entries[browsingMode])
+    {
+        if(be->listIndex == index)
+        {
+            currEntry = be;
+            currIndex = index;
+
+            redraw();
+
+            break;
+        }
+    }
+}
+
+void Browser::setViewMask(unsigned int vmask)
+{
+    // Defines mask filter for supported files
+
+    viewMask = vmask;
+}
+
+void Browser::setCurrentIndex(int index)
+{
+    currIndex = index;
 }
 
 void Browser::setMode(BrwMode mode)
@@ -478,6 +978,14 @@ void Browser::scanDirForFiles(std::string scan_path, std::string extension, bool
     }
 }
 
+void Browser::update()
+{
+    if(entries[browsingMode].size() == 0)
+    {
+        updateEntries();
+    }
+}
+
 void Browser::updateEntries()
 {
     WIN32_FIND_DATA founddata = {0};
@@ -571,512 +1079,4 @@ void Browser::updateCurrentHighlight()
 
     redraw();
 }
-
-void Browser::setCurrentEntry(int index)
-{
-    for(BrwEntry* be : entries[browsingMode])
-    {
-        if(be->listIndex == index)
-        {
-            currEntry = be;
-            currIndex = index;
-
-            redraw();
-
-            break;
-        }
-    }
-}
-
-BrwEntry* Browser::getEntryByIndex(int index)
-{
-    for(BrwEntry* be : entries[browsingMode])
-    {
-        if(be->listIndex == index)
-        {
-            return be;
-        }
-    }
-
-    return NULL;
-}
-
-void Browser::setCurrentIndex(int index)
-{
-    currIndex = index;
-}
-
-void Browser::activateEntry(BrwEntry* be)
-{
-    if(isFileMode())
-    {
-        if (be->ftype == FType_Projects)
-        {
-            MProject.loadProject(&(File(be->path.data())));
-        }
-        else if (be->ftype == FType_Wave)
-        {
-            MInstrPanel->loadInstrFromBrowser(be);
-        }
-    }
-    else if (isDevMode())
-    {
-        BrwEntry* entry = (BrwEntry*)(be);
-
-        //if (entry->devclass == DevClass_GenInternal || entry->devclass == DevClass_GenVst)
-        {
-            MInstrPanel->loadInstrFromBrowser(be);
-        }
-    }
-}
-
-bool Browser::checkMouseTouching(int mx,int my)
-{
-    bool val =  Gobj::checkMouseTouching(mx, my);
-
-    //if(val)  brwindex = (my - y1 - MainLineHeight - (int)mainoffs)/BrwEntryHeight;
-
-    for(auto entry : entries[browsingMode])
-    {
-        if(entry->checkMouseTouching(mx, my))
-        {
-            brwIndex = entry->listIndex;
-        }
-    }
-
-    return val;
-}
-
-void Browser::prreviewSample(bool down)
-{
-    if(down)
-    {
-        BrwEntry* entry = getEntryByIndex(brwIndex);
-
-        if(entry->ftype == FType_Wave)
-        {
-            ipreview = (Instrument*)MInstrPanel->addSample((char*)entry->path.data(), true);
-
-            if(ipreview != NULL)
-            {
-                ipreview->selfNote->preview();
-            }
-        }
-    }
-    else
-    {
-        if(ipreview != NULL)
-        {
-            MAudio->releaseAllPreviews();
-
-            MInstrPanel->deleteInstrument(ipreview);
-
-            ipreview = NULL;
-        }
-    }
-}
-
-void Browser::handleMouseUp(InputEvent& ev)
-{
-    if( browsingMode == Browse_Samples)
-    {
-        prreviewSample(false);
-    }
-}
-
-void Browser::handleMouseDown(InputEvent& ev)
-{
-    if(browsingMode == Browse_ExternalDevs ||
-       browsingMode == Browse_InternalDevs ||
-       browsingMode == Browse_Samples ||
-       browsingMode == Browse_Projects)
-    {
-        BrwEntry* be = getEntryByIndex(brwIndex);
-
-        if(be  != NULL)
-        {
-            if(ev.doubleClick && currIndex == brwIndex)     // double click
-            {
-                activateEntry(be );
-            }
-            else
-            {
-                setCurrentEntry(brwIndex);
-
-                if(browsingMode == Browse_Samples)  prreviewSample(true);
-            }
-        }
-    }
-    else if (browsingMode == Browse_Presets)
-    {
-        setCurrentEntry(brwIndex);
-
-        BrwEntry* prd = getEntryByIndex(brwIndex);
-
-        if(prd != NULL)
-        {
-            activateEntry(prd);
-        }
-    }
-}
-
-void Browser::setViewMask(unsigned int vmask)
-{
-    // Defines mask filter for supported files
-
-    viewMask = vmask;
-}
-
-void Browser::handleMouseWheel(InputEvent& ev)
-{
-    float offsdelta = -(float)ev.wheelDelta*(BrwEntryHeight*2 + 3);
-
-    setVoffs(getVoffs() + offsdelta);
-}
-
-ContextMenu* Browser::createContextMenu()
-{
-    if(browsingMode == Browse_Presets)
-    {
-        return NULL;
-    }
-    else
-    {
-        redraw();
-
-        setCurrentEntry(brwIndex);
-
-        ContextMenu* menu = new ContextMenu(this);
-
-        if(browsingMode == Browse_ExternalDevs)
-        {
-            menu->addMenuItem("Rescan Plugins");
-        }
-        else if(browsingMode == Browse_Samples)
-        {
-            menu->addMenuItem("Load as instrument");
-        }
-        else if(browsingMode == Browse_Presets && entries[browsingMode].size() > 0)
-        {
-            BrwEntry* prd = getEntryByIndex(brwIndex);
-
-            if(prd != NULL)
-            {
-                Device36* module = (Device36*)(prd->dev);
-
-                if(module->isInternal())
-                {
-                    menu->addMenuItem("deleteObject preset");
-                }
-            }
-        }
-        else if(browsingMode == Browse_Projects && entries[browsingMode].size() > 0)
-        {
-            if(getEntryByIndex(brwIndex) != NULL)
-            {
-                menu->addMenuItem("Open project");
-                menu->addMenuItem("deleteObject project");
-            }
-        }
-        else
-        {
-            delete menu;
-
-            menu = NULL;
-        }
-
-        return menu;
-    }
-}
-
-void Browser::activateMenuItem(std::string item)
-{
-    if(item == "Load as instrument")
-    {
-        MInstrPanel->loadInstrFromBrowser(currEntry);
-    }
-    else if(item == "Rescan plugins")
-    {
-        rescanDevices();
-    }
-    else if(item == "deleteObject project")
-    {
-        File f(currEntry->path.data());
-
-        f.deleteFile();
-
-        update();
-    }
-    else if(item == "Open project")
-    {
-        File f(currEntry->path.data());
-
-        MProject.loadProject(&f);
-    }
-}
-
-void Browser::addSearchDir(std::string dir)
-{
-    directories.push_back(dir);
-}
-
-void Browser::removeSearchDir(std::string dir)
-{
-    directories.remove(dir);
-}
-
-void Browser::handleMouseDrag(InputEvent& ev)
-{
-    if(isFileMode() || isDevMode())
-    {
-        if(brwIndex >= 0 && MObject->canDrag(this))
-        {
-            if(isFileMode())
-            {
-                if(currEntry != NULL)
-                {
-                    MObject->dragAdd(currEntry, ev.mouseX, ev.mouseY);
-                }
-            }
-            else if (isDevMode())
-            {
-                MObject->dragAdd(currEntry, ev.mouseX, ev.mouseY);
-            }
-        }
-    }
-}
-
-
-void Browser::initInternalDevices()
-{
-    addEntry(DevClass_EffInternal, "1-band Equalizer",  "",     "eff.eq1");
-    addEntry(DevClass_EffInternal, "3-band Equalizer",  "",     "eff.eq3");
-    addEntry(DevClass_EffInternal, "Graphic Equalizer", "",     "eff.grapheq");
-    addEntry(DevClass_EffInternal, "Delay",             "",     "eff.delay");
-    addEntry(DevClass_EffInternal, "Compressor",        "",     "eff.comp");
-    addEntry(DevClass_EffInternal, "Reverb",            "",     "eff.reverb");
-    addEntry(DevClass_EffInternal, "Chorus",            "",     "eff.chorus");
-    addEntry(DevClass_EffInternal, "Flanger",           "",     "eff.flanger");
-    addEntry(DevClass_EffInternal, "Phaser",            "",     "eff.phaser");
-    addEntry(DevClass_EffInternal, "WahWah",            "",     "eff.wah");
-    addEntry(DevClass_EffInternal, "Distortion",        "",     "eff.dist");
-    addEntry(DevClass_EffInternal, "BitCrusher",        "",     "eff.bitcrush");
-    addEntry(DevClass_EffInternal, "Stereoizer",        "",     "eff.stereo");
-    addEntry(DevClass_EffInternal, "Filter1",           "",     "eff.filter1");
-    addEntry(DevClass_EffInternal, "Tremolo",           "",     "eff.tremolo");
-
-    //addEntry(EffClass_Generator, EffType_Synth1, "internal://synth1", "D36 Synthesizer");
-}
-
-
-BrwEntry* Browser::getEntryByPath(char* path)
-{
-    for(auto entry : entries[browsingMode])
-    {
-        if (entry->path == path)
-        {
-            return entry;
-        }
-    }
-
-    return NULL;
-}
-
-FILE* Browser::rescanFromVstFile()
-{
-    FILE*       fhandle                            = 0;
-    char        listpath[MAX_PATH_LENGTH]         = {0};
-    char        mode                               = 0; // 0 - reading+ writing; 1 - writing;
-
-    BrwEntry    listentry ;
-    BrwEntry   *tmpentry                         = NULL;
-
-    // Check whether file-list of already scanned plugins exists
-    sprintf(listpath, "%s%s", ".\\", PLUGIN_LIST_FILENAME);
-
-    if ((fhandle = fopen(listpath, "rb+")) == 0) //opens for reading and writing
-    {
-        //Opens for writing
-        fhandle = fopen(listpath, "wb+");
-
-        mode = 1;
-    }
-    else if (fhandle != 0)
-    {
-    /*
-        // Let's read all plugin records from the file
-        while (fread(&listentry, sizeof(BrwEntry), 1, fhandle) != 0)
-        {
-            tmpentry = new BrwEntry;
-            memcpy(tmpentry, &listentry, sizeof(BrwEntry));
-            addEntry(tmpentry);
-        }
-*/
-
-        //initialize file and variable for further usage
-        tmpentry = NULL;
-
-        fseek(fhandle, 0, SEEK_END);
-    }
-
-    return fhandle;
-}
-
-void Browser::clearVstFile()
-{
-    char   list_path[MAX_PATH_LENGTH] = {0};
-    // Check whether file-list of already scanned plugins exists
-    sprintf(list_path, "%s%s", ".\\", PLUGIN_LIST_FILENAME);
-    DeleteFile(list_path);
-}
-
-void Browser::devScanProc(ScanThread* thread)
-{
-    char            temppath[MAX_PATH_LENGTH]         = {0};
-    // char          working_directory[MAX_PATH_STRING] = {0};
-    // int           drive                              = _getdrive();
-    BrwEntry       *entry                              = NULL;
-    FILE*           fhandle                            = 0;
-    char            mode                               = 0; // 0 - reading+ writing; 1 - writing;
-    bool            updlist                     = false;
-    char           *envpath                           = NULL;
-    char            regpath[MAX_PATH_LENGTH]           = {0};
-    DWORD           rPathSize                          = MAX_PATH_LENGTH - 1;
-    DWORD           rType                              = REG_SZ;
-    HKEY            hResult                            = 0;
-
-
-    fhandle = rescanFromVstFile();
-
-    //for some reason, file with plugins wasn't created - return immediately
-
-    if(fhandle == 0)
-    {
-        MessageBox(NULL, "Cannot create/open file", "System error", MB_OK | MB_ICONERROR);
-        return ;
-    }
-
-    /* scan local plugin folder */
-    //_getdcwd(drive, working_directory, MAX_PATH_STRING - 1 );
-    //sprintf_s(temppath, MAX_PATH_STRING, "%s%s", szWorkingDirectory, LOCAL_PLUGIN_FOLDER);
-
-    sprintf_s(temppath, MAX_PATH_LENGTH, "%s", LOCAL_PLUGIN_FOLDER);
-
-    scanDirForDevs(temppath, mode, fhandle, thread);
-
-    /* Check whether environment has VST_PATH variable set*/
-    envpath = getenv( "VST_PATH" );
-
-    if (envpath != NULL)
-    {
-        memset(temppath, 0, sizeof(temppath));
-        sprintf(temppath,"%s%s", envpath, "\\");
-
-        if ( (_stricmp(temppath, VST_EXT_PATH_1) != 0) && (_stricmp(temppath, VST_EXT_PATH_2) != 0) )
-        {
-            scanDirForDevs(temppath, mode, fhandle, thread);
-        }
-    }
-
-    /* Scan special Steinberg's folder for plugins */
-    // SHGetValue(HKEY_LOCAL_MACHINE, "Software\\VST","VSTPluginsPath",&rType,&regpath, &rPathSize);
-    // RegGetValue(HKEY_LOCAL_MACHINE, "Software\\VST", "VSTPluginsPath",RRF_RT_ANY,NULL, &regpath, &rPathSize);
-
-    RegOpenKey(HKEY_LOCAL_MACHINE, "Software\\VST", &hResult);
-
-    if (hResult != 0)
-    {
-        RegQueryValueEx(hResult, "VSTPluginsPath", NULL, NULL, (LPBYTE)&regpath, &rPathSize);
-        RegCloseKey(hResult);
-    }
-
-    if ( (rPathSize != 0) && (regpath[0] != 0) )
-    {
-        memset(temppath, 0, sizeof(temppath));
-        sprintf(temppath,"%s%s", regpath, "\\");
-
-        if ( (_stricmp(temppath, VST_EXT_PATH_1) != 0) && (_stricmp(temppath, VST_EXT_PATH_2) != 0) )
-        {
-            scanDirForDevs(temppath, mode, fhandle, thread);
-        }
-    }
-
-    // Last place to check for VST
-
-    memset(temppath, 0, sizeof(temppath));
-
-    strcpy(temppath, VST_EXT_PATH_1);
-
-    scanDirForDevs(temppath, mode, fhandle, thread);
-
-    memset(temppath, 0, sizeof(temppath));
-
-    strcpy(temppath, VST_EXT_PATH_2);
-
-    scanDirForDevs(temppath, mode, fhandle, thread);
-
-    fclose(fhandle);
-
-    fhandle = 0;
-
-    _chdir(WorkDirectory);
-
-    // Phase 2: go through the list and remove old plugins which don't exist
-
-start:
-
-    for(auto entry : entries[browsingMode])
-    {
-        if(entry->isExternal())
-        {
-            if ((fhandle = fopen(entry->path.data(), "rb")) == 0 )
-            {
-                removeEntry(entry);
-
-                updlist = true;
-
-                goto start;
-            }
-            else
-            {
-                fclose(fhandle);
-                fhandle = 0;
-            }
-        }
-    }
-
-    // Now re-write list-file with new list
-
-    if (updlist)
-    {
-        fhandle = fopen(PLUGIN_LIST_FILENAME, "wb+");
-
-        if (fhandle != NULL)
-        {
-            for(BrwEntry* entry : entries[browsingMode])
-            {
-                if (entry->path.rfind("internal://") == std::string::npos)
-                {
-                     fwrite(entry, sizeof(BrwEntry),1, fhandle);
-                }
-            }
-
-            fclose(fhandle);
-        }
-    }
-}
-
-void Browser::rescanDevices( )
-{
-    //Stop_PortAudio();
-
-    //clearVstFile();
-
-    ScanThread PlugScan;
-
-    PlugScan.runThread();
-
-    //Start_PortAudio();
-}
-
 

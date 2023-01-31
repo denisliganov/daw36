@@ -811,25 +811,27 @@ void Vst2Plugin::extractParams()
     }
 }
 
-void Vst2Plugin::handleParamUpdate(Parameter* param)
+void Vst2Plugin::handleParamUpdate(Param* param)
 {
-    if (param != NULL && getParamLock() == false)
+    Parameter* prm = dynamic_cast<Parameter*>(param);
+
+    if (prm != NULL && getParamLock() == false)
     {
-        setParam(param->getIndex(), param->getValue());
+        setParam(prm->getIndex(), prm->getValue());
 
         // Update units string for the parameter
         {
             char      *dispVal    = NULL;
             char      *paramLabel = NULL;
 
-            getDisplayValue(param->getIndex(),&dispVal);
-            getParamLabel(param->getIndex(), &paramLabel);
+            getDisplayValue(prm->getIndex(),&dispVal);
+            getParamLabel(prm->getIndex(), &paramLabel);
 
             char label[MAX_NAME_LENGTH] = {};
             strncpy(label, dispVal, min(MAX_NAME_LENGTH-strlen(paramLabel),strlen(dispVal)));
             strcat(label, paramLabel);
 
-            param->setValString(label);
+            prm->setValString(label);
 
             if (NULL != dispVal)
             {
@@ -848,8 +850,10 @@ void Vst2Plugin::handleParamUpdate(Parameter* param)
 
 bool Vst2Plugin::onSetParameterAutomated(long index,float value)
 {
-    for(Parameter* param : params)
+    for(Param* p : params)
     {
+        Parameter* param = dynamic_cast<Parameter*>(p);
+
         if (param->getIndex() == index)
         {
             setParamLock(true);
@@ -867,8 +871,10 @@ void Vst2Plugin::updParamsFromPlugin()
 {
     setParamLock(true);
 
-    for(Parameter* param : params)
+    for(Param* p : params)
     {
+        Parameter* param = dynamic_cast<Parameter*>(p);
+
         float fVal = getParam(param->getIndex());
 
         if(fVal < 0)
@@ -1016,7 +1022,13 @@ bool Vst2Plugin::restoreProgramSettings (const fxProgram* const prog)
         {
             setParam(i, prog->params[i]);
 
-            getParamByIndex(i)->setValue(prog->params[i]);
+            Param* p = getParamByIndex(i);
+            Parameter* param = dynamic_cast<Parameter*>(p);
+
+            if (param)
+            {
+                param->setValue(prog->params[i]);
+            }
         }
 
         return true;
@@ -1090,9 +1102,14 @@ bool Vst2Plugin::loadFromFXBFile (const void* const data, const int dataSize)
         {
             setParam(i, prog->params[i]);
 
-            Parameter* extparam =  getParamByIndex(i);
+            Param* extparam =  getParamByIndex(i);
 
-            if(extparam != NULL)  extparam->setValue(prog->params[i]);
+            Parameter* param = dynamic_cast<Parameter*>(extparam);
+
+            if (param != NULL)
+            {
+                param->setValue(prog->params[i]);
+            }
         }
     }
     else if ( (set->fxMagic) == 'FBCh' ||  (set->fxMagic) == 'hCBF')

@@ -24,7 +24,7 @@ public:
             void        processEvents(VstEvents *pEvents);
             void        extractParams();
             void        updatePresets();
-            void        handleParamUpdate(Parameter* param = NULL);
+            void        handleParamUpdate(Param* param = NULL);
             bool        onUpdateDisplay();
             void        setBPM(float bpm);
             void        setBufferSize(unsigned int bufferSize);

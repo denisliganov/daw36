@@ -139,7 +139,7 @@ Eff* Eff::makeClone(Eff* eff)
 
     for(; itr1 != params.end(); itr1++, itr2++)
     {
-        (*itr2)->setValue((*itr1)->getValue());
+        ((Parameter*)(*itr2))->setValue(((Parameter*)(*itr1))->getValue());
     }
 
     return eff;
@@ -296,98 +296,6 @@ SubWindow* Eff::createWindow()
 }
 
 
-BasicLP::BasicLP()
-{
-    objId = "eff.lp";
-    objName = "Basic Filter";
-    uniqueId = MAKE_FOURCC('F','L','T','R');
-
-    addParamWithControl(cutoff = new Parameter("CUTOFF", 700.0f, 200.0f, 9800.0f, Units_kHz));
-    addParamWithControl(resonance = new Parameter("RESONANCE", 5.5f, 1.0f, 10.0f, Units_Percent));
-
-    // Filter work data
-    lx1 = lx2 = ly1 = ly2 = 0.0f;
-    rx1 = rx2 = ry1 = ry2 = 0.0f;
-
-    reset();
-}
-
-void BasicLP::handleParamUpdate(Parameter* param)
-{
-    cutoff->setValString(cutoff->calcValStr((float)(cutoff->getOutVal()/1000.0f)));
-    resonance->setValString(resonance->calcValStr(((resonance->getOutVal() - 1.0f)/10.0f*100)));
-
-    reset();
-}
-
-void BasicLP::reset()
-{
-    float alpha, omega, sn, cs;
-    float a0, a1, a2, b0, b1, b2;
-
-    omega = (float)(2.0f*PI*cutoff->getOutVal()/MAudio->getSampleRate());
-    sn = sin (omega); 
-    cs = cos (omega);
-    alpha = sn/resonance->getOutVal();
-    b0 = (1.0f - cs)/2.0f;
-    b1 = 1.0f - cs;
-    b2 = (1.0f - cs)/2.0f;
-    a0 = 1.0f + alpha;
-    a1 = -2.0f*cs;
-    a2 = 1.0f - alpha;
-
-    filtCoefTab[0] = b0/a0;
-    filtCoefTab[1] = b1/a0;
-    filtCoefTab[2] = b2/a0;
-    filtCoefTab[3] = -a1/a0;
-    filtCoefTab[4] = -a2/a0;
-}
-
-void BasicLP::processData(float* in_buff, float* out_buff, int num_frames)
-{
-    float inL, inR, outL, outR, temp_y;
-    int i;
-
-    long fc = 0;
-    for(i=0; i < num_frames; i++)
-    {
-        inL = in_buff[fc];
-        inR = in_buff[fc + 1];
-
-        outL = inL;
-        outR = inR;
-
-        // Left
-        temp_y = filtCoefTab[0]*outL +
-                 filtCoefTab[1]*lx1 +
-                 filtCoefTab[2]*lx2 +
-                 filtCoefTab[3]*ly1 +
-                 filtCoefTab[4]*ly2;
-
-        ly2 = ly1; 
-        ly1 = temp_y; 
-        lx2 = lx1; 
-        lx1 = outL ; 
-        outL = temp_y;
-
-        // Right
-        temp_y = filtCoefTab[0]*outR +
-                 filtCoefTab[1]*rx1 +
-                 filtCoefTab[2]*rx2 +
-                 filtCoefTab[3]*ry1 +
-                 filtCoefTab[4]*ry2;
-
-        ry2 = ry1; 
-        ry1 = temp_y; 
-        rx2 = rx1; 
-        rx1 = outR ; 
-        outR = temp_y;
-
-        out_buff[fc++] = outL;
-        out_buff[fc++] = outR;
-    };
-}
-
 Filter1::Filter1()
 {
     objId = "eff.filter1";
@@ -424,45 +332,39 @@ Filter1::Filter1()
     */
 }
 
-void Filter1::handleParamUpdate(Parameter* param)
+void Filter1::handleParamUpdate(Param* param)
 {
     if(param == f1)
     {
-        BoolParam* bp = (BoolParam*)param;
-
-        if(bp->getOutVal())
+        if(f1->getOutVal())
         {
             dspCoreCFilter3.setMode(rosic::LadderFilterParameters::LOWPASS);
         }
     }
     else if(param == f2)
     {
-        BoolParam* bp = (BoolParam*)param;
-
-        if(bp->getOutVal())
+        if(f2->getOutVal())
         {
             dspCoreCFilter3.setMode(rosic::LadderFilterParameters::HIGHPASS);
         }
     }
     else if(param == f3)
     {
-        BoolParam* bp = (BoolParam*)param;
-
-        if(bp->getOutVal())
+        if(f3->getOutVal())
         {
             dspCoreCFilter3.setMode(rosic::LadderFilterParameters::BANDPASS_12_12);
         }
     }
-    else if(param->getName() == "CUT")
+    else if(param == cutoff)
     {
         dspCoreCFilter3.setCutoff((double)cutoff->getOutVal());
     }
-    else if(param->getName() == "RES")
+    else if(param == resonance)
     {
         dspCoreCFilter3.setResonance((double)resonance->getOutVal());
         resonance->setValString(resonance->calcValStr((resonance->getOutVal()/.97f*100.0f))); // /66.0f*100.0f
     }
-    else if(param->getName() == "BW")
+    else if(param == bandwidth)
     {
         //dspCoreCFilter2.setBandwidth(bandwidth->outval);
         //v_bandwidth->SetValue(bandwidth->outval);
@@ -544,7 +446,7 @@ EQ1::EQ1()
     reset();
 }
 
-void EQ1::handleParamUpdate(Parameter* param)
+void EQ1::handleParamUpdate(Param* param)
 {
     if( param == frequency )
     {
@@ -611,7 +513,7 @@ GraphicEQ::GraphicEQ()
     reset();
 }
 
-void GraphicEQ::handleParamUpdate(Parameter* param)
+void GraphicEQ::handleParamUpdate(Param* param)
 {
     if(param == gain5)
     {
@@ -698,7 +600,7 @@ EQ3::EQ3()
     reset();
 }
 
-void EQ3::handleParamUpdate(Parameter* param)
+void EQ3::handleParamUpdate(Param* param)
 {
     if(param == gain1)
     {
@@ -763,7 +665,7 @@ CTremolo::CTremolo()
     reset();
 }
 
-void CTremolo::handleParamUpdate(Parameter* param)
+void CTremolo::handleParamUpdate(Param* param)
 {
     if(param == speed)
     {
@@ -806,12 +708,12 @@ Compressor::Compressor()
 
     //addParamWithControl(mode = new BoolParam(false, "MODE", "LIMITER MODE"));
 
-    addParamWithControl(new Parameter("THRESH", 0.f, -60.0f, 60.0f, Units_dB));
-    addParamWithControl(new Parameter("RATIO", 1.0f, 1.0f, 30.0f));
-    addParamWithControl(new Parameter("KNEE", 0.f, 0.0f, 48.0f, Units_dB));
-    addParamWithControl(new Parameter("ATTACK", 10.f, 1.f, 90.0f, Units_ms));
-    addParamWithControl(new Parameter("RELEASE", 100.f, 10.f, 900.0f, Units_ms));
-    addParamWithControl(new Parameter("GAIN", 0.f, 0.f, 30.0f, Units_dB));
+    addParamWithControl(thresh = new Parameter("THRESH", 0.f, -60.0f, 60.0f, Units_dB));
+    addParamWithControl(ratio = new Parameter("RATIO", 1.0f, 1.0f, 30.0f));
+    addParamWithControl(knee = new Parameter("KNEE", 0.f, 0.0f, 48.0f, Units_dB));
+    addParamWithControl(attack = new Parameter("ATTACK", 10.f, 1.f, 90.0f, Units_ms));
+    addParamWithControl(release = new Parameter("RELEASE", 100.f, 10.f, 900.0f, Units_ms));
+    addParamWithControl(gain = new Parameter("GAIN", 0.f, 0.f, 30.0f, Units_dB));
 
 /* // Unpredictable shit
     autogain = new BoolParam(false);
@@ -820,7 +722,7 @@ Compressor::Compressor()
 */
 }
 
-void Compressor::handleParamUpdate(Parameter* param)
+void Compressor::handleParamUpdate(Param* param)
 {
 /*
     if(param == mode)
@@ -842,29 +744,29 @@ void Compressor::handleParamUpdate(Parameter* param)
         }
     }
     else  */
-    if(param->getName() == "THRESH")
+    if(param == thresh)
     {
-        dspCoreComp.setThreshold((double)param->getOutVal());
+        dspCoreComp.setThreshold((double)thresh->getOutVal());
     }
-    else if(param->getName() == "KNEE")
+    else if(param == knee)
     {
-        dspCoreComp.setThreshold((double)param->getOutVal());
+        dspCoreComp.setThreshold((double)knee->getOutVal());
     }
-    else if(param->getName() == "RATIO")
+    else if(param == ratio)
     {
-        dspCoreComp.setRatio((double)param->getOutVal());
+        dspCoreComp.setRatio((double)ratio->getOutVal());
     }
-    else if(param->getName() == "GAIN")
+    else if(param == gain)
     {
-        dspCoreComp.setOutputGain((double)param->getOutVal());
+        dspCoreComp.setOutputGain((double)gain->getOutVal());
     }
-    else if(param->getName() == "ATTACK")
+    else if(param == attack)
     {
-        dspCoreComp.setAttackTime(param->getOutVal());
+        dspCoreComp.setAttackTime(attack->getOutVal());
     }
-    else if(param->getName() == "RELEASE")
+    else if(param == release)
     {
-        dspCoreComp.setReleaseTime(param->getOutVal());
+        dspCoreComp.setReleaseTime(release->getOutVal());
     }
 }
 
@@ -896,8 +798,8 @@ CWahWah::CWahWah()
     objName = "WAH";
     uniqueId = MAKE_FOURCC('W','A','H','W');
 
-    addParamWithControl(new Parameter("MODFREQ", 1.25f, 0.1f, 4.9f, Units_Hz1));
-    addParamWithControl(new Parameter("DEPTH", 48.f, 2.f, 46.f, Units_Semitones));
+    addParamWithControl(modfreq = new Parameter("MODFREQ", 1.25f, 0.1f, 4.9f, Units_Hz1));
+    addParamWithControl(depth = new Parameter("DEPTH", 48.f, 2.f, 46.f, Units_Semitones));
 
     //addParamWithControl(frequency = new Parameter("FREQ.", Param_Freq, 0.5f, 0.f, 1.f, Units_Hz));
     //addParamWithControl(drywet = new Parameter("DRY/WET", 0.75f, 0.0f, 1.f, Units_DryWet));
@@ -905,7 +807,7 @@ CWahWah::CWahWah()
     reset();
 }
 
-void CWahWah::handleParamUpdate(Parameter* param)
+void CWahWah::handleParamUpdate(Param* param)
 {
     /*
     if(param == drywet)
@@ -917,13 +819,13 @@ void CWahWah::handleParamUpdate(Parameter* param)
         dspCoreWah.setFrequency(frequency->outval);
     }
     else */
-    if(param->getName() == "MODFREQ")
+    if(param == modfreq)
     {
-        dspCoreWah.setCycleLength(1.f/param->getOutVal());
+        dspCoreWah.setCycleLength(1.f/modfreq->getOutVal());
     }
-    else if(param->getName() == "DEPTH")
+    else if(param == depth)
     {
-        dspCoreWah.setDepth(param->getOutVal());
+        dspCoreWah.setDepth(depth->getOutVal());
     }
 }
 
@@ -955,9 +857,9 @@ CDistort::CDistort()
     objName = "DIS";
     uniqueId = MAKE_FOURCC('D','I','S','T');
 
-    addParamWithControl(new Parameter("DRIVE", 32.0f, 0.0f, 48.f, Units_dB));
-    addParamWithControl(new Parameter("POSTGAIN", 0.0f, -48.0f, 48.f, Units_dB));
-    addParamWithControl(new Parameter("SLOPE", 1.0f, -1.0f, 4.f));
+    addParamWithControl(drive = new Parameter("DRIVE", 32.0f, 0.0f, 48.f, Units_dB));
+    addParamWithControl(postgain = new Parameter("POSTGAIN", 0.0f, -48.0f, 48.f, Units_dB));
+    addParamWithControl(slope = new Parameter("SLOPE", 1.0f, -1.0f, 4.f));
 
     dspCoreDist.setOversampling(1);
     dspCoreDist.setAmount(10);
@@ -966,19 +868,19 @@ CDistort::CDistort()
     reset();
 }
 
-void CDistort::handleParamUpdate(Parameter* param)
+void CDistort::handleParamUpdate(Param* param)
 {
-    if(param->getName() == "DRIVE")
+    if(param == drive)
     {
-        dspCoreDist.setDrive(param->getOutVal());
+        dspCoreDist.setDrive(drive->getOutVal());
     }
-    else if(param->getName() == "POSTGAIN")
+    else if(param == postgain)
     {
-        dspCoreDist.setOutputLevel(param->getOutVal());
+        dspCoreDist.setOutputLevel(postgain->getOutVal());
     }
-    else if(param->getName() == "SLOPE")
+    else if(param == slope)
     {
-        dspCoreDist.setPenticSlopeAtZero(param->getOutVal());
+        dspCoreDist.setPenticSlopeAtZero(slope->getOutVal());
     }
 }
 
@@ -1019,7 +921,7 @@ CBitCrusher::CBitCrusher()
     handleParamUpdate(quantization);
 }
 
-void CBitCrusher::handleParamUpdate(Parameter* param)
+void CBitCrusher::handleParamUpdate(Param* param)
 {
     if(param == decimation)
     {
@@ -1062,7 +964,7 @@ CStereo::CStereo()
     handleParamUpdate(offset);
 }
 
-void CStereo::handleParamUpdate(Parameter* param)
+void CStereo::handleParamUpdate(Param* param)
 {
     if(param == offset)
     {
@@ -1104,37 +1006,44 @@ XDelay::XDelay() : dspCorePingPongDelay()
 
     ppmode = new BoolParam("Mode", true, "Ping-pong");
 
-    addParamWithControl(delay = new Parameter("DELAY", 3, 0.5f, 19.5f, Units_Ticks));
-    addParamWithControl(new Parameter("AMOUNT", 1.f, 0.f, 1.f, Units_Percent));
-    addParamWithControl(new Parameter("FEEDBACK", 55.f, 0.0f, 100.f, Units_Percent));
-    addParamWithControl(new Parameter("PAN", 0.0f, -1.0f, 2.f));
+    addParam(delayMode = new ParamToggle("Ping-pong mode", true));
 
+    addParamWithControl(delay = new Parameter("DELAY", 3, 0.5f, 19.5f, Units_Ticks));
     delay->setInterval(0.25f);
+    addParamWithControl(amount = new Parameter("AMOUNT", 1.f, 0.f, 1.f, Units_Percent));
+    addParamWithControl(feedback = new Parameter("FEEDBACK", 55.f, 0.0f, 100.f, Units_Percent));
+    addParamWithControl(pan = new Parameter("PAN", 0.0f, -1.0f, 2.f));
 
     //highCut = new FrequencyParameter(0.2f);
     //highCut->SetName("HighCut");
     //highCut->AddValueString(Units_Hz);
     //AddParamWithParamcell(highCut);
 
-    addParamWithControl(new Parameter("LOWCUT", Param_Freq, 0.9f, 0.f, 1.f, Units_Hz));
-    addParamWithControl(new Parameter("DRY/WET", .4f, 0.0f, 1.f, Units_DryWet));
+    addParamWithControl(lowcut = new Parameter("LOWCUT", Param_Freq, 0.9f, 0.f, 1.f, Units_Hz));
+    addParamWithControl(drywet = new Parameter("DRY/WET", .4f, 0.0f, 1.f, Units_DryWet));
 
     reset();
 }
 
-void XDelay::handleParamUpdate(Parameter* param)
+void XDelay::handleParamUpdate(Param* param)
 {
     if(param == ppmode)
     {
         dspCorePingPongDelay.setPingPongMode(ppmode->getOutVal());
         dspCorePingPongDelay.setStereoSwap(ppmode->getOutVal());
-        dspCorePingPongDelay.setPan((ppmode->getOutVal() ? -1 : 1)*param->getOutVal());
+        dspCorePingPongDelay.setPan((ppmode->getOutVal() ? -1 : 1)*ppmode->getOutVal());
     }
-    else if(param->getName() == "AMOUNT")
+    else if(param == delayMode)
+    {
+        dspCorePingPongDelay.setPingPongMode(delayMode->getValue());
+        dspCorePingPongDelay.setStereoSwap(delayMode->getValue());
+        dspCorePingPongDelay.setPan((delayMode->getValue() ? -1 : 1)*delayMode->getValue());
+    }
+    else if(param == amount)
     {
         //dspCorePingPongDelay.setGlobalGainFactor(ggain->outval); // old, obsolete
-        dspCorePingPongDelay.setWetLevel(amp2dB(param->getOutVal()));
-        param->setValString(param->calcValStr(int(100*param->getOutVal())));
+        dspCorePingPongDelay.setWetLevel(amp2dB(amount->getOutVal()));
+        amount->setValString(amount->calcValStr(int(100*amount->getOutVal())));
     }
     /*
     else if( param->getName() == "High.cut" )
@@ -1142,25 +1051,25 @@ void XDelay::handleParamUpdate(Parameter* param)
         dspCorePingPongDelay.setLowDamp(param->outval);
     }
     */
-    else if(param->getName() == "DELAY")
+    else if(param == delay)
     {
-        dspCorePingPongDelay.setDelayTime(param->getOutVal()/MTransp->getTicksPerBeat());
+        dspCorePingPongDelay.setDelayTime(delay->getOutVal()/MTransp->getTicksPerBeat());
     }
-    else if( param->getName() == "DRY/WET" )
+    else if( param == drywet )
     {
-        dspCorePingPongDelay.setDryWetRatio((float)(param->getOutVal()));
+        dspCorePingPongDelay.setDryWetRatio((float)(drywet->getOutVal()));
     }
-    else if( param->getName() == "FEEDBACK" )
+    else if( param == feedback )
     {
-        dspCorePingPongDelay.setFeedbackInPercent(param->getOutVal());
+        dspCorePingPongDelay.setFeedbackInPercent(feedback->getOutVal());
     }
-    else if( param->getName() == "PAN" )
+    else if( param == pan )
     {
-        dspCorePingPongDelay.setPan((ppmode->outval == true ? -1 : 1)*param->getOutVal());
+        dspCorePingPongDelay.setPan((ppmode->outval == true ? -1 : 1)*pan->getOutVal());
     }
-    else if( param->getName() == "LOWCUT" )
+    else if( param == lowcut )
     {
-        dspCorePingPongDelay.setHighDamp(param->getOutVal());
+        dspCorePingPongDelay.setHighDamp(lowcut->getOutVal());
     }
 }
 
@@ -1206,7 +1115,7 @@ CReverb::CReverb() : dspCoreReverb()
     reset();
 }
 
-void CReverb::handleParamUpdate(Parameter* param)
+void CReverb::handleParamUpdate(Param* param)
 {
     if(param == roomsize)
     {
@@ -1279,7 +1188,7 @@ CChorus::CChorus()
     addParamWithControl(drywet = new Parameter("DRY/WET", 0.5f, 0.0f, 1.f, Units_DryWet));
 }
 
-void CChorus::handleParamUpdate(Parameter* param)
+void CChorus::handleParamUpdate(Param* param)
 {
     if(param == drywet)
     {
@@ -1349,7 +1258,7 @@ CFlanger::CFlanger()
     addParamWithControl(drywet = new Parameter("DRY/WET", 0.5f, 0.0f, 0.5f, Units_DryWet));
 }
 
-void CFlanger::handleParamUpdate(Parameter* param)
+void CFlanger::handleParamUpdate(Param* param)
 {
     if(param == drywet)
     {
@@ -1428,7 +1337,7 @@ CPhaser::CPhaser()
     dspCorePhaser.setFilterMode(rosic::AllpassChain::FIRST_ORDER_ALLPASS);
 }
 
-void CPhaser::handleParamUpdate(Parameter* param)
+void CPhaser::handleParamUpdate(Param* param)
 {
     if(param == drywet)
     {

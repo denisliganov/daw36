@@ -64,7 +64,7 @@ public:
             void            relocateTriggers();
 
             void            marksel(bool sel);
-    virtual void            markdel(bool del);
+    virtual void            markDeleted(bool del);
             bool            isdel();
             bool            issel();
     virtual bool            isshown();

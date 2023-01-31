@@ -10,20 +10,19 @@
 
 class Control : public Gobj
 {
-protected:
-
-            Parameter*          param;
-            Device36*           dev;
-            Image*              parentImage;
-
-            virtual void        reset() {};
-
 public:
 
             Control();
-            virtual void        addParam(Parameter* p);
-            virtual void        updPosition() {};
-            virtual void        updValue() {};
-            virtual float       getMinStep() {return 0;};
+    virtual void                addParam(Param* p);
+    virtual void                updPosition() {};
+    virtual void                updValue() {};
+    virtual float               getMinStep() {return 0;};
+    virtual void                reset() {};
+
+protected:
+
+            Param*              param;
+            Device36*           dev;
+            Image*              parentImage;
 };
 
