@@ -44,40 +44,39 @@ friend  Browser;
         DragMode_DragX2,
     };
 
-protected:
-
-        int             mainY1;
-        int             mainY2;
-        int             mainX1;
-        int             mainX2;
-
-        void            updActiveObject(InputEvent& ev);
-
-        void            handleMouseDrag(InputEvent& ev);
-        void            handleMouseUp(InputEvent& ev);
-        void            updCursorImage(unsigned flags);
-        void            remap();
-        void            handleWindowResize(int wx, int wh);
-        void            setMode(DragMode m) { mode = m; }
-        DragMode        getMode() { return mode; }
-        void            drawSelf(Graphics& g);
-        void            handleClose();
-        void            handleChildEvent(Gobj * obj,InputEvent & ev);
-
-        DragMode        mode;
-        Gobj*           currAuxPanel;
-        ScrollTimer*    scrollTimer;
-
 public:
 
-        MainWinObject();
-        ~MainWinObject();
+            MainWinObject();
+            ~MainWinObject();
 
-        void            setMainX1(int main_x1);
-        void            setMainX2(int main_x2);
-        void            setMainY1(int main_y1);
-        void            setMainY2(int main_y2);
-        void            switchBrowser(bool on);
+            void                setMainX1(int main_x1);
+            void                setMainX2(int main_x2);
+            void                setMainY1(int main_y1);
+            void                setMainY2(int main_y2);
+            void                switchBrowser(bool on);
+
+protected:
+
+            void                drawSelf(Graphics& g);
+            DragMode            getMode() { return mode; }
+            void                handleClose();
+            void                handleChildEvent(Gobj * obj,InputEvent & ev);
+            void                handleMouseDrag(InputEvent& ev);
+            void                handleMouseUp(InputEvent& ev);
+            void                handleWindowResize(int wx, int wh);
+            void                remap();
+            void                setMode(DragMode m) { mode = m; }
+            void                updActiveObject(InputEvent& ev);
+            void                updCursorImage(unsigned flags);
+
+            int                 mainY1;
+            int                 mainY2;
+            int                 mainX1;
+            int                 mainX2;
+
+            DragMode            mode;
+            Gobj*               currAuxPanel;
+            ScrollTimer*        scrollTimer;
 };
 
 

@@ -17,9 +17,10 @@
 #define MenuItemColor       0xffE0F0FF
 
 #define MenuItemHeight      17
-#define MenuItemsGap        6
-#define MenuItemIndent      28
-#define MenuWidth           100
+#define MenuWidth           80
+
+#define MenuVertSpacing       12
+#define MenuHorizSpacing      23
 
 
 
@@ -60,7 +61,7 @@ public:
             if(itemstr == "")   //  delimiter
             {
                 setc(g, .55f);
-                lineH(g, height/2 - 1, float(MenuItemIndent), float(width - 1));
+                lineH(g, height/2 - 1, float(MenuHorizSpacing), float(width - 1));
             }
             else
             {
@@ -75,7 +76,7 @@ public:
 
                 setc(g, 1.f);
 
-                txt(g, fontId, itemstr, MenuItemIndent, height/2 + th/2 - 2);
+                txt(g, fontId, itemstr, MenuHorizSpacing, height/2 + th/2 - 2);
             }
         }
 
@@ -104,14 +105,14 @@ void ContextMenu::addMenuItem( std::string item_str )
 
     items.push_back(mi);
 
-    int iw = gGetTextWidth(FontBold, item_str) + 150 + MenuItemIndent;
+    int iw = gGetTextWidth(FontBold, item_str) + 150 + MenuHorizSpacing;
 
     if(iw > width)
     {
         width = iw;
     }
 
-    int mHeight = MenuItemsGap*2 - 3;
+    int mHeight = MenuVertSpacing*2;
 
     for(ContextMenuItem* item : items)
     {
@@ -136,7 +137,7 @@ void ContextMenu::handleClose()
 
 void ContextMenu::remap()
 {
-    int itemY = MenuItemsGap;
+    int itemY = MenuVertSpacing;
 
     for(ContextMenuItem* item : items)
     {

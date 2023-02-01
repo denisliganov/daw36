@@ -139,7 +139,7 @@ public:
         Render_Error    GetConfig(const RenderConfig** pp_config_data);
         //API to set the length of the project being rendered (in amount of frames)
         Render_Error    SetAudioLength(long ullAudioLength);
-        //API to set the length of the project being rendered (in amount of frames)
+        //API to get the length of the project being rendered (in amount of frames)
         Render_Error    GetAudioLength(long & ullAudioLength);
         //API to get current rendering position (calculated in frames)
         Render_Error    GetCurrentPos(long & ullCurrentFramePos);

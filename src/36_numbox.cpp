@@ -16,6 +16,10 @@
 
 
 
+NumBox::NumBox()
+{
+    fontId = FontBig;
+}
 
 void NumBox::drawSelf(Graphics& g)
 {
@@ -95,9 +99,9 @@ void BpmBox::drawSelf(Graphics& g)
     else
         str = String::formatted(T("0%.2f"), value);
 
-    int tw = gGetTextWidth(FontBig, str);
+    int tw = gGetTextWidth(fontId, str);
 
-    gText(g, FontBig, str, x1 + width/2 - tw/2, y2 - height/2 + 7);
+    gText(g, fontId, str, x1 + width/2 - tw/2, y2 - height/2 + 7);
 }
 
 void BpmBox::handleNumDrag(int dragCount)
@@ -159,9 +163,9 @@ void MeterBox::drawSelf(Graphics& g)
 
     std::string str = String::formatted(T("%d / %d"), tpbVal, bpbVal);
 
-    int tw = gGetTextWidth(FontBig, str);
+    int tw = gGetTextWidth(fontId, str);
 
-    gText(g, FontBig, str, x1 + width/2 - tw/2, y2 - height/2 + 7);
+    gText(g, fontId, str, x1 + width/2 - tw/2, y2 - height/2 + 7);
 }
 
 void MeterBox::handleMouseWheel(InputEvent & ev)
@@ -189,9 +193,13 @@ void MeterBox::handleMouseWheel(InputEvent & ev)
 void MeterBox::handleNumDrag(int count)
 {
     if(xDrag < width*0.55f)
+    {
         tpbVal -= count;
+    }
     else
+    {
         bpbVal -= count;
+    }
 
     LIMIT(tpbVal, 1, 8);
     LIMIT(bpbVal, 1, 8);
@@ -202,9 +210,13 @@ void MeterBox::handleNumDrag(int count)
 void MeterBox::updAfterDrag()
 {
     if(xDrag < width*0.55f)
+    {
         MTransp->setTicksPerBeat(tpbVal);
+    }
     else
+    {
         MTransp->setBeatsPerBar(bpbVal);
+    }
 }
 
 
@@ -223,9 +235,9 @@ void OctaveBox::drawSelf(Graphics& g)
 
     std::string str = String::formatted(T("%d"), value);
 
-    int tw = gGetTextWidth(FontBig, str);
+    int tw = gGetTextWidth(fontId, str);
 
-    gText(g, FontBig, str, x1 + width/2 - tw/2, y2 - height/2 + 7);
+    gText(g, fontId, str, x1 + width/2 - tw/2, y2 - height/2 + 7);
 }
 
 void OctaveBox::handleNumDrag(int count)
@@ -263,7 +275,7 @@ void TimeScreen::drawSelf(Graphics& g)
 
     std::string str = String::formatted(T("%2d:%02d"), MTransp->getCurrMin(), MTransp->getCurrSec());
 
-    gText(g, FontBig, str, x1 + 7, y2 - height/2 + 7);
+    gText(g, fontId, str, x1 + 7, y2 - height/2 + 7);
 
     std::string str1 = String::formatted(T(":%03d"), MTransp->getCurrMs());
 
@@ -319,6 +331,7 @@ ParamBox::ParamBox(Parameter* param)
 void ParamBox::drawSelf(Graphics& g)
 {
     fill(g, 0.26f);
+    rect(g, 0.1f);
 
     int txy = 0;
 
@@ -344,11 +357,11 @@ void ParamBox::drawSelf(Graphics& g)
             sub = 1;
         }
 
-        setc(g, .9f);
+        setc(g, 1.f);
 
         txt(g, fontId, prm->getValString().substr(sub), width/2, txty);
 
-        setc(g, .7f);
+        setc(g, .8f);
 
         txt(g, fontId, prm->getUnitStr(), width - tw3 - 2, txty);
     }
@@ -473,6 +486,32 @@ void ParamBox::redraw()
 ToggleBox::ToggleBox(ParamToggle* param_tg)
 {
     prmToggle = param_tg;
+
+    fontId = FontSmall;
+}
+
+void ToggleBox::drawSelf(Graphics& g)
+{
+    fill(g, 0.26f);
+    rect(g, 0.1f);
+
+    if (prmToggle->getValue())
+    {
+        setc(g, 0.26f);
+    }
+    else
+    {
+        setc(g, 0.8f);
+    }
+
+    fillx(g, 0, 0, width - width/4, height);
+    setc(g, 0.2f);
+
+    rectx(g, 0, 0, width - width/4, height);
+
+    setc(g, 1.f);
+
+    txtfit(g, fontId, prmToggle->getName(), 2 /*(width - width/4)/2 - gGetTextWidth(fontId, prmToggle->getName())/2*/, height/2 /*+ gGetTextHeight(fontId)/2*/, width - width/4);
 }
 
 SelectorBox::SelectorBox(ParamSelector* param_sel)
@@ -480,9 +519,17 @@ SelectorBox::SelectorBox(ParamSelector* param_sel)
     prmSelector = param_sel;
 }
 
+void SelectorBox::drawSelf(Graphics& g)
+{
+}
+
 RadioBox::RadioBox(ParamRadio* param_radio)
 {
     prmRad = param_radio;
+}
+
+void RadioBox::drawSelf(Graphics& g)
+{
 }
 
 ListBoxx::ListBoxx(std::string name)
@@ -493,5 +540,9 @@ ListBoxx::ListBoxx(std::string name)
 void ListBoxx::SetList( std::list <std::string> entries_list)
 {
     entriesList = entries_list;
+}
+
+void ListBoxx::drawSelf(Graphics& g)
+{
 }
 

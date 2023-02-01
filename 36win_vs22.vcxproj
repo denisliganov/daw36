@@ -68,7 +68,7 @@
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(ProjectDir)\src\3rd party;$(ProjectDir)\src\3rd party\VST3_SDK;$(ProjectDir)\src\3rd party\juce;$(ProjectDir)\src\3rd party\vstsdk3;$(ProjectDir)\src\3rd party\vstsdk3\public.sdk\source\vst2.x;$(ProjectDir)\src\3rd party\vstsdk3\pluginterfaces\vst2.x;$(ProjectDir)\src\3rd party\PortAudio\include;$(ProjectDir)\src\3rd party\PortAudio\common;$(ProjectDir)\src\3rd party\Libsndfile;$(ProjectDir)\src\3rd party\ASIOSDK2\common;$(ProjectDir)\src\3rd party\ASIOSDK2\host\pc;$(ProjectDir)\src\3rd party\ASIOSDK2\host;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;USE_ASIO;VST_FORCE_DEPRECATED=0;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MinimalRebuild>true</MinimalRebuild>
+      <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeaderOutputFile>.\Debug/36win.pch</PrecompiledHeaderOutputFile>

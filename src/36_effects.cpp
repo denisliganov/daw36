@@ -1015,7 +1015,7 @@ XDelay::XDelay() : dspCorePingPongDelay()
 
     ppmode = new BoolParam("Mode", true, "Ping-pong");
 
-    addParam(delayMode = new ParamToggle("Ping-pong mode", true));
+    addParam(delayMode = new ParamToggle("PING-PONG MODE", true));
 
     addParamWithControl(delay = new Parameter("DELAY", 3, 0.5f, 19.5f, Units_Ticks));
     delay->setInterval(0.25f);

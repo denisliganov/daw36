@@ -15,16 +15,16 @@ class NumBox : public Control
 {
 public:
 
-        NumBox() {}
+            NumBox();
 
 protected:
 
             int                 count;
+            FontId              fontId;
             int                 xOld;
             int                 xDrag;
             int                 yOld;
             int                 ySet;
-
             float               value;
 
             void                drawSelf(Graphics& g);
@@ -44,10 +44,10 @@ public:
 
 protected:
 
-            void    drawSelf(Graphics& g);
-            void    handleNumDrag(int count);
-            void    handleMouseWheel(InputEvent& ev);
-            void    updAfterDrag();
+            void                drawSelf(Graphics& g);
+            void                handleNumDrag(int count);
+            void                handleMouseWheel(InputEvent& ev);
+            void                updAfterDrag();
 };
 
 class MeterBox : public NumBox
@@ -58,13 +58,13 @@ public:
 
 protected:
 
-        int             tpbVal;
-        int             bpbVal;
+            int                 bpbVal;
+            int                 tpbVal;
 
-        void    drawSelf(Graphics& g);
-        void    handleNumDrag(int count);
-        void    handleMouseWheel(InputEvent& ev);
-        void    updAfterDrag();
+            void                drawSelf(Graphics& g);
+            void                handleNumDrag(int count);
+            void                handleMouseWheel(InputEvent& ev);
+            void                updAfterDrag();
 };
 
 
@@ -74,19 +74,19 @@ public:
 
             OctaveBox(int val);
 
-            int     getValue() { return value; }
+            int                 getValue() { return value; }
 
 protected:
 
-            int             value;
-            int             ySet;
-            int             xOld;
-            int             yOld;
-            bool            dragging;
+            bool                dragging;
+            int                 xOld;
+            int                 ySet;
+            int                 yOld;
+            int                 value;
 
-            void            drawSelf(Graphics& g);
-            void            handleMouseWheel(InputEvent & ev);
-            void            handleNumDrag(int count);
+            void                drawSelf(Graphics& g);
+            void                handleMouseWheel(InputEvent & ev);
+            void                handleNumDrag(int count);
 };
 
 
@@ -102,11 +102,11 @@ public:
 
 protected:
 
-        ChanVU* vu;
+            ChanVU* vu;
 
-        void    drawSelf(Graphics& g);
-        void    handleNumDrag(int count);
-        void    handleMouseWheel(InputEvent& ev);
+            void                drawSelf(Graphics& g);
+            void                handleNumDrag(int count);
+            void                handleMouseWheel(InputEvent& ev);
 };
 
 
@@ -120,7 +120,6 @@ public:
 
 protected:
             int                 defPos;
-            FontId              fontId;
             int                 th;
             int                 tw1;
             int                 tw2;
@@ -139,6 +138,18 @@ protected:
 };
 
 
+class ToggleBox : public NumBox
+{
+public:
+            ToggleBox(ParamToggle* param_tg);
+
+protected:
+
+            ParamToggle*        prmToggle;
+
+            void                drawSelf(Graphics& g);
+};
+
 class RadioBox : public NumBox
 {
 public:
@@ -147,6 +158,8 @@ public:
 protected:
 
             ParamRadio*         prmRad;
+
+            void                drawSelf(Graphics& g);
 };
 
 
@@ -158,17 +171,8 @@ public:
 protected:
 
             ParamSelector*      prmSelector;
-};
 
-
-class ToggleBox : public NumBox
-{
-public:
-            ToggleBox(ParamToggle* param_tg);
-
-protected:
-
-            ParamToggle*        prmToggle;
+            void                drawSelf(Graphics& g);
 };
 
 
@@ -181,5 +185,7 @@ public:
 protected:
 
             std::list<std::string>  entriesList;
+
+            void                drawSelf(Graphics& g);
 };
 

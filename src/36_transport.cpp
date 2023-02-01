@@ -23,139 +23,6 @@ std::list<Parameter*>           recParams;
 std::forward_list<Parameter*>   params;
 
 
-// Resets parameters being recorded to envelopes
-//
-void StopParamsRecording()
-{
-    if(GRecOn == true)
-    {
-        while(recParams.size() > 0)
-        {
-            recParams.front()->finishRecording();
-        }
-    }
-}
-
-// Completely stops recording
-//
-void StopRecording()
-{
-    StopParamsRecording();
-
-    GRecOn = false;
-
-    GetButton(MCtrllPanel, "bt.rec")->release();
-}
-
-void TogglePlayback()
-{
-    WaitForSingleObject(AudioMutex, INFINITE);
-
-    if(GPlaying)
-    {
-        GPlaying = false;
-
-        //GridPlayer->setFrame((long)GridPlayer->getFrameTSync());
-
-        MPattern->deactivate();
-
-        if(GRecOn == true)
-        {
-            StopParamsRecording();
-        }
-
-        MAudio->resetProcessing(false);
-    }
-    else
-    {
-        GPlaying = true; // start playing
-
-        MPattern->activate();
-    }
-
-    ReleaseMutex(AudioMutex);
-}
-
-void StopPlayback(bool force_mixreset)
-{
-    WaitForSingleObject(AudioMutex, INFINITE);
-
-    GPlaying = false;
-
-    MAudio->resetProcessing(force_mixreset);
-
-    MEdit->playHead->reset();
-
-    MPattern->deactivate();
-
-    MPattern->setFrame(0);
-
-    MGrid->setHoffs(0);
-
-    MTransp->updTimeFromFrame();
-
-    if(GRecOn)
-    {
-        StopRecording();
-    }
-
-    ReleaseMutex(AudioMutex);
-}
-
-void GoToHome()
-{
-    MPattern->setFrame(0);
-
-    MGrid->setHoffs(0);
-
-    MEdit->playHead->updatePosFromFrame();
-
-    MTransp->updTimeFromFrame();
-}
-
-void GoToEnd()
-{
-    long lastframe = MPattern->getLastElementFrame();
-
-    MPattern->setFrame(lastframe);
-
-    //float tick = MainClock->getTickFromFrame(lastframe);
-    //GridPlayer->setTick(tick);
-
-    if(GPlaying)
-    {
-        TogglePlayback(); // Toggle play to stop
-
-        GetButton(MCtrllPanel, "bt.play")->release();
-    }
-
-    MEdit->playHead->updatePosFromFrame();
-
-    MTransp->updTimeFromFrame();
-
-    MGrid->vscr->gotoEnd();
-
-    MGrid->redraw(false, false);
-}
-
-void UpdateTime()
-{
-    MEdit->playHead->updatePosFromFrame();
-
-    MTransp->updTimeFromFrame();
-}
-
-void Players_UpdateQueuedEvs()
-{
-    WaitForSingleObject(AudioMutex, INFINITE);
-    
-    if(GPlaying)
-    {
-        MPattern->queueEvent();
-    }
-
-    ReleaseMutex(AudioMutex);
-}
 
 
 Transport::Transport(float bpm,int tpb,int bpb)
@@ -164,18 +31,35 @@ Transport::Transport(float bpm,int tpb,int bpb)
     ticksPerBeat = tpb;
     beatsPerBar = bpb;
 
+    playing = new ParamToggle("PLAYBACK", false);
+
     init = true;
     propagate();
     init = false;
 }
 
-void Transport::reset()
+void Transport::adjustTime(int min,int sec,int ms)
 {
-    beatsPerMinute = 120;
-    ticksPerBeat = 4;
-    beatsPerBar = 4;
+    Pattern* mainPlayer = MGrid->getPattern();
+    double  currTick = mainPlayer->getPlayTick();
+    float   timeInSeconds = (currTick/(ticksPerBeat*beatsPerMinute))*60;
 
-    propagate();
+    timeInSeconds += float(min)*60 + sec + float(ms)/1000;
+
+    if (timeInSeconds < 0)
+    {
+        timeInSeconds = 0;
+    }
+
+    double newTick = (timeInSeconds/60)*(ticksPerBeat*beatsPerMinute);
+
+    mainPlayer->setPlayTick(newTick);
+
+    updTimeFromFrame();
+
+    MCtrllPanel->getTimeScreen().redraw();
+
+    MEdit->playHead->updatePosFromFrame();
 }
 
 float Transport::getInvertedFPT()
@@ -186,27 +70,6 @@ float Transport::getInvertedFPT()
 int Transport::getTicksPerBar()
 {
     return ticksPerBeat*beatsPerBar;
-}
-
-void Transport::setBeatsPerMinute(float bpm)
-{
-    beatsPerMinute = bpm;
-
-    propagate();
-}
-
-void Transport::setTicksPerBeat(int tpb)
-{
-    ticksPerBeat = tpb;
-
-    propagate();
-}
-
-void Transport::setBeatsPerBar(int bpb)
-{
-    beatsPerBar = bpb;
-
-    propagate();
 }
 
 float Transport::getBeatsPerMinute()
@@ -224,6 +87,42 @@ int Transport::getBeatsPerBar()
     return beatsPerBar;
 }
 
+void Transport::goToHome()
+{
+    MPattern->setFrame(0);
+
+    MGrid->setHoffs(0);
+
+    MEdit->playHead->updatePosFromFrame();
+
+    updTimeFromFrame();
+}
+
+void Transport::goToEnd()
+{
+    long lastframe = MPattern->getLastElementFrame();
+
+    MPattern->setFrame(lastframe);
+
+    //float tick = MainClock->getTickFromFrame(lastframe);
+    //GridPlayer->setTick(tick);
+
+    if(GPlaying)
+    {
+        togglePlayback(); // Toggle play to stop
+
+        GetButton(MCtrllPanel, "bt.play")->release();
+    }
+
+    MEdit->playHead->updatePosFromFrame();
+
+    updTimeFromFrame();
+
+    MGrid->vscr->gotoEnd();
+
+    MGrid->redraw(false, false);
+}
+
 float Transport::getSecondsPerTick()
 {
     return secondsPerTick;
@@ -232,6 +131,16 @@ float Transport::getSecondsPerTick()
 float Transport::getFramesPerTick()
 {
     return framesPerTick;
+}
+
+long Transport::getFrameFromTick(float tick)
+{
+    return long(tick*framesPerTick);
+}
+
+float Transport::getTickFromFrame(long frame)
+{
+    return float(frame*invertedFPT);
 }
 
 void Transport::propagate()
@@ -262,26 +171,113 @@ void Transport::propagate()
     }
 }
 
-void Transport::adjustTime(int min,int sec,int ms)
+void Transport::reset()
 {
-    Pattern* mainPlayer = MGrid->getPattern();
-    double  currTick = mainPlayer->getPlayTick();
-    float   timeInSeconds = (currTick/(ticksPerBeat*beatsPerMinute))*60;
+    beatsPerMinute = 120;
+    ticksPerBeat = 4;
+    beatsPerBar = 4;
 
-    timeInSeconds += float(min)*60 + sec + float(ms)/1000;
+    propagate();
+}
 
-    if (timeInSeconds < 0)
-        timeInSeconds = 0;
+void Transport::stopParamsRecording()
+{
+    // Resets parameters being recorded to envelopes
 
-    double newTick = (timeInSeconds/60)*(ticksPerBeat*beatsPerMinute);
+    if(GRecOn == true)
+    {
+        while(recParams.size() > 0)
+        {
+            recParams.front()->finishRecording();
+        }
+    }
+}
 
-    mainPlayer->setPlayTick(newTick);
+void Transport::togglePlayback()
+{
+    WaitForSingleObject(AudioMutex, INFINITE);
+
+    if(GPlaying)
+    {
+        GPlaying = false;
+
+        //GridPlayer->setFrame((long)GridPlayer->getFrameTSync());
+
+        MPattern->deactivate();
+
+        if(GRecOn == true)
+        {
+            stopParamsRecording();
+        }
+
+        MAudio->resetProcessing(false);
+    }
+    else
+    {
+        GPlaying = true; // start playing
+
+        MPattern->activate();
+    }
+
+    ReleaseMutex(AudioMutex);
+}
+
+void Transport::stopPlayback(bool force_mixreset)
+{
+    WaitForSingleObject(AudioMutex, INFINITE);
+
+    GPlaying = false;
+
+    MAudio->resetProcessing(force_mixreset);
+
+    MEdit->playHead->reset();
+
+    MPattern->deactivate();
+
+    MPattern->setFrame(0);
+
+    MGrid->setHoffs(0);
 
     updTimeFromFrame();
 
-    MCtrllPanel->getTimeScreen().redraw();
+    if(GRecOn)
+    {
+        stopRecording();
+    }
 
-    MEdit->playHead->updatePosFromFrame();
+    ReleaseMutex(AudioMutex);
+}
+
+void Transport::stopRecording()
+{
+    // Completely stops recording
+
+    stopParamsRecording();
+
+    GRecOn = false;
+
+    GetButton(MCtrllPanel, "bt.rec")->release();
+}
+
+void Transport::setBeatsPerMinute(float bpm)
+{
+    beatsPerMinute = bpm;
+
+    propagate();
+}
+
+void Transport::setTicksPerBeat(int tpb)
+{
+    ticksPerBeat = tpb;
+
+    propagate();
+}
+
+void Transport::setBeatsPerBar(int bpb)
+{
+    beatsPerBar = bpb;
+
+    propagate();
 }
 
 void Transport::updTimeFromFrame()
@@ -311,16 +307,5 @@ void Transport::updTimeFromFrame()
         }
     }
 }
-
-long Transport::getFrameFromTick(float tick)
-{
-    return long(tick*framesPerTick);
-}
-
-float Transport::getTickFromFrame(long frame)
-{
-    return float(frame*invertedFPT);
-}
-
 
 

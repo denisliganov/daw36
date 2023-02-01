@@ -515,11 +515,11 @@ bool Handle_RenderStart()
     {
         if(Render_isWorking == false)
         {
-            GoToHome();
+            MTransp->goToHome();
 
             JAudManager->removeAudioCallback((AudioIODeviceCallback*)JAudCallBack);
 
-            TogglePlayback();
+            MTransp->togglePlayback();
 
             Render_isWorking = true;
             Render_.SetConfig(&Render_Config);
@@ -554,7 +554,7 @@ void Handle_RenderStop()
         JAudManager->addAudioCallback((AudioIODeviceCallback*)JAudCallBack);
     }
 
-    StopPlayback();
+    MTransp->stopPlayback();
 }
 
 bool            Render_isWorking;

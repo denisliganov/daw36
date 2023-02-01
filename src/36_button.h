@@ -31,7 +31,6 @@ public:
     virtual void            release();
     virtual void            process(bool down);
             void            toggle();
-            void            addParam(Parameter* prm);
             void            setLedType(bool is_led) { isLedType = is_led; }
     virtual void            handleMouseDown(InputEvent& ev);
     virtual void            handleMouseUp(InputEvent& ev);

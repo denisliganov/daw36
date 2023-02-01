@@ -17,23 +17,24 @@ class ContextMenu : public WinObject
 friend MainWindow;
 friend DropBox;
 
-protected:
-
-       std::list<ContextMenuItem*>    items;
-
-       Gobj*            menuObject;
-       int              itemHeight;
-       DropBox*         dropBox;
-
 public:
 
         ContextMenu(Gobj* obj, DropBox* drop_box = NULL);
 
-        void            addMenuItem( std::string item );
-        void            remap();
-        void            activateMenuItem(std::string item);
-        void            drawSelf(Graphics & g);
-        void            handleClose();
+        void                addMenuItem( std::string item );
+        void                remap();
+        void                activateMenuItem(std::string item);
+
+protected:
+
+        Gobj*               menuObject;
+        int                 itemHeight;
+        DropBox*            dropBox;
+
+        std::list<ContextMenuItem*>    items;
+
+        void                drawSelf(Graphics & g);
+        void                handleClose();
 };
 
 

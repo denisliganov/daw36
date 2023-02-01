@@ -37,16 +37,6 @@ Button36::Button36(bool stick, std::string title)
     isLedType = false;
 }
 
-void Button36::addParam(Parameter* prm)
-{
-    if (prm->getType() == Param_Bool)
-    {
-        param = prm;
-
-        pressed = &((BoolParam*)param)->outval;
-    }
-}
-
 void Button36::process(bool down)
 {
     static bool pressing = false;
@@ -170,13 +160,17 @@ void Button36::drawSelf(Graphics& g)
     if (pressed)
     {
         if (isLedType)
+        {
             setc(g, 1.f);
+        }
         else
+        {
             setc(g, 0xffFFFF40);
+        }
      }
     else
     {
-        setc(g, .7f);
+        setc(g, .9f);
     }
 
     DrawButtonGlyph(g, this);

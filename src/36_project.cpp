@@ -147,7 +147,7 @@ void Project36::deleteAllElems()
     {
         if(GPlaying == true)
         {
-            StopPlayback(true);
+            MTransp->stopPlayback(true);
 
             GetButton(MCtrllPanel, "bt.play")->release();
         }
@@ -168,7 +168,7 @@ void Project36::deleteProject()
 
     if(GPlaying == true)
     {
-        StopPlayback(true);
+        MTransp->stopPlayback(true);
 
         GetButton(MCtrllPanel, "bt.play")->release();
     }

@@ -1168,13 +1168,13 @@ void Hintbox::stop()
 
 void Hintbox::paint(Graphics& g)
 {
-    gSetColor2(g, 0xffFFE000, 1.f, 1);
+    gSetColor2(g, 0xffFFE080, .4f, 1);
     gFillRect(g, 0, 0, getWidth() - 1, getHeight() - 1);
 
-    gSetColor2(g, 0xffFFE000, 0.9f, 1);
+    gSetColor2(g, 0xffFFE080, .6f, 1);
     gDrawRect(g, 0, 0, getWidth() - 1, getHeight() - 1);
 
-    gSetColor2(g, 0xffFFF000, .3f, 1);
+    gSetColor2(g, 0xffFFE080, 1.f, 1);
     gText(g, font, text, tx, ty);
 }
 

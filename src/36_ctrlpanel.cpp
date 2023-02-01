@@ -213,7 +213,7 @@ void ControlPanel::remap()
 
 void ControlPanel::drawSelf(Graphics& g)
 {
-    fill(g, 0.35f);
+    fill(g, 0.4f);
 
     setc(g, .25f);
 
@@ -345,11 +345,11 @@ void ControlPanel::handleChildEvent(Gobj* obj, InputEvent& ev)
             }
             else if(obj == btHome)
             {
-                GoToHome();
+                MTransp->goToHome();
             }
             else if(obj == btEnd)
             {
-                GoToEnd();
+                MTransp->goToEnd();
             }
             else if(obj == btZoomIn)
             {
@@ -369,11 +369,11 @@ void ControlPanel::handleChildEvent(Gobj* obj, InputEvent& ev)
             }
             else if (obj == btPlay)
             {
-                TogglePlayback();
+                MTransp->togglePlayback();
             }
             else if (obj == btStop)
             {
-                StopPlayback(true);
+                MTransp->stopPlayback(true);
 
                 btPlay->release();
             }
@@ -395,7 +395,7 @@ void ControlPanel::handleChildEvent(Gobj* obj, InputEvent& ev)
                 }
                 else
                 {
-                    StopRecording();
+                    MTransp->stopRecording();
                 }
             }
         }

@@ -353,7 +353,7 @@ void TextCursor::handleKeyOrCharPressed(unsigned key, char character, unsigned f
     {
         if(key == 0x20)
         {
-            TogglePlayback();
+            MTransp->togglePlayback();
 
             MCtrllPanel->getPlayButton().toggle();
         }
