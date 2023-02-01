@@ -165,9 +165,7 @@ public:
             ParamToggle(std::string name, bool def_val) {prmName = name; value = def_val;}
 
             bool                getValue()  { return value; }
-            void                setOn()     { value = true; }
-            void                setOff()    { value = false; }
-            void                toggle()    { value = !value; }
+            void                toggle();
 
 protected:
 

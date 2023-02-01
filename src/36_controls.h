@@ -23,6 +23,7 @@ protected:
 
             Param*              param;
             Device36*           dev;
+            FontId              fontId;
             Image*              parentImage;
 };
 

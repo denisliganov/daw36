@@ -78,7 +78,7 @@ void DevParamObject::initAll()
         else if (prmTg)
         {
             ToggleBox* box = NULL;
-            addObject(box = new ToggleBox(prmTg), x, y, boxWidth, int(1.5f*boxHeight));
+            addObject(box = new ToggleBox(prmTg), x, y, boxWidth, int(.75f*boxHeight));
 
             y += box->getH() + 3;
         }

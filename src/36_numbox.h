@@ -20,7 +20,6 @@ public:
 protected:
 
             int                 count;
-            FontId              fontId;
             int                 xOld;
             int                 xDrag;
             int                 yOld;
@@ -138,7 +137,7 @@ protected:
 };
 
 
-class ToggleBox : public NumBox
+class ToggleBox : public Control
 {
 public:
             ToggleBox(ParamToggle* param_tg);
@@ -148,9 +147,11 @@ protected:
             ParamToggle*        prmToggle;
 
             void                drawSelf(Graphics& g);
+            void                handleMouseDown(InputEvent & ev);
+            void                handleMouseUp(InputEvent& ev);
 };
 
-class RadioBox : public NumBox
+class RadioBox : public Control
 {
 public:
             RadioBox(ParamRadio* param_radio);
@@ -163,7 +164,7 @@ protected:
 };
 
 
-class SelectorBox : public NumBox
+class SelectorBox : public Control
 {
 public:
             SelectorBox(ParamSelector* param_sel);
@@ -176,7 +177,7 @@ protected:
 };
 
 
-class ListBoxx : public Scrolled
+class ListBoxx : public Control
 {
 public:
             ListBoxx(std::string name);

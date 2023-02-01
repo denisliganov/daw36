@@ -330,8 +330,7 @@ ParamBox::ParamBox(Parameter* param)
 
 void ParamBox::drawSelf(Graphics& g)
 {
-    fill(g, 0.26f);
-    rect(g, 0.1f);
+    fill(g, 0.2f);
 
     int txy = 0;
 
@@ -340,9 +339,11 @@ void ParamBox::drawSelf(Graphics& g)
         txy = th;
         int txty = txy - 3;
 
-        setc(g, 0.7f);
+        setc(g, 0.8f);
 
-        txtfit(g, fontId, prm->getName(), 2, txty, width/2);
+        txtfit(g, fontId, prm->getName(), 3, txty, width/2);
+
+        setc(g, 1.f);
 
         std::string valstr = prm->getValString();
 
@@ -366,8 +367,8 @@ void ParamBox::drawSelf(Graphics& g)
         txt(g, fontId, prm->getUnitStr(), width - tw3 - 2, txty);
     }
 
-    setc(g, 0.2f);
-    fillx(g, 0, txy, width, height - txy);
+    //setc(g, 0.2f);
+    //fillx(g, 0, txy, width, height - txy);
 
     float offs = prm->getOffset();
     float range = prm->getRange();
@@ -492,26 +493,35 @@ ToggleBox::ToggleBox(ParamToggle* param_tg)
 
 void ToggleBox::drawSelf(Graphics& g)
 {
-    fill(g, 0.26f);
-    rect(g, 0.1f);
+    fill(g, 0.2f);
 
     if (prmToggle->getValue())
     {
-        setc(g, 0.26f);
+        setc(g, 0.8f);
     }
     else
     {
-        setc(g, 0.8f);
+        setc(g, 0.1f);
     }
 
-    fillx(g, 0, 0, width - width/4, height);
+    fillx(g, width - height, 0, height, height);
+
     setc(g, 0.2f);
+    rectx(g, width - width/4, 0, height, height);
 
-    rectx(g, 0, 0, width - width/4, height);
+    setc(g, .9f);
+    txtfit(g, fontId, prmToggle->getName(), 3 /*(width - width/4)/2 - gGetTextWidth(fontId, prmToggle->getName())/2*/, height/2 + 3, width - width/4);
+}
 
-    setc(g, 1.f);
+void ToggleBox::handleMouseDown(InputEvent & ev)
+{
+    prmToggle->toggle();
 
-    txtfit(g, fontId, prmToggle->getName(), 2 /*(width - width/4)/2 - gGetTextWidth(fontId, prmToggle->getName())/2*/, height/2 /*+ gGetTextHeight(fontId)/2*/, width - width/4);
+    redraw();
+}
+
+void ToggleBox::handleMouseUp(InputEvent & ev)
+{
 }
 
 SelectorBox::SelectorBox(ParamSelector* param_sel)

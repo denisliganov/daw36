@@ -687,7 +687,12 @@ void Parameter::setValueFromEnvelope(float envval, Envelope * env)
     }
 }
 
+void ParamToggle::toggle()
+{
+    value = !value; 
 
+    module->handleParamUpdate(this);
+}
 
 BoolParam::BoolParam(bool value)
 {
