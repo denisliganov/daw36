@@ -76,27 +76,24 @@ Element* Note::clone()
     return (Element*)clone(NULL);
 }
 
+Parameter* Note::getParamByDisplayMode(GridDisplayMode mode)
+{
+    switch(mode)
+    {
+        case GridDisplayMode_Volumes:
+            return vol;
+        case GridDisplayMode_Pans:
+            return pan;
+        default:
+            return vol;
+    }
+}
+
 void Note::move(float dtick, int dtrack)
 {
     Element::setPos(tick1 + dtick, line + dtrack);
 
     instr->reinsertNote(this);
-}
-
-void Note::setPos(float tick,int line)
-{
-    Element::setPos(tick, line);
-
-    //instr->reinsertNote(this);
-}
-
-void Note::save(XmlElement * xmlNode)
-{
-    Element::save(xmlNode);
-
-    xmlNode->setAttribute(T("InstrIndex"), instr->getIndex());
-    xmlNode->setAttribute(T("Volume"), vol->getValue());
-    xmlNode->setAttribute(T("Panning"), pan->getValue());
 }
 
 void Note::load(XmlElement * xmlNode)
@@ -111,7 +108,7 @@ void Note::recalc()
 {
     if(!isdel())
     {
-        calcfreq();
+        calcFreq();
 
         calcframes();
 
@@ -152,6 +149,11 @@ void Note::preview(int note, bool update_instr)
         instr->lastNotePan = pan->getValue();
         instr->lastNoteVal = noteValue;
     }
+}
+
+void Note::calcFreq()
+{
+    freq = NoteToFreq(noteValue);
 }
 
 void Note::calcForGrid(Grid* grid)
@@ -196,8 +198,9 @@ void Note::drawOnGrid(Graphics& g, Grid* grid)
         FontId fnt = FontSmall;
 
         fill(g, 1.f, .3f);
-        setc(g, 1.f, .8f);
-        lineH(g, 0, 0, width);
+
+        //setc(g, 1.f, .8f);
+        //lineH(g, 0, 0, width);
 
         //setc(g, .0f, .25f);
         //fillx(g, 0, 1, 7, 8);
@@ -211,7 +214,7 @@ void Note::drawOnGrid(Graphics& g, Grid* grid)
         if(issel())
         {
             fill(g, 1.f, .2f);
-            rect(g, 1.f, .9f);
+            //rect(g, 1.f, .9f);
         }
     }
     else if (grid->getDisplayMode() == GridDisplayMode_Volumes || grid->getDisplayMode() == GridDisplayMode_Pans)
@@ -246,21 +249,6 @@ void Note::drawOnGrid(Graphics& g, Grid* grid)
 
     //g.setColour(Colour(instr->color).withAlpha(0.8f));
     //gTextFit(g, FontSmall, instr->objName.data(), x1, y2 - 1, width);
-}
-
-void Note::setNote(int note_value)
-{
-    noteValue = note_value;
-}
-
-void Note::calcfreq()
-{
-    freq = NoteToFreq(noteValue);
-}
-
-void Note::releasePreview()
-{
-    MAudio->releasePreviewByElement(this);
 }
 
 void Note::handleMouseUp(InputEvent& ev)
@@ -303,6 +291,32 @@ void Note::propagateTriggers(Pattern* sonPatt)
     ReleaseMutex(AudioMutex);
 }
 
+void Note::releasePreview()
+{
+    MAudio->releasePreviewByElement(this);
+}
+
+void Note::setNote(int note_value)
+{
+    noteValue = note_value;
+}
+
+void Note::setPos(float tick,int line)
+{
+    Element::setPos(tick, line);
+
+    //instr->reinsertNote(this);
+}
+
+void Note::save(XmlElement * xmlNode)
+{
+    Element::save(xmlNode);
+
+    xmlNode->setAttribute(T("InstrIndex"), instr->getIndex());
+    xmlNode->setAttribute(T("Volume"), vol->getValue());
+    xmlNode->setAttribute(T("Panning"), pan->getValue());
+}
+
 void Note::unpropagateTriggers(Pattern* sonPatt)
 {
     WaitForSingleObject(AudioMutex, INFINITE);
@@ -310,19 +324,6 @@ void Note::unpropagateTriggers(Pattern* sonPatt)
     Element::unpropagateTriggers(sonPatt);
 
     ReleaseMutex(AudioMutex);
-}
-
-Parameter* Note::getParamByDisplayMode(GridDisplayMode mode)
-{
-    switch(mode)
-    {
-        case GridDisplayMode_Volumes:
-            return vol;
-        case GridDisplayMode_Pans:
-            return pan;
-        default:
-            return vol;
-    }
 }
 
 
@@ -333,7 +334,7 @@ SampleNote::SampleNote(Sample* smp, int note_val) : Note(smp, note_val)
     instr = sample = smp;
     sampleFrameLength = (long)sample->sample_info.frames;
 
-    setticklen(-1);
+    setTickLength(-1);
 
     reversed = false;
 }
@@ -347,17 +348,34 @@ SampleNote* SampleNote::clone(Instrument* new_instr)
     return clone;
 }
 
-void SampleNote::setticklen(float tick_length)
+void SampleNote::drawOnGrid(Graphics& g, Grid* grid)
 {
-    if(tick_length == -1)
+    if(sample->waveImage == NULL)
     {
-        // default length, based on the number of frames in the sample
-        Element::setticklen(MTransp->getTickFromFrame(sampleFrameLength)*sample->rateUp/CalcFreqRatio(noteValue - BaseNote));
+        sample->updWaveImage();
     }
-    else
+
+    if (grid->getDisplayMode() == GridDisplayMode_Bars && MCtrllPanel->wavesAreVisible() && sample->waveImage != NULL)
     {
-        Element::setticklen(tick_length);
+        setc(g, 1.f, 0.4f);
+
+        g.saveState();
+        g.reduceClipRegion(x1, y1, width - 1, height - 1);
+        g.drawImageWithin(sample->waveImage, x1, y1, width, height, RectanglePlacement::stretchToFit);
+        g.restoreState();
     }
+
+    Note::drawOnGrid(g, grid);
+
+    //g.setColour(Colour(instr->getColor()).withBrightness(1.f).withAlpha(0.8f));
+    //gText(g, FontSmall, instr->instrAlias, x1 + 2, y1 + 13);
+
+    //g.setColour(Colour(instr->getColor()).withBrightness(.6f));
+    //gFillRect(g, x1, y1, x1 + 5, y1 + 10);
+
+    //g.setColour(Colour(instr->getColor()).withAlpha(1.f));
+    //std::string al = instr->alias;
+    //gTextFit(g, FontSmall, instr->alias, x2 - 5, y1 + 8, width);
 }
 
 bool SampleNote::isOutOfBounds(double* cursor)
@@ -393,7 +411,7 @@ bool SampleNote::initCursor(double* cursor)
     }
 }
 
-void SampleNote::calcfreq()
+void SampleNote::calcFreq()
 {
     int val = noteValue - BaseNote;
 
@@ -404,6 +422,43 @@ void SampleNote::calcfreq()
     tick2 = tick1 + ticklen;
 
     updateSampleBounds();
+}
+
+void SampleNote::load(XmlElement * xmlNode)
+{
+    Note::load(xmlNode);
+
+    reversed = xmlNode->getBoolAttribute(T("Reversed"));
+}
+
+void SampleNote::recalc()
+{
+    Note::recalc();
+}
+
+void SampleNote::setTickLength(float tick_length)
+{
+    if(tick_length == -1)
+    {
+        // default length, based on the number of frames in the sample
+        Element::setTickLength(MTransp->getTickFromFrame(sampleFrameLength)*sample->rateUp/CalcFreqRatio(noteValue - BaseNote));
+    }
+    else
+    {
+        Element::setTickLength(tick_length);
+    }
+}
+
+void SampleNote::save(XmlElement * xmlNode)
+{
+    Note::save(xmlNode);
+
+    xmlNode->setAttribute(T("Reversed"), int(reversed));
+}
+
+void SampleNote::setTickDelta(float tick_delta)
+{
+    
 }
 
 void SampleNote::updateSampleBounds()
@@ -491,9 +546,9 @@ void SampleNote::updateSampleBounds()
                     p_offs = 0;
                 }
 
-                if(patt->framelen < frame2)
+                if(patt->getFrameLength() < frame2)
                 {
-                    p_cut = (long)(abs(frame2 - patt->framelen)*(sample->rateDown));
+                    p_cut = (long)(abs(frame2 - patt->getFrameLength())*(sample->rateDown));
                 }
                 else
                 {
@@ -527,60 +582,6 @@ void SampleNote::updateSampleBounds()
             }
         }
     }
-}
-
-void SampleNote::save(XmlElement * xmlNode)
-{
-    Note::save(xmlNode);
-
-    xmlNode->setAttribute(T("Reversed"), int(reversed));
-}
-
-void SampleNote::load(XmlElement * xmlNode)
-{
-    Note::load(xmlNode);
-
-    reversed = xmlNode->getBoolAttribute(T("Reversed"));
-}
-
-void SampleNote::drawOnGrid(Graphics& g, Grid* grid)
-{
-    if(sample->waveImage == NULL)
-    {
-        sample->updWaveImage();
-    }
-
-    if (grid->getDisplayMode() == GridDisplayMode_Bars && MCtrllPanel->wavesAreVisible() && sample->waveImage != NULL)
-    {
-        setc(g, 1.f, 0.4f);
-
-        g.saveState();
-        g.reduceClipRegion(x1, y1, width - 1, height - 1);
-        g.drawImageWithin(sample->waveImage, x1, y1, width, height, RectanglePlacement::stretchToFit);
-        g.restoreState();
-    }
-
-    Note::drawOnGrid(g, grid);
-
-    //g.setColour(Colour(instr->getColor()).withBrightness(1.f).withAlpha(0.8f));
-    //gText(g, FontSmall, instr->instrAlias, x1 + 2, y1 + 13);
-
-    //g.setColour(Colour(instr->getColor()).withBrightness(.6f));
-    //gFillRect(g, x1, y1, x1 + 5, y1 + 10);
-
-    //g.setColour(Colour(instr->getColor()).withAlpha(1.f));
-    //std::string al = instr->alias;
-    //gTextFit(g, FontSmall, instr->alias, x2 - 5, y1 + 8, width);
-}
-
-void SampleNote::recalc()
-{
-    Note::recalc();
-}
-
-void SampleNote::settickdelta(float tick_delta)
-{
-    
 }
 
 

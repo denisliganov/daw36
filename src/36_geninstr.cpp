@@ -24,7 +24,7 @@ Generator::~Generator()
 
 void Generator::CheckBounds(Note* gnote, Trigger* tg, long num_frames)
 {
-    if(tg->tgState == TS_Sustain && !tg->previewTrigger && tg->framePhase >= gnote->framelen)
+    if(tg->tgState == TS_Sustain && !tg->previewTrigger && tg->framePhase >= gnote->getFrameLength())
     {
         // Go to release state as note is over
 
@@ -40,7 +40,7 @@ void Generator::CheckBounds(Note* gnote, Trigger* tg, long num_frames)
 
         finished = envVol->isOutOfBounds(tg->framePhase);
 
-        endframe = num_frames - (tg->framePhase - envVol->framelen);
+        endframe = num_frames - (tg->framePhase - envVol->getFrameLength());
 
         if(finished)
         {

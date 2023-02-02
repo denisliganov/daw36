@@ -87,9 +87,9 @@ bool Playhead::handleAutomationRecording(float currStep)
 
     for(Parameter* recparam : recParams)
     {
-        if(currStep >= recparam->env->tick1) // only when playback position is not before the envelope
+        if(currStep >= recparam->env->gettick()) // only when playback position is not before the envelope
         {
-            float x = currStep - recparam->env->tick1;
+            float x = currStep - recparam->env->gettick();
 
             EnvPoint* newpnt;
 

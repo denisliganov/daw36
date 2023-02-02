@@ -106,7 +106,7 @@ void Lane::drawBar(Graphics& g, Element* el, int cx, bool sel, int divHgt)
     }
     else
     {
-        Instrument* instr = (Instrument*)el->dev;
+        Instrument* instr = (Instrument*)el->getDevice();
 
         instr->setMyColor(g, 1, 1, .3f);
     }
@@ -170,7 +170,7 @@ void Lane::drawBars(Graphics& g)
 
     for (Element* el : grid->selected)
     {
-        if (!el->isdel() && el->patt == grid->getPattern() && el->isNote())
+        if (!el->isdel() && el->getPattern() == grid->getPattern() && el->isNote())
         {
             drawBar(g, el, grid->getXfromTick(el->gettick()), true, divHgt);
         }

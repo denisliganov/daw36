@@ -81,7 +81,7 @@ Sample::Sample(float* data, char* smp_path, SF_INFO sfinfo)
     timelen = numFrames/MAudio->getSampleRate();
 
     envVol = new Envelope(CmdEnv_VolEnv);
-    envVol->ticklen = jmax(timelen, 2.f);
+    envVol->setTickLength(jmax(timelen, 2.f));
     //envVol->timebased = true;
 
     // Add some default breakpoints to the sample envelope

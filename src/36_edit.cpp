@@ -175,7 +175,7 @@ Note* Create_Note(float tick, int line, Instrument* instr, int note_val, float l
     newNote->getVol()->setValue(vol);
     newNote->getPan()->setValue(pan);
 
-    newNote->setticklen(length);
+    newNote->setTickLength(length);
 
     if(ptBase)
     {
@@ -183,11 +183,6 @@ Note* Create_Note(float tick, int line, Instrument* instr, int note_val, float l
     }
 
     return newNote;
-}
-
-void Delete_Element(Element* el)
-{
-    delete el;
 }
 
 

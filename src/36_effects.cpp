@@ -63,21 +63,6 @@ Eff::Eff()
     visible = false;
     devIdx = -1;
 
-/*
-    Add(fold_toggle = new Toggle(&folded, &scope), OgTgEffFold, MixChanWidth - 17, 5, 15, 10);
-    fold_toggle->SetOnClickHandler(&EffFoldClick);
-    fold_toggle->SetHint("Fold/unfold effect");
-
-    Add(bypass_toggle = new Toggle(&bypass, &scope), OToggleEffBypass, MixChanWidth - 15, 2, 15, 10);
-    bypass_toggle->SetOnClickHandler(&EffBypassClick);
-    bypass_toggle->SetHint("Effect on/bypass");
-
-    Add(wnd_toggle = new Toggle(&wndvisible, &scope), OToggleEffWnd, 0, 0, 18, 18);
-
-    wnd_toggle->SetOnClickHandler(&EffWindowClick);
-    wnd_toggle->SetHint("Show editor window");
-*/
-
     addObject(previewButton = new EffGuiButton(), MixChanWidth - 21, 0, 20, 15);
 
     //addParamWithControl(new Parameter(1, 0, 1), "", sliderAmount = new Slider36(false));
@@ -102,7 +87,7 @@ void Eff::drawSelf(Graphics& g)
     setc(g, .35f);
     fillx(g, 0, 0, width, height/2);
 
-    rect(g, .3f);
+    //rect(g, .3f);
 
     setc(g, .2f);
     lineH(g, height-1, 0, width-1);

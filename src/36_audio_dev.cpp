@@ -165,13 +165,13 @@ void Audio36::handleMetronome(long framesPerBuffer, bool pre)
             {
                 baroffs = (frame + framesPerBuffer)/fpbar*fpbar - frame;
 
-                barSample->activateTrigger(barSample->selfNote->triggers.front());
+                barSample->activateTrigger(barSample->selfNote->getTriggers().front());
             }
             else if(frame/fpbeat != (frame + framesPerBuffer)/fpbeat)
             {
                 beatoffs = (frame + framesPerBuffer)/fpbeat*fpbeat - frame;
 
-                beatSample->activateTrigger(beatSample->selfNote->triggers.front());
+                beatSample->activateTrigger(beatSample->selfNote->getTriggers().front());
             }
         }
         else

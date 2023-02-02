@@ -872,7 +872,7 @@ void SampleComponent::SetSample(Sample* smp)
         //    min = sample->timelen;
 
         slTime->setRange(min, max);
-        slTime->setValue(smp->envVol->ticklen);
+        slTime->setValue(smp->envVol->getticklen());
 
         //if(sample->timelen > 2)
         //    slTime->setValue(sample->timelen);

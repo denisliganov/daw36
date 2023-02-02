@@ -66,7 +66,7 @@ public:
             void        handleMouseDown(InputEvent& ev);
             bool        isOutOfBounds(long frame_phase);
             long        getFramesRemaining(long frame_phase);
-            void        setticklen(float newlen);
+            void        setTickLength(float newlen);
             void        markDeleted(bool del);
             void        drawOnGrid(Graphics & g,Grid * grid);
 

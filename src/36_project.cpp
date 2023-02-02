@@ -565,7 +565,7 @@ void Project36::saveProjectData(File chosenFile)
 
     for(Element* el : MPattern->elems)
     {
-        if(!el->isdel() && el->type != El_Pattern)
+        if(!el->isdel() && el->getType() != El_Pattern)
         {
             XmlElement* xmlElem = new XmlElement(T("Element"));
 

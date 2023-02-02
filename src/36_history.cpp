@@ -84,7 +84,7 @@ start:
             }
         }
 
-        Delete_Element(el);
+        delete el;
     }
 }
 
@@ -277,11 +277,11 @@ void EditHistory::perform(HistoryAction* act, bool forward)
 
             if(forward)
             {
-                el->setticklen(act->f2);
+                el->setTickLength(act->f2);
             }
             else
             {
-                el->setticklen(act->f1);
+                el->setTickLength(act->f1);
             }
         }break;
 
@@ -291,11 +291,11 @@ void EditHistory::perform(HistoryAction* act, bool forward)
             {
                 if(forward)
                 {
-                    el->settickdelta(act->f1);
+                    el->setTickDelta(act->f1);
                 }
                 else
                 {
-                    el->settickdelta(-act->f1);
+                    el->setTickDelta(-act->f1);
                 }
             }
         }break;

@@ -67,9 +67,9 @@ restart:
 
     for(Element* el : MPattern->elems)
     {
-        if(el->dev == this)
+        if(el->getDevice() == this)
         {
-            Delete_Element(el);
+            delete el;
 
             goto restart;
         }

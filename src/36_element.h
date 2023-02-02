@@ -22,68 +22,73 @@ class Element : public Gobj
 {
 public:
 
-            int             line;
-            int             numlines;
-            bool            deleted;
-            bool            selected;
-            long            frame1;
-            long            frame2;
-            long            framelen;
-            bool            calculated;
-            float           tick1;
-            float           tick2;
-            float           ticklen;
-            Pattern*        patt;
-            Device36*       dev;
-            ElemType        type;
-
-            std::list<Trigger*> triggers;
-
-
             Element();
     virtual ~Element();
-    virtual Element*        clone();
-    virtual Element*        clone(Pattern* newPtBase);
-    virtual void            move(float dtick, int dtrack);
-    virtual void            propagateTriggers(Pattern* pt);
-    virtual void            unpropagateTriggers(Pattern* pt);
-    virtual void            handleMouseDown(InputEvent& ev);
-    virtual void            recalc();
-    virtual bool            checkVisible(Grid* grid);
-            bool            isPointed(int mx, int my, Grid* grid);
-    virtual void            calcForGrid(Grid* grid);
-    virtual void            save(XmlElement* xmlNode);
-    virtual void            load(XmlElement* xmlNode);
-    virtual void            preview(int key) {}
-    virtual bool            isNote() {return false;}
-            void            calcframes();
-            void            addTrigger(Trigger* tg);
-            void            removeTrigger(Trigger* tg);
-            void            deleteAllTriggers();
-            void            deactivateAllTriggers();
-            void            relocateTriggers();
+            void                addTrigger(Trigger* tg);
+    virtual Element*            clone();
+    virtual Element*            clone(Pattern* newPtBase);
+    virtual void                calcForGrid(Grid* grid);
+            void                calcframes();
+    virtual bool                checkVisible(Grid* grid);
+            void                deleteAllTriggers();
+            void                deactivateAllTriggers();
+    virtual void                drawOnGrid(Graphics& g, Grid* grid) {}
+            Device36*           getDevice()     { return dev; }
+    virtual long                getframe();
+    virtual long                getendframe();
+    virtual long                getframes();
+    virtual float               gettick();
+    virtual float               getendtick();
+    virtual float               getticklen();
+            Pattern*            getbasepatt();
+            int                 getline();
+            ElemType            getType()       { return type; }
+            long                getFrameLength()    {return framelen;}
+        std::list<Trigger*>&    getTriggers()       { return triggers; }
+            Pattern*            getPattern()        { return patt; }
+    virtual void                handleMouseDown(InputEvent& ev);
+    virtual bool                isNote() {return false;}
+            bool                isPointed(int mx, int my, Grid* grid);
+            bool                isdel();
+            bool                issel();
+    virtual bool                isshown();
+    virtual void                load(XmlElement* xmlNode);
+    virtual void                move(float dtick, int dtrack);
+            void                markSelected(bool sel);
+    virtual void                markDeleted(bool del);
+    virtual void                preview(int key) {}
+    virtual void                propagateTriggers(Pattern* pt);
+            void                removeTrigger(Trigger* tg);
+            void                relocateTriggers();
+    virtual void                recalc();
+    virtual void                save(XmlElement* xmlNode);
+    virtual void                setline(int tkl);
+    virtual void                setPos(float tk, int ln);
+    virtual void                setendtick(float et);
+    virtual void                setTickLength(float tl);
+    virtual void                setTickDelta(float tick_delta);
+            void                softdel();
+    virtual void                setPattern(Pattern* pt);
+    virtual void                unpropagateTriggers(Pattern* pt);
 
-            void            marksel(bool sel);
-    virtual void            markDeleted(bool del);
-            bool            isdel();
-            bool            issel();
-    virtual bool            isshown();
+protected:
 
-            int             getline();
-    virtual void            setline(int tkl);
-    virtual void            setPos(float tk, int ln);
-    virtual void            setendtick(float et);
-    virtual void            setticklen(float tl);
-    virtual void            settickdelta(float tick_delta);
-    virtual long            getframe();
-    virtual long            getendframe();
-    virtual long            getframes();
-    virtual float           gettick();
-    virtual float           getendtick();
-    virtual float           getticklen();
-            Pattern*        getbasepatt();
-    virtual void            drawOnGrid(Graphics& g, Grid* grid) {}
-            void            softdel();
+            bool                calculated;
+            bool                deleted;
+            Device36*           dev;
+            long                frame1;
+            long                frame2;
+            long                framelen;
+            int                 line;
+            int                 numlines;
+            Pattern*            patt;
+            bool                selected;
+            float               tick1;
+            float               tick2;
+            float               ticklen;
+            ElemType            type;
+
+            std::list<Trigger*> triggers;
 };
 
 

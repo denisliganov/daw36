@@ -512,11 +512,11 @@ void Grid::action(GridAction act, float dTick, int dLine)
 
                 for(Element* el : selected)
                 {
-                    el->marksel(false);
+                    el->markSelected(false);
 
                     Element* cl = el->clone();
 
-                    cl->marksel(true);
+                    cl->markSelected(true);
 
                     cloned.push_back(cl);
                 }
@@ -644,7 +644,7 @@ void Grid::action(GridAction act, float dTick, int dLine)
 
             for(Element* el : clipboard)
             {
-                el->marksel(true);
+                el->markSelected(true);
 
                 selected.push_back(el);
             }
@@ -659,7 +659,7 @@ void Grid::action(GridAction act, float dTick, int dLine)
 
             for(Element* el : clipboard)
             {
-                el->marksel(false);
+                el->markSelected(false);
 
                 Element* cl = el->clone();
 
@@ -667,7 +667,7 @@ void Grid::action(GridAction act, float dTick, int dLine)
                 {
                     //cl->setPos(cl->getStartTick() + alignTick - firstElemTick, cl->getLine());
 
-                    cl->marksel(true);
+                    cl->markSelected(true);
 
                     selected.push_back(cl);
 
@@ -746,7 +746,7 @@ void Grid::action(GridAction act, float dTick, int dLine)
 
                     selected.push_back(el);
 
-                    el->marksel(true);
+                    el->markSelected(true);
 
                     redraw(false, false);
                 }
@@ -754,7 +754,7 @@ void Grid::action(GridAction act, float dTick, int dLine)
                 {
                     selected.remove(el);
 
-                    el->marksel(false);
+                    el->markSelected(false);
 
                     redraw(false, false);
                 }
@@ -1064,6 +1064,7 @@ void Grid::deleteAcross(int mx1, int my1, int mx2, int my2)
 
 void Grid::drawElements(Graphics& g)
 {
+    /*
     if(visible.size() > 0)
     {
         std::list<Element*>::iterator it = visible.begin();
@@ -1077,8 +1078,8 @@ void Grid::drawElements(Graphics& g)
             it++;
         }
     }
+*/
 
-/*
     if(visible.size() > 0)
     {
         std::list<Element*>::iterator it = visible.end();
@@ -1104,7 +1105,6 @@ void Grid::drawElements(Graphics& g)
             it--;
         }
     }
-*/
 }
 
 bool Grid::drawDraggedObject(Graphics & g,Gobj * obj)
@@ -1412,7 +1412,7 @@ void Grid::handleMouseDown(InputEvent& ev)
                             
                                 selected.push_back(nt);
                             
-                                nt->marksel(true);
+                                nt->markSelected(true);
                             
                                 redraw(false, false);
                             }
@@ -1420,7 +1420,7 @@ void Grid::handleMouseDown(InputEvent& ev)
                             {
                                 selected.remove(nt);
                             
-                                nt->marksel(false);
+                                nt->markSelected(false);
                             
                                 redraw(false, false);
                             }
@@ -1785,6 +1785,105 @@ Note* Grid::putNote(float tick, int line, int noteVal)
     }
 }
 
+void Grid::recalcElements()
+{
+    for(Element* el : updateList)
+    {
+        el->recalc();
+    }
+
+    updateList.clear();
+}
+
+void Grid::reassignElements()
+{
+    std::list<Element*> elems;
+
+    if (selected.size() == 0)
+    {
+        elems.push_back(activeElem);
+    }
+    else
+    {
+        elems = selected;
+    }
+
+    std::list<Element*>  newSelected;
+
+    for(Element* el : elems)
+    {
+        Note* note = dynamic_cast<Note*>(el);
+
+        if (note)
+        {
+            Instrument* instrNew = MInstrPanel->getInstrFromLine(note->getline());
+            Instrument* instrOld = note->getInstr();
+
+            if (instrOld != instrNew)
+            {
+                Note* newNote = _Create_Note(note->gettick(), note->getline(), instrNew, note->getNoteValue(), 
+                                                note->getticklen(), note->vol->getValue(), note->pan->getValue(), patt);
+
+                if (selected.size() > 0)
+                {
+                    newSelected.push_back(newNote);
+                    newNote->markSelected(true);
+                }
+                else
+                {
+                    setActivElement(newNote);
+                }
+            }
+        }
+    }
+
+    MHistory->addNewAction(HistAction_DeleteGroup, elems);
+
+    if (selected.size() > 0)
+    {
+        selected.clear();
+        selected.splice(selected.begin(), newSelected);
+    }
+
+    MGrid->redraw(true);
+}
+
+void Grid::redraw(bool remap_objects, bool refresh_image)
+{
+    if(refresh_image)
+    {
+        updFillerImage();
+        updBufferImage();
+
+        timeline->redraw();
+    }
+
+    if(remap_objects)
+    {
+        remap();
+
+        //updElementsImage();
+    }
+
+    Gobj::redraw();
+}
+
+void Grid::remap()
+{
+    updBufferImage();
+
+    updBounds();
+
+    remapElements();
+
+    place->update();
+
+    if (MCursor && MCursor->getParent() == this)
+    {
+        MCursor->updPos();
+    }
+}
+
 void Grid::remapElements()
 {
     visible.clear();
@@ -1856,105 +1955,6 @@ void Grid::remapElements()
                 }
             }
         }
-    }
-}
-
-void Grid::recalcElements()
-{
-    for(Element* el : updateList)
-    {
-        el->recalc();
-    }
-
-    updateList.clear();
-}
-
-void Grid::reassignElements()
-{
-    std::list<Element*> elems;
-
-    if (selected.size() == 0)
-    {
-        elems.push_back(activeElem);
-    }
-    else
-    {
-        elems = selected;
-    }
-
-    std::list<Element*>  newSelected;
-
-    for(Element* el : elems)
-    {
-        Note* note = dynamic_cast<Note*>(el);
-
-        if (note)
-        {
-            Instrument* instrNew = MInstrPanel->getInstrFromLine(note->getline());
-            Instrument* instrOld = note->getInstr();
-
-            if (instrOld != instrNew)
-            {
-                Note* newNote = _Create_Note(note->gettick(), note->getline(), instrNew, note->getNoteValue(), 
-                                                note->getticklen(), note->vol->getValue(), note->pan->getValue(), patt);
-
-                if (selected.size() > 0)
-                {
-                    newSelected.push_back(newNote);
-                    newNote->marksel(true);
-                }
-                else
-                {
-                    setActivElement(newNote);
-                }
-            }
-        }
-    }
-
-    MHistory->addNewAction(HistAction_DeleteGroup, elems);
-
-    if (selected.size() > 0)
-    {
-        selected.clear();
-        selected.splice(selected.begin(), newSelected);
-    }
-
-    MGrid->redraw(true);
-}
-
-void Grid::redraw(bool remap_objects, bool refresh_image)
-{
-    if(refresh_image)
-    {
-        updFillerImage();
-        updBufferImage();
-
-        timeline->redraw();
-    }
-
-    if(remap_objects)
-    {
-        remap();
-
-        //updElementsImage();
-    }
-
-    Gobj::redraw();
-}
-
-void Grid::remap()
-{
-    updBufferImage();
-
-    updBounds();
-
-    remapElements();
-
-    place->update();
-
-    if (MCursor && MCursor->getParent() == this)
-    {
-        MCursor->updPos();
     }
 }
 
@@ -2034,13 +2034,13 @@ void Grid::selectAll(bool select)
         {
             if(select)
             {
-                el->marksel(true);
+                el->markSelected(true);
 
                 selected.push_back(el);
             }
             else
             {
-                el->marksel(false);
+                el->markSelected(false);
             }
         }
     }

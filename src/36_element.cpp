@@ -190,7 +190,7 @@ void Element::softdel()
 {
     markDeleted(true);
 
-    marksel(false);
+    markSelected(false);
 }
 
 void Element::markDeleted(bool del)
@@ -203,7 +203,7 @@ bool Element::isdel()
     return deleted;
 }
 
-void Element::marksel(bool sel)
+void Element::markSelected(bool sel)
 {
     selected = sel;
 }
@@ -381,14 +381,14 @@ void Element::setendtick(float endtick)
     tick2 = endtick;
 }
 
-void Element::setticklen(float tick_length)
+void Element::setTickLength(float tick_length)
 {
     ticklen = tick_length;
 
     tick2 = tick1 + ticklen;
 }
 
-void Element::settickdelta(float tick_delta)
+void Element::setTickDelta(float tick_delta)
 {
     ticklen += tick_delta;
 
@@ -396,6 +396,11 @@ void Element::settickdelta(float tick_delta)
         ticklen = 0;
 
     tick2 = tick1 + ticklen;
+}
+
+void Element::setPattern(Pattern* pt)
+{
+    patt = pt;
 }
 
 float Element::getticklen()

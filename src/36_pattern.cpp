@@ -109,7 +109,7 @@ restart:
 
     for(Element* el : elems)
     {
-        Delete_Element(el);
+        delete el;
 
         goto restart;
     }
@@ -119,7 +119,7 @@ Element* Pattern::checkElement(float tick, int trknum)
 {
     for(Element* el : elems)
     {
-        if(!el->isdel() && el->tick1 == tick && el->line == trknum)
+        if(!el->isdel() && el->gettick() == tick && el->getline() == trknum)
         {
             return el;
         }
@@ -140,7 +140,7 @@ void Pattern::recalc()
         }
     }
 
-    calcfreq();
+    calcFreq();
 
     relocateTriggers();
 }
@@ -159,7 +159,7 @@ void Pattern::addElement(Element* el)
 
         elems.push_back(el);
 
-        el->patt = this;
+        el->setPattern(this);
 
         for (Pattern* ptinst : instances)
         {
@@ -227,9 +227,9 @@ long Pattern::getLastElementFrame()
 
     for(Element* el : elems)
     {
-        if (!el->isdel() && el->frame2 > endFrame)
+        if (!el->isdel() && el->getendframe() > endFrame)
         {
-            endFrame = el->frame2;
+            endFrame = el->getendframe();
         }
     }
 
@@ -695,7 +695,7 @@ void Pattern::preInitTriggers(long frame, bool activate_env, bool paraminit)
         {
             if(!tg->el->isdel() && tg->starter )
             {
-                if(tg->el->type == El_Envelope)
+                if(tg->el->getType() == El_Envelope)
                 {
                     // if envelope
                     {
@@ -742,7 +742,7 @@ void Pattern::preInitTriggers(long frame, bool activate_env, bool paraminit)
                         tg->stop();
                     }
                 }
-                else if(tg->el->type == El_Pattern)
+                else if(tg->el->getType() == El_Pattern)
                 {
                     Pattern* pt = (Pattern*)tg->el;
 

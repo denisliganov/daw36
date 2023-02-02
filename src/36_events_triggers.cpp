@@ -65,7 +65,7 @@ void Trigger::start(long frame)
         toberemoved = false;
         tgworking = true;
 
-        switch(el->type)
+        switch(el->getType())
         {
             case El_SampleNote:
             case El_GenNote:
@@ -90,7 +90,7 @@ void Trigger::stop()
     {
         tgworking = false;
 
-        switch(el->type)
+        switch(el->getType())
         {
             case El_SampleNote:
             case El_GenNote:
@@ -147,7 +147,7 @@ void Trigger::setFrame(long frame)
 
 bool Trigger::isOutOfPlayback()
 {
-    if(ev->evpatt->getFrame() < ev->ev_frame || ev->evpatt->getFrame() > ev->ev_frame + el->framelen)
+    if(ev->evpatt->getFrameLength() < ev->ev_frame || ev->evpatt->getFrame() > ev->ev_frame + el->getFrameLength())
     {
         return true;
     }
@@ -230,7 +230,7 @@ void Event::activateTriggers(bool deactonly)
             }
             else if( !(deactonly && tg->starter) ) // skip starters if asked
             {
-                if(tg->el->isNote() && !(tg->el->type == El_Pattern))
+                if(tg->el->isNote() && !(tg->el->getType() == El_Pattern))
                 {
                     if(tg->starter)
                     {

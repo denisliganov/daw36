@@ -778,9 +778,9 @@ bool Envelope::isOutOfBounds(long frame_phase)
     }
 }
 
-void Envelope::setticklen(float tl)
+void Envelope::setTickLength(float tl)
 {
-    Element::setticklen(tl);
+    Element::setTickLength(tl);
 
     updateLastValue();
 }

@@ -180,7 +180,7 @@ public:
 
             void                addOption(std::string opt) { options.push_back(opt); }
             int                 getNumOptions()     { return options.size(); }
-            std::list<std::string>  getOptions()     { return options; }
+       std::list<std::string>&  getOptions()     { return options; }
             int                 getCurrent()     { return currentOption; }
             void                setCurrent(int curr) { currentOption = curr;}
 

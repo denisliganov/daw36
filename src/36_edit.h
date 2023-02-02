@@ -50,11 +50,9 @@ public:
         ScrollTimer();
 };
 
-    Pattern*        Create_Pattern_Base(float tk1, float tk2, int tr1, int tr2, char* name, Pattern* ptBase);
-    Pattern*        Create_Pattern_Instance(Pattern* ptMom, float tk1, float tk2, int tr1, int tr2, Pattern* ptBase);
-    Note*           Create_Note(float tick, int line, Instrument* instr, int note_val, float length, float vol, float pan, Pattern* ptBase);
-    Note*           _Create_Note(float tick, int line, Instrument* instr, int note_val, float length, float vol, float pan, Pattern* ptBase);
+        Pattern*        Create_Pattern_Base(float tk1, float tk2, int tr1, int tr2, char* name, Pattern* ptBase);
+        Pattern*        Create_Pattern_Instance(Pattern* ptMom, float tk1, float tk2, int tr1, int tr2, Pattern* ptBase);
+        Note*           Create_Note(float tick, int line, Instrument* instr, int note_val, float length, float vol, float pan, Pattern* ptBase);
+        Note*           _Create_Note(float tick, int line, Instrument* instr, int note_val, float length, float vol, float pan, Pattern* ptBase);
 
-    void            AddElement(Element* data);
-    void            Delete_Element(Element* el);
 
