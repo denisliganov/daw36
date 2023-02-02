@@ -384,13 +384,13 @@ void Instrument::drawSelf(Graphics& g)
     setc(g, .25f);
     fillx(g, 0, 0, width, height/2);
 
-    Gobj::setc(g, .0f);
+    setc(g, .0f);
 
-    gTextFit(g, FontSmall, objName, x1 + 25, y1 + 9, width - 26);
+    txtfit(g, FontSmall, objName, 25, 9, width - 26);
 
-    setc(g, .7f);
+    setc(g, 1.f);
 
-    gTextFit(g, FontSmall, objName, x1 + 26, y1 + 8, width - 26);
+    txtfit(g, FontSmall, objName, 26, 8, width - 26);
 
 //    lineH(0, 0, width - 1);
 }

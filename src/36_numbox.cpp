@@ -494,7 +494,7 @@ ToggleBox::ToggleBox(ParamToggle* param_tg)
 
 void ToggleBox::drawSelf(Graphics& g)
 {
-    fill(g, 0.2f);
+    //fill(g, 0.2f);
 
     if (prmToggle->getValue())
     {
@@ -536,11 +536,12 @@ RadioBox::RadioBox(ParamRadio* param_radio)
 
 void RadioBox::drawSelf(Graphics& g)
 {
-    fill(g, 0.2f);
+    //fill(g, 0.2f);
 
     int h1 = (textHeight + 4);
     int y = 0;
     int opt = 0;
+
     for (std::string str : prmRad->getOptions())
     {
         if (prmRad->getCurrent() == opt)
@@ -554,7 +555,7 @@ void RadioBox::drawSelf(Graphics& g)
             rectx(g, width - h1, y, h1, h1);
         }
 
-        setc(g, .8f);
+        setc(g, 1.f);
         txtfit(g, fontId, str, 3, y + textHeight, width - h1);
 
         y += textHeight + 4;

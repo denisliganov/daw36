@@ -23,6 +23,72 @@
 
 
 
+Note* AddNote(float tick, int line, Instrument* instr, int note_val, float length, float vol, float pan, Pattern* ptBase)
+{
+    Note* note = CreateNote(tick, line, instr, note_val, length, vol, pan, ptBase);
+
+    std::list<Element*> elem;
+    elem.push_back(note);
+
+    MHistory->addNewAction(HistAction_AddGroup, elem);
+
+    return note;
+}
+
+Note* CreateNote(float tick, int line, Instrument* instr, int note_val, float length, float vol, float pan, Pattern* ptBase)
+{
+    Note* newNote = NULL;
+    Sample* sample = dynamic_cast<Sample*>(instr);
+
+    if (sample != NULL)
+    {
+        newNote = new SampleNote((Sample*)instr, note_val);
+    }
+    else
+    {
+        newNote = new Note(instr, note_val);
+    }
+
+    newNote->setPos(tick, line);
+
+    newNote->getVol()->setValue(vol);
+    newNote->getPan()->setValue(pan);
+
+    newNote->setTickLength(length);
+
+    if(ptBase)
+    {
+        ptBase->addElement(newNote);
+    }
+
+    return newNote;
+}
+
+Pattern* CreatePatternBase(float tk1, float tk2, int tr1, int tr2, char* name, Pattern* ptBase)
+{
+    Pattern* ptMom = new Pattern(name, tk1, tk2, tr1, tr2, true);
+
+    MProject.patternList.push_front(ptMom);
+
+    //GetPatternNameImage(ptMom);
+
+    ptMom->ptBase = ptMom;
+
+    Pattern* ptSon = CreatePatternInstance(ptMom, tk1, tk2, tr1, tr2, ptBase);
+
+    return ptSon;
+}
+
+Pattern* CreatePatternInstance(Pattern* ptMom, float tk1, float tk2, int tr1, int tr2, Pattern* ptBase)
+{
+    Pattern* ptSon = new Pattern(NULL, tk1, tk2, tr1, tr2, false);
+
+    ptMom->addInstance(ptSon);
+    ptBase->addElement(ptSon);
+
+    return ptSon;
+}
+
 MainEdit::MainEdit()
 {
     MPattern = new Pattern(NULL, 0.f, -1.f, 0, 119, true);
@@ -117,72 +183,6 @@ void MainEdit::handleChildEvent(Gobj * obj, InputEvent& ev)
 
         //MInstrPanel->setOffset(int(verticalGridScroller->getOffset()));
     }
-}
-
-Note* AddNote(float tick, int line, Instrument* instr, int note_val, float length, float vol, float pan, Pattern* ptBase)
-{
-    Note* note = CreateNote(tick, line, instr, note_val, length, vol, pan, ptBase);
-
-    std::list<Element*> elem;
-    elem.push_back(note);
-
-    MHistory->addNewAction(HistAction_AddGroup, elem);
-
-    return note;
-}
-
-Note* CreateNote(float tick, int line, Instrument* instr, int note_val, float length, float vol, float pan, Pattern* ptBase)
-{
-    Note* newNote = NULL;
-    Sample* sample = dynamic_cast<Sample*>(instr);
-
-    if (sample != NULL)
-    {
-        newNote = new SampleNote((Sample*)instr, note_val);
-    }
-    else
-    {
-        newNote = new Note(instr, note_val);
-    }
-
-    newNote->setPos(tick, line);
-
-    newNote->getVol()->setValue(vol);
-    newNote->getPan()->setValue(pan);
-
-    newNote->setTickLength(length);
-
-    if(ptBase)
-    {
-        ptBase->addElement(newNote);
-    }
-
-    return newNote;
-}
-
-Pattern* CreatePatternBase(float tk1, float tk2, int tr1, int tr2, char* name, Pattern* ptBase)
-{
-    Pattern* ptMom = new Pattern(name, tk1, tk2, tr1, tr2, true);
-
-    MProject.patternList.push_front(ptMom);
-
-    //GetPatternNameImage(ptMom);
-
-    ptMom->ptBase = ptMom;
-
-    Pattern* ptSon = CreatePatternInstance(ptMom, tk1, tk2, tr1, tr2, ptBase);
-
-    return ptSon;
-}
-
-Pattern* CreatePatternInstance(Pattern* ptMom, float tk1, float tk2, int tr1, int tr2, Pattern* ptBase)
-{
-    Pattern* ptSon = new Pattern(NULL, tk1, tk2, tr1, tr2, false);
-
-    ptMom->addInstance(ptSon);
-    ptBase->addElement(ptSon);
-
-    return ptSon;
 }
 
 
