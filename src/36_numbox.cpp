@@ -529,7 +529,7 @@ RadioBox::RadioBox(ParamRadio* param_radio)
 {
     prmRad = param_radio;
 
-    setFontId(FontVis);
+    setFontId(FontSmall);
 
     height = (textHeight + 4)*prmRad->getNumOptions();
 }
