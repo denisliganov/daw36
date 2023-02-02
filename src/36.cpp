@@ -54,24 +54,26 @@ bool                GRecOn;
 XmlElement*         xmlAudioSettings = NULL;
 
 
-int                 MixerHeight;
-int                 MixerTopHeight;
-int                 MixChanWidth;
+int                 AuxCtrlWidth;
+int                 AuxHeight;
+int                 BottomPadHeight;
 int                 CtrlPanelHeight;
+int                 FxPanelMaxWidth;
 int                 GridScrollWidth;
-int                 LeftGap;
-int                 MainLineHeight;
 int                 InstrScrollerWidth;
 int                 InstrWidth;
 int                 InstrHeight;
 int                 InstrControlWidth;
-int                 FxPanelMaxWidth;
-int                 PanelGap;
-int                 AuxCtrlWidth;
-int                 BottomPadHeight;
-int                 AuxHeight;
-int                 MixChannelPadHeight;
+int                 LeftGap;
 int                 LineNumWidth;
+int                 MainLineHeight;
+int                 MenuButtonsSpacing;
+int                 MenuGroupsSpacing;
+int                 MixerHeight;
+int                 MixerTopHeight;
+int                 MixChanWidth;
+int                 MixChannelPadHeight;
+int                 PanelGap;
 
 
 Instrument*         SoloInstr;
@@ -104,24 +106,25 @@ MainWinObject::MainWinObject()
     SoloInstr = NULL;
     SoloMixChannel = NULL;
 
-    PanelGap =              1;
+    AuxCtrlWidth =          0;
     AuxHeight =             40;
+    CtrlPanelHeight =       50;
+    GridScrollWidth =       32;
+    InstrControlWidth =     220;
+    InstrScrollerWidth =    16;
+    InstrHeight =           32;
+    BottomPadHeight =       0; //16;
+    FxPanelMaxWidth =       360;
+    LeftGap =               26;
+    LineNumWidth =          18;
     MixerHeight =           500;
     MixerTopHeight =        16;
     MixChanWidth =          70;
     MixChannelPadHeight =   80;
-    CtrlPanelHeight =       50;
-    GridScrollWidth =       32;
-    InstrHeight =           32;
     MainLineHeight =        30;
-    LeftGap =               26;
-    BottomPadHeight =       0; //16;
-    AuxCtrlWidth =          0;
-    FxPanelMaxWidth =       360;
-    InstrControlWidth =     220;
-    //InstrWidth =            185;
-    InstrScrollerWidth =    16;
-    LineNumWidth =          18;
+    PanelGap =              1;
+    MenuButtonsSpacing =    3;
+    MenuGroupsSpacing =     12;
 
     mainX1 = InstrControlWidth;
     mainX2 = width - 1;

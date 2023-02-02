@@ -19,8 +19,6 @@ protected:
 
             int                 xControls;
             int                 yControls;
-            int                 xShowHide;
-            int                 yShowHide;
 
             Button36*           trkSizeUp;
             Button36*           trkSizeDown;

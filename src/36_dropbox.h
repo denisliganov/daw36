@@ -14,30 +14,31 @@ class DropBox : public Gobj
 {
 friend ControlPanel;
 
-protected:
-
-        FontId          fontId;
-        int             menuId;
-        ContextMenu*    menu;
-
-        std::vector<std::string>    menuItems;
-
-        void        drawSelf(Graphics& g);
-        void        activateMenuItem(std::string item);
-        void        handleMouseDown(InputEvent& ev);
-        void        handleMouseUp(InputEvent & ev);
-        void        handleMouseWheel(InputEvent & ev);
-        void        handleMouseEnter(InputEvent & ev)  { redraw(); }
-        void        handleMouseLeave(InputEvent & ev)  { redraw(); }
-
 public:
 
-        DropBox(int menu_id, std::string name);
-        void        addItem(std::string item);
-        void        handleContextMenuClosed();
-        void        activate();
-        void        deactivate();
-        int         getMenuId() { return menuId; }
+            DropBox(int menu_id, std::string name);
+            void                addItem(std::string item);
+            void                activate();
+            void                deactivate();
+            int                 getMenuId() { return menuId; }
+            void                handleContextMenuClosed();
+
+protected:
+
+            FontId              fontId;
+            int                 menuId;
+            ContextMenu*        menu;
+
+            std::vector<std::string>    menuItems;
+
+            void                activateMenuItem(std::string item);
+            void                drawSelf(Graphics& g);
+            void                handleMouseDown(InputEvent& ev);
+            void                handleMouseUp(InputEvent & ev);
+            void                handleMouseWheel(InputEvent & ev);
+            void                handleMouseEnter(InputEvent & ev)  { redraw(); }
+            void                handleMouseLeave(InputEvent & ev)  { redraw(); }
+
 };
 
 

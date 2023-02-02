@@ -68,7 +68,7 @@ Note::~Note()
 
 Note* Note::clone(Instrument* new_instr)
 {
-    return _Create_Note(tick1, line, new_instr == NULL ? instr : new_instr, noteValue, ticklen, vol->getValue(), pan->getValue(), patt);
+    return AddNote(tick1, line, new_instr == NULL ? instr : new_instr, noteValue, ticklen, vol->getValue(), pan->getValue(), patt);
 }
 
 Element* Note::clone()

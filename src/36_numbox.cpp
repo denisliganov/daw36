@@ -25,7 +25,7 @@ void NumBox::drawSelf(Graphics& g)
 {
     fill(g, .2f);
 
-    rect(g, 0.22f);
+    //rect(g, 0.22f);
 }
 
 void NumBox::handleMouseDown(InputEvent& ev)

@@ -61,6 +61,22 @@ void DropBox::deactivate()
     menu = NULL;
 }
 
+void DropBox::drawSelf(Graphics& g)
+{
+    if (undermouse)
+    {
+        fill(g, 0.6f);
+    }
+    else
+    {
+        fill(g, 0.3f);
+    }
+
+    setc(g, 1.f);
+
+    gText(g, fontId, objName, x1 + width/2 - gGetTextWidth(fontId, objName)/2, y2 - height/2 + gGetTextHeight(fontId)/2 - 1);
+}
+
 void DropBox::handleContextMenuClosed()
 {
     if(parent->getWindow()->getActiveObj() != this) // Avoid reopening, when this DB already open
@@ -95,24 +111,6 @@ void DropBox::handleMouseWheel(InputEvent & ev)
 void DropBox::handleMouseUp(InputEvent& ev)
 {
     //
-}
-
-void DropBox::drawSelf(Graphics& g)
-{
-    if (undermouse)
-    {
-        fill(g, 0.6f);
-    }
-    else
-    {
-        fill(g, 0.3f);
-    }
-
-    rect(g, 0.2f);
-
-    setc(g, 1.f);
-
-    gText(g, fontId, objName, x1 + width/2 - gGetTextWidth(fontId, objName)/2, y2 - height/2 + gGetTextHeight(fontId)/2 - 1);
 }
 
 

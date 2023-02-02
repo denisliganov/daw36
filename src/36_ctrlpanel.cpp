@@ -48,7 +48,7 @@ ControlPanel::ControlPanel()
     fileMenu->addItem("Render");
     fileMenu->addItem("");
     fileMenu->addItem("Exit");
-    xMenu += 40;
+    xMenu += fileMenu->getW() + 3;
     addObject(editMenu = new DropBox(0, "EDIT"), xMenu, yMenu);
     editMenu->addItem("Undo");
     editMenu->addItem("Redo");
@@ -56,7 +56,7 @@ ControlPanel::ControlPanel()
     editMenu->addItem("Delete Song");
     editMenu->addItem("");
     editMenu->addItem("Settings");
-    xMenu += 41;
+    xMenu += editMenu->getW() + 3;
     addObject(helpMenu = new DropBox(0, "HELP"), xMenu, yMenu);
     helpMenu->addItem("Keys Reference");
     helpMenu->addItem("");
@@ -76,8 +76,6 @@ ControlPanel::ControlPanel()
     //addObject(trkSizeDown = new Button36(false), xControls, yControls + buttonHeight/2, buttonWidth, buttonHeight/2, "bt.clr");
     //xControls += buttonWidth + 1;
 
-    xShowHide = 0;
-    yShowHide = CtrlPanelHeight - 28;
 
     addObject(btBrowser = new GroupButton(2), "bt.browser");
     btBrowser->setLedType(true);
@@ -94,6 +92,7 @@ ControlPanel::ControlPanel()
 
     addObject(btWaveMode = new Button36(true), "bt.showwaves"); 
     btWaveMode->setLedType(true);
+
     addObject(btMouseMode = new Button36(true), "bt.mousemode");
     btMouseMode->setLedType(true);
 
@@ -217,7 +216,7 @@ void ControlPanel::drawSelf(Graphics& g)
 
     setc(g, .25f);
 
-    lineH(g, 0, 0, width - 1);
+    //lineH(g, 0, 0, width - 1);
 
     for(int i = 1; i < 40; i++)
     {

@@ -1772,7 +1772,7 @@ Note* Grid::putNote(float tick, int line, int noteVal)
     {
         MInstrPanel->setCurrInstr(instr);
 
-        Note* newNote = _Create_Note(tick, line, instr, noteVal > 0 ? noteVal : instr->lastNoteVal, 
+        Note* newNote = AddNote(tick, line, instr, noteVal > 0 ? noteVal : instr->lastNoteVal, 
                                         instr->lastNoteLength, instr->lastNoteVol, instr->lastNotePan, getPattern());
 
         redraw(true);
@@ -1821,7 +1821,7 @@ void Grid::reassignElements()
 
             if (instrOld != instrNew)
             {
-                Note* newNote = _Create_Note(note->gettick(), note->getline(), instrNew, note->getNoteValue(), 
+                Note* newNote = AddNote(note->gettick(), note->getline(), instrNew, note->getNoteValue(), 
                                                 note->getticklen(), note->vol->getValue(), note->pan->getValue(), patt);
 
                 if (selected.size() > 0)

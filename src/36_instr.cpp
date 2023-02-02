@@ -333,7 +333,7 @@ void Instrument::createSelfPattern()
 
     if(selfNote == NULL)
     {
-        selfNote = Create_Note(0, 0, this, BaseNote, 4, 1, 0, selfPattern);
+        selfNote = CreateNote(0, 0, this, BaseNote, 4, 1, 0, selfPattern);
 
         selfNote->propagateTriggers(selfPattern);
     }

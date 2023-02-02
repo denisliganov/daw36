@@ -119,34 +119,9 @@ void MainEdit::handleChildEvent(Gobj * obj, InputEvent& ev)
     }
 }
 
-Pattern* Create_Pattern_Base(float tk1, float tk2, int tr1, int tr2, char* name, Pattern* ptBase)
+Note* AddNote(float tick, int line, Instrument* instr, int note_val, float length, float vol, float pan, Pattern* ptBase)
 {
-    Pattern* ptMom = new Pattern(name, tk1, tk2, tr1, tr2, true);
-
-    MProject.patternList.push_front(ptMom);
-
-    //GetPatternNameImage(ptMom);
-
-    ptMom->ptBase = ptMom;
-
-    Pattern* ptSon = Create_Pattern_Instance(ptMom, tk1, tk2, tr1, tr2, ptBase);
-
-    return ptSon;
-}
-
-Pattern* Create_Pattern_Instance(Pattern* ptMom, float tk1, float tk2, int tr1, int tr2, Pattern* ptBase)
-{
-    Pattern* ptSon = new Pattern(NULL, tk1, tk2, tr1, tr2, false);
-
-    ptMom->addInstance(ptSon);
-    ptBase->addElement(ptSon);
-
-    return ptSon;
-}
-
-Note* _Create_Note(float tick, int line, Instrument* instr, int note_val, float length, float vol, float pan, Pattern* ptBase)
-{
-    Note* note = Create_Note(tick, line, instr, note_val, length, vol, pan, ptBase);
+    Note* note = CreateNote(tick, line, instr, note_val, length, vol, pan, ptBase);
 
     std::list<Element*> elem;
     elem.push_back(note);
@@ -156,7 +131,7 @@ Note* _Create_Note(float tick, int line, Instrument* instr, int note_val, float 
     return note;
 }
 
-Note* Create_Note(float tick, int line, Instrument* instr, int note_val, float length, float vol, float pan, Pattern* ptBase)
+Note* CreateNote(float tick, int line, Instrument* instr, int note_val, float length, float vol, float pan, Pattern* ptBase)
 {
     Note* newNote = NULL;
     Sample* sample = dynamic_cast<Sample*>(instr);
@@ -183,6 +158,31 @@ Note* Create_Note(float tick, int line, Instrument* instr, int note_val, float l
     }
 
     return newNote;
+}
+
+Pattern* CreatePatternBase(float tk1, float tk2, int tr1, int tr2, char* name, Pattern* ptBase)
+{
+    Pattern* ptMom = new Pattern(name, tk1, tk2, tr1, tr2, true);
+
+    MProject.patternList.push_front(ptMom);
+
+    //GetPatternNameImage(ptMom);
+
+    ptMom->ptBase = ptMom;
+
+    Pattern* ptSon = CreatePatternInstance(ptMom, tk1, tk2, tr1, tr2, ptBase);
+
+    return ptSon;
+}
+
+Pattern* CreatePatternInstance(Pattern* ptMom, float tk1, float tk2, int tr1, int tr2, Pattern* ptBase)
+{
+    Pattern* ptSon = new Pattern(NULL, tk1, tk2, tr1, tr2, false);
+
+    ptMom->addInstance(ptSon);
+    ptBase->addElement(ptSon);
+
+    return ptSon;
 }
 
 
