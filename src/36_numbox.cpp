@@ -314,16 +314,15 @@ ParamBox::ParamBox(Parameter* param)
 
     prm = param;
 
-    fontId = FontSmall;
+    setFontId(FontSmall);
 
-    th = gGetTextHeight(fontId);
     tw1 = gGetTextWidth(fontId, prm->getName());
     tw2 = gGetTextWidth(fontId, prm->getMaxValString());
     tw3 = gGetTextWidth(fontId, prm->getUnitStr());
 
     sliderOnly = false;
 
-    height = th + 2;
+    height = textHeight + 2;
     width = tw1 + tw2 + tw3;
     width += 20;
 }
@@ -336,7 +335,7 @@ void ParamBox::drawSelf(Graphics& g)
 
     if (sliderOnly == false)
     {
-        txy = th;
+        txy = textHeight;
         int txty = txy - 3;
 
         setc(g, 0.8f);
@@ -488,7 +487,9 @@ ToggleBox::ToggleBox(ParamToggle* param_tg)
 {
     prmToggle = param_tg;
 
-    fontId = FontSmall;
+    setFontId(FontSmall);
+
+    height = textHeight + 4;
 }
 
 void ToggleBox::drawSelf(Graphics& g)
@@ -498,19 +499,19 @@ void ToggleBox::drawSelf(Graphics& g)
     if (prmToggle->getValue())
     {
         setc(g, 0.8f);
+        fillx(g, width - height, 0, height, height);
     }
     else
     {
         setc(g, 0.1f);
+        rectx(g, width - height, 0, height, height);
     }
 
-    fillx(g, width - height, 0, height, height);
+//    setc(g, 0.4f);
+//    rectx(g, width - width/4, 0, height, height);
 
-    setc(g, 0.2f);
-    rectx(g, width - width/4, 0, height, height);
-
-    setc(g, .9f);
-    txtfit(g, fontId, prmToggle->getName(), 3 /*(width - width/4)/2 - gGetTextWidth(fontId, prmToggle->getName())/2*/, height/2 + 3, width - width/4);
+    setc(g, .8f);
+    txtfit(g, fontId, prmToggle->getName(), 3 /*(width - width/4)/2 - gGetTextWidth(fontId, prmToggle->getName())/2*/, height/2 + 4, width - height);
 }
 
 void ToggleBox::handleMouseDown(InputEvent & ev)
@@ -524,21 +525,49 @@ void ToggleBox::handleMouseUp(InputEvent & ev)
 {
 }
 
+RadioBox::RadioBox(ParamRadio* param_radio)
+{
+    prmRad = param_radio;
+
+    setFontId(FontVis);
+
+    height = (textHeight + 4)*prmRad->getNumOptions();
+}
+
+void RadioBox::drawSelf(Graphics& g)
+{
+    fill(g, 0.2f);
+
+    int h1 = (textHeight + 4);
+    int y = 0;
+    int opt = 0;
+    for (std::string str : prmRad->getOptions())
+    {
+        if (prmRad->getCurrent() == opt)
+        {
+            setc(g, 0.8f);
+            fillx(g, width - h1, y, h1, h1);
+        }
+        else
+        {
+            setc(g, 0.1f);
+            rectx(g, width - h1, y, h1, h1);
+        }
+
+        setc(g, .8f);
+        txtfit(g, fontId, str, 3, y + textHeight, width - h1);
+
+        y += textHeight + 4;
+        opt++;
+    }
+}
+
 SelectorBox::SelectorBox(ParamSelector* param_sel)
 {
     prmSelector = param_sel;
 }
 
 void SelectorBox::drawSelf(Graphics& g)
-{
-}
-
-RadioBox::RadioBox(ParamRadio* param_radio)
-{
-    prmRad = param_radio;
-}
-
-void RadioBox::drawSelf(Graphics& g)
 {
 }
 

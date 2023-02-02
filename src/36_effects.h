@@ -174,7 +174,6 @@ public:
 
 protected:
 
-            BoolParam*          ppmode;
             Parameter*          delay;
             Parameter*          amount;
             Parameter*          feedback;

@@ -136,19 +136,19 @@ void Button36::drawButtonBase(Graphics& g)
     if (!pressed)
     {
         fill(g, 0.25f);
-        rect(g, 0.1f);
+        //rect(g, 0.1f);
     }
     else
     {
         if(isLedType)
         {
             fill(g, 0.6f);
-            rect(g, 0.7f);
+            //rect(g, 0.7f);
         }
         else
         {
             fill(g, 0xffFFFF40, .6f);
-            rect(g, 0xffFFFF40, .7f);
+            //rect(g, 0xffFFFF40, .7f);
         }
     }
 }

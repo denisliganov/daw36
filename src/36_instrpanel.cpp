@@ -742,9 +742,9 @@ void InstrPanel::remap()
     {
         btHideFX->setCoords1(FxPanelMaxWidth, 0, 28, 28);
 
-        confine(0, instrListY, FxPanelMaxWidth, height);
+        confine(10, instrListY, FxPanelMaxWidth, height);
 
-        mixr->setCoords1(0, instrListY, FxPanelMaxWidth, instrListHeight);
+        mixr->setCoords1(10, instrListY, FxPanelMaxWidth - 10, instrListHeight);
     }
     else
     {

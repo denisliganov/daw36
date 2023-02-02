@@ -21,7 +21,7 @@ void DevParamObject::initAll()
     int boxWidth = 130;
     int boxHeight = 22;
 
-    int x = border;
+    int x = 0;
     int y = border;
 
     int txs1=0, txs2=0, txs3=0;
@@ -64,21 +64,21 @@ void DevParamObject::initAll()
         else if (prmRad)
         {
             RadioBox* box = NULL;
-            addObject(box = new RadioBox(prmRad), x, y);
+            addObject(box = new RadioBox(prmRad), x, y, boxWidth, box->getH());
 
             y += box->getH() + 3;
         }
         else if (prmSel)
         {
             SelectorBox* box = NULL;
-            addObject(box = new SelectorBox(prmSel), x, y);
+            addObject(box = new SelectorBox(prmSel), x, y, boxWidth, box->getH());
 
             y += box->getH() + 3;
         }
         else if (prmTg)
         {
             ToggleBox* box = NULL;
-            addObject(box = new ToggleBox(prmTg), x, y, boxWidth, int(.75f*boxHeight));
+            addObject(box = new ToggleBox(prmTg), x, y, boxWidth, box->getH());
 
             y += box->getH() + 3;
         }
@@ -91,7 +91,7 @@ void DevParamObject::initAll()
 
 void DevParamObject::drawSelf(Graphics& g)
 {
-    fill(g, 0.3f);
+    fill(g, 0.35f);
 }
 
 void DevParamObject::handleChildEvent(Gobj * obj,InputEvent & ev)

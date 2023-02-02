@@ -119,7 +119,6 @@ public:
 
 protected:
             int                 defPos;
-            int                 th;
             int                 tw1;
             int                 tw2;
             int                 tw3;

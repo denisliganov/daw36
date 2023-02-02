@@ -1013,8 +1013,6 @@ XDelay::XDelay() : dspCorePingPongDelay()
     dspCorePingPongDelay.setPingPongMode(true);
     dspCorePingPongDelay.setStereoSwap(true);
 
-    ppmode = new BoolParam("Mode", true, "Ping-pong");
-
     addParam(delayMode = new ParamToggle("PING-PONG MODE", true));
 
     addParamWithControl(delay = new Parameter("DELAY", 3, 0.5f, 19.5f, Units_Ticks));
@@ -1036,13 +1034,7 @@ XDelay::XDelay() : dspCorePingPongDelay()
 
 void XDelay::handleParamUpdate(Param* param)
 {
-    if(param == ppmode)
-    {
-        dspCorePingPongDelay.setPingPongMode(ppmode->getOutVal());
-        dspCorePingPongDelay.setStereoSwap(ppmode->getOutVal());
-        dspCorePingPongDelay.setPan((ppmode->getOutVal() ? -1 : 1)*ppmode->getOutVal());
-    }
-    else if(param == delayMode)
+    if(param == delayMode)
     {
         dspCorePingPongDelay.setPingPongMode(delayMode->getValue());
         dspCorePingPongDelay.setStereoSwap(delayMode->getValue());
@@ -1074,7 +1066,7 @@ void XDelay::handleParamUpdate(Param* param)
     }
     else if( param == pan )
     {
-        dspCorePingPongDelay.setPan((ppmode->outval == true ? -1 : 1)*pan->getOutVal());
+        dspCorePingPongDelay.setPan((delayMode->getValue() == true ? -1 : 1)*pan->getOutVal());
     }
     else if( param == lowcut )
     {

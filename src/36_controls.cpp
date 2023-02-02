@@ -24,3 +24,9 @@ void Control::addParam(Param* p)
     updPosition();
 }
 
+void Control::setFontId(FontId fId)
+{
+    fontId = fId;
+
+    textHeight = gGetTextHeight(fontId);
+}

@@ -18,6 +18,7 @@ public:
     virtual void                updValue() {};
     virtual float               getMinStep() {return 0;};
     virtual void                reset() {};
+    virtual void                setFontId(FontId fId);
 
 protected:
 
@@ -25,5 +26,6 @@ protected:
             Device36*           dev;
             FontId              fontId;
             Image*              parentImage;
+            int                 textHeight;
 };
 
