@@ -82,9 +82,9 @@ void Eff::remap()
 
 void Eff::drawSelf(Graphics& g)
 {
-    fill(g, .4f);
+    fill(g, .5f);
 
-    setc(g, .35f);
+    setc(g, .45f);
     fillx(g, 0, 0, width, height/2);
 
     //rect(g, .3f);

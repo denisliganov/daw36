@@ -459,7 +459,7 @@ bool Project36::loadProjectData(File chosenFile, LoadThread* thread)
 
                     //GetPatternNameImage(patt);
 
-                    patt->ptBase = patt;
+                    patt->setBasePattern(patt);
 
                     XmlElement* xmlDerived = NULL;
 
@@ -563,7 +563,7 @@ void Project36::saveProjectData(File chosenFile)
 
     // Save patterns, elements
 
-    for(Element* el : MPattern->elems)
+    for(Element* el : MPattern->getElems())
     {
         if(!el->isdel() && el->getType() != El_Pattern)
         {

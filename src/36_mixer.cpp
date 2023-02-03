@@ -226,7 +226,7 @@ void MixChannel::drawSelf(Graphics& g)
 {
     int baseheight = MixChannelPadHeight;
 
-    fill(g, .15f);
+    fill(g, .2f);
 
     //setc(g, 1.f);
     //gTextFit(g, FontSmall, instr->getObjName(), 0, 5, width);

@@ -222,7 +222,7 @@ void Event::activateTriggers(bool deactonly)
 {
     for(Trigger* tg : triggers)
     {
-        if(!tg->tgPatt->muted && !tg->el->isdel())
+        if(!tg->tgPatt->isMuted() && !tg->el->isdel())
         {
             if(tg->starter && (tick < 0 || tick > tg->tgPatt->getticklen()))
             {

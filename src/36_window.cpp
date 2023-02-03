@@ -429,7 +429,7 @@ void MainWindow::paint(Graphics& g)
     g.drawRect(2, 2, w - 4, h - 4);
 
     // Title bar
-    gSetMonoColor(g, 0.2f);
+    gSetMonoColor(g, 0.25f);
     g.fillRect(1, 1, w - 2, titleHeight + getBorderThickness().getTop());
     //g.fillRect(3, titleHeight, w - 6, 3);
 
@@ -626,10 +626,11 @@ void SubWindow::closeButtonPressed()
 
 void SubWindow::paint(Graphics& g)
 {
-    gSetMonoColor(g, 0.2f);
+    gSetMonoColor(g, 0.25f);
     g.fillRect(0, 0, getWidth(), getHeight());
 
-    gSetMonoColor(g, 0.5f);
+    //gSetMonoColor(g, 0.5f);
+    gSetMonoColor(g, 0.35f);
     g.drawRect(0, 0, getWidth(), getHeight());
 
     gSetMonoColor(g, 1.f);

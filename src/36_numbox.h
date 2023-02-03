@@ -160,6 +160,7 @@ protected:
             ParamRadio*         prmRad;
 
             void                drawSelf(Graphics& g);
+            void                handleMouseDown(InputEvent & ev);
 };
 
 

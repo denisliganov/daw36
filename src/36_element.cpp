@@ -72,7 +72,7 @@ void Element::calcframes()
 
 bool Element::isPointed(int mx, int my, Grid* grid)
 {
-    if(patt == grid->getPattern()->ptBase && checkVisible(grid))
+    if(patt == grid->getPattern()->getBasePattern() && checkVisible(grid))
     {
         if (mx >= dx1 && mx <= dx2 && my >= dy1 && my <= dy2)
         {

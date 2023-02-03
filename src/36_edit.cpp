@@ -72,7 +72,7 @@ Pattern* CreatePatternBase(float tk1, float tk2, int tr1, int tr2, char* name, P
 
     //GetPatternNameImage(ptMom);
 
-    ptMom->ptBase = ptMom;
+    ptMom->setBasePattern(ptMom);
 
     Pattern* ptSon = CreatePatternInstance(ptMom, tk1, tk2, tr1, tr2, ptBase);
 
@@ -92,7 +92,7 @@ Pattern* CreatePatternInstance(Pattern* ptMom, float tk1, float tk2, int tr1, in
 MainEdit::MainEdit()
 {
     MPattern = new Pattern(NULL, 0.f, -1.f, 0, 119, true);
-    MPattern->ptBase = MPattern;
+    MPattern->setBasePattern(MPattern);;
     MPattern->calcframes();
     MPattern->addInstance(MPattern);
 
@@ -104,7 +104,7 @@ MainEdit::MainEdit()
     MGrid = grid;
 
     MProject.patternList.push_front(MPattern);
-    MPattern->ptBase = MPattern;
+
     MPattern->setBounds(0, 2147483647);
 
     addObject(grid->vscr);

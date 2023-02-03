@@ -322,13 +322,11 @@ void Instrument::createSelfPattern()
     if(selfPattern == NULL)
     {
         selfPattern = new Pattern("self", 0.0f, 16.0f, 0, 0, true);
-        selfPattern->ptBase = selfPattern;
-        selfPattern->patt = selfPattern;
+//        selfPattern->setBasePattern(selfPattern);
+        selfPattern->setPattern(selfPattern);
         selfPattern->addInstance(selfPattern);
 
         MProject.patternList.push_front(selfPattern);
-
-        selfPattern->ptBase = selfPattern;
     }
 
     if(selfNote == NULL)
@@ -379,10 +377,10 @@ Instrument* Instrument::clone()
 
 void Instrument::drawSelf(Graphics& g)
 {
-    Gobj::fill(g, .3f);
+    Gobj::fill(g, .35f);
 
-    setc(g, .25f);
-    fillx(g, 0, 0, width, height/2);
+    //setc(g, .3f);
+    //fillx(g, 0, 0, width, height/2);
 
     setc(g, .0f);
 

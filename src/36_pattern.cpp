@@ -182,7 +182,7 @@ void Pattern::addInstance(Pattern * pt)
 {
     instances.push_back(pt);
 
-    pt->ptBase = this;
+    pt->setBasePattern(this);
 
     for(Element* el : elems)
     {
@@ -201,6 +201,11 @@ void Pattern::removeInstance(Pattern* pt)
             el->unpropagateTriggers(pt);
         }
     }
+}
+
+void Pattern::setBasePattern(Pattern* pt)
+{
+    ptBase = pt;
 }
 
 void Pattern::save(XmlElement * xmlNode)

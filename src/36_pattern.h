@@ -13,74 +13,80 @@ class Pattern : public Note
 {
 public:
 
-            bool            ranged;
-            bool            muted;
-            bool            looped;
-            bool            playing;
-            tframe          startFrame;
-            tframe          currFrame;
-            tframe          frameCount;
-            tframe          endFrame;
-            double          playTick;
+            Pattern(char* nm, float tk1, float tk2, int tr1, int tr2, bool tracks);
+            ~Pattern();
+            void                adjustBounds();
+            void                addElement(Element* el);
+            void                addInstance(Pattern* child);
+            void                activate();
+            Pattern*            clone(float new_tick, int new_trackline);
+            Pattern*            clone();
+            bool                checkVisible(Grid* grid);
+            Element*            checkElement(float tick, int trknum);
+            void                copyParams(Pattern* newPatt);
+            void                deactivate();
+            void                deleteAllElements(bool flush, bool preventundo);
+            double              getPlayTick();
+            void                getSmallestCountDown(long* count);
+            long                getFrame();
+            long                getGlobalFrame();
+            long                getGlobalEndFrame();
+            long                getGlobalStartFrame();
+            long                getLastElementFrame();
+         std::list<Element*>&   getElems()  { return elems; }
+            Pattern*            getBasePattern()    { return ptBase; }
+            void                init(char* nm, bool tracks);
+            bool                isLooped();
+            bool                isPlaying();
+            bool                isMuted()      { return muted; }
+            bool                isBounded()     { return ranged; }
+            void                load(XmlElement* xmlNode);
+            void                move(float dtick, int dtrack);
+    virtual void                handleMouseUp(InputEvent& ev);
+            void                drawOnGrid(Graphics& g, Grid* grid);
+            void                processEnvelopes(long buffframe, long num_frames, long curr_frame);
+            void                placeTrigger(Trigger* tg);
+            void                preInitTriggers(long frame, bool activate_env, bool paraminit = true);
+            void                removeTrigger(Trigger* tg);
+            void                queueEvent();
+            long                requeueEvent(bool change);
+            void                recalc();
+            void                removeInstance(Pattern* child);
+            void                removeElement(Element* el);
+            void                resetPosition();
+            void                resetLoop();
+            void                setGlobalFrame(long frame);
+            void                setBounds(long start, long end);
+            void                setNewName(const char* name);
+            void                setPlayTick(double tick);
+            void                setPatt(Pattern* pPt);
+            void                save(XmlElement* xmlNode);
+            void                setLoop();
+            void                setFrame(long frame);
+            void                setBasePattern(Pattern* pt);
+            void                tickFrame(long nc, long dcount, long fpb);
+            void                updateEvents();
 
-            Instrument*     instr;
-            Pattern*        ptBase;
+protected:
+
+            tframe              currFrame;
+            tframe              endFrame;
+            tframe              frameCount;
+            Instrument*         instr;
+            bool                muted;
+            bool                looped;
+            Pattern*            ptBase;
+            bool                playing;
+            double              playTick;
+            bool                ranged;
+            tframe              startFrame;
 
             std::list<Element*>         elems;
             std::list<Pattern*>         instances;
-
             std::list<Event*>           events;
             std::list<Event*>::iterator pendingEvent;
 
 
-            Pattern(char* nm, float tk1, float tk2, int tr1, int tr2, bool tracks);
-            ~Pattern();
-            void            init(char* nm, bool tracks);
-        Pattern*            clone(float new_tick, int new_trackline);
-        Pattern*            clone();
-            void            copyParams(Pattern* newPatt);
-            void            save(XmlElement* xmlNode);
-            void            load(XmlElement* xmlNode);
-            void            move(float dtick, int dtrack);
-            bool            checkVisible(Grid* grid);
-         Element*           checkElement(float tick, int trknum);
-            void            deleteAllElements(bool flush, bool preventundo);
-            void            recalc();
-            void            addElement(Element* el);
-            void            addInstance(Pattern* child);
-            void            removeInstance(Pattern* child);
-            void            removeElement(Element* el);
-            long            getLastElementFrame();
-            void            setNewName(const char* name);
-    virtual void            handleMouseUp(InputEvent& ev);
-            void            drawOnGrid(Graphics& g, Grid* grid);
-            double          getPlayTick();
-            void            setPlayTick(double tick);
-            void            setPatt(Pattern* pPt);
-            bool            isLooped();
-            void            setLoop();
-            bool            isPlaying();
-            void            resetPosition();
-            void            activate();
-            void            setBounds(long start, long end);
-            void            tickFrame(long nc, long dcount, long fpb);
-            void            setFrame(long frame);
-            long            getFrame();
-            long            getGlobalFrame();
-            void            setGlobalFrame(long frame);
-            long            getGlobalEndFrame();
-            long            getGlobalStartFrame();
-            void            deactivate();
-            void            resetLoop();
-            void            queueEvent();
-            void            adjustBounds();
-            void            removeTrigger(Trigger* tg);
-            void            placeTrigger(Trigger* tg);
-            void            preInitTriggers(long frame, bool activate_env, bool paraminit = true);
-            void            updateEvents();
-            long            requeueEvent(bool change);
-            void            getSmallestCountDown(long* count);
-            void            processEnvelopes(long buffframe, long num_frames, long curr_frame);
 };
 
 

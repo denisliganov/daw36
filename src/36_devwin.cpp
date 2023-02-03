@@ -21,7 +21,7 @@ void DevParamObject::initAll()
     int boxWidth = 130;
     int boxHeight = 22;
 
-    int x = 0;
+    int x = 2;
     int y = border;
 
     int txs1=0, txs2=0, txs3=0;

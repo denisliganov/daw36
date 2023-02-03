@@ -401,7 +401,7 @@ bool SampleNote::initCursor(double* cursor)
        *cursor = rightmostFrame;
     }
 
-    if(patt->ranged && (patt != MPattern)&&((frame1 + *cursor) >= patt->endFrame))
+    if(patt->isBounded() && (patt != MPattern)&&((frame1 + *cursor) >= patt->getendframe()))
     {
         return false;
     }
@@ -530,7 +530,7 @@ void SampleNote::updateSampleBounds()
             //leftmostFrame = long(leftmostFrame*ksize);
         }
 
-        if(patt && patt->ranged == true)
+        if(patt && patt->isBounded() == true)
         {
             long p_offs = 0;
             long p_cut = 0;

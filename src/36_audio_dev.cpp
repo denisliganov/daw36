@@ -84,7 +84,7 @@ Audio36::Audio36(float smpRate)
     globalMute = mixMute = false;
 
     prevPattern = new Pattern(NULL, 0.f, -1.f, 0, 119, true);
-    prevPattern->ptBase = prevPattern;
+    prevPattern->setBasePattern(prevPattern);
     prevPattern->calcframes();
     prevPattern->addInstance(prevPattern);
 

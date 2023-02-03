@@ -160,7 +160,7 @@ void Lane::drawBars(Graphics& g)
 
     // First draw non-selected elements, then selected ones over them
 
-    for(Element* el : grid->getPattern()->ptBase->elems)
+    for(Element* el : grid->getPattern()->getBasePattern()->getElems())
     {
         if (!el->isdel() && el->isNote())
         {
@@ -272,7 +272,7 @@ void Lane::process(bool leftbt, int mx, int my, unsigned flags)
         processSelectedOnly = true;
     }
 
-    for(Element* el : grid->getPattern()->ptBase->elems)
+    for(Element* el : grid->getPattern()->getBasePattern()->getElems())
     {
         int cx = grid->getXfromTick(el->gettick());
 

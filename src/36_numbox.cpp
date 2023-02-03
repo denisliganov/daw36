@@ -329,42 +329,9 @@ ParamBox::ParamBox(Parameter* param)
 
 void ParamBox::drawSelf(Graphics& g)
 {
-    fill(g, 0.2f);
+    fill(g, 0.45f);
 
     int txy = 0;
-
-    if (sliderOnly == false)
-    {
-        txy = textHeight;
-        int txty = txy - 3;
-
-        setc(g, 0.8f);
-
-        txtfit(g, fontId, prm->getName(), 3, txty, width/2);
-
-        setc(g, 1.f);
-
-        std::string valstr = prm->getValString();
-
-        int sub = 0;
-
-        if(valstr.data()[0] == '-' || 
-           valstr.data()[0] == '+' ||
-           valstr.data()[0] == '<')
-        {
-            int poffs = gGetTextWidth(fontId, valstr.substr(0, 1));
-            txt(g, fontId, prm->getValString().substr(0, 1), width/2 - poffs, txty);
-            sub = 1;
-        }
-
-        setc(g, 1.f);
-
-        txt(g, fontId, prm->getValString().substr(sub), width/2, txty);
-
-        setc(g, .8f);
-
-        txt(g, fontId, prm->getUnitStr(), width - tw3 - 2, txty);
-    }
 
     //setc(g, 0.2f);
     //fillx(g, 0, txy, width, height - txy);
@@ -392,21 +359,56 @@ void ParamBox::drawSelf(Graphics& g)
     setc(g, 0.f);
     fillx(g, defPos, height - sh, 1, sh);
 
-    setc(g, 0xffB0B000);
-    //setc(g, .75f);
+    //setc(g, 0xffB0B000);
+    //setc(g, .6f);
+    //fillx(g, xstart, height - sh, w, sh);
+
+    setc(g, .6f);
+    //setc(g, 0xffA0A060);
     fillx(g, xstart, height - sh, w, sh);
 
-    setc(g, 0xff606000);
-    //setc(g, .4f);
-    fillx(g, xstart, height - sh + 1, w, sh-1);
-
-    setc(g, 0xff505000);
-    //setc(g, .66f);
+    setc(g, .32f);
+    //setc(g, 0xff505030);
     fillx(g, xoffs, height - sh, 1, sh);
 
-    setc(g, 0xffFFFF00);
-    //setc(g, 1.f);
+    setc(g, 1.f);
+    //setc(g, 0xffFFFFA0);
     fillx(g, xval, height - sh, 1, sh);
+
+    if (sliderOnly == false)
+    {
+        txy = textHeight;
+
+        int txty = txy - 3;
+
+        //setc(g, 0.8f);
+        setc(g, 1.f);
+
+        txtfit(g, fontId, prm->getName(), 3, txty, width/2);
+
+        setc(g, 1.f);
+
+        std::string valstr = prm->getValString();
+
+        int sub = 0;
+
+        if(valstr.data()[0] == '-' || 
+           valstr.data()[0] == '+' ||
+           valstr.data()[0] == '<')
+        {
+            int poffs = gGetTextWidth(fontId, valstr.substr(0, 1));
+            txt(g, fontId, prm->getValString().substr(0, 1), width/2 - poffs, txty);
+            sub = 1;
+        }
+
+        setc(g, 1.f);
+
+        txt(g, fontId, prm->getValString().substr(sub), width/2, txty);
+
+        setc(g, .9f);
+
+        txt(g, fontId, prm->getUnitStr(), width - tw3 - 2, txty);
+    }
 }
 
 float ParamBox::getMinStep()
@@ -499,19 +501,19 @@ void ToggleBox::drawSelf(Graphics& g)
     if (prmToggle->getValue())
     {
         setc(g, 0.8f);
-        fillx(g, width - height, 0, height, height);
+        fillx(g, 0, 0, height, height);
     }
     else
     {
-        setc(g, 0.1f);
-        rectx(g, width - height, 0, height, height);
+        setc(g, 0.45f);
+        fillx(g, 0, 0, height, height);
     }
 
 //    setc(g, 0.4f);
 //    rectx(g, width - width/4, 0, height, height);
 
     setc(g, .8f);
-    txtfit(g, fontId, prmToggle->getName(), 3 /*(width - width/4)/2 - gGetTextWidth(fontId, prmToggle->getName())/2*/, height/2 + 4, width - height);
+    txtfit(g, fontId, prmToggle->getName(), height + 6 /*(width - width/4)/2 - gGetTextWidth(fontId, prmToggle->getName())/2*/, height/2 + 4, width - height);
 }
 
 void ToggleBox::handleMouseDown(InputEvent & ev)
@@ -547,20 +549,27 @@ void RadioBox::drawSelf(Graphics& g)
         if (prmRad->getCurrent() == opt)
         {
             setc(g, 0.8f);
-            fillx(g, width - h1, y, h1, h1);
+            fillx(g, 2, y + 2, textHeight, textHeight);
         }
         else
         {
-            setc(g, 0.1f);
-            rectx(g, width - h1, y, h1, h1);
+            setc(g, 0.4f);
+            fillx(g, 2, y + 2, textHeight, textHeight);
         }
 
         setc(g, 1.f);
-        txtfit(g, fontId, str, 3, y + textHeight, width - h1);
+        txtfit(g, fontId, str, (textHeight + 4) + 6, y + textHeight - 1, width - h1);
 
         y += textHeight + 4;
         opt++;
     }
+}
+
+void RadioBox::handleMouseDown(InputEvent & ev)
+{
+    prmRad->setCurrent((ev.mouseY - y1) / (textHeight + 4));
+
+    redraw();
 }
 
 SelectorBox::SelectorBox(ParamSelector* param_sel)

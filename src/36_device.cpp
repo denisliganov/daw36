@@ -65,7 +65,7 @@ void Device36::removeElements()
 
 restart:
 
-    for(Element* el : MPattern->elems)
+    for(Element* el : MPattern->getElems())
     {
         if(el->getDevice() == this)
         {

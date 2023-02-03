@@ -1910,7 +1910,7 @@ void Grid::remapElements()
         }
         */
 
-        for(Element* el : patt->elems)
+        for(Element* el : patt->getElems())
         {
             if ( el->getendtick() < hscr->getoffs() || el->gettick() > lastVisibleTick)
             {
@@ -2028,7 +2028,7 @@ void Grid::selectAll(bool select)
 {
     selected.clear();
 
-    for(Element* el : patt->elems)
+    for(Element* el : patt->getElems())
     {
         if(!el->isdel())
         {
@@ -2069,7 +2069,7 @@ void Grid::updBounds()
 
     if (patt != NULL)
     {
-        for(Element* el : patt->ptBase->elems)
+        for(Element* el : patt->getBasePattern()->getElems())
         {
             if (!el->isdel())
             {
@@ -2200,7 +2200,7 @@ void Grid::updTransport()
 
     MInstrPanel->updateWaves();
 
-    for(Element* el : patt->ptBase->elems)
+    for(Element* el : patt->getBasePattern()->getElems())
     {
         if (!el->isdel())
         {
