@@ -52,57 +52,6 @@ public:
 
 class Gobj
 {
-protected:
-
-            ObjectGroup         objGroup;
-
-            std::string         objId;
-            std::string         objName;
-            std::string         hint;
-
-            float               monoLevel;
-            float               colorHue;
-            float               colorSat;
-
-            Gobj*               parent;
-            WinObject*          window;
-            bool                visible;
-            bool                enabled;
-            bool                changed;
-            bool                relativeToParent;
-            bool                autoMapped;
-            bool                undermouse;
-            bool                touchable;
-
-            // Relative coords, width, height
-            int                 xRel;
-            int                 yRel;
-            int                 width;
-            int                 height;
-
-            // Absolute coords
-            int                 x1;
-            int                 y1;
-            int                 x2;
-            int                 y2;
-
-            // Absolute drawing coords, width, height
-            int                 dx1;
-            int                 dy1;
-            int                 dx2;
-            int                 dy2;
-            int                 dwidth;
-            int                 dheight;
-
-            // Confinement rectangle coords within object
-            int                 bx1;
-            int                 by1;
-            int                 bx2;
-            int                 by2;
-
-            // Graphic context
-            Graphics*           gr;
-
 public:
             // List of child objects
             std::list<Gobj*>    objs;
@@ -200,7 +149,6 @@ public:
             void                rectx(Graphics& g, int x, int y, int w, int h);
             void                lineH(Graphics& g, int ly, int lx1, int lx2);
             void                lineV(Graphics& g, int lx, int ly1, int ly2);
-            void                line(int lx,int ly,int lx2,int ly2);
             void                setc(Graphics& g, float c, float a=1.f);
             void                setc(Graphics& g, uint32 clr, float b, float);
             void                setc(Graphics& g, uint32 clr);
@@ -216,6 +164,56 @@ public:
             void                defineHueColor(float hue, float sat) { colorHue = hue; colorSat = sat; }
             void                defineMonoColor(float mono_level) { monoLevel = mono_level; }
 
+protected:
+
+            ObjectGroup         objGroup;
+
+            std::string         objId;
+            std::string         objName;
+            std::string         hint;
+
+            float               monoLevel;
+            float               colorHue;
+            float               colorSat;
+
+            Gobj*               parent;
+            WinObject*          window;
+            bool                visible;
+            bool                enabled;
+            bool                changed;
+            bool                relativeToParent;
+            bool                autoMapped;
+            bool                undermouse;
+            bool                touchable;
+
+            // Relative coords, width, height
+            int                 xRel;
+            int                 yRel;
+            int                 width;
+            int                 height;
+
+            // Absolute coords
+            int                 x1;
+            int                 y1;
+            int                 x2;
+            int                 y2;
+
+            // Absolute drawing coords, width, height
+            int                 dx1;
+            int                 dy1;
+            int                 dx2;
+            int                 dy2;
+            int                 dwidth;
+            int                 dheight;
+
+            // Confinement rectangle coords within object
+            int                 bx1;
+            int                 by1;
+            int                 bx2;
+            int                 by2;
+
+            // Graphic context
+            Graphics*           gr;
 };
 
 // Util function used for drag'n'dropping objects

@@ -84,13 +84,13 @@ void Eff::drawSelf(Graphics& g)
 {
     fill(g, .5f);
 
-    setc(g, .45f);
-    fillx(g, 0, 0, width, height/2);
+    //setc(g, .45f);
+    //fillx(g, 0, 0, width, height/2);
 
     //rect(g, .3f);
 
-    setc(g, .2f);
-    lineH(g, height-1, 0, width-1);
+    //setc(g, .2f);
+    //lineH(g, height-1, 0, width-1);
 
     if (guiWindow && guiWindow->isOpen())
     {

@@ -597,11 +597,6 @@ void Gobj::lineV(Graphics& g, int lx,int ly1,int ly2)
     gLineVertical(g, x1 + lx, y1 + ly1, y1 + ly2);
 }
 
-void Gobj::line(int lx,int ly,int lx2,int ly2)
-{
-    gLine(*gr, x1 + lx, y1 + ly, x1 + lx2, y1 + ly2);
-}
-
 int Gobj::txt(Graphics& g, FontId fontId, std::string str, int x, int y)
 {
     return gText(g, fontId, str, x1+x, y1+y);

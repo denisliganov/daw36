@@ -13,15 +13,6 @@ public:
             Eff();
             virtual ~Eff();
 
-            bool                bypass;
-            Button36*           bypassToggle;
-            bool                folded;
-            Button36*           foldToggle;
-            MixChannel*         mixChannel;
-            int                 muteCount;
-            Slider36*           sliderAmount;
-            Button36*           wndToggle;
-
             void                activateMenuItem(std::string item);
             ContextMenu*        createContextMenu();
             SubWindow*          createWindow();
@@ -38,6 +29,16 @@ public:
             void                remap();
             virtual void        save(XmlElement* xmlEff);
             virtual void        setMixChannel(MixChannel* ncell);
+
+public:
+            bool                bypass;
+            Button36*           bypassToggle;
+            bool                folded;
+            Button36*           foldToggle;
+            MixChannel*         mixChannel;
+            int                 muteCount;
+            Slider36*           sliderAmount;
+            Button36*           wndToggle;
 };
 
 class Filter1 : public Eff
@@ -45,7 +46,12 @@ class Filter1 : public Eff
 public:
             Filter1();
 
-            ParamRadio*        filterType;
+            void                handleParamUpdate(Param* param = NULL);
+            void                processData(float* in_buff, float* out_buff, int num_frames);
+            void                reset();
+
+protected:
+            ParamRadio*         filterType;
             ParamToggle*        x2toggle;
             Parameter*          cutoff;
             Parameter*          resonance;
@@ -57,10 +63,6 @@ public:
             bool                f_master;
             Filter1*            f_next;
 
-            void                handleParamUpdate(Param* param = NULL);
-            void                processData(float* in_buff, float* out_buff, int num_frames);
-            void                reset();
-
             rosic::LadderFilter dspCoreCFilter3;
 };
 
@@ -68,23 +70,27 @@ class CChorus : public Eff
 {
 public:
             CChorus();
+            void                handleParamUpdate(Param* param = NULL);
+            void                processData(float* in_buff, float* out_buff, int num_frames);
+            void                reset();
 
+protected:
             Parameter*          depth;
             Parameter*          drywet;
             rosic::Chorus*      dspCoreChorus;
             Parameter*          delay;
             Parameter*          freq;
-
-            void                handleParamUpdate(Param* param = NULL);
-            void                processData(float* in_buff, float* out_buff, int num_frames);
-            void                reset();
 };
 
 class CFlanger : public Eff
 {
 public:
             CFlanger();
+            void                handleParamUpdate(Param* param = NULL);
+            void                processData(float* in_buff, float* out_buff, int num_frames);
+            void                reset();
 
+protected:
             Parameter*          depth;
             rosic::Flanger      dspCoreFlanger;
             Parameter*          drywet;
@@ -93,17 +99,17 @@ public:
             float*              fmemory;
             BoolParam*          invert;
             Parameter*          modfreq;
-
-            void                handleParamUpdate(Param* param = NULL);
-            void                processData(float* in_buff, float* out_buff, int num_frames);
-            void                reset();
 };
 
 class CPhaser : public Eff
 {
 public:
             CPhaser();
+            void                handleParamUpdate(Param* param = NULL);
+            void                processData(float* in_buff, float* out_buff, int num_frames);
+            void                reset();
 
+protected:
             rosic::Phaser       dspCorePhaser;
             Parameter*          depth;
             Parameter*          drywet;
@@ -113,25 +119,21 @@ public:
             Parameter*          modfreq;
             Parameter*          numstages;
             Parameter*          stereo;
-
-            void                handleParamUpdate(Param* param = NULL);
-            void                processData(float* in_buff, float* out_buff, int num_frames);
-            void                reset();
 };
 
 class EQ1 : public Eff
 {
 public:
             EQ1();
+            void                handleParamUpdate(Param* param = NULL);
+            void                processData(float* in_buff, float* out_buff, int num_frames);
+            void                reset();
 
+protected:
             Parameter           *bandwidth;
             rosic::TwoPoleFilter dspCoreEq1;
             Parameter           *frequency;
             Parameter           *gain;
-
-            void                handleParamUpdate(Param* param = NULL);
-            void                processData(float* in_buff, float* out_buff, int num_frames);
-            void                reset();
 };
 
 class GraphicEQ : public Eff
@@ -139,13 +141,14 @@ class GraphicEQ : public Eff
 public:
             GraphicEQ();
 
-            rosic::Equalizer    dspCoreEqualizer;
-            int                 f1, f2, f3, f4, f5, f6, f7, f8, f9;
-            Parameter           *gain1, *gain2, *gain3, *gain4, *gain5, *gain6, *gain7, *gain8, *gain9;
-
             void                handleParamUpdate(Param* param = NULL);
             void                processData(float* in_buff, float* out_buff, int num_frames);
             void                reset();
+
+protected:
+            rosic::Equalizer    dspCoreEqualizer;
+            int                 f1, f2, f3, f4, f5, f6, f7, f8, f9;
+            Parameter           *gain1, *gain2, *gain3, *gain4, *gain5, *gain6, *gain7, *gain8, *gain9;
 };
 
 class EQ3 : public Eff
@@ -153,14 +156,16 @@ class EQ3 : public Eff
 public:
             EQ3();
 
+            void                handleParamUpdate(Param* param = NULL);
+            void                processData(float* in_buff, float* out_buff, int num_frames);
+            void                reset();
+
+protected:
+
             rosic::Equalizer    dspCoreEqualizer;
             Parameter           *freq1, *freq2, *freq3;
             int                 f1, f2, f3;
             Parameter           *gain1, *gain2, *gain3, *bandwidth;
-
-            void                handleParamUpdate(Param* param = NULL);
-            void                processData(float* in_buff, float* out_buff, int num_frames);
-            void                reset();
 };
 
 class XDelay : public Eff
