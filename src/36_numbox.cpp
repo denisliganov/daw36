@@ -329,7 +329,7 @@ ParamBox::ParamBox(Parameter* param)
 
 void ParamBox::drawSelf(Graphics& g)
 {
-    fill(g, 0.45f);
+    fill(g, 0.4f);
 
     int txy = 0;
 
@@ -360,12 +360,12 @@ void ParamBox::drawSelf(Graphics& g)
     fillx(g, defPos, height - sh, 1, sh);
 
     //setc(g, 0xffB0B000);
-    //setc(g, .6f);
-    //fillx(g, xstart, height - sh, w, sh);
+    setc(g, .7f);
+    fillx(g, xstart, height - sh, w, sh);
 
     setc(g, .6f);
     //setc(g, 0xffA0A060);
-    fillx(g, xstart, height - sh, w, sh);
+    fillx(g, xstart, height - sh+1, w, sh-1);
 
     setc(g, .32f);
     //setc(g, 0xff505030);

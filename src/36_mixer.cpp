@@ -1023,7 +1023,7 @@ void Mixer::init()
 
 void Mixer::cleanBuffers(int num_frames)
 {
-    for(Instrument* instr : MInstrPanel->instrs)
+    for(Instrument* instr : MInstrPanel->getInstrs())
     {
         memset(instr->mixChannel->inbuff, 0, sizeof(float)*num_frames*2);
     }
@@ -1040,7 +1040,7 @@ void Mixer::mixAll(int num_frames)
 {
     WaitForSingleObject(MixerMutex, INFINITE);
 
-    for(Instrument* instr : MInstrPanel->instrs)
+    for(Instrument* instr : MInstrPanel->getInstrs())
     {
         if (instr->mixChannel != masterChannel)
         {
@@ -1070,7 +1070,7 @@ void Mixer::mixAll(int num_frames)
 
 void Mixer::resetAll()
 {
-    for(Instrument* instr : MInstrPanel->instrs)
+    for(Instrument* instr : MInstrPanel->getInstrs())
     {
         instr->mixChannel->reset();
     }
@@ -1102,7 +1102,7 @@ void Mixer::remap()
 {
     int yCh = 0;
 
-    for(Instrument* instr : MInstrPanel->instrs)
+    for(Instrument* instr : MInstrPanel->getInstrs())
     {
         if(!instr->isPreviewOnly())
         {
@@ -1186,7 +1186,7 @@ void Mixer::updateChannelIndexes()
 {
     int idx = 0;
 
-    for(Instrument* instr : MInstrPanel->instrs)
+    for(Instrument* instr : MInstrPanel->getInstrs())
     {
         instr->mixChannel->setIndex(idx++);
     }

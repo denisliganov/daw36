@@ -378,17 +378,21 @@ Instrument* Instrument::clone()
 
 void Instrument::drawSelf(Graphics& g)
 {
-    Gobj::fill(g, .35f);
+    //Gobj::fill(g, .35f);
 
-    setc(g, .31f);
+    Gobj::setMyColor(g, .7f);
+    fillx(g, 0, 0, width, height);
+
+   // setc(g, .31f);
+    Gobj::setMyColor(g, .6f);
     fillx(g, 0, 0, width, height/2);
 
-    setc(g, .0f);
-
+    //setc(g, .0f);
+    Gobj::setMyColor(g, .1f);
     txtfit(g, FontSmall, objName, 25, 9, width - 26);
 
-    setc(g, 1.f);
-
+    //setc(g, 1.f);
+    Gobj::setMyColor(g, 1.f);
     txtfit(g, FontSmall, objName, 26, 8, width - 26);
 
 //    lineH(0, 0, width - 1);

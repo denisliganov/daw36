@@ -623,12 +623,11 @@ void Gobj::deactivateDropBoxById(int dropbox_id)
 
 void Gobj::setMyColor(Graphics & g, float brightness, float saturation, float alpha)
 {
-/*
     if(colorHue > 0)
     {
         g.setColour(Colour(colorHue, saturation > 0 ? saturation : colorSat, brightness > 0 ? brightness : 1, alpha));
     }
-    else */if(brightness > 0)
+    else if(brightness > 0)
     {
         gSetMonoColor(g, brightness, alpha);
     }

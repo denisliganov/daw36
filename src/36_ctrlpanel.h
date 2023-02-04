@@ -15,10 +15,22 @@ friend  Transport;
 friend  KeyHandler;
 friend  Scroller;
 
+public:
+
+
+            ControlPanel();
+            SnapMenu&           getSnapMenu()   { return *snapMenu; } 
+            TimeScreen&         getTimeScreen()     { return *timeScreen; } 
+            Scroller&           getScroller()       { return *gridScroller; } 
+            ContextMenu*        createContextMenu();
+            Button36&           getPlayButton()       { return *btPlay; } 
+
+            bool                wavesAreVisible();
+            bool                isDarkGrid() { return true; }
+
 protected:
 
-            int                 xControls;
-            int                 yControls;
+            int                 xButtons;
 
             Button36*           trkSizeUp;
             Button36*           trkSizeDown;
@@ -73,18 +85,5 @@ protected:
             void                handleChildEvent(Gobj* obj, InputEvent& ev);
             void                drawSelf(Graphics& g);
             void                remap();
-
-public:
-
-
-            ControlPanel();
-            SnapMenu&           getSnapMenu()   { return *snapMenu; } 
-            TimeScreen&         getTimeScreen()     { return *timeScreen; } 
-            Scroller&           getScroller()       { return *gridScroller; } 
-            ContextMenu*        createContextMenu();
-            Button36&           getPlayButton()       { return *btPlay; } 
-
-            bool                wavesAreVisible();
-            bool                isDarkGrid() { return true; }
 };
 

@@ -21,19 +21,6 @@ friend Audio36;
 
 public:
             InstrPanel(Mixer* mixer);
-            Button36*           btShowFX;
-            Button36*           btHideFX;
-            std::list<Instrument*>::iterator    currInstr;
-            MixChannel*         currMixChannel;
-            Gobj*               dropObj;
-            std::list<Instrument*>              instrs;
-            InstrHighlight*     instrHighlight;
-            bool                fxShowing;
-            Mixer*              mixr;
-            Slider36*           masterVolSlider;
-            ParamBox*           masterVolBox;
-            Knob*               masterVolKnob;
-            Parameter*          masterVolume;
             void                addInstrument(Instrument* i, Instrument* objAfter = NULL);
             VstInstr*           addVst(const char* path, VstInstr* vst);
             Sample*             addSample(const char* path, bool temporaryForPreview = false);
@@ -47,11 +34,13 @@ public:
             void                generateAll(long num_frames, long mixbuffframe);
             Instrument*         getInstrFromLine(int trkLine);
             Instrument*         getCurrInstr();
+            std::list<Instrument*>& getInstrs() { return instrs; }
             bool                handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my);
             bool                handleObjDrop(Gobj * obj,int mx,int my, unsigned int flags);
             void                handleChildEvent(Gobj* obj, InputEvent& ev);
             void                handleMouseWheel(InputEvent& ev);
             void                hideFX();
+            bool                isFxShowing()   { return fxShowing; }
             Instrument*         loadInstrFromBrowser(BrwEntry* fdi);
             VstInstr*           loadVst(const char* path, VstInstr* otherVst);
             Sample*             loadSample(const char* path);
@@ -64,6 +53,23 @@ public:
             void                showFX();
             void                updateWaves();
             void                updateInstrIndexes();
+
+            Button36*           btShowFX;
+            Button36*           btHideFX;
+
+protected:
+            MixChannel*         currMixChannel;
+            Gobj*               dropObj;
+            InstrHighlight*     instrHighlight;
+            bool                fxShowing;
+            Mixer*              mixr;
+            Slider36*           masterVolSlider;
+            ParamBox*           masterVolBox;
+            Knob*               masterVolKnob;
+            Parameter*          masterVolume;
+
+            std::list<Instrument*>::iterator    currInstr;
+            std::list<Instrument*>              instrs;
 };
 
 //};

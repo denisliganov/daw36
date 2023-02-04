@@ -148,6 +148,8 @@ extern int              PanelGap;
 extern int              FxPanelMaxWidth;
 extern int              BottomPadHeight;
 extern int              LineNumWidth;
+extern int              MenuButtonsSpacing;
+extern int              MenuGroupsSpacing;
 
 extern Transport*       MTransp;
 extern EditHistory*     MHistory;

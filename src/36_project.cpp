@@ -100,9 +100,9 @@ void Project36::releaseAllOnExit()
 
     //MInstrPanel->setEnable(false);
 
-    while(MInstrPanel->instrs.size() > 0)
+    while(MInstrPanel->getInstrs().size() > 0)
     {
-        MInstrPanel->deleteInstrument(MInstrPanel->instrs.front());
+        MInstrPanel->deleteInstrument(MInstrPanel->getInstrs().front());
     }
 
     // Erase remembered session files
@@ -173,9 +173,9 @@ void Project36::deleteProject()
         GetButton(MCtrllPanel, "bt.play")->release();
     }
 
-    while(MInstrPanel->instrs.size() > 0)
+    while(MInstrPanel->getInstrs().size() > 0)
     {
-        MInstrPanel->deleteInstrument(MInstrPanel->instrs.front());
+        MInstrPanel->deleteInstrument(MInstrPanel->getInstrs().front());
     }
 
     MPattern->deleteAllElements(true, true);
@@ -533,7 +533,7 @@ void Project36::saveProjectData(File chosenFile)
 
     // Save instruments
 
-    for(Instrument* i : MInstrPanel->instrs)
+    for(Instrument* i : MInstrPanel->getInstrs())
     {
         XmlElement* xmlInstr = new XmlElement(T("Instrument"));
         i->save(xmlInstr);

@@ -32,10 +32,12 @@
 
 ControlPanel::ControlPanel()
 {
+    xButtons = 0;
     int yMenu = 4;
-    int xMenu = 0;
+    int buttonWidth = 30;
+    int buttonHeight = 30;
 
-    addObject(fileMenu = new DropBox(0, "FILE"), xMenu, yMenu);
+    addObject(fileMenu = new DropBox(0, "FILE"), xButtons, yMenu);
     fileMenu->addItem("New");
     fileMenu->addItem("Open");
     fileMenu->addItem("");
@@ -48,80 +50,72 @@ ControlPanel::ControlPanel()
     fileMenu->addItem("Render");
     fileMenu->addItem("");
     fileMenu->addItem("Exit");
-    xMenu += fileMenu->getW() + 3;
-    addObject(editMenu = new DropBox(0, "EDIT"), xMenu, yMenu);
+    xButtons += fileMenu->getW() + MenuButtonsSpacing;
+    addObject(editMenu = new DropBox(0, "EDIT"), xButtons, yMenu);
     editMenu->addItem("Undo");
     editMenu->addItem("Redo");
     editMenu->addItem("");
     editMenu->addItem("Delete Song");
     editMenu->addItem("");
     editMenu->addItem("Settings");
-    xMenu += editMenu->getW() + 3;
-    addObject(helpMenu = new DropBox(0, "HELP"), xMenu, yMenu);
+    xButtons += editMenu->getW() + MenuButtonsSpacing;
+    addObject(helpMenu = new DropBox(0, "HELP"), xButtons, yMenu);
     helpMenu->addItem("Keys Reference");
     helpMenu->addItem("");
     helpMenu->addItem("About M");
 
-    //xMenu += 140;
-    //addObject(brwMenu = new DropBox(0, "BROWSER"), xMenu, yMenu);
-    addObject(btConfig = new Button36(true), 180, 0, 30, 30, "bt.cfg");
+    xButtons += editMenu->getW() + MenuGroupsSpacing;
+
+    addObject(btConfig = new Button36(true), xButtons, yMenu, 30, 30, "bt.cfg");
     btConfig->setLedType(true);
 
-    int buttonWidth = 30;
-    int buttonHeight = 30;
-
-    //addObject(colorChange = new Button36(false), xControls, yControls, buttonWidth, buttonHeight, "bt.clr");
-    //xControls += buttonWidth + 1;
-    //addObject(trkSizeUp = new Button36(false), xControls, yControls, buttonWidth, buttonHeight/2, "bt.clr");
-    //addObject(trkSizeDown = new Button36(false), xControls, yControls + buttonHeight/2, buttonWidth, buttonHeight/2, "bt.clr");
-    //xControls += buttonWidth + 1;
+    xButtons += btConfig->getW() + MenuGroupsSpacing*2;
 
 
-    addObject(btBrowser = new GroupButton(2), "bt.browser");
+    addObject(btPlay = new Button36(true), xButtons, yMenu, 52, buttonHeight, "bt.play");
+    xButtons += 52 + MenuButtonsSpacing;
+
+    addObject(btStop = new Button36(false), xButtons, yMenu, 32, buttonHeight, "bt.stop");
+    xButtons += 32 + MenuButtonsSpacing;
+
+    addObject(btRec = new Button36(false), xButtons, yMenu, buttonWidth, buttonHeight, "bt.rec");
+    xButtons += buttonWidth + MenuButtonsSpacing;
+
+    addObject(btHome = new Button36(false), xButtons, yMenu, buttonWidth, buttonHeight, "bt.home");
+    xButtons += buttonWidth + MenuButtonsSpacing;
+
+    addObject(btEnd = new Button36(false), xButtons, yMenu, buttonWidth, buttonHeight, "bt.end");
+    xButtons += buttonWidth + MenuGroupsSpacing;
+
+    addObject(bpmBox = new BpmBox(120), xButtons, yMenu, 70, buttonHeight);
+    xButtons += bpmBox->getW() + MenuButtonsSpacing;
+
+    addObject(meterBox = new MeterBox(4, 4), xButtons, yMenu, 54, buttonHeight);
+    xButtons += meterBox->getW() + MenuButtonsSpacing;
+
+    addObject(octaveBox = new OctaveBox(5), xButtons, yMenu, 30, buttonHeight);
+    xButtons += octaveBox->getW() + MenuButtonsSpacing;
+
+    addObject(snapMenu = new SnapMenu(), xButtons, yMenu, 64, buttonHeight);
+    xButtons += snapMenu->getW() + MenuButtonsSpacing;
+
+    addObject(timeScreen = new TimeScreen(), xButtons, yMenu, 80, buttonHeight, "pos.display");
+    xButtons += timeScreen->getW();
+
+    addObject(btBrowser = new GroupButton(2), xButtons, yMenu, buttonWidth*2, buttonHeight, "bt.browser");
     btBrowser->setLedType(true);
-    //addObject(btStepMode = new GroupButton(2), "bt.steps"); 
-    //btStepMode->setLedType(true);
-    addObject(btBarMode = new GroupButton(2), "bt.bars"); 
+    xButtons += btBrowser->getW() + MenuButtonsSpacing;
+    addObject(btBarMode = new GroupButton(2), xButtons, yMenu, buttonWidth, buttonHeight, "bt.bars"); 
     btBarMode->setLedType(true);
-    addObject(btVols = new GroupButton(2), "bt.vols"); 
-    btVols->setLedType(true);
-    addObject(btPans = new GroupButton(2), "bt.pans"); 
-    btPans->setLedType(true);
-
     btBarMode->press();
+    xButtons += btBarMode->getW() + MenuButtonsSpacing;
+    addObject(btVols = new GroupButton(2), xButtons, yMenu,  buttonWidth, buttonHeight, "bt.vols"); 
+    btVols->setLedType(true);
+    xButtons += btVols->getW() + MenuButtonsSpacing;
+    addObject(btPans = new GroupButton(2), xButtons, yMenu,  buttonWidth, buttonHeight, "bt.pans"); 
+    btPans->setLedType(true);
+    xButtons += btPans->getW() + MenuGroupsSpacing;
 
-    addObject(btWaveMode = new Button36(true), "bt.showwaves"); 
-    btWaveMode->setLedType(true);
-
-    addObject(btMouseMode = new Button36(true), "bt.mousemode");
-    btMouseMode->setLedType(true);
-
-
-    int yControls = 4;
-    xControls = 400;
-
-    addObject(btPlay = new Button36(true), xControls, yControls, 52, buttonHeight, "bt.play");
-    xControls += 52 + 4;
-    addObject(btStop = new Button36(false), xControls, yControls, 32, buttonHeight, "bt.stop");
-    xControls += 32 + 4;
-    addObject(btRec = new Button36(false), xControls, yControls, 28, buttonHeight, "bt.rec");
-    xControls += 28 + 4;
-    addObject(btHome = new Button36(false), xControls, yControls, 28, buttonHeight, "bt.home");
-    xControls += 28 + 4;
-    addObject(btEnd = new Button36(false), xControls, yControls, 28, buttonHeight, "bt.end");
-    xControls += 28 + 20;
-
-    addObject(bpmBox = new BpmBox(120), xControls, yControls, 70, buttonHeight);
-    xControls += bpmBox->getW() + 5;
-    addObject(meterBox = new MeterBox(4, 4), xControls, yControls, 54, buttonHeight);
-    xControls += meterBox->getW() + 5;
-    addObject(octaveBox = new OctaveBox(5), xControls, yControls, 30, buttonHeight);
-    xControls += octaveBox->getW() + 5;
-    addObject(snapMenu = new SnapMenu(), xControls, yControls, 64, buttonHeight);
-
-    xControls += snapMenu->getW() + 5;
-    addObject(timeScreen = new TimeScreen(), xControls, yControls, 80, buttonHeight, "pos.display");
-    xControls += timeScreen->getW() + 5;
 
     addObject(btZoomOut = new Button36(false), "bt.zoomout");
     addObject(btZoomIn = new Button36(false), "bt.zoomin");
@@ -132,7 +126,9 @@ ControlPanel::ControlPanel()
 
 bool ControlPanel::wavesAreVisible()
 {
-    return btWaveMode->isPressed();
+    return false;
+
+    //return btWaveMode->isPressed();
 }
 
 void ControlPanel::remap()
@@ -140,7 +136,7 @@ void ControlPanel::remap()
     int buttonWidth = 30;
     int yTop = 0;
     int navHeight = height - 16;
-    int xStartCoord = xControls + 150;
+    int xStartCoord = xButtons + 150;
 
     if(width - 30 > (xStartCoord + 30*2))
     {
@@ -159,14 +155,6 @@ void ControlPanel::remap()
             MGrid->hscr->setEnable((true));
         }
 
-/*
-        int bH = 23;
-        btScale1->setCoords1(xStartCoord, yTop, buttonWidth, bH);
-        btScale2->setCoords1(xStartCoord, yTop + bH - 1, buttonWidth, bH);
-        btScale3->setCoords1(xStartCoord, yTop + bH*2 - 2, buttonWidth, bH);
-        xStartCoord += buttonWidth + 6;
-*/
-
         int bH = navHeight/2 + 1;
 
         btZoomOut->setCoords1(xStartCoord, yTop, buttonWidth, bH);
@@ -177,30 +165,7 @@ void ControlPanel::remap()
         btScrollBack->setCoords1(xStartCoord, yTop, buttonWidth, navHeight);
         btScrollForth->setCoords1(width - 30, yTop, buttonWidth, navHeight);
 
-        xStartCoord = xControls + 80;
-
         MGrid->hscr->setCoords2(btScrollBack->getX2() + 3, yTop, btScrollForth->getX1() - 3, yTop + navHeight - 1);
-
-        int xEditButtons = 150;
-        int yEditButtons = 4;
-        int buttonHeight = 30;
-
-        btConfig->setCoords1(xEditButtons, yEditButtons, buttonWidth, buttonHeight); 
-        xEditButtons += buttonWidth + 10;
-
-        btBrowser->setCoords1(xEditButtons, yEditButtons, buttonWidth*2, buttonHeight); 
-        xEditButtons += buttonWidth*2 + 1;
-        //btStepMode->setCoords1(xEditButtons, yEditButtons, buttonWidth, buttonHeight); 
-        //xEditButtons += buttonWidth + 1;
-        btBarMode->setCoords1(xEditButtons, yEditButtons, buttonWidth, buttonHeight); 
-        xEditButtons += buttonWidth + 1;
-        //btWaveMode->setCoords1(xEditButtons, yEditButtons, buttonWidth, buttonHeight); 
-        //xEditButtons += buttonWidth + 1;
-        btVols->setCoords1(xEditButtons, yEditButtons, buttonWidth, buttonHeight); 
-        xEditButtons += buttonWidth + 1;
-        btPans->setCoords1(xEditButtons, yEditButtons, buttonWidth, buttonHeight); 
-        xEditButtons += buttonWidth + 1;
-        btMouseMode->setCoords1(xEditButtons, yEditButtons, buttonWidth, buttonHeight);
     }
     else
     {

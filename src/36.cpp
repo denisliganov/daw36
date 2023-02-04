@@ -124,7 +124,7 @@ MainWinObject::MainWinObject()
     MainLineHeight =        30;
     PanelGap =              1;
     MenuButtonsSpacing =    3;
-    MenuGroupsSpacing =     12;
+    MenuGroupsSpacing =     20;
 
     mainX1 = InstrControlWidth;
     mainX2 = width - 1;
