@@ -95,14 +95,15 @@ protected:
             Instrument* instr = (Instrument*)parent;
 
             fill(g, .35f);
+            rect(g, .38f);
 
             bool wvis = instr->isWindowVisible();
 
-            uint32 colorHL = 0xffFF9930;
-            uint32 hlDecr = 0x80000000;
-
             if(wvis)
             {
+                uint32 colorHL = 0xffFF9930;
+                uint32 hlDecr = 0x80000000;
+                
                 for (int c = 0; c < 4; c++)
                 {
                     setc(g, (uint32)colorHL);
@@ -379,8 +380,8 @@ void Instrument::drawSelf(Graphics& g)
 {
     Gobj::fill(g, .35f);
 
-    //setc(g, .3f);
-    //fillx(g, 0, 0, width, height/2);
+    setc(g, .31f);
+    fillx(g, 0, 0, width, height/2);
 
     setc(g, .0f);
 

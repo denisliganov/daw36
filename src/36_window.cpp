@@ -527,7 +527,7 @@ SubWindow::SubWindow(bool title_bar)
 
     setDropShadowEnabled(false);
 
-    setResizable(true, true);
+    setResizable(true, false);
 
     setOpen(false);
 
@@ -629,8 +629,8 @@ void SubWindow::paint(Graphics& g)
     gSetMonoColor(g, 0.25f);
     g.fillRect(0, 0, getWidth(), getHeight());
 
-    //gSetMonoColor(g, 0.5f);
-    gSetMonoColor(g, 0.35f);
+    gSetMonoColor(g, 0.5f);
+    //gSetMonoColor(g, 0.35f);
     g.drawRect(0, 0, getWidth(), getHeight());
 
     gSetMonoColor(g, 1.f);
