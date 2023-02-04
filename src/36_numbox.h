@@ -174,19 +174,7 @@ protected:
             ParamSelector*      prmSelector;
 
             void                drawSelf(Graphics& g);
+            void                handleMouseDown(InputEvent & ev);
 };
 
-
-class ListBoxx : public Control
-{
-public:
-            ListBoxx(std::string name);
-            void SetList(std::list<std::string>  entries_list);
-
-protected:
-
-            std::list<std::string>  entriesList;
-
-            void                drawSelf(Graphics& g);
-};
 

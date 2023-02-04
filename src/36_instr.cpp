@@ -94,12 +94,15 @@ protected:
         {
             Instrument* instr = (Instrument*)parent;
 
-            fill(g, .35f);
-            rect(g, .38f);
+            instr->setMyColor(g, .6f);
+            fillx(g, 0, 0, width, height);
 
-            bool wvis = instr->isWindowVisible();
+            instr->setMyColor(g, .8f);
+            rectx(g, 0, 0, width, height);
 
-            if(wvis)
+            bool wVis = instr->isWindowVisible();
+
+            if(wVis)
             {
                 uint32 colorHL = 0xffFF9930;
                 uint32 hlDecr = 0x80000000;
@@ -115,18 +118,16 @@ protected:
                 }
             }
 
-            int tw = gGetTextWidth(FontInst, instr->getAlias());
-            int th = gGetTextHeight(FontInst);
+            int tw = gGetTextWidth(FontBold, instr->getAlias());
+            int th = gGetTextHeight(FontBold);
 
-            setc(g, .1f);
-            txt(g, FontInst, instr->getAlias(), width/2 - tw/2 + 2, height/2 + th/2 + 1);
-
-            if (wvis)
-                setc(g, (uint32)0xffFF9930);
+            if (wVis)
+                //setc(g, (uint32)0xffFF9930);
+                instr->setMyColor(g, .8f);
             else
-                setc(g, 1.f);
+                instr->setMyColor(g, 1.f);
 
-            txt(g, FontInst, instr->getAlias(), width/2 - tw/2, height/2 + th/2 - 1);
+            txt(g, FontBold, instr->getAlias(), width/2 - tw/2, height/2 + th/2 - 1);
         }
 
         void handleMouseDrag(InputEvent & ev)   { parent->handleMouseDrag(ev); }
@@ -1031,9 +1032,9 @@ void Instrument::remap()
     soloButt->setCoords1(width - bw*2 - 2, height - bw, bw, bw);
     muteButt->setCoords1(width - bw - 1, height - bw, bw, bw);
 
-    guiButton->setCoords1(3, 1, 20, 20);
+    guiButton->setCoords1(0, 0, 16, 16);
 
-    ivu->setCoords1(0, 1, 3, height - 1);
+    //ivu->setCoords1(0, 1, 3, height - 1);
 
     if(gGetTextWidth(FontSmall, objName) > width - 38 - 50 - 10)
     {

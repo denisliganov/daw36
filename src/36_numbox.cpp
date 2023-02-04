@@ -360,18 +360,18 @@ void ParamBox::drawSelf(Graphics& g)
     fillx(g, defPos, height - sh, 1, sh);
 
     //setc(g, 0xffB0B000);
-    setc(g, .7f);
+    setc(g, .6f);
     fillx(g, xstart, height - sh, w, sh);
 
-    setc(g, .6f);
+    setc(g, .5f);
     //setc(g, 0xffA0A060);
     fillx(g, xstart, height - sh+1, w, sh-1);
 
-    setc(g, .32f);
+    setc(g, .4f);
     //setc(g, 0xff505030);
     fillx(g, xoffs, height - sh, 1, sh);
 
-    setc(g, 1.f);
+    setc(g, .8f);
     //setc(g, 0xffFFFFA0);
     fillx(g, xval, height - sh, 1, sh);
 
@@ -496,7 +496,7 @@ ToggleBox::ToggleBox(ParamToggle* param_tg)
 
 void ToggleBox::drawSelf(Graphics& g)
 {
-    //fill(g, 0.2f);
+    fill(g, 0.3f);
 
     if (prmToggle->getValue())
     {
@@ -538,7 +538,7 @@ RadioBox::RadioBox(ParamRadio* param_radio)
 
 void RadioBox::drawSelf(Graphics& g)
 {
-    //fill(g, 0.2f);
+    fill(g, 0.3f);
 
     int h1 = (textHeight + 4);
     int y = 0;
@@ -575,23 +575,46 @@ void RadioBox::handleMouseDown(InputEvent & ev)
 SelectorBox::SelectorBox(ParamSelector* param_sel)
 {
     prmSelector = param_sel;
+
+    setFontId(FontSmall);
+
+    height = (textHeight + 4)*prmSelector->getNumOptions();
 }
 
 void SelectorBox::drawSelf(Graphics& g)
 {
+    fill(g, 0.3f);
+
+    int h1 = (textHeight + 4);
+    int y = 0;
+    int opt = 0;
+
+    for (std::string str : prmSelector->getOptions())
+    {
+        if (prmSelector->getValue(opt))
+        {
+            setc(g, 0.8f);
+            fillx(g, 2, y + 2, textHeight, textHeight);
+        }
+        else
+        {
+            setc(g, 0.4f);
+            fillx(g, 2, y + 2, textHeight, textHeight);
+        }
+
+        setc(g, 1.f);
+        txtfit(g, fontId, str, (textHeight + 4) + 6, y + textHeight - 1, width - h1);
+
+        y += textHeight + 4;
+        opt++;
+    }
 }
 
-ListBoxx::ListBoxx(std::string name)
+void SelectorBox::handleMouseDown(InputEvent & ev)
 {
-    setObjName(name);
+    prmSelector->toggleValue((ev.mouseY - y1) / (textHeight + 4));
+
+    redraw();
 }
 
-void ListBoxx::SetList( std::list <std::string> entries_list)
-{
-    entriesList = entries_list;
-}
-
-void ListBoxx::drawSelf(Graphics& g)
-{
-}
 

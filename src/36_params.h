@@ -5,6 +5,7 @@
 #include "36_objects.h"
 #include "36_config.h"
 
+#include <vector>
 
 class AToggleButton;
 
@@ -191,21 +192,25 @@ protected:
             std::list<std::string>  options;
 };
 
-class ParamSelector
+class ParamSelector : public Param
 {
 public:
 
-            ParamSelector(std::string name);
-            void                addOption(std::string opt);
-            void                setOn(std::string option);
-            void                setOff(std::string option);
+            ParamSelector(std::string name) { prmName = name; }
+            void                addOption(std::string opt, bool val) { options.push_back(opt); optVals.push_back(val); }
+            std::vector<std::string>&  getOptions()     { return options; }
+            void                setValue(int optnum, bool new_val) { optVals[optnum] = new_val; lastChangedNum = optnum; }
+            void                toggleValue(int optnum) { optVals[optnum] = !optVals[optnum]; lastChangedNum = optnum; }
+            bool                getValue(int optnum)    { return optVals[optnum]; }
+            int                 getLastChanged() { return lastChangedNum; }
+            int                 getNumOptions()     { return options.size(); }
 
 protected:
 
-            int                 currentOption;
-            std::string         prmName;
+            int                 lastChangedNum;
 
-            std::list<std::string>  options;
+            std::vector<std::string>  options;
+            std::vector<bool>         optVals;
 };
 
 class BoolParam : public Parameter

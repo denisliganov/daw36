@@ -1014,6 +1014,14 @@ XDelay::XDelay() : dspCorePingPongDelay()
     addParamWithControl(lowcut = new Parameter("LOWCUT", Param_Freq, 0.9f, 0.f, 1.f, Units_Hz));
     addParamWithControl(drywet = new Parameter("DRY/WET", .4f, 0.0f, 1.f, Units_DryWet));
 
+    addParam(selectTypes = new ParamSelector("Define:"));
+    selectTypes->addOption("1 tick", false);
+    selectTypes->addOption("2 tick", false);
+    selectTypes->addOption("3 tick", true);
+    selectTypes->addOption("4 tick", false);
+    selectTypes->addOption("5 tick", false);
+    selectTypes->addOption("6 tick", true);
+
     reset();
 }
 

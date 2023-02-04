@@ -155,7 +155,6 @@
     <ClCompile Include="src\36_devwin.cpp" />
     <ClCompile Include="src\36_element.cpp" />
     <ClCompile Include="src\36_helper.cpp" />
-    <ClCompile Include="src\36_blank.cpp" />
     <ClCompile Include="src\36_browser.cpp" />
     <ClCompile Include="src\36_brwentry.cpp" />
     <ClCompile Include="src\36_button.cpp" />
@@ -181,6 +180,7 @@
     <ClCompile Include="src\36_keyboard.cpp" />
     <ClCompile Include="src\36_knob.cpp" />
     <ClCompile Include="src\36_lane.cpp" />
+    <ClCompile Include="src\36_listbox.cpp" />
     <ClCompile Include="src\36_logger.cpp" />
     <ClCompile Include="src\36_menu.cpp" />
     <ClCompile Include="src\36_midi.cpp" />
@@ -336,7 +336,6 @@
     <ClInclude Include="src\36_devwin.h" />
     <ClInclude Include="src\36_element.h" />
     <ClInclude Include="src\36_helper.h" />
-    <ClInclude Include="src\36_blank.h" />
     <ClInclude Include="src\36_browser.h" />
     <ClInclude Include="src\36_brwentry.h" />
     <ClInclude Include="src\36_button.h" />
@@ -363,6 +362,7 @@
     <ClInclude Include="src\36_keyboard.h" />
     <ClInclude Include="src\36_knob.h" />
     <ClInclude Include="src\36_lane.h" />
+    <ClInclude Include="src\36_listbox.h" />
     <ClInclude Include="src\36_logger.h" />
     <ClInclude Include="src\36_macros.h" />
     <ClInclude Include="src\36_menu.h" />

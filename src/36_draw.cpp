@@ -137,6 +137,11 @@ void gDrawRect(Graphics& g, int x1, int y1, int x2, int y2)
     g.drawRect(x1, y1, x2 - x1 + 1, y2 - y1 + 1);
 }
 
+void gGradRect(Graphics& g, int x1, int y1, int x2, int y2)
+{
+    g.drawRect(x1, y1, x2 - x1 + 1, y2 - y1 + 1);
+}
+
 void gDrawMonoRect(Graphics& g, int x1, int y1, int x2, int y2, float fillClr, float drawClr)
 {
     gSetMonoColor(g, fillClr);

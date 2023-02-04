@@ -187,6 +187,8 @@ protected:
             Parameter*          drywet;
             ParamToggle*        delayMode;
 
+            ParamSelector*      selectTypes;
+
             rosic::PingPongEcho dspCorePingPongDelay;
 };
 

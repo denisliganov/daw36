@@ -16,7 +16,7 @@
 
 #define MenuItemColor       0xffE0F0FF
 
-#define MenuItemHeight      17
+#define MenuItemHeight      22
 #define MenuWidth           80
 
 #define MenuVertSpacing       12

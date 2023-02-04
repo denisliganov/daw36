@@ -45,6 +45,7 @@ protected:
         float               visiblepart;
 };
 
+
 class Scrolled : public Gobj
 {
 public:
@@ -57,7 +58,6 @@ public:
         float               getHoffs();
         void                setVoffs(float offs);
         float               getVoffs();
-
 };
 
 

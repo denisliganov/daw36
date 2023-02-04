@@ -64,21 +64,21 @@ void DevParamObject::initAll()
         else if (prmRad)
         {
             RadioBox* box = NULL;
-            addObject(box = new RadioBox(prmRad), x, y, boxWidth, box->getH());
+            addObject(box = new RadioBox(prmRad), x + 5, y, boxWidth - 5, box->getH());
 
             y += box->getH() + 3;
         }
         else if (prmSel)
         {
             SelectorBox* box = NULL;
-            addObject(box = new SelectorBox(prmSel), x, y, boxWidth, box->getH());
+            addObject(box = new SelectorBox(prmSel), x + 5, y, boxWidth - 5, box->getH());
 
             y += box->getH() + 3;
         }
         else if (prmTg)
         {
             ToggleBox* box = NULL;
-            addObject(box = new ToggleBox(prmTg), x, y, boxWidth, box->getH());
+            addObject(box = new ToggleBox(prmTg), x + 5, y, boxWidth - 5, box->getH());
 
             y += box->getH() + 3;
         }

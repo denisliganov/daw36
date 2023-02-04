@@ -64,13 +64,15 @@ ControlPanel::ControlPanel()
     helpMenu->addItem("");
     helpMenu->addItem("About M");
 
-    xButtons += editMenu->getW() + MenuGroupsSpacing;
+    xButtons += helpMenu->getW() + MenuGroupsSpacing;
 
     addObject(btConfig = new Button36(true), xButtons, yMenu, 30, 30, "bt.cfg");
     btConfig->setLedType(true);
+    xButtons += btConfig->getW() + MenuButtonsSpacing;
 
-    xButtons += btConfig->getW() + MenuGroupsSpacing*2;
-
+    addObject(btRender = new Button36(true), xButtons, yMenu, 30, 30, "bt.render");
+    btConfig->setLedType(true);
+    xButtons += btRender->getW() + MenuGroupsSpacing;
 
     addObject(btPlay = new Button36(true), xButtons, yMenu, 52, buttonHeight, "bt.play");
     xButtons += 52 + MenuButtonsSpacing;
@@ -100,11 +102,12 @@ ControlPanel::ControlPanel()
     xButtons += snapMenu->getW() + MenuButtonsSpacing;
 
     addObject(timeScreen = new TimeScreen(), xButtons, yMenu, 80, buttonHeight, "pos.display");
-    xButtons += timeScreen->getW();
+
+    xButtons += timeScreen->getW() + MenuGroupsSpacing;
 
     addObject(btBrowser = new GroupButton(2), xButtons, yMenu, buttonWidth*2, buttonHeight, "bt.browser");
     btBrowser->setLedType(true);
-    xButtons += btBrowser->getW() + MenuButtonsSpacing;
+    xButtons += btBrowser->getW() + MenuGroupsSpacing;
     addObject(btBarMode = new GroupButton(2), xButtons, yMenu, buttonWidth, buttonHeight, "bt.bars"); 
     btBarMode->setLedType(true);
     btBarMode->press();
