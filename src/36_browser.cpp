@@ -648,7 +648,7 @@ void Browser::remap()
 
     float visibleSpan = (float)(height - cy - BottomPadHeight - 1);
 
-    int yentry = cy - (int)vscr->getoffs();
+    int yentry = cy - (int)vscr->getOffset();
     float fullSpan = 0;
 
     confine(cx, cy, cx + cw - 1, cy + visibleSpan - 1);
@@ -681,7 +681,7 @@ void Browser::remap()
 
     vscr->setCoords1(width - BrwScrollerWidth + 1, cy, BrwScrollerWidth - 2, visibleSpan);
 
-    vscr->updBounds(fullSpan, float(visibleSpan), vscr->getoffs());
+    vscr->updBounds(fullSpan, float(visibleSpan), vscr->getOffset());
 
     // dbg file browsing
     //ShowFiles->SetXYWH(0, 0, bwidth, bheight);

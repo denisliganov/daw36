@@ -7,28 +7,27 @@
 
 
 
-
-
 class Scroller : public Control
 {
 public:
 
         Scroller(bool is_vertical);
-        void                adjOffs(float delta);
-        void                drawSelf(Graphics & g);
-        float               getoffs() { return offset; }
-        float               getvisible() { return visiblepart; }
-        int                 getPos(InputEvent& ev, int& offset_on_bar);
+        void                adjustOffset(float delta);
+        float               getOffset() { return offset; }
+        float               getVisiblePart() { return visiblepart; }
         void                gotoStart();
         void                gotoEnd();
+        void                setOffset(float offs);
+        void                updBounds(float full_span, float visible_span, float offs);
+
+protected:
+
+        void                drawSelf(Graphics & g);
+        int                 getPos(InputEvent& ev, int& offset_on_bar);
         void                handleMouseDown(InputEvent& ev);
         void                handleMouseWheel(InputEvent& ev);
         void                handleMouseDrag(InputEvent& ev);
         void                handleMouseUp(InputEvent & ev);
-        void                setOffs(float offs);
-        void                updBounds(float full_span, float visible_span, float offs);
-
-protected:
 
         bool                active;
         int                 barpixlen;
