@@ -265,7 +265,7 @@ SubWindow* VstEffect::createWindow()
     }
     else
     {
-        return window->addWindow(new ParamObject());
+        return window->addWindow(new ParamWin());
     }
 }
 

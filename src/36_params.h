@@ -59,7 +59,7 @@ public:
             void                setIndex(int idx)   { index = idx; }
             void                setName(std::string name)   { prmName = name; };
             void                setEnvDirect(bool envdir);
-            void                setDevice(Device36* dev) { module = dev; };
+            void                setModule(ParamObject* md) { module = md; };
 
 protected:
 
@@ -67,7 +67,7 @@ protected:
             bool                envdirect;
             int                 globalindex;
             int                 index;
-            Device36*           module;
+            ParamObject*        module;
             std::string         prmName;
             ParamType           type;
 

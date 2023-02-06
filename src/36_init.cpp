@@ -46,7 +46,7 @@ char *              WorkDirectory;
 void        GetCurrentDir();
 void        LoadCursorImages();
 void        StartEditor();
-
+void        LoadDefaultInstruments();
 
 void ExitProgram()
 {
@@ -145,6 +145,22 @@ void InitializeAndStartProgram()
     // Splash_Delete();
 
     StartEditor();
+}
+
+void StartEditor()
+{
+    Octave = 5;
+    BaseNote = 60;
+
+    GPlaying = false;
+    Render_isWorking = false;
+    GRecOn = false;
+
+    MHistory = new EditHistory();
+
+    LoadDefaultInstruments();
+
+    MProject.init();
 }
 
 void InitDirectories()
@@ -343,22 +359,6 @@ void LoadCursorImages()
     VSCursor    = LoadCursor(NULL, IDC_SIZENS);
     HSCursor    = LoadCursor(NULL, IDC_SIZEWE);
     ArrowCursor = LoadCursor(NULL, IDC_ARROW);
-}
-
-void StartEditor()
-{
-    Octave = 5;
-    BaseNote = 60;
-
-    GPlaying = false;
-    Render_isWorking = false;
-    GRecOn = false;
-
-    MHistory = new EditHistory();
-
-    LoadDefaultInstruments();
-
-    MProject.init();
 }
 
 

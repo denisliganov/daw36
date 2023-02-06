@@ -8,7 +8,7 @@
 
 
 
-ParamObject::ParamObject()
+ParamWin::ParamWin()
 {
     addObject(slider1 = new Slider36(false), 10, 10, 60, 10);
     addObject(slider2 = new Slider36(false), 10, 25, 60, 10);
@@ -20,15 +20,15 @@ ParamObject::ParamObject()
 
     setWidthHeight(300, 300);
 }
-  
-void ParamObject::drawSelf(Graphics& g)
+
+void ParamWin::drawSelf(Graphics& g)
 {
     gSetMonoColor(g, 0.4f);
 
     g.fillAll();
 }
 
-void ParamObject::handleChildEvent(Gobj * obj,InputEvent & ev)
+void ParamWin::handleChildEvent(Gobj * obj,InputEvent & ev)
 {
     int a = 1;
 }

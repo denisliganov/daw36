@@ -329,7 +329,7 @@ ParamBox::ParamBox(Parameter* param)
 
 void ParamBox::drawSelf(Graphics& g)
 {
-    fill(g, 0.4f);
+    fill(g, 0.3f);
 
     int txy = 0;
 

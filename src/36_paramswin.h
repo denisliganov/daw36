@@ -5,7 +5,7 @@
 
 
 
-class ParamObject : public WinObject
+class ParamWin : public WinObject
 {
 protected:
 
@@ -18,7 +18,7 @@ protected:
 
 public:
 
-        ParamObject();
+        ParamWin();
 };
 
 

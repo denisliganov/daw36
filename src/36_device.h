@@ -7,10 +7,10 @@
 
 #include "36_globals.h"
 #include "36_objects.h"
+#include "36_paramobject.h"
 
 
-
-class Device36 : public Gobj
+class Device36 : public ParamObject
 {
 friend InstrPanel;
 
@@ -18,27 +18,16 @@ public:
             Device36();
     virtual ~Device36();
 
-    virtual void                addParam(Param* param);
-    virtual void                addParamWithControl(Param* param, std::string ctrl_name = "", Control* ctrl = NULL);
     virtual SubWindow*          createWindow() { return NULL;  }
-            void                dequeueParamEnvelope(Trigger* tgenv);
-            void                enqueueParamEnvelope(Trigger* tgenv);
     virtual void                forceStop() {};
             int                 getIndex() { return devIdx; }
-    virtual Param*              getParamByName(char *param_name);
-    virtual Param*              getParamByIndex(int devIdx);
-    virtual bool                getParamLock() { return paramLocked; };
-            std::list<Param*>   getParams() { return params; }
             std::list<BrwEntry*>   getPresets() { return presets; }
             BrwEntry*           getCurrPreset() { return currPreset; }
-    virtual void                handleParamUpdate(Param* param = NULL) {};
             void                handleWindowClosed();
             bool                isWindowVisible();
             bool                isPreviewOnly() { return previewOnly; }
             bool                isInternal()    { return internal; }
     virtual void                reset() { }
-    virtual void                removeParam(Param* param);
-    virtual void                setParamLock(bool lock) { paramLocked = lock; };
     virtual void                scanForPresets();
     virtual void                setBPM(float bpm) {};
     virtual void                setBufferSize(unsigned bufferSize) {};
@@ -52,7 +41,6 @@ protected:
             std::string         currPresetName;
             int                 devIdx;
             DevClass            devClass;
-            Trigger*            envelopes;
             std::string         filePath;
             SubWindow*          guiWindow;
             bool                internal;
@@ -63,8 +51,7 @@ protected:
             bool                previewOnly;
             long                uniqueId;
 
-            std::list<BrwEntry*>        presets;
-            std::list<Param*>       params;
+            std::list<BrwEntry*>    presets;
 
             void                deletePresets();
             BrwEntry*           getPreset(char* objName);
@@ -83,9 +70,5 @@ protected:
             void                saveCustomStateData(XmlElement & xmlParentNode) {};
             bool                setPresetByName(char* objName);
             void                setIndex(int idx)  { devIdx = idx; }
-
-private:
-
-            bool                paramLocked;
 };
 

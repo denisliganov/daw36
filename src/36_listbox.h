@@ -20,6 +20,7 @@ public:
 
 protected:
 
+            int                 border;
             int                 currentEntry;
             int                 entryHeight;
             FontId              fontId;
@@ -27,6 +28,7 @@ protected:
             std::vector<std::string>  entries;
 
             void                drawSelf(Graphics& g);
+            void                handleChildEvent(Gobj * obj,InputEvent & ev);
     virtual void                handleMouseDown(InputEvent& ev);
     virtual void                handleMouseUp(InputEvent& ev);
     virtual void                handleMouseDrag(InputEvent& ev);

@@ -32,8 +32,6 @@ Device36::Device36()
     envelopes = NULL;
     guiWindow = NULL;
 
-    paramLocked = false;
-
     currPresetName = "Untitled";
 }
 
@@ -152,35 +150,6 @@ void Device36::scanForPresets()
 
         FindClose(shandle);
     }
-}
-
-void Device36::addParam(Param* param)
-{
-    param->setDevice(this);
-    param->setEnvDirect(false);
-
-    params.push_back(param);
-}
-
-void Device36::addParamWithControl(Param* param, std::string oname, Control* ctrl)
-{
-    addParam(param);
-
-    if (ctrl)
-    {
-        param->addControl(ctrl);
-
-        addObject(ctrl);
-    }
-
-    handleParamUpdate(param);
-}
-
-void Device36::removeParam(Param* param)
-{
-    params.remove(param);
-
-    delete param;
 }
 
 // BRIEF:
@@ -451,29 +420,6 @@ bool Device36::setPresetByName(BrwEntry* preset)
     return false;
 }
 
-Param* Device36::getParamByName(char *param_name)
-{
-    for(Param* param : params)
-    {
-        if(_stricmp(param->getName().data(), param_name) == 0)
-        {
-            return param;
-        }
-    }
-
-    return NULL;
-}
-
-Param* Device36::getParamByIndex(int index)
-{
-    for(Param* param : params)
-    {
-        if(param->getIndex() == index)  return param;
-    }
-
-    return NULL;
-}
-
 void Device36::savePreset()
 {
     AlertWindow w (T("Save preset"), T("Enter new preset devName:"), AlertWindow::QuestionIcon);
@@ -547,35 +493,6 @@ BrwEntry* Device36::getPreset(char* name)
             return pe;
 
     return NULL;
-}
-
-void Device36::enqueueParamEnvelope(Trigger* tg)
-{
-    tg->tgworking = true;
-
-    if(envelopes != NULL)  envelopes->group_next = tg;
-
-    tg->group_prev = envelopes;
-    tg->group_next = NULL;
-
-    envelopes = tg;
-
-    Parameter* prm = ((Envelope*)tg->el)->param;
-    tg->prev_value = prm->getValueNormalized();
-
-    // New envelopes unblock the param ability to be changed by envelope
-    prm->unblockEnvAffect();
-}
-
-void Device36::dequeueParamEnvelope(Trigger* tg)
-{
-    if(envelopes == tg)  envelopes = tg->group_prev;
-    
-    if(tg->group_prev != NULL)  tg->group_prev->group_next = tg->group_next;
-    if(tg->group_next != NULL)  tg->group_next->group_prev = tg->group_prev;
-
-    tg->group_prev = NULL;
-    tg->group_next = NULL;
 }
 
 void Device36::showWindow(bool show)

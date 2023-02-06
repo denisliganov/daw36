@@ -22,6 +22,70 @@ Scroller::Scroller(bool is_vertical)
     coordref = is_vertical ? &y1 : &x1;
 }
 
+void Scroller::adjustOffset(float delta)
+{
+    setOffset(offset + delta);
+}
+
+void Scroller::drawSelf(Graphics & g)
+{
+    fill(g, .22f);
+
+    setc(g, .12f);
+
+    rectx(g, 0, 0, width, height);
+
+    if(active)
+    {
+        setc(g, 0.45f);
+
+        if(vertical)
+        {
+            fillx(g, 1, 1 + offsetpix, width - 2, barpixlen);
+        }
+        else
+        {
+            fillx(g, 1 + offsetpix, 1, barpixlen, height - 2);
+        }
+    }
+}
+
+void Scroller::gotoStart()
+{
+    event = {};
+    setOffset(0);
+}
+
+void Scroller::gotoEnd()
+{
+    event = {};
+    setOffset(fullspan - visiblepart);
+}
+
+int Scroller::getPos(InputEvent& ev, int& offset_on_bar)
+{
+    int pos = 0;
+    int mouseRef = vertical ? ev.mouseY : ev.mouseX;
+    int barRef = (*coordref + 1 + offsetpix);
+
+    if (mouseRef >= barRef && mouseRef <= (barRef + barpixlen))
+    {
+        pos = 0;
+
+        offset_on_bar = mouseRef - barRef; 
+    }
+    else if (mouseRef < barRef)
+    {
+        pos = -1;
+    }
+    else
+    {
+        pos = 1;
+    }
+
+    return pos;
+}
+
 void Scroller::handleMouseUp(InputEvent & ev)
 {
     currpos = 0;
@@ -58,33 +122,13 @@ void Scroller::handleMouseDown(InputEvent& ev)
     }
 }
 
-int Scroller::getPos(InputEvent& ev, int& offset_on_bar)
+void Scroller::handleMouseWheel(InputEvent& ev)
 {
-    int pos = 0;
-    int mouseRef = vertical ? ev.mouseY : ev.mouseX;
-    int barRef = (*coordref + 1 + offsetpix);
+    float ofsDelta = ev.wheelDelta*(visiblepart*0.1f);
 
-    if (mouseRef >= barRef && mouseRef <= (barRef + barpixlen))
-    {
-        pos = 0;
+    event = ev;
 
-        offset_on_bar = mouseRef - barRef; 
-    }
-    else if (mouseRef < barRef)
-    {
-        pos = -1;
-    }
-    else
-    {
-        pos = 1;
-    }
-
-    return pos;
-}
-
-void Scroller::adjustOffset(float delta)
-{
-    setOffset(offset + delta);
+    setOffset(offset - ofsDelta);
 }
 
 void Scroller::setOffset(float offs)
@@ -112,15 +156,6 @@ void Scroller::setOffset(float offs)
     redraw();
 
     parent->handleChildEvent(this, event);
-}
-
-void Scroller::handleMouseWheel(InputEvent& ev)
-{
-    float ofsDelta = ev.wheelDelta*(visiblepart*0.1f);
-
-    event = ev;
-
-    setOffset(offset - ofsDelta);
 }
 
 void Scroller::updBounds(float full_span, float visible_span, float offs)
@@ -161,40 +196,7 @@ void Scroller::updBounds(float full_span, float visible_span, float offs)
     redraw();
 }
 
-void Scroller::drawSelf(Graphics & g)
-{
-    fill(g, .22f);
 
-    setc(g, .12f);
-
-    rectx(g, 0, 0, width, height);
-
-    if(active)
-    {
-        setc(g, 0.45f);
-
-        if(vertical)
-        {
-            fillx(g, 3, 1 + offsetpix, width - 4, barpixlen);
-        }
-        else
-        {
-            fillx(g, 1 + offsetpix, 1, barpixlen, height - 2);
-        }
-    }
-}
-
-void Scroller::gotoStart()
-{
-    event = {};
-    setOffset(0);
-}
-
-void Scroller::gotoEnd()
-{
-    event = {};
-    setOffset(fullspan - visiblepart);
-}
 
 Scrolled::Scrolled()
 {

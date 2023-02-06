@@ -155,7 +155,6 @@
     <ClCompile Include="src\36_edit.cpp" />
     <ClCompile Include="src\36_element.cpp" />
     <ClCompile Include="src\36_helper.cpp" />
-    <ClCompile Include="src\36_blank.cpp" />
     <ClCompile Include="src\36_browser.cpp" />
     <ClCompile Include="src\36_brwentry.cpp" />
     <ClCompile Include="src\36_button.cpp" />
@@ -181,6 +180,7 @@
     <ClCompile Include="src\36_keyboard.cpp" />
     <ClCompile Include="src\36_knob.cpp" />
     <ClCompile Include="src\36_lane.cpp" />
+    <ClCompile Include="src\36_listbox.cpp" />
     <ClCompile Include="src\36_logger.cpp" />
     <ClCompile Include="src\36_menu.cpp" />
     <ClCompile Include="src\36_midi.cpp" />
@@ -188,6 +188,7 @@
     <ClCompile Include="src\36_note.cpp" />
     <ClCompile Include="src\36_numbox.cpp" />
     <ClCompile Include="src\36_objects.cpp" />
+    <ClCompile Include="src\36_paramobject.cpp" />
     <ClCompile Include="src\36_params.cpp" />
     <ClCompile Include="src\36_paramswin.cpp" />
     <ClCompile Include="src\36_pattern.cpp" />
@@ -336,7 +337,6 @@
     <ClInclude Include="src\36_edit.h" />
     <ClInclude Include="src\36_element.h" />
     <ClInclude Include="src\36_helper.h" />
-    <ClInclude Include="src\36_blank.h" />
     <ClInclude Include="src\36_browser.h" />
     <ClInclude Include="src\36_brwentry.h" />
     <ClInclude Include="src\36_button.h" />
@@ -363,6 +363,7 @@
     <ClInclude Include="src\36_keyboard.h" />
     <ClInclude Include="src\36_knob.h" />
     <ClInclude Include="src\36_lane.h" />
+    <ClInclude Include="src\36_listbox.h" />
     <ClInclude Include="src\36_logger.h" />
     <ClInclude Include="src\36_macros.h" />
     <ClInclude Include="src\36_menu.h" />
@@ -372,6 +373,7 @@
     <ClInclude Include="src\36_note.h" />
     <ClInclude Include="src\36_numbox.h" />
     <ClInclude Include="src\36_objects.h" />
+    <ClInclude Include="src\36_paramobject.h" />
     <ClInclude Include="src\36_params.h" />
     <ClInclude Include="src\36_paramswin.h" />
     <ClInclude Include="src\36_pattern.h" />

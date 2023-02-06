@@ -5,6 +5,7 @@
 #include "36_draw.h"
 #include "36.h"
 #include "36_grid.h"
+#include "36_listbox.h"
 
 
 
@@ -12,8 +13,24 @@
 ConfigObject::ConfigObject()
 {
     Gobj::addObject(slider1 = new Slider36(false), 10, 50, 120, 20);
-    Gobj::addObject(slider2 = new Slider36(false), 10, 100, 120, 20);
-    Gobj::addObject(slider3 = new Slider36(false), 10, 150, 120, 20);
+    Gobj::addObject(slider2 = new Slider36(false), 10, 72, 120, 20);
+    Gobj::addObject(slider3 = new Slider36(false), 10, 94, 120, 20);
+
+    Gobj::addObject(listBox = new ListBoxx("List1"), 200, 50, 120, 100);
+
+    listBox->addEntry("Entry1");
+    listBox->addEntry("Entry2");
+    listBox->addEntry("Entry3");
+    listBox->addEntry("Entry4");
+    listBox->addEntry("Entry5");
+    listBox->addEntry("Entry6");
+    listBox->addEntry("Entry7");
+    listBox->addEntry("Entry8");
+    listBox->addEntry("Entry9");
+    /*
+    listBox->addEntry("Entry10");
+    listBox->addEntry("Entry11");
+*/
 
     slider1->addParam(hue = new Parameter(globalHue, 0, 1));
     slider2->addParam(saturation = new Parameter(0.2f, 0, 1));

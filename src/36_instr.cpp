@@ -123,7 +123,7 @@ protected:
 
             if (wVis)
                 //setc(g, (uint32)0xffFF9930);
-                instr->setMyColor(g, .8f);
+                setc(g, 1.f);
             else
                 instr->setMyColor(g, 1.f);
 
