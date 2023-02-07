@@ -23,6 +23,8 @@ protected:
         Knob*               knob2;
         Knob*               knob3;
         Knob*               knob4;
+        RadioBox*           rb1;
+        RadioBox*           rb2;
         Slider36*           slider1;
         Slider36*           slider2;
         Slider36*           slider3;

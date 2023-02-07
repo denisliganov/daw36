@@ -329,7 +329,7 @@ ParamBox::ParamBox(Parameter* param)
 
 void ParamBox::drawSelf(Graphics& g)
 {
-    Instrument* i = dynamic_cast<Instrument*>(parent);
+    Instrument* i = NULL; //dynamic_cast<Instrument*>(parent);
 
     if (i) 
         i->setMyColor(g, .3f);
@@ -368,20 +368,20 @@ void ParamBox::drawSelf(Graphics& g)
 
     //setc(g, 0xffB0B000);
     if (i) 
-        i->setMyColor(g, .8f);
+        i->setMyColor(g, .6f);
     else
         setc(g, 0.6f);
     fillx(g, xstart, height - sh, w, sh);
 
     if (i) 
-        i->setMyColor(g, .6f);
+        i->setMyColor(g, .5f);
     else
         setc(g, 0.5f);
     //setc(g, 0xffA0A060);
     fillx(g, xstart, height - sh+1, w, sh-1);
 
     if (i) 
-        i->setMyColor(g, .4f);
+        i->setMyColor(g, .35f);
     else
         setc(g, 0.4f);
     //setc(g, 0xff505030);

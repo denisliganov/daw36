@@ -7,7 +7,7 @@
 #include "36.h"
 #include "36_grid.h"
 #include "36_listbox.h"
-
+#include "36_numbox.h"
 
 
 
@@ -16,7 +16,7 @@ ConfigObject::ConfigObject()
     border = 10;
     xstart = ystart = border;
     groupSpacing = 6;
-    smallSpacing = 3;
+    smallSpacing = 4;
     wndW = border;
     wndH = border;
 
@@ -47,23 +47,7 @@ ConfigObject::ConfigObject()
 
     horizPut = true;
 
-    placeObject(listBox = new ListBoxx("List1"), 120, 100);
-
-    horizPut = false;
-
-    placeObject(knob1 = new Knob(new Parameter(0.5f)), 35, 35);
-    placeObject(knob2 = new Knob(new Parameter(0.5f)), 22, 22);
-    placeObject(knob3 = new Knob(new Parameter(0.5f)), 11, 11);
-    placeObject(knob4 = new Knob(new Parameter(0.5f)), 11, 11);
-
-    //horizPut = true;
-
-    resetGroup();
-    resetPut();
-
-    placeObject(slider4 = new Slider36(false), 60, 20);
-    placeObject(slider5 = new Slider36(false), 60, 20);
-    placeObject(slider6 = new Slider36(false), 60, 20);
+    placeObject(listBox = new ListBoxx("List1"), 120, 300);
 
     listBox->addEntry("Entry1");
     listBox->addEntry("Entry2");
@@ -76,6 +60,34 @@ ConfigObject::ConfigObject()
     listBox->addEntry("Entry9");
     listBox->addEntry("Entry10");
     listBox->addEntry("Entry11");
+
+    resetGroup();
+
+    static ParamRadio* pr = new ParamRadio("Radio1");
+    pr->addOption("R1");
+    pr->addOption("R123423423423");
+    pr->addOption("Crown");
+    pr->addOption("Altavista");
+    pr->addOption("Google");
+    placeObject(rb1 = new RadioBox(pr), 55, rb1->getH());
+
+    resetGroup();
+
+    horizPut = false;
+
+    placeObject(knob1 = new Knob(new Parameter("Paraaadasdam1", 0.5f, 0, 22222, Units_dB)), 88, 88);
+    placeObject(knob2 = new Knob(new Parameter(0.5f)), 44, 44);
+    placeObject(knob3 = new Knob(new Parameter(0.5f)), 55, 55);
+    placeObject(knob4 = new Knob(new Parameter(0.5f)), 111, 111);
+
+    //horizPut = true;
+
+    resetGroup();
+    resetPut();
+
+    placeObject(slider4 = new Slider36(false), 60, 20);
+    placeObject(slider5 = new Slider36(false), 60, 20);
+    placeObject(slider6 = new Slider36(false), 60, 20);
 
     addParam(hue);
     addParam(saturation);

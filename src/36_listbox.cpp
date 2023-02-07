@@ -95,7 +95,7 @@ void ListBoxx::handleMouseDrag(InputEvent& ev)
 
 void ListBoxx::handleMouseDown(InputEvent& ev)
 {
-    currentEntry = (ev.mouseY - y1 + vscr->getOffset())/entryHeight;
+    currentEntry = (ev.mouseY - y1 - entryHeight + vscr->getOffset())/entryHeight;
 
     redraw();
 }

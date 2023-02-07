@@ -22,6 +22,8 @@ Knob::Knob(Parameter* par)
     angleOffset = float(2*PI - angleRange)*.5f;
 
     updPosition();
+
+    fontId = FontVis;
 }
 
 void Knob::updValue()
@@ -114,10 +116,14 @@ void Knob::drawSelf(Graphics& g)
 
     Instrument* instr = dynamic_cast<Instrument*>(parent);
 
+    fill(g, .2f);
+
+    int fh = gGetTextHeight(fontId);
+
     setc(g, .8f);
-    txtfit(g, FontSmall, prm->getName(), 0, 12, width);
-    txtfit(g, FontSmall, prm->getValString(), 0, height - 2, width);
-    txtfit(g, FontSmall, prm->getUnitString(), width - 10, height - 2, width);
+    txt(g, fontId, prm->getName(), 2, 10);
+    //txt(g, FontSmall, prm->getValString(), 0, height - 2);
+    //txt(g, FontSmall, prm->getUnitString(), width - gGetTextWidth(FontSmall, prm->getUnitString()), height - 2);
 
 
     //gSetMonoColor(g, .5f, 1);
@@ -130,20 +136,25 @@ void Knob::drawSelf(Graphics& g)
 
     gSetMonoColor(g, .3f);
 
+    int w = width - fh;
+    int h = height - fh;
+    int x = x1 + fh/2;
+    int y = y1 + fh;
+
     //gPie(g, x1+1, y1+1, width-2, height-2, PI + angleOffset, 3*PI - angleOffset);
-    gPie(g, x1+1, y1+1, width-2, height-2, PI, 3*PI);
+    gPie(g, x+1, y+1, w-2, h-2, PI, 3*PI);
 
 
     gSetMonoColor(g, .4f);
 
-    gEllipseFill(g, x1 + 3, y1 + 3, width-6, height-6);
+    gEllipseFill(g, x + 3, y + 3, w-6, h-6);
 
     if(prm->getOffset() < 0)
     {
         float o = prm->getOffset() / prm->getRange();
         float oa = abs(o*angleRange);
 
-        float rad = float(width-2)/2;
+        float rad = float(w-2)/2;
         float singleAngle = 1.f/(2*PI);
         float ratio = 1.f/(2*PI*rad);
         float singlePixelAngle = ratio*2*PI;
@@ -156,8 +167,8 @@ void Knob::drawSelf(Graphics& g)
     //gEllipseFill(g, x1, y1, width, height);
 
     float xadv0, xadv1, yadv0, yadv1;
-    int rrad0 = width/2 - 3;
-    int rrad1 = 0;//rrad0/3.f;
+    int rrad0 = w/2 - 3;
+    int rrad1 = rrad0/2.f;
     float ang = positionAngle - (PI/2.f - angleOffset);
 
     if (positionAngle >= PI / 2)
@@ -179,12 +190,16 @@ void Knob::drawSelf(Graphics& g)
     else
         parent->setMyColor(g, .9f);
 
-    int kx1 = (float)RoundFloat(x1 + width/2 + xadv1);
-    int ky1 = (float)RoundFloat(y1 + height/2 - yadv1);
-    int kx2 = (float)RoundFloat(x1 + width/2 + xadv0);
-    int ky2 = (float)RoundFloat(y1 + height/2 - yadv0);
+    int kx1 = (float)RoundFloat(x + w/2 + xadv1);
+    int ky1 = (float)RoundFloat(y + h/2 - yadv1);
+    int kx2 = (float)RoundFloat(x + w/2 + xadv0);
+    int ky2 = (float)RoundFloat(y + h/2 - yadv0);
 
     gDoubleLine(g, kx1, ky1, kx2, ky2, 2);
+
+    setc(g, 0);
+    std::string val = prm->getValString() + " " + prm->getUnitString();
+    txt(g, fontId, val, width/2 - gGetTextWidth(fontId, prm->getValString())/2, height/2 + fh);
 }
 
 

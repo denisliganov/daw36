@@ -65,6 +65,7 @@ class ParamToggle;
 class ParamRadio;
 class ParamSelector;
 class Renderer;
+class RadioBox;
 class Scroller;
 class Selection;
 class SnapMenu;
