@@ -95,7 +95,7 @@ public:
             void                finishRecording();
             std::string         getValString();
             std::string         getMaxValString();
-            std::string         getUnitStr();
+            std::string         getUnitString();
             std::string         getSignStr();
             float               getRange()      { return range; };
             float               getOffset()     { return offset; };

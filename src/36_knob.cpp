@@ -114,6 +114,12 @@ void Knob::drawSelf(Graphics& g)
 
     Instrument* instr = dynamic_cast<Instrument*>(parent);
 
+    setc(g, .8f);
+    txtfit(g, FontSmall, prm->getName(), 0, 12, width);
+    txtfit(g, FontSmall, prm->getValString(), 0, height - 2, width);
+    txtfit(g, FontSmall, prm->getUnitString(), width - 10, height - 2, width);
+
+
     //gSetMonoColor(g, .5f, 1);
     //gPie(g, x1 + 1, y1+1, width-2, height-2, PI - angleOffset, PI + angleOffset);
 
@@ -151,7 +157,7 @@ void Knob::drawSelf(Graphics& g)
 
     float xadv0, xadv1, yadv0, yadv1;
     int rrad0 = width/2 - 3;
-    int rrad1 = rrad0/2.f;
+    int rrad1 = 0;//rrad0/3.f;
     float ang = positionAngle - (PI/2.f - angleOffset);
 
     if (positionAngle >= PI / 2)

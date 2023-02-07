@@ -13,7 +13,7 @@
 #include "36_params.h"
 #include "36_utils.h"
 #include "36_device.h"
-
+#include "36_instr.h"
 
 
 NumBox::NumBox()
@@ -318,7 +318,7 @@ ParamBox::ParamBox(Parameter* param)
 
     tw1 = gGetTextWidth(fontId, prm->getName());
     tw2 = gGetTextWidth(fontId, prm->getMaxValString());
-    tw3 = gGetTextWidth(fontId, prm->getUnitStr());
+    tw3 = gGetTextWidth(fontId, prm->getUnitString());
 
     sliderOnly = false;
 
@@ -329,7 +329,14 @@ ParamBox::ParamBox(Parameter* param)
 
 void ParamBox::drawSelf(Graphics& g)
 {
-    fill(g, 0.3f);
+    Instrument* i = dynamic_cast<Instrument*>(parent);
+
+    if (i) 
+        i->setMyColor(g, .3f);
+    else
+        setc(g, 0.3f);
+
+    fillx(g, 0, 0, width, height);
 
     int txy = 0;
 
@@ -360,18 +367,30 @@ void ParamBox::drawSelf(Graphics& g)
     fillx(g, defPos, height - sh, 1, sh);
 
     //setc(g, 0xffB0B000);
-    setc(g, .6f);
+    if (i) 
+        i->setMyColor(g, .8f);
+    else
+        setc(g, 0.6f);
     fillx(g, xstart, height - sh, w, sh);
 
-    setc(g, .5f);
+    if (i) 
+        i->setMyColor(g, .6f);
+    else
+        setc(g, 0.5f);
     //setc(g, 0xffA0A060);
     fillx(g, xstart, height - sh+1, w, sh-1);
 
-    setc(g, .4f);
+    if (i) 
+        i->setMyColor(g, .4f);
+    else
+        setc(g, 0.4f);
     //setc(g, 0xff505030);
     fillx(g, xoffs, height - sh, 1, sh);
 
-    setc(g, .8f);
+    if (i) 
+        i->setMyColor(g, .99f);
+    else
+        setc(g, 0.99f);
     //setc(g, 0xffFFFFA0);
     fillx(g, xval, height - sh, 1, sh);
 
@@ -407,7 +426,7 @@ void ParamBox::drawSelf(Graphics& g)
 
         setc(g, .9f);
 
-        txt(g, fontId, prm->getUnitStr(), width - tw3 - 2, txty);
+        txt(g, fontId, prm->getUnitString(), width - tw3 - 2, txty);
     }
 }
 
@@ -420,7 +439,7 @@ std::string ParamBox::getClickHint()
 {
     if (sliderOnly)
     {
-        return prm->getName() + ":  " + prm->getValString() + " " + prm->getUnitStr();
+        return prm->getName() + ":  " + prm->getValString() + " " + prm->getUnitString();
     }
     else
     {

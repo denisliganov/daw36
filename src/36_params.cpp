@@ -131,7 +131,7 @@ Parameter::~Parameter()
     params.remove(this);
 }
 
-std::string Parameter::getUnitStr()
+std::string Parameter::getUnitString()
 {
     switch(unitsType)
     {

@@ -20,13 +20,14 @@ public:
             void                setOffset(float offs);
             void                updBounds(float full_span, float visible_span, float offs);
             bool                isActive() { return active; }
+            void                handleMouseWheel(InputEvent& ev);
 
 protected:
 
             void                drawSelf(Graphics & g);
             int                 getPos(InputEvent& ev, int& offset_on_bar);
             void                handleMouseDown(InputEvent& ev);
-            void                handleMouseWheel(InputEvent& ev);
+
             void                handleMouseDrag(InputEvent& ev);
             void                handleMouseUp(InputEvent & ev);
 

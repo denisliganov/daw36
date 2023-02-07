@@ -4,7 +4,7 @@
 #include "36_scroller.h"
 #include "36_draw.h"
 #include "36_ctrlpanel.h"
-
+#include "36_utils.h"
 
 
 
@@ -31,9 +31,8 @@ void Scroller::drawSelf(Graphics & g)
 {
     fill(g, .22f);
 
-    setc(g, .12f);
-
-    rectx(g, 0, 0, width, height);
+    //setc(g, .12f);
+    //rectx(g, 0, 0, width, height);
 
     if(active)
     {
@@ -184,7 +183,7 @@ void Scroller::updBounds(float full_span, float visible_span, float offs)
 
         ratio = (float)fullpixlen/fullspan;
 
-        barpixlen = int(ratio*visiblepart);
+        barpixlen = int(ratio*visiblepart)+1;
 
         offsetpix = int(ratio*offset);
     }

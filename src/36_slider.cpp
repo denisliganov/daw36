@@ -125,6 +125,9 @@ void Slider36::drawSelf(Graphics& g)
 
     rect(g, .32f);
 
+    if (prm == NULL)
+        return;
+
     if (vertical)
     {
         int ypos = y2 - 1 - slLen;
