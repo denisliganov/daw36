@@ -131,12 +131,16 @@ void Button36::updPosition()
     redraw();
 }
 
+
 void Button36::drawButtonBase(Graphics& g)
 {
     if (!pressed)
     {
         fill(g, 0.25f);
+
         //rect(g, 0.1f);
+
+        drawGlassRect1(g, (float)x1, (float)y1, width, height, Colour(70, 70, 70), 1, 0, true, true, true, true);
     }
     else
     {

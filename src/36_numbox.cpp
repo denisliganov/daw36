@@ -340,9 +340,6 @@ void ParamBox::drawSelf(Graphics& g)
 
     int txy = 0;
 
-    //setc(g, 0.2f);
-    //fillx(g, 0, txy, width, height - txy);
-
     float offs = prm->getOffset();
     float range = prm->getRange();
     float val = prm->getValue();
@@ -377,13 +374,17 @@ void ParamBox::drawSelf(Graphics& g)
         i->setMyColor(g, .5f);
     else
         setc(g, 0.5f);
+
     //setc(g, 0xffA0A060);
     fillx(g, xstart, height - sh+1, w, sh-1);
+
+    //drawGlassRect(g, x1 + (float)xstart, y1 + (float)(height - sh+1), w, sh-1, Colour(180, 120, 120), 0, 0, true, true, true, true);
 
     if (i) 
         i->setMyColor(g, .35f);
     else
         setc(g, 0.4f);
+
     //setc(g, 0xff505030);
     fillx(g, xoffs, height - sh, 1, sh);
 
@@ -552,15 +553,24 @@ RadioBox::RadioBox(ParamRadio* param_radio)
 
     setFontId(FontSmall);
 
-    height = (textHeight + 4)*prmRad->getNumOptions();
+    height = headerHeight + (textHeight + 4)*prmRad->getNumOptions();
 }
 
 void RadioBox::drawSelf(Graphics& g)
 {
     fill(g, 0.3f);
 
-    int h1 = (textHeight + 4);
-    int y = 0;
+    setc(g, .1f);
+    fillx(g, 0, headerHeight, width, height - headerHeight);
+
+    setc(g, 0.35f);
+    fillx(g, 0, 0, width, headerHeight - 1);
+
+    setc(g, 0.8f);
+    txtfit(g, fontId, getObjName(), 3, headerHeight - 4, width - 3);
+
+
+    int y = headerHeight;
     int opt = 0;
 
     for (std::string str : prmRad->getOptions())
@@ -577,7 +587,7 @@ void RadioBox::drawSelf(Graphics& g)
         }
 
         setc(g, 1.f);
-        txtfit(g, fontId, str, (textHeight + 4) + 6, y + textHeight - 1, width - h1);
+        txtfit(g, fontId, str, (textHeight + 4) + 6, y + textHeight - 1, width - (textHeight + 4));
 
         y += textHeight + 4;
         opt++;
@@ -586,7 +596,10 @@ void RadioBox::drawSelf(Graphics& g)
 
 void RadioBox::handleMouseDown(InputEvent & ev)
 {
-    prmRad->setCurrent((ev.mouseY - y1) / (textHeight + 4));
+    if ((ev.mouseY - y1) > headerHeight)
+    {
+        prmRad->setCurrent((ev.mouseY - y1 - headerHeight) / (textHeight + 4));
+    }
 
     redraw();
 }

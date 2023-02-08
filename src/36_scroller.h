@@ -47,7 +47,7 @@ protected:
 };
 
 
-class Scrolled : public Gobj
+class Scrolled : public Control
 {
 public:
 

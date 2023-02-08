@@ -108,6 +108,9 @@ void Slider36::remap()
 
 std::string Slider36::getHint()
 {
+    if (prm == NULL)
+        return "";
+
     std::string hint = prm->getName().data();
 
     hint += ": ";

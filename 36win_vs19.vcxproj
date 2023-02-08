@@ -182,12 +182,14 @@
     <ClCompile Include="src\36_lane.cpp" />
     <ClCompile Include="src\36_listbox.cpp" />
     <ClCompile Include="src\36_logger.cpp" />
+    <ClCompile Include="src\36_makeup.cpp" />
     <ClCompile Include="src\36_menu.cpp" />
     <ClCompile Include="src\36_midi.cpp" />
     <ClCompile Include="src\36_mixer.cpp" />
     <ClCompile Include="src\36_note.cpp" />
     <ClCompile Include="src\36_numbox.cpp" />
     <ClCompile Include="src\36_objects.cpp" />
+    <ClCompile Include="src\36_paramobject.cpp" />
     <ClCompile Include="src\36_params.cpp" />
     <ClCompile Include="src\36_paramswin.cpp" />
     <ClCompile Include="src\36_pattern.cpp" />
@@ -365,6 +367,7 @@
     <ClInclude Include="src\36_listbox.h" />
     <ClInclude Include="src\36_logger.h" />
     <ClInclude Include="src\36_macros.h" />
+    <ClInclude Include="src\36_makeup.h" />
     <ClInclude Include="src\36_menu.h" />
     <ClInclude Include="src\36_midi.h" />
     <ClInclude Include="src\36_midi_def.h" />
@@ -372,6 +375,7 @@
     <ClInclude Include="src\36_note.h" />
     <ClInclude Include="src\36_numbox.h" />
     <ClInclude Include="src\36_objects.h" />
+    <ClInclude Include="src\36_paramobject.h" />
     <ClInclude Include="src\36_params.h" />
     <ClInclude Include="src\36_paramswin.h" />
     <ClInclude Include="src\36_pattern.h" />

@@ -28,39 +28,66 @@ typedef enum ImageId
 }ImageId;
 
 
-        void    gInitGraphics();
-        void    gSetMonoColor(Graphics& g, float clr, float alpha = 1.f);
-        void    gGeneratePalette(int max_colors);
-        void    gSetColorIndex(Graphics& g, int color_index);
-        void    gRound(Graphics& g, int x1, int y1, float rad);
+        void    gArc(Graphics& g, int x, int y, int w, int h, float startAngle, float endAngle);
         void    gCircle(Graphics& g, int x1, int y1, float rad);
-        void    gLine(Graphics& g, int x1, int y1, int x2, int y2);
-        void    gLine(Graphics& g, float x1, float y1, float x2, float y2);
-        void    gLineHorizontal(Graphics& g, int y, int x1, int x2);
-        void    gLineVertical(Graphics& g, int x, int y1, int y2);
+        void    gCircle(Graphics& g, int x1, int y1, float rad);
+        void    gDoubleLine(Graphics& g, float x1, float y1, float x2, float y2, float thick);
+        void    gDrawRectWH(Graphics& g, int x1, int y1, int w, int h);
+        void    gDrawImageRegion(Graphics& g, Image* img, int x, int y, int w, int h);
+        void    gDrawMonoRect(Graphics& g, int x1, int y1, int x2, int y2, float fillClr, float drawClr);
+        void    gDrawTriangle(Graphics& g, int x1, int y1, int x2, int y2, int x3, int y3);
+        void    gDrawRect(Graphics& g, int x1, int y1, int x2, int y2);
+        void    gEllipse(Graphics& g, const float x, const float y, const float width, const float height, const float lineThickness);
+        void    gEllipseFill(Graphics& g, const float x,const float y,const float width,const float height);
         void    gFillRect(Graphics& g, int x1, int y1, int x2, int y2);
         void    gFillRectWH(Graphics& g, int x1, int y1, int w, int h);
-        void    gDrawRect(Graphics& g, int x1, int y1, int x2, int y2);
-        void    gDrawRectWH(Graphics& g, int x1, int y1, int w, int h);
+        void    gFilledTriangle(Graphics& g, int x1, int y1, int x2, int y2, int x3, int y3);
+        void    gGeneratePalette(int max_colors);
+        void    gGradRect(Graphics& g, uint32 clr, int x1, int y1, int x2, int y2);
+        void    gInitGraphics();
         void    gSetColor(Graphics& g, uint32 color);
         void    gSetColor(Graphics& g, uint8 red, uint8 green, uint8 blue, uint8 alpha = 255);
         void    gSetColor2(Graphics& g, uint32 color, float brightness, float alpha = 1.f);
         void    gSetColorHue(Graphics & g, float hue, float brightness=1, float saturation=1, float alpha=1);
-        void    gDrawImageRegion(Graphics& g, Image* img, int x, int y, int w, int h);
+        void    gLine(Graphics& g, int x1, int y1, int x2, int y2);
+        void    gLine(Graphics& g, float x1, float y1, float x2, float y2);
+        void    gLineHorizontal(Graphics& g, int y, int x1, int x2);
+        void    gLineVertical(Graphics& g, int x, int y1, int y2);
+        void    gPie(Graphics& g, int x, int y, int w, int h, float startAngle, float endAngle);
         void    gLine(Graphics& g, float x1, float y1, float x2, float y2);
         void    gPanelRect(Graphics& g, int x1, int y1, int x2, int y2);
-        void    gDoubleLine(Graphics& g, float x1, float y1, float x2, float y2, float thick);
-        void    gCircle(Graphics& g, int x1, int y1, float rad);
+        void    gRound(Graphics& g, int x1, int y1, float rad);
+        void    gSetPixel(Graphics& g, int x, int y);
+        void    gSetColorIndex(Graphics& g, int color_index);
+        void    gSetMonoColor(Graphics& g, float clr, float alpha = 1.f);
         void    gTriangle(Graphics& g, int x1, int y1, int x2, int y2, int x3, int y3, const Colour& fill, const Colour& outline);
         void    gTriangle(Graphics& g, int x1, int y1, int x2, int y2, int x3, int y3);
-        void    gDrawTriangle(Graphics& g, int x1, int y1, int x2, int y2, int x3, int y3);
-        void    gFilledTriangle(Graphics& g, int x1, int y1, int x2, int y2, int x3, int y3);
-        void    gDrawMonoRect(Graphics& g, int x1, int y1, int x2, int y2, float fillClr, float drawClr);
-        void    gSetPixel(Graphics& g, int x, int y);
-        void    gEllipse(Graphics& g, const float x, const float y, const float width, const float height, const float lineThickness);
-        void    gEllipseFill(Graphics& g, const float x,const float y,const float width,const float height);
-        void    gPie(Graphics& g, int x, int y, int w, int h, float startAngle, float endAngle);
-        void    gArc(Graphics& g, int x, int y, int w, int h, float startAngle, float endAngle);
         void    gTriLine(Graphics& g, int x, int y, bool left, bool center, bool right);
 
+        void    paintButton (Graphics& g, int x, int y, int w, int h, bool isMouseOverButton, bool isButtonDown);
+        void    drawGlassRound (Graphics& g,
+                                   const float x, const float y,
+                                   const float diameter,
+                                   const Colour& colour,
+                                   const float outlineThickness);
+        void    drawGlassRect (Graphics& g,
+                                    const float x, const float y,
+                                    const float width, const float height,
+                                    const Colour& colour,
+                                    const float outlineThickness,
+                                    const float cornerSize,
+                                    const bool flatOnLeft,
+                                    const bool flatOnRight,
+                                    const bool flatOnTop,
+                                    const bool flatOnBottom);
+        void    drawGlassRect1 (Graphics& g,
+                                    const float x, const float y,
+                                    const float width, const float height,
+                                    const Colour& colour,
+                                    const float outlineThickness,
+                                    const float cornerSize,
+                                    const bool flatOnLeft,
+                                    const bool flatOnRight,
+                                    const bool flatOnTop,
+                                    const bool flatOnBottom);
 

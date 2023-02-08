@@ -13,17 +13,13 @@
 
 Knob::Knob(Parameter* par)
 {
+    setFontId(FontSmall);
     param = par;
-
     prm = par;
-
     angleRange = PI * 1.9f;
-
     angleOffset = float(2*PI - angleRange)*.5f;
 
     updPosition();
-
-    fontId = FontVis;
 }
 
 void Knob::updValue()
@@ -50,9 +46,9 @@ void Knob::updPosition()
     redraw();
 }
 
-void Knob::TweakByWheel(int delta, int mouse_x, int mouse_y)
+void Knob::handleMouseWheel(InputEvent& ev)
 {
-    positionAngle -= (float)((PI / 32) * delta);
+    positionAngle -= (float)((PI / 32) * ev.wheelDelta);
 
     if (positionAngle < 0)
     {
@@ -116,19 +112,15 @@ void Knob::drawSelf(Graphics& g)
 
     Instrument* instr = dynamic_cast<Instrument*>(parent);
 
-    fill(g, .2f);
-
-    int fh = gGetTextHeight(fontId);
+    fill(g, .3f);
 
     setc(g, .8f);
     txt(g, fontId, prm->getName(), 2, 10);
+
     //txt(g, FontSmall, prm->getValString(), 0, height - 2);
     //txt(g, FontSmall, prm->getUnitString(), width - gGetTextWidth(FontSmall, prm->getUnitString()), height - 2);
-
-
     //gSetMonoColor(g, .5f, 1);
     //gPie(g, x1 + 1, y1+1, width-2, height-2, PI - angleOffset, PI + angleOffset);
-
     //gSetMonoColor(g, .3f);
     //gEllipseFill(g, x1 + 3, y1 + 3, width-6, height-6);
 
@@ -136,18 +128,18 @@ void Knob::drawSelf(Graphics& g)
 
     gSetMonoColor(g, .3f);
 
-    int w = width - fh;
-    int h = height - fh;
-    int x = x1 + fh/2;
-    int y = y1 + fh;
+    int w = width;
+    int h = height - headerHeight;
 
-    //gPie(g, x1+1, y1+1, width-2, height-2, PI + angleOffset, 3*PI - angleOffset);
-    gPie(g, x+1, y+1, w-2, h-2, PI, 3*PI);
+    w = MAX(w, h) - 8;
+    h = w;
 
+    int x = x1 + 4;
+    int y = y1 + headerHeight + 4;
 
     gSetMonoColor(g, .4f);
 
-    gEllipseFill(g, x + 3, y + 3, w-6, h-6);
+    gEllipseFill(g, x, y, w, h);
 
     if(prm->getOffset() < 0)
     {
@@ -158,11 +150,14 @@ void Knob::drawSelf(Graphics& g)
         float singleAngle = 1.f/(2*PI);
         float ratio = 1.f/(2*PI*rad);
         float singlePixelAngle = ratio*2*PI;
-
-        gSetMonoColor(g, .5f);
-
-        //gPie(g, x1+1, y1+1, width-2, height-2, PI + angleOffset + oa, PI + angleOffset + oa);
+        gSetMonoColor(g, .2f);
+        gPie(g, x1+1, y1+1, width-2, height-2, PI + angleOffset + oa, PI + angleOffset + oa);
     }
+
+    //setc(g, .2f);
+    //gPie(g, x, y, w, h, PI + angleOffset, 3*PI - angleOffset);
+    //gPie(g, x, y, w, h, PI, 3*PI);
+
 
     //gEllipseFill(g, x1, y1, width, height);
 
@@ -197,9 +192,18 @@ void Knob::drawSelf(Graphics& g)
 
     gDoubleLine(g, kx1, ky1, kx2, ky2, 2);
 
-    setc(g, 0);
-    std::string val = prm->getValString() + " " + prm->getUnitString();
-    txt(g, fontId, val, width/2 - gGetTextWidth(fontId, prm->getValString())/2, height/2 + fh);
+    //Gobj::setc(g, 8.f);
+    //std::string val = prm->getValString() + " " + prm->getUnitString();
+    //txt(g, fontId, val, width/2 - gGetTextWidth(fontId, prm->getValString())/2, height/2 + headerHeight);
+
+    setc(g, 0.35f);
+    fillx(g, 0, 0, width, headerHeight);
+
+    setc(g, 0.8f);
+    txtfit(g, fontId, prm->getName(), 3, 12, w - 2);
+
+    //setc(g, 0.5f);
+    //rectx(g, 0, headerHeight, width, height - headerHeight);
 }
 
 

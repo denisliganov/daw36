@@ -22,10 +22,12 @@ public:
 
 protected:
 
-            Param*              param;
+            bool                headerOn;
+            int                 headerHeight;
             Device36*           dev;
             FontId              fontId;
             Image*              parentImage;
+            Param*              param;
             int                 textHeight;
 };
 

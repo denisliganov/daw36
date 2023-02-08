@@ -6,6 +6,7 @@
 #include "36_utils.h"
 #include "36_draw.h"
 #include "36_text.h"
+#include "36_config.h"
 
 #include "Binarysrc/images.h"
 
@@ -137,9 +138,20 @@ void gDrawRect(Graphics& g, int x1, int y1, int x2, int y2)
     g.drawRect(x1, y1, x2 - x1 + 1, y2 - y1 + 1);
 }
 
-void gGradRect(Graphics& g, int x1, int y1, int x2, int y2)
+void gGradRect(Graphics& g, uint32 clr, int x1, int y1, int x2, int y2)
 {
-    g.drawRect(x1, y1, x2 - x1 + 1, y2 - y1 + 1);
+    uint32 colorHL = clr;
+    uint32 hlDecr = 0x80000000;
+    
+    for (int c = 0; c < 4; c++)
+    {
+        gSetColor(g, (uint32)colorHL);
+
+        gDrawRect(g, x1 + c, y1 + c, x2 - c, y2 - c);
+
+        colorHL -= hlDecr;
+        hlDecr /=2;
+    }
 }
 
 void gDrawMonoRect(Graphics& g, int x1, int y1, int x2, int y2, float fillClr, float drawClr)
@@ -350,6 +362,401 @@ void gTriLine(Graphics& g, int x, int y, bool left, bool center, bool right)
     }
 
     gLine(g, x - delay, y + delay, x - 10, y + 10);
+}
+
+static void createRoundedPath (Path& p,
+                               const float x, const float y,
+                               const float w, const float h,
+                               const float cs,
+                               const bool curveTopLeft, const bool curveTopRight,
+                               const bool curveBottomLeft, const bool curveBottomRight) throw()
+{
+    const float cs2 = 2.0f * cs;
+
+    if (curveTopLeft)
+    {
+        p.startNewSubPath (x, y + cs);
+        p.addArc (x, y, cs2, cs2, float_Pi * 1.5f, float_Pi * 2.0f);
+    }
+    else
+    {
+        p.startNewSubPath (x, y);
+    }
+
+    if (curveTopRight)
+    {
+        p.lineTo (x + w - cs, y);
+        p.addArc (x + w - cs2, y, cs2, cs2, 0.0f, float_Pi * 0.5f);
+    }
+    else
+    {
+        p.lineTo (x + w, y);
+    }
+
+    if (curveBottomRight)
+    {
+        p.lineTo (x + w, y + h - cs);
+        p.addArc (x + w - cs2, y + h - cs2, cs2, cs2, float_Pi * 0.5f, float_Pi);
+    }
+    else
+    {
+        p.lineTo (x + w, y + h);
+    }
+
+    if (curveBottomLeft)
+    {
+        p.lineTo (x + cs, y + h);
+        p.addArc (x, y + h - cs2, cs2, cs2, float_Pi, float_Pi * 1.5f);
+    }
+    else
+    {
+        p.lineTo (x, y + h);
+    }
+
+    p.closeSubPath();
+}
+
+
+void drawGlassRect1 (Graphics& g,
+                            const float x, const float y,
+                            const float width, const float height,
+                            const Colour& colour,
+                            const float outlineThickness,
+                            const float cornerSize,
+                            const bool flatOnLeft,
+                            const bool flatOnRight,
+                            const bool flatOnTop,
+                            const bool flatOnBottom) throw()
+{
+    if (width <= outlineThickness || height <= outlineThickness)
+        return;
+
+    const int intX = (int) x;
+    const int intY = (int) y;
+    const int intW = (int) width;
+    const int intH = (int) height;
+
+    const float cs = cornerSize < 0 ? jmin (width * 0.5f, height * 0.5f) : cornerSize;
+    const float edgeBlurRadius = height * 0.75f + (height - cs * 2.0f);
+    const int intEdge = (int) edgeBlurRadius;
+
+    Path outline;
+
+    createRoundedPath (outline, x, y, width, height, cs,
+                        ! (flatOnLeft || flatOnTop),
+                        ! (flatOnRight || flatOnTop),
+                        ! (flatOnLeft || flatOnBottom),
+                        ! (flatOnRight || flatOnBottom));
+
+    {
+        ColourGradient cg (colour, 0, y, colour, 0, y + height, false);
+
+        //cg.addColour (0.03, colour.withMultipliedAlpha (0.9f));
+        cg.addColour (0.4, colour);
+        cg.addColour (0.9, colour.withMultipliedAlpha (0.6f));
+
+#ifdef USE_OLD_JUCE
+        g.setBrush(&GradientBrush(cg));
+#else
+        g.setGradientFill(cg);
+#endif	
+        g.fillPath (outline);
+    }
+
+    //return;
+
+    ColourGradient cg (Colours::transparentBlack, x + edgeBlurRadius, y + height * 0.5f, colour.darker (0.4f), x, y + height * 0.5f, true);
+
+    cg.addColour (jlimit (0.0, 1.0, 1.0 - (cs * 0.5f) / edgeBlurRadius), Colours::transparentBlack);
+    cg.addColour (jlimit (0.0, 1.0, 1.0 - (cs * 0.25f) / edgeBlurRadius), colour.darker (0.4f).withMultipliedAlpha (0.3f));
+
+    if (! (flatOnLeft || flatOnTop || flatOnBottom))
+    {
+        g.saveState();
+
+#ifdef USE_OLD_JUCE
+		g.setBrush(&GradientBrush(cg));
+#else
+        g.setGradientFill(cg);
+#endif
+        g.reduceClipRegion (intX, intY, intEdge, intH);
+        g.fillPath (outline);
+        g.restoreState();
+    }
+
+
+    if (! (flatOnRight || flatOnTop || flatOnBottom))
+    {
+        cg.x1 = x + width - edgeBlurRadius;
+        cg.x2 = x + width;
+
+        g.saveState();
+#ifdef USE_OLD_JUCE
+		g.setBrush(&GradientBrush(cg));
+#else
+        g.setGradientFill(cg);
+#endif
+        g.reduceClipRegion (intX + intW - intEdge, intY, 2 + intEdge, intH);
+        g.fillPath (outline);
+        g.restoreState();
+    }
+
+    //return;
+
+    // White upper shine
+    {
+        const float leftIndent = flatOnLeft ? 0.0f : cs * 0.4f;
+        const float rightIndent = flatOnRight ? 0.0f : cs * 0.4f;
+
+        Path highlight;
+        createRoundedPath (highlight,
+                           x + leftIndent,
+                           y + cs * 0.1f,
+                           width - (leftIndent + rightIndent),
+                           4, cs * 0.3f,
+                           ! (flatOnLeft || flatOnTop),
+                           ! (flatOnRight || flatOnTop),
+                           ! (flatOnLeft || flatOnBottom),
+                           ! (flatOnRight || flatOnBottom));
+
+#ifdef USE_OLD_JUCE
+        g.setBrush(&GradientBrush(colour.brighter (1.0f), 0, y , Colours::transparentWhite, 0, y + 3, false));
+#else
+        g.setGradientFill (ColourGradient(colour.brighter (1.0f), 0, y, Colours::transparentWhite, 0, y + 3, false));
+#endif
+        g.fillPath (highlight);
+    }
+
+    g.setColour (colour.darker().withMultipliedAlpha (1.5f));
+    g.strokePath (outline, PathStrokeType (outlineThickness));
+
+    return;
+}
+
+
+void drawGlassRect (Graphics& g,
+                            const float x, const float y,
+                            const float width, const float height,
+                            const Colour& colour,
+                            const float outlineThickness,
+                            const float cornerSize,
+                            const bool flatOnLeft,
+                            const bool flatOnRight,
+                            const bool flatOnTop,
+                            const bool flatOnBottom) throw()
+{
+    if (width <= outlineThickness || height <= outlineThickness)
+        return;
+
+    const int intX = (int) x;
+    const int intY = (int) y;
+    const int intW = (int) width;
+    const int intH = (int) height;
+
+    const float cs = cornerSize < 0 ? jmin (width * 0.5f, height * 0.5f) : cornerSize;
+    const float edgeBlurRadius = height * 0.75f + (height - cs * 2.0f);
+    const int intEdge = (int) edgeBlurRadius;
+
+    Path outline;
+
+    createRoundedPath (outline, x, y, width, height, cs,
+                        ! (flatOnLeft || flatOnTop),
+                        ! (flatOnRight || flatOnTop),
+                        ! (flatOnLeft || flatOnBottom),
+                        ! (flatOnRight || flatOnBottom));
+
+    {
+        ColourGradient cg (colour, 0, y, colour, 0, y + height, false);
+
+        //cg.addColour (0.03, colour.withMultipliedAlpha (0.9f));
+        cg.addColour (0.4, colour);
+        cg.addColour (0.94, colour.withMultipliedAlpha (0.6f));
+
+#ifdef USE_OLD_JUCE
+        g.setBrush(&GradientBrush(cg));
+#else
+        g.setGradientFill(cg);
+#endif	
+        g.fillPath (outline);
+    }
+
+    //return;
+
+    ColourGradient cg (Colours::transparentBlack, x + edgeBlurRadius, y + height * 0.5f, colour.darker (0.4f), x, y + height * 0.5f, true);
+
+    cg.addColour (jlimit (0.0, 1.0, 1.0 - (cs * 0.5f) / edgeBlurRadius), Colours::transparentBlack);
+    cg.addColour (jlimit (0.0, 1.0, 1.0 - (cs * 0.25f) / edgeBlurRadius), colour.darker (0.4f).withMultipliedAlpha (0.3f));
+
+    if (! (flatOnLeft || flatOnTop || flatOnBottom))
+    {
+        g.saveState();
+
+#ifdef USE_OLD_JUCE
+		g.setBrush(&GradientBrush(cg));
+#else
+        g.setGradientFill(cg);
+#endif
+        g.reduceClipRegion (intX, intY, intEdge, intH);
+        g.fillPath (outline);
+        g.restoreState();
+    }
+
+
+    if (! (flatOnRight || flatOnTop || flatOnBottom))
+    {
+        cg.x1 = x + width - edgeBlurRadius;
+        cg.x2 = x + width;
+
+        g.saveState();
+#ifdef USE_OLD_JUCE
+		g.setBrush(&GradientBrush(cg));
+#else
+        g.setGradientFill(cg);
+#endif
+        g.reduceClipRegion (intX + intW - intEdge, intY, 2 + intEdge, intH);
+        g.fillPath (outline);
+        g.restoreState();
+    }
+
+    //return;
+
+    // White upper shine
+    {
+        const float leftIndent = flatOnLeft ? 0.0f : cs * 0.4f;
+        const float rightIndent = flatOnRight ? 0.0f : cs * 0.4f;
+
+        Path highlight;
+        createRoundedPath (highlight,
+                           x + leftIndent,
+                           y + cs * 0.1f,
+                           width - (leftIndent + rightIndent),
+                           height * 0.3f, cs * 0.3f,
+                           ! (flatOnLeft || flatOnTop),
+                           ! (flatOnRight || flatOnTop),
+                           ! (flatOnLeft || flatOnBottom),
+                           ! (flatOnRight || flatOnBottom));
+
+#ifdef USE_OLD_JUCE
+        g.setBrush(&GradientBrush(colour.brighter (2.0f), 0, y + height * 0.06f, Colours::transparentWhite, 0, y + height * 0.3f, false));
+#else
+        g.setGradientFill (ColourGradient(colour.brighter (2.0f), 0, y + height * 0.06f, Colours::transparentWhite, 0, y + height * 0.3f, false));
+#endif
+        g.fillPath (highlight);
+    }
+
+    g.setColour (colour.darker().withMultipliedAlpha (1.5f));
+    g.strokePath (outline, PathStrokeType (outlineThickness));
+
+    return;
+}
+
+void drawGlassRound (Graphics& g,
+                           const float x, const float y,
+                           const float diameter,
+                           const Colour& colour,
+                           const float outlineThickness) throw()
+{
+    if (diameter <= outlineThickness)
+        return;
+
+    Path p;
+    p.addEllipse (x, y, diameter, diameter);
+
+    {
+        ColourGradient cg (Colours::white.overlaidWith (colour.withMultipliedAlpha (0.3f)), 0, y,
+                           Colours::white.overlaidWith (colour.withMultipliedAlpha (0.3f)), 0, y + diameter, false);
+
+        cg.addColour (0.4, Colours::white.overlaidWith (colour));
+
+#ifdef USE_OLD_JUCE
+        g.setBrush(&GradientBrush(cg));
+#else
+        g.setGradientFill(cg);
+#endif
+
+        g.fillPath (p);
+    }
+
+    {
+
+#ifdef USE_OLD_JUCE
+        g.setBrush(&GradientBrush(Colours::white, 0, y + diameter * 0.06f, Colours::transparentWhite, 0, y + diameter * 0.3f, false));
+#else
+        g.setGradientFill(ColourGradient(Colours::white, 0, y + diameter * 0.06f,
+                          Colours::transparentWhite, 0, y + diameter * 0.3f, false));
+#endif
+
+        g.fillEllipse (x + diameter * 0.2f, y + diameter * 0.05f, diameter * 0.6f, diameter * 0.4f);
+    }
+
+    {
+        ColourGradient cg (Colours::transparentBlack,
+                           x + diameter * 0.5f, y + diameter * 0.5f,
+                           Colours::black.withAlpha (0.5f * outlineThickness * colour.getFloatAlpha()),
+                           x, y + diameter * 0.5f, true);
+
+        cg.addColour (0.7, Colours::transparentBlack);
+        cg.addColour (0.8, Colours::black.withAlpha (0.1f * outlineThickness));
+
+#ifdef USE_OLD_JUCE
+        g.setBrush(&GradientBrush(cg));
+#else
+        g.setGradientFill(cg);
+#endif
+        g.fillPath (p);
+    }
+
+    g.setColour (Colours::black.withAlpha (0.5f * colour.getFloatAlpha()));
+    g.drawEllipse (x, y, diameter, diameter, outlineThickness);
+}
+
+
+void paintButton (Graphics& g, int x, int y, int w, int h, bool isMouseOverButton, bool isButtonDown)
+{
+    g.setColour(Colour(21, 25, 26));
+    g.fillRect(x, y, w, h);
+
+    g.setColour(Colour(75, 101, 90));
+    //g.setColour(Colour(74, 88, 91));
+    g.drawRect(x+1, y+1, w - 2, h - 2);
+
+    g.setColour(Colour(110, 160, 150));
+    //g.setColour(Colour(112, 124, 129));
+    g.fillRect(x+2, y+2, w - 4, h - 4);
+
+    if(!isButtonDown)
+    {
+        Colour clr = Colour(200, 220, 230);
+
+        g.setColour(clr);
+        //g.setColour(Colour(233, 233, 233));
+        g.drawHorizontalLine(y+2, x+2.f, x+float(w - 2));
+        g.setColour(clr.withAlpha(0.35f));
+        g.drawHorizontalLine(y+3, x+2.f, x+float(w - 2));
+        g.setColour(clr.withAlpha(0.25f));
+        g.drawHorizontalLine(y+4, x+2.f, x+float(w - 2));
+        g.setColour(clr.withAlpha(0.2f));
+        g.drawHorizontalLine(y+5, x+2.f, x+float(w - 2));
+        g.setColour(clr.withAlpha(0.15f));
+        g.drawHorizontalLine(y+6, x+2.f, x+float(w - 2));
+        g.setColour(clr.withAlpha(0.1f));
+        g.drawHorizontalLine(y+7, x+2.f, x+float(w - 2));
+        g.setColour(clr.withAlpha(0.08f));
+        g.drawHorizontalLine(y+8, x+2.f, x+float(w - 2));
+        g.setColour(clr.withAlpha(0.06f));
+        g.drawHorizontalLine(y+9, x+2.f, x+float(w - 2));
+        g.setColour(clr.withAlpha(0.05f));
+        g.drawHorizontalLine(y+10, x+2.f, x+float(w - 2));
+        g.setColour(clr.withAlpha(0.04f));
+        g.drawHorizontalLine(y+11, x+2.f, x+float(w - 2));
+        
+        g.setColour(Colour(143, 159, 165));
+        //g.setColour(Colour(137, 137, 137));
+        g.drawHorizontalLine(y + h - 3, x + 2.f, x + float(w - 2));
+    }
+    else
+    {
+    }
 }
 
 

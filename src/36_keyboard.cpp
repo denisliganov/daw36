@@ -1,30 +1,31 @@
 
 
 
-#include "36_globals.h"
-#include "36_keyboard.h"
-#include "36_grid.h"
-#include "36_pattern.h"
-#include "36_note.h"
+#include "36.h"
+#include "36_audio_dev.h"
+#include "36_button.h"
+#include "36_configwin.h"
 #include "36_ctrlpanel.h"
+#include "36_draw.h"
+#include "36_edit.h"
+#include "36_globals.h"
+#include "36_grid.h"
+#include "36_history.h"
+#include "36_juce_components.h"
 #include "36_instrpanel.h"
 #include "36_instr.h"
+#include "36_keyboard.h"
+#include "36_makeup.h"
 #include "36_menu.h"
-#include "36_edit.h"
-#include "36_button.h"
-#include "36_draw.h"
-#include "36_project.h"
-#include "36_juce_components.h"
-#include "36_history.h"
-#include "36.h"
-#include "36_utils.h"
-#include "36_transport.h"
-#include "36_configwin.h"
-#include "36_textinput.h"
 #include "36_numbox.h"
-#include "36_window.h"
-#include "36_audio_dev.h"
+#include "36_note.h"
+#include "36_pattern.h"
+#include "36_project.h"
 #include "36_snapmenu.h"
+#include "36_transport.h"
+#include "36_textinput.h"
+#include "36_utils.h"
+#include "36_window.h"
 
 
 
@@ -514,7 +515,15 @@ void TextCursor::handleKeyOrCharPressed(unsigned key, char character, unsigned f
                     wc->setOpen(true);*/
                 }
                 break;
+
+                case key_f8:
+                {
+                    SubWindow* wc = MObject->addWindow(new MakeUpObject());
             
+                    wc->setOpen(true);
+                }
+                break;
+
                 case key_delete:
                 {
                     grid->action(GridAction_Delete);

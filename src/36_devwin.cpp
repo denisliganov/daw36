@@ -57,7 +57,7 @@ void DevParamObject::initAll()
             ParamBox* box = NULL;
             addObject(box = new ParamBox(prm), x, y, boxWidth, boxHeight);
 
-            box->setSliderOnly(false);
+            //box->setSliderOnly(false);
 
             y += boxHeight + 3;
         }

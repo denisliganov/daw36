@@ -18,21 +18,32 @@ protected:
 
         Parameter*          brightness;
         Parameter*          hue;
-        ListBoxx*           listBox;
+        Parameter*          saturation;
+        Parameter*          bufferSize;
+
+        ParamRadio*         pr;
+
+        ListBoxx*           interpolation;
+        ListBoxx*           midiDevices;
+        ListBoxx*           outputDevices;
+
+        ParamBox*           buffSizeBox;
+        ParamBox*           pbox2;
+        ParamBox*           pbox3;
+        ParamBox*           pbox4;
+        ParamBox*           pbox5;
+        ParamBox*           pbox6;
+
         Knob*               knob1;
         Knob*               knob2;
         Knob*               knob3;
         Knob*               knob4;
-        RadioBox*           rb1;
+
+        RadioBox*           chooserBox;
         RadioBox*           rb2;
-        Slider36*           slider1;
-        Slider36*           slider2;
-        Slider36*           slider3;
-        Slider36*           slider4;
-        Slider36*           slider5;
-        Slider36*           slider6;
-        Parameter*          saturation;
-        
+
+        Button36*           showASIOPanel;
+
         int                 xstart;
         int                 ystart;
         int                 border;

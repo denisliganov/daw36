@@ -70,10 +70,14 @@ protected:
             //setc(g, 0xffFFC030, 1, .5f);
 
             //rect(g, 0xa0FFC030);
+/*
             setc(g, 0xb0FFA000);
             lineH(g, 0, 0, width-1);
             lineH(g, height-1, 0, width-1);
             fillx(g, width-3, 4, 1, height-8);
+*/
+            setc(g, 0xe0FF9930);
+            gDrawRect(g,  x1, y1, x2, y2);
         }
 };
 

@@ -15,83 +15,89 @@ ConfigObject::ConfigObject()
 {
     border = 10;
     xstart = ystart = border;
-    groupSpacing = 6;
+    groupSpacing = 8;
     smallSpacing = 4;
     wndW = border;
     wndH = border;
+    horizPut = false;
+
 
 /*
-    Gobj::addObject(slider1 = new Slider36(false), 10, 50, 120, 20);
-    Gobj::addObject(slider2 = new Slider36(false), 10, 72, 120, 20);
-    Gobj::addObject(slider3 = new Slider36(false), 10, 94, 120, 20);
+    Gobj::addObject(buffSizeBox = new Slider36(false), 10, 50, 120, 20);
+    Gobj::addObject(pbox2 = new Slider36(false), 10, 72, 120, 20);
+    Gobj::addObject(pbox3 = new Slider36(false), 10, 94, 120, 20);
 
-    Gobj::addObject(listBox = new ListBoxx("List1"), 200, 50, 120, 100);
+    Gobj::addObject(midiDevices = new ListBoxx("List1"), 200, 50, 120, 100);
 
     Gobj::addObject(knob1 = new Knob(new Parameter(0.5f)), 140, 190, 40, 40);
     Gobj::addObject(knob2 = new Knob(new Parameter(0.5f)), 180, 190, 20, 20);
 */
 
-    horizPut = false;
+    // Init params and controls
 
-    placeObject(slider1 = new Slider36(false), 40, 20);
-    placeObject(slider2 = new Slider36(false), 40, 20);
-    placeObject(slider3 = new Slider36(false), 40, 20);
+    addParam(hue = new Parameter("hue", globalHue, 0, 1));
+    addParam(saturation = new Parameter("sat", 0.2f, 0, 1));
+    addParam(brightness = new Parameter("brightness", 0, -1.f, 1.9f));
+    addParam(bufferSize = new Parameter("buffsize", 2048, 512, 16384-512));
 
-    slider1->addParam(hue = new Parameter(globalHue, 0, 1));
-    slider2->addParam(saturation = new Parameter(0.2f, 0, 1));
-    slider3->addParam(brightness = new Parameter(0, -1.f, 1.9f));
+    knob1 = new Knob(hue);
+    knob2 = new Knob(saturation);
+    knob3 = new Knob(brightness);
+    buffSizeBox = new ParamBox(bufferSize);
 
-    hue->addControl(slider1);
-    saturation->addControl(slider2);
-    brightness->addControl(slider3);
+    pr = new ParamRadio("Radio1");
+    pr->addOption("Opt1");
+    pr->addOption("Opt2");
+    pr->addOption("Opt3");
+    pr->addOption("Opt4");
+    pr->addOption("Opt15");
+
+    chooserBox = new RadioBox(pr);
+
+    outputDevices = new ListBoxx("Output devices");
+    outputDevices->addEntry("Device1");
+    outputDevices->addEntry("Device2");
+
+    midiDevices = new ListBoxx("MIDI devices");
+    midiDevices->addEntry("Entry1");
+    midiDevices->addEntry("Entry2");
+    midiDevices->addEntry("Entry3");
+    midiDevices->addEntry("Entry4Entry4Entry4Entry4Entry4");
+    midiDevices->addEntry("Entry5");
+    midiDevices->addEntry("Entry6Entry4Entry4");
+    midiDevices->addEntry("Entry7Entry4Entry4Entry4Entry4Entry4");
+    midiDevices->addEntry("Entry8Entry4");
+    midiDevices->addEntry("Entry9");
+    midiDevices->addEntry("Entry10");
+    midiDevices->addEntry("Entry11");
+
+
+    // Place all controls
+
+
+    placeObject(outputDevices, 220, 300);
+    placeObject(buffSizeBox, 180, 20);
+
+    resetPut();
 
     horizPut = true;
 
-    placeObject(listBox = new ListBoxx("List1"), 120, 300);
+    resetGroup();
 
-    listBox->addEntry("Entry1");
-    listBox->addEntry("Entry2");
-    listBox->addEntry("Entry3");
-    listBox->addEntry("Entry4Entry4Entry4Entry4Entry4");
-    listBox->addEntry("Entry5");
-    listBox->addEntry("Entry6Entry4Entry4");
-    listBox->addEntry("Entry7Entry4Entry4Entry4Entry4Entry4");
-    listBox->addEntry("Entry8Entry4");
-    listBox->addEntry("Entry9");
-    listBox->addEntry("Entry10");
-    listBox->addEntry("Entry11");
+    placeObject(midiDevices, 220, 100);
 
     resetGroup();
 
-    static ParamRadio* pr = new ParamRadio("Radio1");
-    pr->addOption("R1");
-    pr->addOption("R123423423423");
-    pr->addOption("Crown");
-    pr->addOption("Altavista");
-    pr->addOption("Google");
-    placeObject(rb1 = new RadioBox(pr), 55, rb1->getH());
+    placeObject(chooserBox, 100, chooserBox->getH());
 
     resetGroup();
 
-    horizPut = false;
-
-    placeObject(knob1 = new Knob(new Parameter("Paraaadasdam1", 0.5f, 0, 22222, Units_dB)), 88, 88);
-    placeObject(knob2 = new Knob(new Parameter(0.5f)), 44, 44);
-    placeObject(knob3 = new Knob(new Parameter(0.5f)), 55, 55);
-    placeObject(knob4 = new Knob(new Parameter(0.5f)), 111, 111);
-
-    //horizPut = true;
+    placeObject(knob1, 55, 70);
+    placeObject(knob2, 55, 70);
+    placeObject(knob3, 55, 70);
 
     resetGroup();
     resetPut();
-
-    placeObject(slider4 = new Slider36(false), 60, 20);
-    placeObject(slider5 = new Slider36(false), 60, 20);
-    placeObject(slider6 = new Slider36(false), 60, 20);
-
-    addParam(hue);
-    addParam(saturation);
-    addParam(brightness);
 
     WinObject::setWidthHeight(wndW + border, wndH + border);
 }
@@ -212,7 +218,9 @@ void ConfigObject::handleParamUpdate(Param * param)
     Gobj::redraw();
 
     if(holderWindow)
+    {
         holderWindow->repaint();
+    }
 }
 
 

@@ -31,15 +31,18 @@ protected:
 
         void drawSelf(Graphics& g)
         {
-            fill(g, .2f);
+            Instrument* instr = (Instrument*)parent;
+
+            instr->setMyColor(g, .4f);
+            fillx(g, 0, 0, width, height);
 
             if(pressed)
             {
-                setc(g, 1.f);
+                instr->setMyColor(g, 1.f);
             }
             else
             {
-                setc(g, .6f);
+                instr->setMyColor(g, .6f);
             }
 
             txt(g, FontVis, "M", width/2 - 2, height/2 + gGetTextHeight(FontVis)/2 - 1);
@@ -59,15 +62,18 @@ protected:
 
         void drawSelf(Graphics& g)
         {
-            fill(g, .2f);
+            Instrument* instr = (Instrument*)parent;
+
+            instr->setMyColor(g, .4f);
+            fillx(g, 0, 0, width, height);
 
             if(pressed)
             {
-                setc(g, 1.f);
+                instr->setMyColor(g, 1.f);
             }
             else
             {
-                setc(g, .6f);
+                instr->setMyColor(g, .6f);
             }
 
             txt(g, FontVis, "S", width/2 - 2, height/2 + gGetTextHeight(FontVis)/2 - 1);
@@ -104,18 +110,7 @@ protected:
 
             if(wVis)
             {
-                uint32 colorHL = 0xffFF9930;
-                uint32 hlDecr = 0x80000000;
-                
-                for (int c = 0; c < 4; c++)
-                {
-                    setc(g, (uint32)colorHL);
-
-                    rectx(g, 0 + c, 0 + c, width - c*2, height - c*2);
-
-                    colorHL -= hlDecr;
-                    hlDecr /=2;
-                }
+                gGradRect(g, 0xffFF9930, x1, y1, x2, y2);
             }
 
             int tw = gGetTextWidth(FontBold, instr->getAlias());

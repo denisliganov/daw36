@@ -22,9 +22,7 @@ protected:
 
             int                 border;
             int                 currentEntry;
-            int                 entryHeight;
             int                 scrWidth;
-            FontId              fontId;
 
             std::vector<std::string>  entries;
 
