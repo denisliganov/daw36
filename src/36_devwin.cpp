@@ -55,7 +55,7 @@ void DevParamObject::initAll()
         if (prm)
         {
             ParamBox* box = NULL;
-            addObject(box = new ParamBox(prm), x, y, boxWidth, boxHeight);
+            Gobj::addObject(box = new ParamBox(prm), x, y, boxWidth, boxHeight);
 
             //box->setSliderOnly(false);
 
@@ -64,21 +64,21 @@ void DevParamObject::initAll()
         else if (prmRad)
         {
             RadioBox* box = NULL;
-            addObject(box = new RadioBox(prmRad), x + 5, y, boxWidth - 5, box->getH());
+            Gobj::addObject(box = new RadioBox(prmRad), x + 5, y, boxWidth - 5, box->getH());
 
             y += box->getH() + 3;
         }
         else if (prmSel)
         {
             SelectorBox* box = NULL;
-            addObject(box = new SelectorBox(prmSel), x + 5, y, boxWidth - 5, box->getH());
+            Gobj::addObject(box = new SelectorBox(prmSel), x + 5, y, boxWidth - 5, box->getH());
 
             y += box->getH() + 3;
         }
         else if (prmTg)
         {
             ToggleBox* box = NULL;
-            addObject(box = new ToggleBox(prmTg), x + 5, y, boxWidth - 5, box->getH());
+            Gobj::addObject(box = new ToggleBox(prmTg), x + 5, y, boxWidth - 5, box->getH());
 
             y += box->getH() + 3;
         }
@@ -91,7 +91,7 @@ void DevParamObject::initAll()
 
 void DevParamObject::drawSelf(Graphics& g)
 {
-    fill(g, 0.35f);
+    Gobj::fill(g, 0.35f);
 }
 
 void DevParamObject::handleChildEvent(Gobj * obj,InputEvent & ev)

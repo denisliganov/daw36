@@ -58,7 +58,7 @@ public:
             }
             else
             {
-                setVisible(false);
+                setVis(false);
             }
         }
 
@@ -754,7 +754,7 @@ void InstrPanel::remap()
     {
         btShowFX->setCoords1(0, 0, 28, 28);
 
-        mixr->setVisible(false);
+        mixr->setVis(false);
     }
 
     confine(0, instrListY-1, width, instrListY + instrListHeight - 1);

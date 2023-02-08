@@ -364,11 +364,6 @@ void LoadCursorImages()
 
 void ToggleConfigWindow()
 {
-    if(ConfigWindow == NULL)
-    {
-        ConfigWindow = MObject->addWindow(new ConfigObject());
-    }
-
-    ConfigWindow->setOpen(!ConfigWindow->isOpen());
+    
 }
 

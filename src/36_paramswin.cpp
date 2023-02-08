@@ -10,13 +10,6 @@
 
 ParamWin::ParamWin()
 {
-    addObject(slider1 = new Slider36(false), 10, 10, 60, 10);
-    addObject(slider2 = new Slider36(false), 10, 25, 60, 10);
-    addObject(slider3 = new Slider36(false), 10, 40, 60, 10);
-
-    slider1->addParam(new Parameter());
-    slider2->addParam(new Parameter());
-    slider3->addParam(new Parameter());
 
     setWidthHeight(300, 300);
 }

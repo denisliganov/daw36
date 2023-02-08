@@ -106,7 +106,7 @@ public:
 
                             setCoords1(x, y, currNote->getW(), currNote->getH());
 
-                            setVisible(true);
+                            setVis(true);
                         }
                     }
                     else if (grid->mode == GridMode_Default)
@@ -116,7 +116,7 @@ public:
 
                         setCoords2(x, y, x + grid->snap*grid->getPixelsPerTick() - 1, y + int(grid->getLineHeight()) - 1);
 
-                        setVisible(true);
+                        setVis(true);
                     }
                 }
             }
@@ -124,7 +124,7 @@ public:
 
         void update()
         {
-            setVisible(false);
+            setVis(false);
 
             if((grid->isundermouse()) && grid->getDisplayMode() == GridDisplayMode_Bars && grid->mode != GridMode_Selecting)
             {
@@ -2064,7 +2064,7 @@ void Grid::selReset(bool deselect)
     }
 
     sel->setCoords1(0, 0, 1, 1);
-    sel->setVisible(false);
+    sel->setVis(false);
 }
 
 

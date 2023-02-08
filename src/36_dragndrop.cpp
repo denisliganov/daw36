@@ -62,8 +62,8 @@ void DragAndDrop::reset()
 
     setCoords2(0, 0, -1, -1);
 
-    dropHighlightHorizontal->setVisible(false);
-    dropHighlightVertical->setVisible(false);
+    dropHighlightHorizontal->setVis(false);
+    dropHighlightVertical->setVis(false);
 };
 
 bool DragAndDrop::canDrag()

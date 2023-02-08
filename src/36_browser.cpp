@@ -309,7 +309,7 @@ void Browser::disableAllEntries()
     {
         for(auto be : entries[i])
         {
-            be->setVisible(false);
+            be->setVis(false);
         }
     }
 }
@@ -668,7 +668,7 @@ void Browser::remap()
         }
         else
         {
-            be->setVisible(false);
+            be->setVis(false);
         }
 
         yentry += BrwEntryHeight;

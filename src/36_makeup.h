@@ -2,13 +2,12 @@
 #pragma once
 
 #include "36_globals.h"
-#include "36_window.h"
-#include "36_device.h"
+#include "36_paramobject.h"
 
 
 
 
-class MakeUpObject : public WinObject, public Device36
+class MakeUpObject : public ParamObject
 {
 protected:
 

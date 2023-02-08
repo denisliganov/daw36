@@ -182,6 +182,7 @@
     <ClCompile Include="src\36_lane.cpp" />
     <ClCompile Include="src\36_listbox.cpp" />
     <ClCompile Include="src\36_logger.cpp" />
+    <ClCompile Include="src\36_makeup.cpp" />
     <ClCompile Include="src\36_menu.cpp" />
     <ClCompile Include="src\36_midi.cpp" />
     <ClCompile Include="src\36_mixer.cpp" />
@@ -366,6 +367,7 @@
     <ClInclude Include="src\36_listbox.h" />
     <ClInclude Include="src\36_logger.h" />
     <ClInclude Include="src\36_macros.h" />
+    <ClInclude Include="src\36_makeup.h" />
     <ClInclude Include="src\36_menu.h" />
     <ClInclude Include="src\36_midi.h" />
     <ClInclude Include="src\36_midi_def.h" />

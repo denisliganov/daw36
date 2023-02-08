@@ -2,20 +2,23 @@
 #pragma once
 
 #include "36_globals.h"
-#include "36_effects.h"
-#include "36_window.h"
+#include "36_paramswin.h"
 
 
-class DevParamObject : public WinObject
+class DevParamObject : public ParamObject
 {
 public:
+
             DevParamObject(Device36* eff);
+
 protected:
-            Device36*   device;
-            void        drawSelf(Graphics& g);
-            void        handleChildEvent(Gobj * obj,InputEvent & ev);
-            void        handleClose();
-    virtual void        initAll();
+
+            Device36*           device;
+
+            void                drawSelf(Graphics& g);
+            void                handleChildEvent(Gobj * obj,InputEvent & ev);
+            void                handleClose();
+    virtual void                initAll();
 };
 
 

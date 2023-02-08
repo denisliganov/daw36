@@ -302,7 +302,7 @@ TextCursor::TextCursor()
 
 void TextCursor::setPos(float newTick, int newLine)
 {
-    setVisible(false);
+    setVis(false);
 
     tick = newTick;
     line = newLine;
@@ -327,7 +327,7 @@ void TextCursor::updPos()
 
                 setCoords2(x, y, x, y + int(grid->getLineHeight()) - 1);
 
-                setVisible(true);
+                setVis(true);
             }
         }
     }

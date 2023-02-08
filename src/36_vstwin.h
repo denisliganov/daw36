@@ -37,7 +37,7 @@ public:
         setSize (1, 1);
         setOpaque (true);
 
-        //setVisible (true);
+        //setVis (true);
         //setBufferedToImage(true);
     }
 

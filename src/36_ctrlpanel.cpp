@@ -3,6 +3,7 @@
 #include "36.h"
 #include "36_system.h"
 #include "36_ctrlpanel.h"
+#include "36_configwin.h"
 #include "36_scroller.h"
 #include "36_keyboard.h"
 #include "36_grid.h"
@@ -346,11 +347,22 @@ void ControlPanel::handleChildEvent(Gobj* obj, InputEvent& ev)
             }
             else if(obj == btConfig)
             {
-                ToggleConfigWindow();
+                static SubWindow* cw = NULL;
+
+                if(cw == NULL)
+                {
+                    ConfigObject* co = new ConfigObject();
+
+                    co->setInvokeButton(btConfig);
+
+                    cw = MObject->addWindow(co);
+                }
+                
+                cw->setOpen(!cw->isOpen());
             }
             else if(obj == btRender)
             {
-                //RenderWnd->setVisible(!RenderWnd->isVisible());
+                //RenderWnd->setVis(!RenderWnd->isVisible());
             }
             else if (obj == btRec)
             {

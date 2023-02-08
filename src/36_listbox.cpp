@@ -123,7 +123,7 @@ void ListBoxx::remap()
     }
     else
     {
-        vscr->setVisible(false);
+        vscr->setVis(false);
     }
 }
 

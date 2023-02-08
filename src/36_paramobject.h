@@ -3,14 +3,17 @@
 
 #include "36_globals.h"
 #include "36_objects.h"
+#include "36_window.h"
+#include "36_button.h"
 
 #include <vector>
 
 
 
-class ParamObject : public Gobj
+class ParamObject : public WinObject
 {
 public:
+
             ParamObject();
 
     virtual void                addParam(Param* param);
@@ -24,12 +27,15 @@ public:
     virtual void                handleParamUpdate(Param* param = NULL) {};
     virtual void                removeParam(Param* param);
     virtual void                setParamLock(bool lock) { paramLocked = lock; };
+            void                setInvokeButton(Button36* bt) { invokeButton = bt; }
+    virtual void                handleClose();
 
 protected:
 
             Trigger*            envelopes;
+            Button36*           invokeButton;
 
-            std::list<Param*>       params;
+            std::list<Param*>   params;
 
 private:
 

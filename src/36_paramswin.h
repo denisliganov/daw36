@@ -2,23 +2,21 @@
 #pragma once
 
 #include "36_globals.h"
+#include "36_window.h"
+#include "36_paramobject.h"
 
 
 
 class ParamWin : public WinObject
 {
-protected:
-
-        Slider36*   slider1;
-        Slider36*   slider2;
-        Slider36*   slider3;
-
-        void    drawSelf(Graphics& g);
-        void    handleChildEvent(Gobj * obj,InputEvent & ev);
-
 public:
 
-        ParamWin();
+            ParamWin();
+
+protected:
+
+            void                drawSelf(Graphics& g);
+            void                handleChildEvent(Gobj* obj, InputEvent& ev);
 };
 
 

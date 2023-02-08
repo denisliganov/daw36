@@ -9,6 +9,8 @@
 ParamObject::ParamObject()
 {
     paramLocked = false;
+
+    invokeButton = NULL;
 }
 
 void ParamObject::addParam(Param* param)
@@ -95,4 +97,10 @@ void ParamObject::dequeueParamEnvelope(Trigger* tg)
     tg->group_next = NULL;
 }
 
-
+void ParamObject::handleClose()
+{
+    if (invokeButton != NULL)
+    {
+        invokeButton->release();
+    }
+}

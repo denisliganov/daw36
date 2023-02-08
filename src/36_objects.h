@@ -102,7 +102,7 @@ public:
 
             void                setParent(Gobj* parent);
             void                setWindow(WinObject* w);
-            void                setVisible(bool vis);
+            void                setVis(bool vis);
             Gobj*               getLastTouchedObject(int mx, int my);
             void                settouchable(bool tch);
 

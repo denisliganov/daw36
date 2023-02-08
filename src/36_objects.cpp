@@ -152,7 +152,7 @@ void Gobj::setEnable(bool en)
     }
 }
 
-void Gobj::setVisible(bool vis)
+void Gobj::setVis(bool vis)
 {
     if(window)
     {
@@ -167,7 +167,7 @@ void Gobj::setVisible(bool vis)
 
         for(Gobj* obj : objs)
         {
-            obj->setVisible(false);
+            obj->setVis(false);
         }
     }
 }
@@ -315,7 +315,7 @@ void Gobj::updCoords()
     
         if(CheckPlaneCrossing(x1, y1, x2, y2, cx1, cy1, cx2, cy2) == true)
         {
-            setVisible(true);
+            setVis(true);
     
             dx1 =       x1 > cx1 ? x1 : cx1;
             dy1 =       y1 > cy1 ? y1 : cy1;
@@ -335,7 +335,7 @@ void Gobj::updCoords()
         }
         else
         {
-            setVisible(false);
+            setVis(false);
     
            // dx1 = dy1 = dx2 = dy2 = dwidth = dheight = 0;
         }

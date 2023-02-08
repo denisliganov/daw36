@@ -102,7 +102,6 @@ class JuceMidiInputCallback;
 class JuceMidiWrapper;
 class SampleWindow;
 class RenderWindow;
-class ConfigWindow;
 class ParamWindow;
 class SampleWave;
 class AButton;
