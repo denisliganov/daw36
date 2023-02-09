@@ -55,11 +55,15 @@ protected:
         int                 wndH;
         bool                horizPut;
 
-        void                placeObject(Gobj* obj, int ow, int oh);
-        void                resetPut();
-        void                resetGroup();
+        void                putRight(Gobj* obj, int ow, int oh);
+        void                putDown(Gobj* obj, int ow, int oh);
+        void                returnLeft();
+        void                returnTop();
+        void                putSpace();
+
         void                goHoriz()   { horizPut = true; }
         void                goVert()    { horizPut = false; }
+
         void                drawSelf(Graphics& g);
         void                handleChildEvent(Gobj * obj,InputEvent & ev);
         void                handleParamUpdate(Param * param = NULL);

@@ -72,44 +72,41 @@ ConfigObject::ConfigObject()
     midiDevices->addEntry("Entry11");
 
 
-    // Place all controls
+    // Position all controls
 
+    putRight(outputDevices, 220, 300);
+    putRight(buffSizeBox, 180, 20);
 
-    placeObject(outputDevices, 220, 300);
-    placeObject(buffSizeBox, 180, 20);
-
-    resetPut();
+    returnLeft();
 
     horizPut = true;
 
-    resetGroup();
+    putSpace();
 
-    placeObject(midiDevices, 220, 100);
+    putRight(midiDevices, 220, 100);
 
-    resetGroup();
+    putSpace();
 
-    placeObject(chooserBox, 100, chooserBox->getH());
+    putRight(chooserBox, 100, chooserBox->getH());
 
-    resetGroup();
+    putSpace();
 
-    placeObject(knob1, 55, 70);
-    placeObject(knob2, 55, 70);
-    placeObject(knob3, 55, 70);
+    putRight(knob1, 55, 70);
+    putRight(knob2, 55, 70);
+    putRight(knob3, 55, 70);
 
-    resetGroup();
-    resetPut();
+    putSpace();
+    returnLeft();
 
     WinObject::setWidthHeight(wndW + border, wndH + border);
 }
 
 void ConfigObject::drawSelf(Graphics& g)
 {
-    gSetMonoColor(g, 0.4f);
-
-    g.fillAll();
+    fill(g, 0.4f);
 }
 
-void ConfigObject::placeObject(Gobj* obj, int ow, int oh)
+void ConfigObject::putRight(Gobj* obj, int ow, int oh)
 {
     Gobj::addObject(obj, xstart, ystart, ow, oh);
 
@@ -143,7 +140,41 @@ void ConfigObject::placeObject(Gobj* obj, int ow, int oh)
     }
 }
 
-void ConfigObject::resetPut()
+void ConfigObject::putDown(Gobj* obj, int ow, int oh)
+{
+    Gobj::addObject(obj, xstart, ystart, ow, oh);
+
+    if (horizPut)
+    {
+        xstart += ow + smallSpacing;
+
+        if (xstart > wndW)
+        {
+            wndW = xstart;
+        }
+
+        if (ystart + oh + smallSpacing > wndH)
+        {
+            wndH = ystart + oh + smallSpacing;
+        }
+    }
+    else
+    {
+        ystart += oh + smallSpacing;
+
+        if (ystart > wndH)
+        {
+            wndH = ystart;
+        }
+
+        if (xstart + ow + smallSpacing > wndW)
+        {
+            wndW = xstart + ow + smallSpacing;
+        }
+    }
+}
+
+void ConfigObject::returnLeft()
 {
     if (horizPut)
     {
@@ -158,7 +189,22 @@ void ConfigObject::resetPut()
     }
 }
 
-void ConfigObject::resetGroup()
+void ConfigObject::returnTop()
+{
+    if (horizPut)
+    {
+        xstart = border;
+        ystart = wndH;
+//        wndH = ymax + groupSpacing;
+    }
+    else
+    {
+        xstart = wndW;
+        ystart = border;
+    }
+}
+
+void ConfigObject::putSpace()
 {
     if (horizPut)
     {

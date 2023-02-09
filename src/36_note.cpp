@@ -197,7 +197,10 @@ void Note::drawOnGrid(Graphics& g, Grid* grid)
     {
         FontId fnt = FontSmall;
 
-        fill(g, 1.f, .3f);
+        instr->setMyColor(g, .3f);
+        gFillRect(g, x1, y1, x2, y2);
+
+        //fillx(g, 1.f, .3f);
 
         //setc(g, 1.f, .8f);
         //lineH(g, 0, 0, width);
@@ -205,11 +208,10 @@ void Note::drawOnGrid(Graphics& g, Grid* grid)
         //setc(g, .0f, .25f);
         //fillx(g, 0, 1, 7, 8);
 
-        setc(g, 0.f);
-        txt(g,fnt, instr->getAlias(), 1, height-1);
-
-        setc(g, 1.f);
-        txt(g,fnt, instr->getAlias(), 0, height-2);
+        //setc(g, 0.f);
+        //txt(g,fnt, instr->getAlias(), 1, height-1);
+        //setc(g, 1.f);
+        //txt(g,fnt, instr->getAlias(), 0, height-2);
 
         if(issel())
         {
