@@ -44,25 +44,6 @@ protected:
 
         Button36*           showASIOPanel;
 
-        int                 xstart;
-        int                 ystart;
-        int                 border;
-        int                 xmax;
-        int                 ymax;
-        int                 groupSpacing;
-        int                 smallSpacing;
-        int                 wndW;
-        int                 wndH;
-        bool                horizPut;
-
-        void                putRight(Gobj* obj, int ow, int oh);
-        void                putDown(Gobj* obj, int ow, int oh);
-        void                returnLeft();
-        void                returnTop();
-        void                putSpace();
-
-        void                goHoriz()   { horizPut = true; }
-        void                goVert()    { horizPut = false; }
 
         void                drawSelf(Graphics& g);
         void                handleChildEvent(Gobj * obj,InputEvent & ev);

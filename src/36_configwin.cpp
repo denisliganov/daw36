@@ -13,14 +13,6 @@
 
 ConfigObject::ConfigObject()
 {
-    border = 10;
-    xstart = ystart = border;
-    groupSpacing = 8;
-    smallSpacing = 4;
-    wndW = border;
-    wndH = border;
-    horizPut = false;
-
 
 /*
     Gobj::addObject(buffSizeBox = new Slider36(false), 10, 50, 120, 20);
@@ -77,153 +69,28 @@ ConfigObject::ConfigObject()
     putRight(outputDevices, 220, 300);
     putRight(buffSizeBox, 180, 20);
 
-    returnLeft();
+    goTop();
 
-    horizPut = true;
-
-    putSpace();
+    //putSpace();
 
     putRight(midiDevices, 220, 100);
 
-    putSpace();
+    //putSpace();
 
     putRight(chooserBox, 100, chooserBox->getH());
 
-    putSpace();
+    //putSpace();
 
     putRight(knob1, 55, 70);
     putRight(knob2, 55, 70);
     putRight(knob3, 55, 70);
 
-    putSpace();
-    returnLeft();
-
-    WinObject::setWidthHeight(wndW + border, wndH + border);
+    finalizePuts();
 }
 
 void ConfigObject::drawSelf(Graphics& g)
 {
     fill(g, 0.4f);
-}
-
-void ConfigObject::putRight(Gobj* obj, int ow, int oh)
-{
-    Gobj::addObject(obj, xstart, ystart, ow, oh);
-
-    if (horizPut)
-    {
-        xstart += ow + smallSpacing;
-
-        if (xstart > wndW)
-        {
-            wndW = xstart;
-        }
-
-        if (ystart + oh + smallSpacing > wndH)
-        {
-            wndH = ystart + oh + smallSpacing;
-        }
-    }
-    else
-    {
-        ystart += oh + smallSpacing;
-
-        if (ystart > wndH)
-        {
-            wndH = ystart;
-        }
-
-        if (xstart + ow + smallSpacing > wndW)
-        {
-            wndW = xstart + ow + smallSpacing;
-        }
-    }
-}
-
-void ConfigObject::putDown(Gobj* obj, int ow, int oh)
-{
-    Gobj::addObject(obj, xstart, ystart, ow, oh);
-
-    if (horizPut)
-    {
-        xstart += ow + smallSpacing;
-
-        if (xstart > wndW)
-        {
-            wndW = xstart;
-        }
-
-        if (ystart + oh + smallSpacing > wndH)
-        {
-            wndH = ystart + oh + smallSpacing;
-        }
-    }
-    else
-    {
-        ystart += oh + smallSpacing;
-
-        if (ystart > wndH)
-        {
-            wndH = ystart;
-        }
-
-        if (xstart + ow + smallSpacing > wndW)
-        {
-            wndW = xstart + ow + smallSpacing;
-        }
-    }
-}
-
-void ConfigObject::returnLeft()
-{
-    if (horizPut)
-    {
-        xstart = border;
-        ystart = wndH;
-//        wndH = ymax + groupSpacing;
-    }
-    else
-    {
-        xstart = wndW;
-        ystart = border;
-    }
-}
-
-void ConfigObject::returnTop()
-{
-    if (horizPut)
-    {
-        xstart = border;
-        ystart = wndH;
-//        wndH = ymax + groupSpacing;
-    }
-    else
-    {
-        xstart = wndW;
-        ystart = border;
-    }
-}
-
-void ConfigObject::putSpace()
-{
-    if (horizPut)
-    {
-        xstart += groupSpacing;
-    }
-    else
-    {
-        ystart += groupSpacing;
-    }
-
-    if (xstart > wndW)
-    {
-        wndW = xstart;
-    }
-
-    if (ystart > wndH)
-    {
-        wndH = ystart;
-    }
 }
 
 void ConfigObject::handleChildEvent(Gobj * obj,InputEvent & ev)

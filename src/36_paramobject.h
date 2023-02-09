@@ -34,8 +34,29 @@ protected:
 
             Trigger*            envelopes;
             Button36*           invokeButton;
-
             std::list<Param*>   params;
+
+            int                 border;
+            int                 xstart1;
+            int                 ystart1;
+
+            int                 xstart2;
+            int                 ystart2;
+
+            int                 groupSpacing;
+            int                 objSpacing;
+
+            int                 wndW;
+            int                 wndH;
+
+            bool                horizPut;
+
+            void                putRight(Gobj* obj, int ow, int oh);
+            void                putBelow(Gobj* obj, int ow, int oh);
+            void                goLeft();
+            void                goTop();
+            void                putSpace();
+            void                finalizePuts();
 
 private:
 

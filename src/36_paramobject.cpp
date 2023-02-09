@@ -8,6 +8,15 @@
 
 ParamObject::ParamObject()
 {
+    border = 10;
+    xstart1 = ystart1 = border;
+    groupSpacing = 8;
+    objSpacing = 4;
+    wndW = border;
+    wndH = border;
+    horizPut = false;
+
+
     paramLocked = false;
 
     invokeButton = NULL;
@@ -104,3 +113,131 @@ void ParamObject::handleClose()
         invokeButton->release();
     }
 }
+
+
+void ParamObject::putRight(Gobj* obj, int ow, int oh)
+{
+    Gobj::addObject(obj, xstart1, ystart1, ow, oh);
+
+    if (horizPut)
+    {
+        xstart1 += ow + objSpacing;
+
+        if (xstart1 > wndW)
+        {
+            wndW = xstart1;
+        }
+
+        if (ystart1 + oh + objSpacing > wndH)
+        {
+            wndH = ystart1 + oh + objSpacing;
+        }
+    }
+    else
+    {
+        ystart1 += oh + objSpacing;
+
+        if (ystart1 > wndH)
+        {
+            wndH = ystart1;
+        }
+
+        if (xstart1 + ow + objSpacing > wndW)
+        {
+            wndW = xstart1 + ow + objSpacing;
+        }
+    }
+}
+
+void ParamObject::putBelow(Gobj* obj, int ow, int oh)
+{
+    Gobj::addObject(obj, xstart1, ystart1, ow, oh);
+
+    if (horizPut)
+    {
+        xstart1 += ow + objSpacing;
+
+        if (xstart1 > wndW)
+        {
+            wndW = xstart1;
+        }
+
+        if (ystart1 + oh + objSpacing > wndH)
+        {
+            wndH = ystart1 + oh + objSpacing;
+        }
+    }
+    else
+    {
+        ystart1 += oh + objSpacing;
+
+        if (ystart1 > wndH)
+        {
+            wndH = ystart1;
+        }
+
+        if (xstart1 + ow + objSpacing > wndW)
+        {
+            wndW = xstart1 + ow + objSpacing;
+        }
+    }
+}
+
+void ParamObject::goLeft()
+{
+    if (horizPut)
+    {
+        xstart1 = border;
+        ystart1 = wndH;
+//        wndH = ymax + groupSpacing;
+    }
+    else
+    {
+        xstart1 = wndW;
+        ystart1 = border;
+    }
+}
+
+void ParamObject::goTop()
+{
+    if (horizPut)
+    {
+        xstart1 = border;
+        ystart1 = wndH;
+//        wndH = ymax + groupSpacing;
+    }
+    else
+    {
+        xstart1 = wndW;
+        ystart1 = border;
+    }
+}
+
+void ParamObject::putSpace()
+{
+    if (horizPut)
+    {
+        xstart1 += groupSpacing;
+    }
+    else
+    {
+        ystart1 += groupSpacing;
+    }
+
+    if (xstart1 > wndW)
+    {
+        wndW = xstart1;
+    }
+
+    if (ystart1 > wndH)
+    {
+        wndH = ystart1;
+    }
+}
+
+
+void ParamObject::finalizePuts()
+{
+    WinObject::setWidthHeight(wndW + border, wndH + border);
+}
+
