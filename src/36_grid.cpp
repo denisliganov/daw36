@@ -145,11 +145,11 @@ public:
                     //gLineVertical(g, x1, y1, y2);
                     //gLineHorizontal(g, y2, x1, x2);
 
-                    fill(g, 1.f, .2f);
-                    //gTriangle(g, x1, y1 + 1, x2, y2, x1, y2);
+                    //fill(g, 1.f, .2f);
+                    //rect(g, .9f);
 
-                    //gDrawTriangle(g, x1, y1 + 1, x2, y2, x1, y2);
-                    rect(g, .9f);
+                    currNote->getInstr()->setMyColor(g, 1.f);
+                    gDrawRect(g, x1, y1, x2, y2);
 
                     //gSetMonoColor(g, 1, .1f);
                     //gTriangle(g, x1, y2 - height, x2, y2, x1, y2);

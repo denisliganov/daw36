@@ -197,8 +197,11 @@ void Note::drawOnGrid(Graphics& g, Grid* grid)
     {
         FontId fnt = FontSmall;
 
-        instr->setMyColor(g, .3f);
+        instr->setMyColor(g, .6f);
         gFillRect(g, x1, y1, x2, y2);
+
+        instr->setMyColor(g, 1.f);
+        gFillRect(g, x1, y1, x1, y2);
 
         //fillx(g, 1.f, .3f);
 
@@ -215,8 +218,9 @@ void Note::drawOnGrid(Graphics& g, Grid* grid)
 
         if(issel())
         {
-            fill(g, 1.f, .2f);
-            //rect(g, 1.f, .9f);
+            //fill(g, 1.f, .2f);
+            instr->setMyColor(g, 1.f);
+            rectx(g, x1, y1, x2, y2);
         }
     }
     else if (grid->getDisplayMode() == GridDisplayMode_Volumes || grid->getDisplayMode() == GridDisplayMode_Pans)

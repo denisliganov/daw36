@@ -7,7 +7,7 @@
 #include "36.h"
 #include "36_grid.h"
 #include "36_listbox.h"
-#include "36_numbox.h"
+#include "36_parambox.h"
 
 
 
@@ -30,25 +30,27 @@ ConfigObject::ConfigObject()
     addParam(hue = new Parameter("hue", globalHue, 0, 1));
     addParam(saturation = new Parameter("sat", 0.2f, 0, 1));
     addParam(brightness = new Parameter("brightness", 0, -1.f, 1.9f));
-    addParam(bufferSize = new Parameter("buffsize", 2048, 512, 16384-512));
+
+    addParam(bufferSize = new Parameter("Audio buffer size", 2048, 512, 16384-512, Units_Integer));
+    bufferSize->setUnitString("samples");
 
     knob1 = new Knob(hue);
     knob2 = new Knob(saturation);
     knob3 = new Knob(brightness);
     buffSizeBox = new ParamBox(bufferSize);
 
-    interpolationSelect = new ParamRadio("Radio1");
-    interpolationSelect->addOption("Opt1");
-    interpolationSelect->addOption("Opt2");
-    interpolationSelect->addOption("Opt3");
-    interpolationSelect->addOption("Opt4");
-    interpolationSelect->addOption("Opt15");
+    interpolationSelect = new ParamRadio("Interpolation (sample playback)");
+
+    interpolationSelect->addOption("Linear");
+    interpolationSelect->addOption("3-point Hermire");
+    interpolationSelect->addOption("6-point Polinomial");
+    interpolationSelect->addOption("Sinc depth 64");
 
     chooserBox = new RadioBox(interpolationSelect);
 
     outputDevices = new ListBoxx("Output devices");
-    outputDevices->addEntry("Device1");
-    outputDevices->addEntry("Device2");
+    outputDevices->addEntry("Output Device 1");
+    outputDevices->addEntry("Output Device 2");
 
     showASIOPanel = new Button36(false, "Show ASIO panel");
 
@@ -76,29 +78,25 @@ ConfigObject::ConfigObject()
 
     putRight(outputDevices, 280, 120);
     putBelow(inputDevices, 280, 120);
+    spaceBelow();
     putBelow(midiOutDevices, 280, 120);
     putBelow(midiInDevices, 280, 120);
-
     goTop();
+    spaceRight();
+    putRight(buffSizeBox, 200, 20);
+    putBelow(showASIOPanel, 200, 20);
+    spaceBelow();
+    putBelow(chooserBox, 200, chooserBox->getH());
 
-    putRight(buffSizeBox, 100, 20);
-    putBelow(showASIOPanel, 100, 20);
-    putBelow(chooserBox, 100, chooserBox->getH());
 
-    //goLeft();
-
-    //putSpace();
-    //putSpace();
-
-    //goTop();
-
-    //putSpace();
-
+/*
     putBelow(knob1, 55, 70);
     putBelow(knob2, 55, 70);
     putBelow(knob3, 55, 70);
-
+*/
     finalizePuts();
+
+    setName("Configuration");
 }
 
 void ConfigObject::drawSelf(Graphics& g)

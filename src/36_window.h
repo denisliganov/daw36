@@ -99,6 +99,7 @@ public:
             bool                isOpen()   { return open; }
             void                setOpen(bool vis);
             void                setColor(uint32 clr) { color = clr; }
+            void                closeButtonPressed();
 
 protected:
 
@@ -111,9 +112,7 @@ protected:
             int                 ycoffs;
             bool                updFocus;
 
-            void                buttonClicked(Button* butt);
             void                broughtToFront();
-            void                closeButtonPressed();
             int                 getDesktopWindowStyleFlags() const;
             void                lookAndFeelChanged();
             void                mouseDown(const MouseEvent& e);

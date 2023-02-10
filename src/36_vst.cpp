@@ -1841,13 +1841,11 @@ void Vst2Host::removeModule(Vst2Plugin *plug)
         {
             plugins.erase(plugins.begin() + i);
 
-            return;
+            break;
         }
 
         i++;
     }
-
-    delete plug;
 }
 
 // Remove all of the loaded effects from memory

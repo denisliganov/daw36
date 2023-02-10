@@ -70,6 +70,7 @@ protected:
             ParamObject*        module;
             std::string         prmName;
             ParamType           type;
+            std::string         unitStr;
 
             std::list<Control*> controls;
 };
@@ -120,6 +121,7 @@ public:
             void                setValString(std::string str);
             void                setReversed(bool rev) { reversed = rev; }
             void                setLastVal(float lval);
+            void                setUnitString(std::string unit_str)     { unitStr = unit_str; }
         XmlElement*             save();
         XmlElement*             save4Preset();
     virtual void                updateLinks();

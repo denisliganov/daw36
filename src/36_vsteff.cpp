@@ -73,9 +73,16 @@ VstEffect::VstEffect(char* path)
 
 VstEffect::~VstEffect()
 {
+    if (guiWindow)
+    {
+        guiWindow->setOpen(false);
+    }
+
     if (vst2 != NULL)
     {
         VstHost->removeModule(vst2);
+
+        delete vst2;
     }
 }
 

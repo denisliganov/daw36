@@ -132,6 +132,11 @@ Parameter::~Parameter()
 
 std::string Parameter::getUnitString()
 {
+    if (unitStr != "")
+    {
+        return unitStr;
+    }
+
     switch(unitsType)
     {
         case Units_Hz:

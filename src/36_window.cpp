@@ -595,16 +595,6 @@ void SubWindow::resized()
     }
 }
 
-void SubWindow::buttonClicked(Button* butt)
-{
-    if(butt == closeButton)
-    {
-        exitModalState(0);
-
-        setVisible(false);
-    }
-}
-
 void SubWindow::setOpen(bool vis)
 {
     open = vis;

@@ -8,11 +8,11 @@
 
 
 
-class ConfigObject : public ParamObject
+class RenderWinObject : public ParamObject
 {
 public:
 
-        ConfigObject();
+        RenderWinObject();
 
 protected:
 

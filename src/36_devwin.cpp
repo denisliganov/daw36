@@ -2,7 +2,7 @@
 #include "36_params.h"
 #include "36_devwin.h"
 #include "36_draw.h"
-#include "36_numbox.h"
+#include "36_parambox.h"
 #include "36_vstinstr.h"
 #include "36_vsteff.h"
 

@@ -46,11 +46,13 @@ Device36::~Device36()
         delete param;
     }
 
-    deletePresets();
+    //deletePresets();
 
     if(guiWindow)
     {
-        window->deleteWindow(guiWindow);
+        //guiWindow->setOpen(false);
+        //guiWindow->closeButtonPressed();
+        //window->deleteWindow(guiWindow);
     }
 
     removeElements();

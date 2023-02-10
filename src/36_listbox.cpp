@@ -24,8 +24,9 @@ void ListBoxx::drawSelf(Graphics& g)
 
     setc(g, 0.35f);
     fillx(g, 0, 0, width, headerHeight - 2);
-    setc(g, 0.8f);
-    txtfit(g, fontId, getObjName(), 3, headerHeight - 4, width);
+
+    setc(g, 0.9f);
+    txtfit(g, FontBold, getObjName(), 3, headerHeight - 4, width);
 
     g.saveState();
     g.reduceClipRegion(x1 + 1, y1 + headerHeight + 1, width - 2, height - headerHeight - 1);
@@ -50,7 +51,7 @@ void ListBoxx::drawSelf(Graphics& g)
 */
             if (entryNum == currentEntry)
             {
-                setc(g, 0.6f);
+                setc(g, 0.5f);
             }
             else
             {
@@ -61,7 +62,7 @@ void ListBoxx::drawSelf(Graphics& g)
             setc(g, 0.2f);
             lineH(g, yoffs + y, 0, w);
 
-            setc(g, 0.9f);
+            setc(g, 1.f);
             txtfit(g, fontId, e, 4, yoffs + y + headerHeight - 3, w - 2);
         }
         else if (yoffs > (vscr->getOffset() + vscr->getVisiblePart()))
@@ -94,7 +95,12 @@ void ListBoxx::handleMouseDown(InputEvent& ev)
 {
     if ((ev.mouseY - y1) > headerHeight)
     {
-        currentEntry = (ev.mouseY - y1 - headerHeight + vscr->getOffset())/headerHeight;
+        int entry = (ev.mouseY - (y1 + headerHeight) + vscr->getOffset())/headerHeight;
+
+        if (entry < entries.size())
+        {
+            currentEntry = entry;
+        }
 
         redraw();
     }

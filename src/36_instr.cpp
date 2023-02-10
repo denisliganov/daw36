@@ -21,7 +21,7 @@
 #include "36_text.h"
 #include "36_events_triggers.h"
 #include "36_knob.h"
-
+#include "36_parambox.h"
 
 //namespace M {
 

@@ -67,9 +67,16 @@ VstInstr::VstInstr(char* fullpath, VstInstr* vst)
 
 VstInstr::~VstInstr()
 {
+    if (guiWindow)
+    {
+        guiWindow->setOpen(false);
+    }
+
     if (vst2 != NULL)
     {
         VstHost->removeModule(vst2);
+
+        delete vst2;
     }
 }
 

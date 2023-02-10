@@ -41,7 +41,7 @@ public:
         {
             itemstr = str;
 
-            fontId = FontBold;
+            fontId = FontSmall;
 
             tw = gGetTextWidth(fontId, itemstr);
             th = gGetTextHeight(fontId);

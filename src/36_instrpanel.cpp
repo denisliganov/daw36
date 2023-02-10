@@ -26,7 +26,7 @@
 #include "36_params.h"
 #include "36_slider.h"
 #include "36_knob.h"
-#include "36_numbox.h"
+#include "36_parambox.h"
 
 
 
@@ -548,7 +548,7 @@ Instrument* InstrPanel::loadInstrFromBrowser(BrwEntry * be)
 {
     if (getNumInstrs() >= 36)
     {
-        MWindow->showAlertBox("Can't load more than instruments ;)");
+        MWindow->showAlertBox("Can't load more than 36 instruments");
 
         return NULL;
     }

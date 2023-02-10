@@ -1,5 +1,5 @@
 
-#include "36_configwin.h"
+#include "36_renderwin.h"
 #include "36_slider.h"
 #include "36_knob.h"
 #include "36_params.h"
@@ -11,7 +11,7 @@
 
 
 
-ConfigObject::ConfigObject()
+RenderWinObject::RenderWinObject()
 {
 
 /*
@@ -101,17 +101,17 @@ ConfigObject::ConfigObject()
     finalizePuts();
 }
 
-void ConfigObject::drawSelf(Graphics& g)
+void RenderWinObject::drawSelf(Graphics& g)
 {
     fill(g, 0.4f);
 }
 
-void ConfigObject::handleChildEvent(Gobj * obj,InputEvent & ev)
+void RenderWinObject::handleChildEvent(Gobj * obj,InputEvent & ev)
 {
     int a = 1;
 }
 
-void ConfigObject::handleParamUpdate(Param * param)
+void RenderWinObject::handleParamUpdate(Param * param)
 {
     if(param == hue)
     {
