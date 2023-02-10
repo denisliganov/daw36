@@ -567,7 +567,7 @@ void RadioBox::drawSelf(Graphics& g)
     fillx(g, 0, 0, width, headerHeight - 1);
 
     setc(g, 0.8f);
-    txtfit(g, fontId, getObjName(), 3, headerHeight - 4, width - 3);
+    txtfit(g, fontId, prmRad->getName(), 3, headerHeight - 4, width - 3);
 
 
     int y = headerHeight;

@@ -53,9 +53,10 @@ protected:
 
             void                putRight(Gobj* obj, int ow, int oh);
             void                putBelow(Gobj* obj, int ow, int oh);
+            void                spaceRight();
+            void                spaceBelow();
             void                goLeft();
             void                goTop();
-            void                putSpace();
             void                finalizePuts();
 
 private:

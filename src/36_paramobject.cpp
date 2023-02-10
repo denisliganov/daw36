@@ -10,12 +10,12 @@ ParamObject::ParamObject()
 {
     border = 10;
     xstart1 = ystart1 = border;
+    xstart2 = ystart2 = border;
     groupSpacing = 8;
     objSpacing = 4;
     wndW = border;
     wndH = border;
     horizPut = false;
-
 
     paramLocked = false;
 
@@ -114,125 +114,88 @@ void ParamObject::handleClose()
     }
 }
 
-
 void ParamObject::putRight(Gobj* obj, int ow, int oh)
 {
-    Gobj::addObject(obj, xstart1, ystart1, ow, oh);
-
-    if (horizPut)
+    if (obj)
     {
-        xstart1 += ow + objSpacing;
-
-        if (xstart1 > wndW)
-        {
-            wndW = xstart1;
-        }
-
-        if (ystart1 + oh + objSpacing > wndH)
-        {
-            wndH = ystart1 + oh + objSpacing;
-        }
+        Gobj::addObject(obj, xstart1, ystart1, ow, oh);
     }
-    else
-    {
-        ystart1 += oh + objSpacing;
 
-        if (ystart1 > wndH)
-        {
-            wndH = ystart1;
-        }
+    xstart2 = xstart1;
+    ystart2 = ystart1 + oh + objSpacing;
 
-        if (xstart1 + ow + objSpacing > wndW)
-        {
-            wndW = xstart1 + ow + objSpacing;
-        }
-    }
-}
-
-void ParamObject::putBelow(Gobj* obj, int ow, int oh)
-{
-    Gobj::addObject(obj, xstart1, ystart1, ow, oh);
-
-    if (horizPut)
-    {
-        xstart1 += ow + objSpacing;
-
-        if (xstart1 > wndW)
-        {
-            wndW = xstart1;
-        }
-
-        if (ystart1 + oh + objSpacing > wndH)
-        {
-            wndH = ystart1 + oh + objSpacing;
-        }
-    }
-    else
-    {
-        ystart1 += oh + objSpacing;
-
-        if (ystart1 > wndH)
-        {
-            wndH = ystart1;
-        }
-
-        if (xstart1 + ow + objSpacing > wndW)
-        {
-            wndW = xstart1 + ow + objSpacing;
-        }
-    }
-}
-
-void ParamObject::goLeft()
-{
-    if (horizPut)
-    {
-        xstart1 = border;
-        ystart1 = wndH;
-//        wndH = ymax + groupSpacing;
-    }
-    else
-    {
-        xstart1 = wndW;
-        ystart1 = border;
-    }
-}
-
-void ParamObject::goTop()
-{
-    if (horizPut)
-    {
-        xstart1 = border;
-        ystart1 = wndH;
-//        wndH = ymax + groupSpacing;
-    }
-    else
-    {
-        xstart1 = wndW;
-        ystart1 = border;
-    }
-}
-
-void ParamObject::putSpace()
-{
-    if (horizPut)
-    {
-        xstart1 += groupSpacing;
-    }
-    else
-    {
-        ystart1 += groupSpacing;
-    }
+    xstart1 += ow + objSpacing;
 
     if (xstart1 > wndW)
     {
         wndW = xstart1;
     }
 
+    if (ystart1 + oh + objSpacing > wndH)
+    {
+        wndH = ystart1 + oh + objSpacing;
+    }
+}
+
+void ParamObject::putBelow(Gobj* obj, int ow, int oh)
+{
+    if (obj)
+    {
+        Gobj::addObject(obj, xstart2, ystart2, ow, oh);
+    }
+
+    ystart1 = ystart2;
+    xstart1 = xstart2 + ow + objSpacing;
+
+    ystart2 += oh + objSpacing;
+
+    if (ystart2 > wndH)
+    {
+        wndH = ystart2;
+    }
+
+    if (xstart2 + ow + objSpacing > wndW)
+    {
+        wndW = xstart2 + ow + objSpacing;
+    }
+}
+
+void ParamObject::spaceRight()
+{
+    xstart1 += groupSpacing;
+    xstart2 += groupSpacing;
+
+    if (xstart1 > wndW)
+    {
+        wndW = xstart1;
+    }
+}
+
+void ParamObject::spaceBelow()
+{
+    ystart1 += groupSpacing;
+    ystart2 += groupSpacing;
+
     if (ystart1 > wndH)
     {
         wndH = ystart1;
     }
+}
+
+void ParamObject::goLeft()
+{
+    xstart1 = border;
+    ystart1 = wndH;
+    xstart2 = border;
+    ystart2 = wndH;
+}
+
+void ParamObject::goTop()
+{
+    xstart1 = wndW;
+    ystart1 = border;
+    xstart2 = wndW;
+    ystart2 = border;
 }
 
 

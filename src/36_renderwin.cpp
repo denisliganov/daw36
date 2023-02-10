@@ -37,14 +37,14 @@ ConfigObject::ConfigObject()
     knob3 = new Knob(brightness);
     buffSizeBox = new ParamBox(bufferSize);
 
-    interpolationSelect = new ParamRadio("Radio1");
-    interpolationSelect->addOption("Opt1");
-    interpolationSelect->addOption("Opt2");
-    interpolationSelect->addOption("Opt3");
-    interpolationSelect->addOption("Opt4");
-    interpolationSelect->addOption("Opt15");
+    pr = new ParamRadio("Radio1");
+    pr->addOption("Opt1");
+    pr->addOption("Opt2");
+    pr->addOption("Opt3");
+    pr->addOption("Opt4");
+    pr->addOption("Opt15");
 
-    chooserBox = new RadioBox(interpolationSelect);
+    chooserBox = new RadioBox(pr);
 
     outputDevices = new ListBoxx("Output devices");
     outputDevices->addEntry("Device1");

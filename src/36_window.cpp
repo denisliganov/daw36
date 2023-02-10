@@ -1296,7 +1296,7 @@ void WinObject::dragDrop(int mx, int my, unsigned int flags)
 
 void WinObject::updateHint(InputEvent& ev)
 {
-    if (hintBox == NULL)
+    if (hintBox == NULL || getParentComponent() == NULL)
     {
         return;
     }

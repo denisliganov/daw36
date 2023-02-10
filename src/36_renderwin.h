@@ -20,7 +20,7 @@ protected:
         Parameter*          hue;
         Parameter*          saturation;
         Parameter*          bufferSize;
-        ParamRadio*         interpolationSelect;
+        ParamRadio*         pr;
 
         ListBoxx*           interpolation;
         ListBoxx*           midiOutDevices;
