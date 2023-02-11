@@ -101,9 +101,11 @@ protected:
             Instrument* instr = (Instrument*)parent;
 
             instr->setMyColor(g, .6f);
+
             fillx(g, 0, 0, width, height);
 
             instr->setMyColor(g, .8f);
+
             rectx(g, 0, 0, width, height);
 
             bool wVis = instr->isWindowVisible();
@@ -135,7 +137,9 @@ protected:
 
         void drawSelf(Graphics& g)
         {
-            setc(g, .4f);
+            Instrument* instr = (Instrument*)parent;
+
+            instr->setMyColor(g, .3f);
 
             int yc = 0;
 
