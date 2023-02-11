@@ -217,6 +217,11 @@ void Gobj::setCoords2(int x, int y, int xx, int yy)
     setCoords1(x, y, xx - x + 1, yy - y + 1);
 }
 
+void Gobj::setWH(int w, int h)
+{
+    setCoords1(xRel, yRel, w, h);
+}
+
 // use absolute coords, cropped by parent
 
 void Gobj::setCoordsAbs(int ax1, int ay1, int ax2, int ay2)

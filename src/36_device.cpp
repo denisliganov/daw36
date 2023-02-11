@@ -352,11 +352,11 @@ long Device36::getPresetIndex(char* name)
     return -1;
 }
 
-bool Device36::setPresetByName(char * name)
+bool Device36::setPresetByName(std::string pname)
 {
     for(BrwEntry* pe : presets)
     {
-        if(pe->getObjName() == name)
+        if(pe->getObjName() == pname)
         {
             return setPresetByName(pe);
         }
@@ -376,7 +376,7 @@ bool Device36::setPresetByName(BrwEntry* preset)
 
     if(xmlMainNode == NULL)
     {
-        MWindow->showAlertBox("Can't open preset file");
+        MWindow->showAlertBox("Can't open preset file " + preset->getObjName());
     }
     else
     {
@@ -483,7 +483,9 @@ void Device36::getPresetName(long index, char *name)
 BrwEntry* Device36::getPreset(long index)
 {
     for(BrwEntry* pe : presets)
+    {
         if(pe->prindex == index) return pe;
+    }
 
     return NULL;
 }
@@ -491,8 +493,12 @@ BrwEntry* Device36::getPreset(long index)
 BrwEntry* Device36::getPreset(char* name)
 {
     for(BrwEntry* pe : presets)
-        if (pe->getObjName() == name)  
+    {
+        if (pe->getObjName() == name)
+        {
             return pe;
+        }
+    }
 
     return NULL;
 }

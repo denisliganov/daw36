@@ -5,6 +5,7 @@
 #include "36_parambox.h"
 #include "36_vstinstr.h"
 #include "36_vsteff.h"
+#include "36_listbox.h"
 
 
 
@@ -17,15 +18,12 @@ DevParamObject::DevParamObject(Device36* dev)
 
 void DevParamObject::initAll()
 {
-    int border = 12;
+    //int border = 12;
     int boxWidth = 130;
     int boxHeight = 22;
 
-    int x = 10;
-    int y = border;
-
-    int txs1=0, txs2=0, txs3=0;
-    int tx1=0, tx2=0, tx3=0;
+    //int x = 10;
+    //int y = border;
 
     std::list<Param*>  showParams;
 
@@ -52,51 +50,70 @@ void DevParamObject::initAll()
         ParamSelector*  prmSel = dynamic_cast<ParamSelector*>(param);
         ParamToggle*    prmTg = dynamic_cast<ParamToggle*>(param);
 
+        Gobj* obj = NULL;
+
         if (prm)
         {
-            ParamBox* box = NULL;
-            Gobj::addObject(box = new ParamBox(prm), x, y, boxWidth, boxHeight);
+            ParamBox* box = box = new ParamBox(prm);
 
-            //box->setSliderOnly(false);
+            box->setCoords1(0, 0, boxWidth, boxHeight);
+            box->setSliderOnly(false);
 
-            y += boxHeight + 3;
+            obj = box;
         }
         else if (prmRad)
         {
-            RadioBox* box = NULL;
-            Gobj::addObject(box = new RadioBox(prmRad), x + 5, y, boxWidth - 5, box->getH());
-
-            y += box->getH() + 3;
+            RadioBox* box = new RadioBox(prmRad);
+            obj = box;
         }
         else if (prmSel)
         {
-            SelectorBox* box = NULL;
-            Gobj::addObject(box = new SelectorBox(prmSel), x + 5, y, boxWidth - 5, box->getH());
-
-            y += box->getH() + 3;
+            SelectorBox* box = new SelectorBox(prmSel);
+            obj = box;
         }
         else if (prmTg)
         {
-            ToggleBox* box = NULL;
-            Gobj::addObject(box = new ToggleBox(prmTg), x + 5, y, boxWidth - 5, box->getH());
+            ToggleBox* box = new ToggleBox(prmTg);
+            obj = box;
+        }
 
-            y += box->getH() + 3;
+        if (obj)
+        {
+            putBelow(obj, obj->getW(), obj->getH());
         }
     }
 
-    setWidthHeight(x + boxWidth + border + 5, y + border - 2);
+    presetBox = new ListBoxx("Presets");
+
+    goTop();
+
+    spaceRight();
+    spaceRight();
+
+    putRight(presetBox, 150, wndH - border);
+
+    presetBox->setList(device->getList());
+
+    finalizePuts();
+
+//    setWidthHeight(x + boxWidth + border + 5, y + border - 2);
 
     WinObject::setName(String(device->getObjName().data()));
 }
 
 void DevParamObject::drawSelf(Graphics& g)
 {
-    Gobj::fill(g, 0.35f);
+    Gobj::fill(g, 0.36f);
 }
 
 void DevParamObject::handleChildEvent(Gobj * obj,InputEvent & ev)
 {
     int a = 1;
+
+    if (obj == presetBox && !ev.clickDown)
+    {
+        device->setPresetByName(presetBox->getCurrentName());
+    }
 }
 
 void DevParamObject::handleClose()

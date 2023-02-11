@@ -113,6 +113,7 @@ public:
             void                setCoordsAbs(int ax1, int ay1, int ax2, int ay2);
             void                setCoordsUn(int ax1, int ay1, int ax2, int ay2);
     virtual void                setDrawAreaDirectly(int xabs1, int xabs2, int xabs3, int xabs4);
+            void                setWH(int w, int h);
 
     virtual void                updCoords();
     virtual void                remap() {}

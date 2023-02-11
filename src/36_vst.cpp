@@ -705,9 +705,13 @@ void Vst2Plugin::updatePresets()
             preset->setObjName(bzName);
 
             if(idx == currentProgram)
+            {
                 currPreset = preset;
+            }
 
             presets.push_back(preset);
+
+            pres.push_back(preset->getObjName());
         }
     }
 }

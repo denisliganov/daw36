@@ -105,7 +105,7 @@ void ContextMenu::addMenuItem( std::string item_str )
 
     items.push_back(mi);
 
-    int iw = gGetTextWidth(FontBold, item_str) + 150 + MenuHorizSpacing;
+    int iw = gGetTextWidth(FontBold, item_str) + 100 + MenuHorizSpacing;
 
     if(iw > width)
     {

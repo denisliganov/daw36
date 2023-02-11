@@ -22,29 +22,29 @@ public:
             VstInstr(char* fullpath, VstInstr* vst);
     virtual ~VstInstr();
             void                addNoteEvent(int note, long num_frames, long frame_phase, long total_frames, float volume);
+            void                checkBounds(Note* gnote, Trigger* tg, long num_frames);
+            void                deactivateTrigger(Trigger* tg);
+            void                flowTriggers(Trigger* tgfrom, Trigger* tgto) {}; // stub to avoid any action here
             void                generateData(long num_frames = 0, long mixbuffframe = 0);
-            void                vstProcess(long num_frames, long buffframe);
+            void                load(XmlElement* instrNode);
+            bool                onUpdateDisplay();
+            void                postProcessTrigger(Trigger* tg = NULL, long num_frames = 0, long buffframe = 0, long mixbuffframe = 0, long remaining = 0);
+            long                processTrigger(Trigger* tg, long num_frames = 0, long buffframe = 0);
             void                postNoteON(int note, float vol);
             void                postNoteOFF(int note, int velocity);
-            void                stopAllNotes();
-            void                postProcessTrigger(Trigger* tg = NULL, long num_frames = 0, long buffframe = 0, long mixbuffframe = 0, long remaining = 0);
-            void                deactivateTrigger(Trigger* tg);
-            long                processTrigger(Trigger* tg, long num_frames = 0, long buffframe = 0);
-            void                checkBounds(Note* gnote, Trigger* tg, long num_frames);
-            void                flowTriggers(Trigger* tgfrom, Trigger* tgto) {}; // stub to avoid any action here
-            void                save(XmlElement* instrNode);
-            void                load(XmlElement* instrNode);
             void                reset();
+            void                save(XmlElement* instrNode);
+            void                stopAllNotes();
             void                setBufferSize(unsigned int bufferSize);
             void                setSampleRate(float sampleRate);
-            bool                onUpdateDisplay();
+            void                vstProcess(long num_frames, long buffframe);
 
 private:
 
-            VstMidiEvent    MidiEvents[800];
+            VstMidiEvent        MidiEvents[800];
 
-            long            numevents;
-            int             muteCount;
+            long                numEvents;
+            int                 muteCount;
 };
 
 //}

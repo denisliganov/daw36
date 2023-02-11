@@ -30,17 +30,16 @@ ConfigObject::ConfigObject()
     addParam(hue = new Parameter("hue", globalHue, 0, 1));
     addParam(saturation = new Parameter("sat", 0.2f, 0, 1));
     addParam(brightness = new Parameter("brightness", 0, -1.f, 1.9f));
-
     addParam(bufferSize = new Parameter("Audio buffer size", 2048, 512, 16384-512, Units_Integer));
     bufferSize->setUnitString("samples");
 
     knob1 = new Knob(hue);
     knob2 = new Knob(saturation);
     knob3 = new Knob(brightness);
+
     buffSizeBox = new ParamBox(bufferSize);
 
     interpolationSelect = new ParamRadio("Interpolation (sample playback)");
-
     interpolationSelect->addOption("Linear");
     interpolationSelect->addOption("3-point Hermire");
     interpolationSelect->addOption("6-point Polinomial");

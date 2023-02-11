@@ -1159,7 +1159,7 @@ void Hintbox::stop()
 
 void Hintbox::paint(Graphics& g)
 {
-    gSetColor2(g, 0xffFFE080, .4f, 1);
+    gSetColor2(g, 0xffFFE080, .6f, 1);
     gFillRect(g, 0, 0, getWidth() - 1, getHeight() - 1);
 
     //gSetColor2(g, 0xffFFE080, .6f, 1);

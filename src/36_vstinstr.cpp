@@ -26,7 +26,7 @@ VstInstr::VstInstr(char* fullpath, VstInstr* vst)
     type = Instr_VstPlugin;
 
     internal = false;
-    numevents = 0;
+    numEvents = 0;
     muteCount = 0;
 
     if(fullpath != NULL)
@@ -60,6 +60,7 @@ VstInstr::VstInstr(char* fullpath, VstInstr* vst)
         vst2->updatePresets();
 
         presets = vst2->presets;         // sync lists 
+        pres = vst2->pres;
     }
 
     createSelfPattern();
@@ -189,19 +190,19 @@ void VstInstr::deactivateTrigger(Trigger* tg)
 void VstInstr::vstProcess(long num_frames, long buffframe)
 {
     /*
-    struct VstEvents			// a block of events for the current audio block
+    struct VstEvents            // a block of events for the current audio block
     {
         long numEvents;
-        long reserved;			// zero
-        VstEvent* events[2];	// variable
+        long reserved;          // zero
+        VstEvent* events[2];    // variable
     };
     */
 
     VstEvents* events = NULL;
 
-    if(numevents > 0)
+    if(numEvents > 0)
     {
-        unsigned short      NumEvents = (unsigned short)numevents;
+        unsigned short      NumEvents = (unsigned short)numEvents;
         long                EvSize = sizeof(long)+ sizeof(long) + (sizeof(VstEvent*)*NumEvents);
 
         events = (VstEvents*)malloc(EvSize);
@@ -219,7 +220,7 @@ void VstInstr::vstProcess(long num_frames, long buffframe)
 
     vst2->processData(NULL, &dataBuff[buffframe*2], num_frames);
 
-    numevents = 0;
+    numEvents = 0;
 
     // This freeing code was working here, but it causes Absynth 2.04 to crash, while other hosts work
     // well with it. Probably it's responsibility of a plugin to free the memory allocated for VstEvents
@@ -357,7 +358,7 @@ void VstInstr::generateData(long num_frames, long mixbuffframe)
 
 void VstInstr::addNoteEvent(int note, long num_frames, long frame_phase, long total_frames, float volume)
 {
-    VstMidiEvent* pEv = &(MidiEvents[numevents]);
+    VstMidiEvent* pEv = &(MidiEvents[numEvents]);
 
     unsigned char velocity = (unsigned char)((volume <= 1) ? volume * 100 : 100 + (volume - 1)/(DAW_VOL_RANGE - 1)*0x1B); //volume is the value from 0 to 1, if it's greater then it's gaining
 /*
@@ -399,14 +400,14 @@ struct VstMidiEvent		// to be casted from a VstEvent
         pEv->midiData[1] = note;
         pEv->midiData[2] = velocity;
 
-        numevents++;
+        numEvents++;
     }
     //else if (frame_phase < total_frames)
     //{
     //    pEv->midiData[0] = (char)0xa0;
     //    pEv->midiData[1] = note;
     //    pEv->midiData[2] = velocity;
-    //    numevents++;
+    //    numEvents++;
     //}
     else if(frame_phase > total_frames)
     {
@@ -414,13 +415,13 @@ struct VstMidiEvent		// to be casted from a VstEvent
         pEv->midiData[1] = note;
         pEv->midiData[2] = velocity;
 
-        numevents++;
+        numEvents++;
     }
 }
 
 void VstInstr::postNoteON(int note, float vol)
 {
-    VstMidiEvent* pEv = &(MidiEvents[numevents]);
+    VstMidiEvent* pEv = &(MidiEvents[numEvents]);
 
     //volume is the value from 0 to 1, if it's greater then its gaining
 
@@ -440,12 +441,12 @@ void VstInstr::postNoteON(int note, float vol)
     pEv->midiData[1] = note;
     pEv->midiData[2] = l_velocity;
 
-    numevents++;
+    numEvents++;
 }
 
 void VstInstr::postNoteOFF(int note, int velocity)
 {
-    VstMidiEvent* pEv = &(MidiEvents[numevents]);
+    VstMidiEvent* pEv = &(MidiEvents[numEvents]);
 
     memset(pEv, 0, sizeof(VstMidiEvent));
 
@@ -462,12 +463,12 @@ void VstInstr::postNoteOFF(int note, int velocity)
     pEv->midiData[1] = note;
     pEv->midiData[2] = velocity;
 
-    numevents++;
+    numEvents++;
 }
 
 void VstInstr::stopAllNotes()
 {
-    VstMidiEvent* pEv = &(MidiEvents[numevents]);
+    VstMidiEvent* pEv = &(MidiEvents[numEvents]);
 
     memset(pEv, 0, sizeof(VstMidiEvent));
 
@@ -482,7 +483,7 @@ void VstInstr::stopAllNotes()
     pEv->midiData[1] = 0x7B;
     pEv->midiData[2] = 0x00;
 
-    numevents++;
+    numEvents++;
 }
 
 void VstInstr::save(XmlElement * instrNode)

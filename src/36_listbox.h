@@ -17,6 +17,7 @@ public:
             void                setList(std::vector<std::string>&  entries_list)  { entries = entries_list; }
             void                setCurrent(int curr)                            { currentEntry = curr; }
             int                 getCurrent()                                    { return currentEntry; }
+            std::string         getCurrentName()                                { return entries[currentEntry]; }
 
 protected:
 

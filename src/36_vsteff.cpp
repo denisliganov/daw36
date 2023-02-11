@@ -45,9 +45,13 @@ VstEffect::VstEffect(char* path)
         uniqueId = vst2->aeff->uniqueID;
 
         if (path)
+        {
             filePath = path;
+        }
         else
+        {
             filePath = vst2->vstpath;
+        }
 
         objName = vst2->objName;
 
@@ -231,7 +235,10 @@ bool VstEffect::onUpdateDisplay()
 
     BrwEntry* updPreset = getPreset(vst2->getProgram());
 
-    if (currPreset != updPreset)  currPreset = updPreset;
+    if (currPreset != updPreset)
+    {
+        currPreset = updPreset;
+    }
 
     window->redraw();
 

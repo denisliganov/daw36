@@ -26,7 +26,7 @@ void ListBoxx::drawSelf(Graphics& g)
     fillx(g, 0, 0, width, headerHeight - 2);
 
     setc(g, 0.9f);
-    txtfit(g, FontBold, getObjName(), 3, headerHeight - 4, width);
+    txtfit(g, FontBold, getObjName(), 3, headerHeight - 5, width);
 
     g.saveState();
     g.reduceClipRegion(x1 + 1, y1 + headerHeight + 1, width - 2, height - headerHeight - 1);
@@ -100,6 +100,8 @@ void ListBoxx::handleMouseDown(InputEvent& ev)
         if (entry < entries.size())
         {
             currentEntry = entry;
+
+            parent->handleChildEvent(this, ev);
         }
 
         redraw();
@@ -115,7 +117,7 @@ void ListBoxx::handleMouseWheel(InputEvent& ev)
 
 void ListBoxx::handleMouseUp(InputEvent& ev)
 {
-    
+    parent->handleChildEvent(this, ev);
 }
 
 void ListBoxx::remap()
@@ -124,7 +126,7 @@ void ListBoxx::remap()
     if (entries.size() * headerHeight > height)
     {
         vscr->setCoords1(width - 12, headerHeight + 1, 11, height - headerHeight - 2);
-        
+
         vscr->updBounds(entries.size() * headerHeight, height, vscr->getOffset());
     }
     else
