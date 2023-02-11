@@ -1019,17 +1019,17 @@ void Instrument::remap()
 {
     previewButton->setCoords1(31, height - 10, 20, 10);
 
-    volBox->setCoords1(width - 86, height - 10, 60, 10);
-    panBox->setCoords1(width - 149, height - 10, 57, 10);
+    volBox->setCoords1(width - 82, height - 10, 50, 10);
+    panBox->setCoords1(width - 149, height - 10, 50, 10);
 
     int bw = 11;
 
-    soloButt->setCoords1(width - bw*2 - 2, height - bw, bw, bw);
-    muteButt->setCoords1(width - bw - 1, height - bw, bw, bw);
+    soloButt->setCoords1(width - bw*2 - 10, height - bw, bw, bw);
+    muteButt->setCoords1(width - bw - 9, height - bw, bw, bw);
 
     guiButton->setCoords1(0, 0, 16, 16);
 
-    //ivu->setCoords1(0, 1, 3, height - 1);
+    ivu->setCoords1(width - 8, 0, 8, height);
 
     if(gGetTextWidth(FontSmall, objName) > width - 38 - 50 - 10)
     {

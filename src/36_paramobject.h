@@ -23,7 +23,7 @@ public:
     virtual Param*              getParamByName(char *param_name);
     virtual Param*              getParamByIndex(int devIdx);
     virtual bool                getParamLock() { return paramLocked; };
-            std::list<Param*>   getParams() { return params; }
+    virtual std::list<Param*>   getParams() { return params; }
     virtual void                handleParamUpdate(Param* param = NULL) {};
     virtual void                removeParam(Param* param);
     virtual void                setParamLock(bool lock) { paramLocked = lock; };

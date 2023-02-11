@@ -205,13 +205,13 @@ void InstrVU::drawSelf(Graphics & g)
         if(yc < left)
         {
             // gSetPixel(g, x1, y2 - yc); 
-            fillx(g, 0, yc, 2, 1);
+            fillx(g, 0, yc, width, 1);
         }
 
         if(yc < right)
         {
             // gSetPixel(g, x2, y2 - yc); 
-            fillx(g, 0, yc, 2, 1);
+            fillx(g, 0, yc, width, 1);
         }
 
         yc += 2;

@@ -32,11 +32,11 @@ void DevParamObject::initAll()
 
     if (vsti)
     {
-        showParams = vsti->vst2->getParams();
+        showParams = vsti->getParams();
     }
     else if (vste)
     {
-        showParams = vste->vst2->getParams();
+        showParams = vste->getParams();
     }
     else
     {

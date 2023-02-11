@@ -587,7 +587,7 @@ VstInstr* InstrPanel::loadVst(const char* path, VstInstr* otherVst)
         vst = new VstInstr(NULL, otherVst);
     }
 
-    if (vst->vst2 == NULL)
+    if (!vst->isLoaded())
     {
         delete vst;
 

@@ -61,9 +61,9 @@ VstInstr::VstInstr(char* fullpath, VstInstr* vst)
 
         presets = vst2->presets;         // sync lists 
         pres = vst2->pres;
-    }
 
-    createSelfPattern();
+        createSelfPattern();
+    }
 }
 
 VstInstr::~VstInstr()

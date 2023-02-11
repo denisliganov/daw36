@@ -12,19 +12,17 @@
 
 class VstInstr: public Instrument
 {
-protected:
-
-            virtual SubWindow*   createWindow();
-
 public:
-            Vst2Plugin*     vst2;
 
             VstInstr(char* fullpath, VstInstr* vst);
     virtual ~VstInstr();
             void                addNoteEvent(int note, long num_frames, long frame_phase, long total_frames, float volume);
             void                checkBounds(Note* gnote, Trigger* tg, long num_frames);
+            virtual SubWindow*   createWindow();
             void                deactivateTrigger(Trigger* tg);
+            bool                isLoaded() { return vst2 != NULL; }
             void                flowTriggers(Trigger* tgfrom, Trigger* tgto) {}; // stub to avoid any action here
+            std::list<Param*>   getParams() { return vst2->getParams(); }
             void                generateData(long num_frames = 0, long mixbuffframe = 0);
             void                load(XmlElement* instrNode);
             bool                onUpdateDisplay();
@@ -45,6 +43,7 @@ private:
 
             long                numEvents;
             int                 muteCount;
+            Vst2Plugin*         vst2;
 };
 
 //}

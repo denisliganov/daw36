@@ -25,7 +25,6 @@ VstEffect::VstEffect(char* path)
 
     presetPath = ".\\Data\\Presets\\";
 
-    guibutt = NULL;
 
     // While loading some VST plugins current working directory somehow gets changed
     // Thus we need to remember it and restore in the end of initialization, hehehe
@@ -55,12 +54,11 @@ VstEffect::VstEffect(char* path)
 
         objName = vst2->objName;
 
-        guibutt = new Button36(true);
-
+        //guibutt = new Button36(true);
         //guibutt->SetTitle("Edit");
         //guibutt->SetHint("Show editor window");
-
-        addObject((Control*)(guibutt));
+        //addObject((Control*)(guibutt));
+        
         extractParams();
         presetPath = "Effects\\VST\\";
 
@@ -87,6 +85,19 @@ VstEffect::~VstEffect()
         VstHost->removeModule(vst2);
 
         delete vst2;
+    }
+}
+
+
+SubWindow* VstEffect::createWindow()
+{
+    if(vst2->hasGui())
+    {
+        return window->addWindow(new VstComponent(vst2, this));
+    }
+    else
+    {
+        return window->addWindow(new ParamWin());
     }
 }
 
@@ -156,17 +167,33 @@ VstEffect* VstEffect::clone(MixChannel* mc)
     return clone;
 }
 
-void VstEffect::updatePresets()
-{
-    vst2->updatePresets();
-
-    // sync lists 
-    presets = vst2->presets;
-}
-
 void VstEffect::extractParams()
 {
     vst2->extractParams();
+}
+
+void VstEffect::handleMouseDown(InputEvent& ev)
+{
+    if(ev.keyFlags == 0 && ev.doubleClick)
+    {
+        showWindow(true);
+    }
+}
+
+void VstEffect::handleParamUpdate(Param* param)
+{
+    vst2->handleParamUpdate(param);
+}
+
+void VstEffect::load(XmlElement * xmlEff)
+{
+    setParamLock(true);
+
+    Eff::load(xmlEff);
+
+    setParamLock(false);
+
+    vst2->load(xmlEff);
 }
 
 void VstEffect::processData(float * in_buff,float * out_buff,int num_frames)
@@ -178,46 +205,6 @@ void VstEffect::processData(float * in_buff,float * out_buff,int num_frames)
 
     // pPlug->pEffect->EffSuspend();
     // pVSTCollector->ReleaseSema();
-}
-
-void VstEffect::processEvents(VstEvents *pEvents)
-{
-    vst2->processEvents(pEvents);
-}
-
-void VstEffect::handleParamUpdate(Param* param)
-{
-    vst2->handleParamUpdate(param);
-}
-
-bool VstEffect::setPresetByName(char* name)
-{
-    return vst2->setPresetByName(name);
-}
-
-bool VstEffect::setPresetByIndex(long index)
-{
-    return vst2->setPresetByIndex(index);
-}
-
-void VstEffect::setBPM(float bpm)
-{
-    //vstplug->setBPM(bpm);
-}
-
-void VstEffect::setBufferSize(unsigned int bufferSize)
-{
-    vst2->setBufferSize(bufferSize);
-}
-
-void VstEffect::setSampleRate(float sampleRate)
-{
-    vst2->setSampleRate(sampleRate);
-}
-
-void VstEffect::reset()
-{
-    vst2->reset();
 }
 
 bool VstEffect::onUpdateDisplay()
@@ -245,6 +232,41 @@ bool VstEffect::onUpdateDisplay()
     return true;
 }
 
+void VstEffect::processEvents(VstEvents *pEvents)
+{
+    vst2->processEvents(pEvents);
+}
+
+void VstEffect::reset()
+{
+    vst2->reset();
+}
+
+bool VstEffect::setPresetByName(char* name)
+{
+    return vst2->setPresetByName(name);
+}
+
+bool VstEffect::setPresetByIndex(long index)
+{
+    return vst2->setPresetByIndex(index);
+}
+
+void VstEffect::setBPM(float bpm)
+{
+    //vstplug->setBPM(bpm);
+}
+
+void VstEffect::setBufferSize(unsigned int bufferSize)
+{
+    vst2->setBufferSize(bufferSize);
+}
+
+void VstEffect::setSampleRate(float sampleRate)
+{
+    vst2->setSampleRate(sampleRate);
+}
+
 void VstEffect::save(XmlElement * xmlEff)
 {
     Eff::save(xmlEff);
@@ -252,36 +274,12 @@ void VstEffect::save(XmlElement * xmlEff)
     vst2->save(xmlEff);
 }
 
-void VstEffect::load(XmlElement * xmlEff)
+void VstEffect::updatePresets()
 {
-    setParamLock(true);
+    vst2->updatePresets();
 
-    Eff::load(xmlEff);
-
-    setParamLock(false);
-
-    vst2->load(xmlEff);
+    // sync lists 
+    presets = vst2->presets;
 }
-
-void VstEffect::handleMouseDown(InputEvent& ev)
-{
-    if(ev.keyFlags == 0 && ev.doubleClick)
-    {
-        showWindow(true);
-    }
-}
-
-SubWindow* VstEffect::createWindow()
-{
-    if(vst2->hasGui())
-    {
-        return window->addWindow(new VstComponent(vst2, this));
-    }
-    else
-    {
-        return window->addWindow(new ParamWin());
-    }
-}
-
 
 
