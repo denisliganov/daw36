@@ -18,6 +18,9 @@ public:
             SubWindow*          createWindow();
             virtual Eff*        clone();
             void                drawSelf(Graphics& g);
+            MixChannel*         getMixChannel() { return mixChannel; }
+            int                 getMuteCount()  { return muteCount; }
+            bool                getBypass()     { return bypass; }
             void                handleMouseUp(InputEvent& ev);
             void                handleMouseDown(InputEvent& ev);
             void                handleMouseDrag(InputEvent& ev);
@@ -30,15 +33,13 @@ public:
             virtual void        save(XmlElement* xmlEff);
             virtual void        setMixChannel(MixChannel* ncell);
 
-public:
-            bool                bypass;
-            Button36*           bypassToggle;
-            bool                folded;
-            Button36*           foldToggle;
-            MixChannel*         mixChannel;
             int                 muteCount;
-            Slider36*           sliderAmount;
-            Button36*           wndToggle;
+
+private:
+
+            bool                bypass;
+            bool                folded;
+            MixChannel*         mixChannel;
 };
 
 class Filter1 : public Eff

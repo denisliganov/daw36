@@ -101,10 +101,11 @@ void SnapMenu::handleMouseUp(InputEvent& ev)
 
 void SnapMenu::drawSelf(Graphics& g)
 {
-    fill(g, .3f);
+    fill(g, .4f);
     rect(g, 0.22f);
     setc(g, 1.f);
-    gText(g, FontBig, vitems[currentItem], x1 + width/2 - gGetTextWidth(FontBig, vitems[currentItem])/2, y2 - height/2 + 7);
+
+    txt(g, FontBig, vitems[currentItem], width/2 - gGetTextWidth(FontBig, vitems[currentItem])/2, height/2 + 7);
 }
 
 

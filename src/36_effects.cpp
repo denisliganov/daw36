@@ -57,10 +57,9 @@ public:
 
 Eff::Eff()
 {
-    folded = false;
-    bypass = false;
     muteCount = 0;
     visible = false;
+    bypass = false;
     devIdx = -1;
 
     addObject(previewButton = new EffGuiButton(), MixChanWidth - 21, 0, 20, 15);
@@ -208,8 +207,6 @@ void Eff::save(XmlElement * xmlEff)
     xmlEff->setAttribute(T("EffIndex"), devIdx);
     xmlEff->setAttribute(T("EffName"), String(objName.data()));
     xmlEff->setAttribute(T("EffPath"), String(filePath.data()));
-    xmlEff->setAttribute(T("Folded"), folded ? 1 : 0);
-    xmlEff->setAttribute(T("Bypass"), bypass ? 1 : 0);
 
     //if(devType != EffType_VSTPlugin)
     {
@@ -220,8 +217,6 @@ void Eff::save(XmlElement * xmlEff)
 void Eff::load(XmlElement * xmlEff)
 {
     devIdx = xmlEff->getIntAttribute(T("EffIndex"));
-    folded = xmlEff->getBoolAttribute(T("Folded"));
-    bypass = xmlEff->getBoolAttribute(T("Bypass"));
 
     //if(devType != EffType_VSTPlugin)
     {

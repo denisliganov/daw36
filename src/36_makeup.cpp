@@ -65,14 +65,22 @@ void MakeUpObject::drawSelf(Graphics& g)
     drawGlassRect1(g, (float)390, (float)80, 50, 60, clr, 0, 0, true, true, true, true);
 
 
+    clr = Colour(140, 140, 220);
+    drawGlassRect(g, (float)250, (float)200, 220, 80, clr, 1, 28, false, false, false, false);
+
+
     drawGlassRound(g,  50, 200, 60, Colour(125, 125, 100), 1);
     drawGlassRound(g,  150, 200, 50, Colour(100, 100, 100), 1);
     drawGlassRound(g,  50, 280, 80, Colour(55, 55, 55), 1);
-    drawGlassRound(g,  250, 280, 120, Colour(80, 90, 90), 1);
 
-    paintButton(g, 300, 300, 40, 30, false, false);
+    //drawGlassRound(g,  250, 280, 120, Colour(80, 90, 90), 1);
 
-    paintButton(g, 350, 300, 80, 80, false, false);
+    drawGlassRound(g,  140, 120, 20, Colour(180, 200, 250), 1);
+    drawGlassRound(g,  250, 200, 40, Colour(140, 140, 220), 1);
+    drawGlassRound(g,  340, 210, 30, Colour(80, 80, 250), 1);
+
+//    paintButton(g, 300, 300, 40, 30, false, false);
+//    paintButton(g, 350, 300, 80, 80, false, false);
 }
 
 void MakeUpObject::handleChildEvent(Gobj * obj,InputEvent & ev)

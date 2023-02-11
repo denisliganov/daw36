@@ -315,25 +315,25 @@ void MixChannel::process(int num_frames, float* out_buff)
         {
             eff->process(inbuff, outbuff, num_frames);
 
-            if(eff->bypass == false)
+            if(eff->getBypass() == false)
             {
                 // Copy output back to input for the next effect to process
 
-                if(eff->muteCount > 0)
+                if(eff->getMuteCount() > 0)
                 {
                     long tc = 0;
                     float aa;
 
                     while(tc < num_frames)
                     {
-                        aa = float(DECLICK_COUNT - eff->muteCount)/DECLICK_COUNT;
+                        aa = float(DECLICK_COUNT - eff->getMuteCount())/DECLICK_COUNT;
 
                         inbuff[tc*2] = inbuff[tc*2]*(1.f - aa) + outbuff[tc*2]*aa;
                         inbuff[tc*2 + 1] = inbuff[tc*2 + 1]*(1.f - aa) + outbuff[tc*2 + 1]*aa;
 
                         tc++;
 
-                        if(eff->muteCount > 0)
+                        if(eff->getMuteCount() > 0)
                         {
                             eff->muteCount--;
                         }
@@ -346,14 +346,14 @@ void MixChannel::process(int num_frames, float* out_buff)
             }
             else
             {
-                if(eff->muteCount < DECLICK_COUNT)
+                if(eff->getMuteCount() < DECLICK_COUNT)
                 {
                     long tc = 0;
                     float aa;
 
-                    while(tc < num_frames && eff->muteCount < DECLICK_COUNT)
+                    while(tc < num_frames && eff->getMuteCount() < DECLICK_COUNT)
                     {
-                        aa = float(DECLICK_COUNT - eff->muteCount)/DECLICK_COUNT;
+                        aa = float(DECLICK_COUNT - eff->getMuteCount())/DECLICK_COUNT;
 
                         inbuff[tc*2] = inbuff[tc*2]*(1.f - aa) + outbuff[tc*2]*aa;
                         inbuff[tc*2 + 1] = inbuff[tc*2 + 1]*(1.f - aa) + outbuff[tc*2 + 1]*aa;
@@ -959,7 +959,7 @@ bool MixChannel::handleObjDrop(Gobj * obj,int mx,int my,unsigned flags)
             }
             else if(eff != dropObj)
             {
-                eff->mixChannel->removeEffect(eff);
+                eff->getMixChannel()->removeEffect(eff);
             }
 
             if(eff != dropObj)

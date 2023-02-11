@@ -399,6 +399,8 @@ SubWindow* MainWindow::createChildWindowFromWinObject(WinObject* wobj, int x, in
         sw->setBounds(x, y, wobj->getWidth(), wobj->getHeight());
     }
 
+    sw->setAlwaysOnTop(true);
+
     return sw;
 }
 
@@ -620,8 +622,9 @@ void SubWindow::paint(Graphics& g)
     g.fillRect(0, 0, getWidth(), getHeight());
 
     gSetMonoColor(g, 0.5f);
-    //gSetMonoColor(g, 0.35f);
     g.drawRect(0, 0, getWidth(), getHeight());
+
+    //drawGlassRect(g, (float)0, (float)0, getWidth(), 23, Colour(100, 100, 100), 0, 0, true, true, false, false);
 
     gSetMonoColor(g, 1.f);
     g.setFont(*bld);

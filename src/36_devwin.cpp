@@ -90,7 +90,10 @@ void DevParamObject::initAll()
     spaceRight();
     spaceRight();
 
-    putRight(presetBox, 150, wndH - border);
+    if (device->getNumPresets() > 0)
+    {
+        putRight(presetBox, 150, wndH - border);
+    }
 
     presetBox->setList(device->getList());
 
@@ -103,7 +106,7 @@ void DevParamObject::initAll()
 
 void DevParamObject::drawSelf(Graphics& g)
 {
-    Gobj::fill(g, 0.36f);
+    Gobj::fill(g, 0.4f);
 }
 
 void DevParamObject::handleChildEvent(Gobj * obj,InputEvent & ev)
@@ -113,6 +116,8 @@ void DevParamObject::handleChildEvent(Gobj * obj,InputEvent & ev)
     if (obj == presetBox && !ev.clickDown)
     {
         device->setPresetByName(presetBox->getCurrentName());
+
+        redraw();
     }
 }
 

@@ -360,7 +360,10 @@ void VstInstr::addNoteEvent(int note, long num_frames, long frame_phase, long to
 {
     VstMidiEvent* pEv = &(MidiEvents[numEvents]);
 
-    unsigned char velocity = (unsigned char)((volume <= 1) ? volume * 100 : 100 + (volume - 1)/(DAW_VOL_RANGE - 1)*0x1B); //volume is the value from 0 to 1, if it's greater then it's gaining
+    //volume is the value from 0 to 1, if it's greater then it's gaining
+
+    unsigned char velocity = (unsigned char)((volume <= 1) ? volume * 100 : 100 + (volume - 1)/(DAW_VOL_RANGE - 1)*0x1B);
+
 /*
 struct VstMidiEvent		// to be casted from a VstEvent
 {
@@ -391,7 +394,6 @@ struct VstMidiEvent		// to be casted from a VstEvent
     pEv->deltaFrames = 0;
     pEv->noteLength = 0;
     pEv->noteOffset = 0;
-
     pEv->flags = 0;
 
     if (frame_phase == 0)
@@ -570,6 +572,16 @@ void VstInstr::setSampleRate(float sampleRate)
     Instrument::setSampleRate(sampleRate);
 
     vst2->setSampleRate(sampleRate);
+}
+
+bool VstInstr::setPresetByName(std::string pname)
+{
+    return vst2->setPresetByName(pname.data());
+}
+
+bool VstInstr::setPresetByIndex(long index)
+{
+    return vst2->setPresetByIndex(index);
 }
 
 bool VstInstr::onUpdateDisplay()

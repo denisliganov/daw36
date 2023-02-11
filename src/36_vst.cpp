@@ -897,9 +897,9 @@ void Vst2Plugin::updParamsFromPlugin()
     setParamLock(false);
 }
 
-bool Vst2Plugin::setPresetByName(char* name)
+bool Vst2Plugin::setPresetByName(std::string name)
 {
-    if (name != NULL)
+    if (name != "")
     {
         for(BrwEntry* pe : presets)
         {

@@ -45,11 +45,13 @@ public:
         InstrHighlight() 
         {
             settouchable(false);
+            
+            instr = NULL;
         }
 
         void updPos()
         {
-            Instrument* instr = MInstrPanel->getCurrInstr();
+            instr = MInstrPanel->getCurrInstr();
 
             if (instr && instr->isshown())
             {
@@ -76,9 +78,17 @@ protected:
             lineH(g, height-1, 0, width-1);
             fillx(g, width-3, 4, 1, height-8);
 */
-            setc(g, 0xe0FF9930);
+            //setc(g, 0xe0FF9930);
+
+            if (instr != NULL)
+                instr->setMyColor(g, 1.f);
+            else
+                setc(g, 0xe0FF9930);
+
             gDrawRect(g,  x1, y1, x2, y2);
         }
+
+        Instrument*     instr;
 };
 
 

@@ -96,11 +96,22 @@ public:
 virtual Instrument*             clone();
             void                drawSelf(Graphics& g);
             void                drawover(Graphics & g);
+    virtual void                generateData(long num_frames = 0, long buffframe = 0);
+    virtual void                mute(Trigger* tg) {};
+
         virtual void            deactivateTrigger(Trigger* tg);
         virtual void            deClick(Trigger* tg, long num_frames = 0, long buffframe = 0, long mixbuffframe = 0, long remaining = 0);
             void                forceStop();
             void                flowTriggers(Trigger* tgfrom, Trigger* tgto);
     virtual void                fillMixChannel(long num_frames, long buffframe, long mixbuffframe);
+    virtual void                staticInit(Trigger* tg, long num_frames);
+            void                setBufferSize(unsigned bufferSize);
+            void                setSampleRate(float sampleRate);
+    virtual long                workTrigger(Trigger* tg, long num_frames, long remaining, long buffframe, long mixbuffframe);
+    virtual void                preProcessTrigger(Trigger* tg, bool* skip, bool* fill, long num_frames, long buffframe = 0);
+    virtual long                processTrigger(Trigger* tg, long num_frames = 0, long buffframe = 0) {return 0;};
+    virtual void                postProcessTrigger(Trigger* tg, long num_frames = 0, long buffframe = 0, long mixbuffframe = 0, long remaining = 0);
+
             void                handleMouseDown(InputEvent& ev);
             void                handleMouseUp(InputEvent& ev);
             void                handleMouseWheel(InputEvent& ev);
@@ -109,24 +120,18 @@ virtual Instrument*             clone();
             std::string         getAlias()                          {return instrAlias;};
             float               getLastNoteLength()                 { return lastNoteLength; }
             std::list <Element*>   getNotesFromRange(float tick_offset, float lastVisibleTick);
-    virtual void                generateData(long num_frames = 0, long buffframe = 0);
+
+
     virtual void                load(XmlElement* instrNode);
-    virtual void                mute(Trigger* tg) {};
+
         Instrument*             makeClone(Instrument * instr);
             void                preview(int note = BaseNote);
-    virtual void                preProcessTrigger(Trigger* tg, bool* skip, bool* fill, long num_frames, long buffframe = 0);
-    virtual long                processTrigger(Trigger* tg, long num_frames = 0, long buffframe = 0) {return 0;};
-    virtual void                postProcessTrigger(Trigger* tg, long num_frames = 0, long buffframe = 0, long mixbuffframe = 0, long remaining = 0);
             void                remap();
             void                removeNote(Note* note);
             void                reinsertNote(Note* note);
-            void                setLastParams(float last_length,float last_vol,float last_pan, int last_val);
             void                setIndex(int idx);
-    virtual void                staticInit(Trigger* tg, long num_frames);
+            void                setLastParams(float last_length,float last_vol,float last_pan, int last_val);
     virtual void                save(XmlElement* instrNode);
-            void                setBufferSize(unsigned bufferSize);
-            void                setSampleRate(float sampleRate);
-            virtual long        workTrigger(Trigger* tg, long num_frames, long remaining, long buffframe, long mixbuffframe);
 
 };
 

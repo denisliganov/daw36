@@ -242,9 +242,9 @@ void VstEffect::reset()
     vst2->reset();
 }
 
-bool VstEffect::setPresetByName(char* name)
+bool VstEffect::setPresetByName(std::string pname)
 {
-    return vst2->setPresetByName(name);
+    return vst2->setPresetByName(pname);
 }
 
 bool VstEffect::setPresetByIndex(long index)

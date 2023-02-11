@@ -10,25 +10,25 @@
 
 class SnapMenu : public Gobj
 {
-protected:
-
-        float   snapSize;
-        int     currentItem;
-
-        std::vector<std::string>        vitems;
-
-        void    drawSelf(Graphics& g);
-        void    activateMenuItem(std::string item);
-        void    handleMouseDown(InputEvent& ev);
-        void    handleMouseUp(InputEvent & ev);
-        void    handleMouseWheel(InputEvent & ev);
-
 public:
 
         SnapMenu();
 
-        float   getSnapSize();
-        void    updateSnapSize();
+        float               getSnapSize();
+        void                updateSnapSize();
+
+protected:
+
+        float               snapSize;
+        int                 currentItem;
+
+        std::vector<std::string>        vitems;
+
+        void                activateMenuItem(std::string item);
+        void                drawSelf(Graphics& g);
+        void                handleMouseDown(InputEvent& ev);
+        void                handleMouseUp(InputEvent & ev);
+        void                handleMouseWheel(InputEvent & ev);
 };
 
 

@@ -73,7 +73,7 @@ ControlPanel::ControlPanel()
 
     addObject(btRender = new Button36(true), xButtons, yMenu, 30, 30, "bt.render");
     btConfig->setLedType(true);
-    xButtons += btRender->getW() + MenuGroupsSpacing;
+    xButtons += btRender->getW() + MenuGroupsSpacing*2;
 
     addObject(btPlay = new Button36(true), xButtons, yMenu, 52, buttonHeight, "bt.play");
     xButtons += 52 + MenuButtonsSpacing;
@@ -104,7 +104,7 @@ ControlPanel::ControlPanel()
 
     addObject(timeScreen = new TimeScreen(), xButtons, yMenu, 80, buttonHeight, "pos.display");
 
-    xButtons += timeScreen->getW() + MenuGroupsSpacing;
+    xButtons += timeScreen->getW() + MenuGroupsSpacing*4;
 
     addObject(btBrowser = new GroupButton(2), xButtons, yMenu, buttonWidth*2, buttonHeight, "bt.browser");
     btBrowser->setLedType(true);
@@ -140,7 +140,7 @@ void ControlPanel::remap()
     int buttonWidth = 30;
     int yTop = 0;
     int navHeight = height - 16;
-    int xStartCoord = xButtons + 150;
+    int xStartCoord = xButtons + MenuGroupsSpacing;
 
     if(width - 30 > (xStartCoord + 30*2))
     {

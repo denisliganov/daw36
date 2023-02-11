@@ -35,6 +35,8 @@ public:
             void                stopAllNotes();
             void                setBufferSize(unsigned int bufferSize);
             void                setSampleRate(float sampleRate);
+            bool                setPresetByName(std::string pname);
+            bool                setPresetByIndex(long index);
             void                vstProcess(long num_frames, long buffframe);
 
 private:

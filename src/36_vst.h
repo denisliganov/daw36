@@ -107,14 +107,14 @@ public:
             void                    setSampleRate(float smpRate);
             void                    setBufferSize(unsigned int buffSize);
             void                    reset();
-            void                    setPresetName(char *new_name);
+            void                    setPresetName(char* name);
             void                    updatePresets();
             void                    extractParams();
             void                    updateVString(Param* param);
             void                    handleParamUpdate(Param* param);
             bool                    onSetParameterAutomated(long index,float value);
             void                    updParamsFromPlugin();
-            bool                    setPresetByName(char* nm);
+            bool                    setPresetByName(std::string pname);
             bool                    setPresetByIndex(long index);
             long                    getCurrentPreset();
             void                    save(XmlElement* xmlEff);

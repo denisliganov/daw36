@@ -32,7 +32,7 @@ public:
             void                setSampleRate(float smpRate);
             void                showEditor(bool show);
             void                save(XmlElement* xmlEff);
-            bool                setPresetByName(char* objName);
+            bool                setPresetByName(std::string pname);
             bool                setPresetByIndex(long devIdx);
             void                updatePresets();
 

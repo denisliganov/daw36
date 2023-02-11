@@ -23,24 +23,30 @@ public:
             int                 getIndex() { return devIdx; }
             std::list<BrwEntry*>   getPresets() { return presets; }
             BrwEntry*           getCurrPreset() { return currPreset; }
+            BrwEntry*           getPreset(char* objName);
+            BrwEntry*           getPreset(long devIdx);
+            long                getNumPresets();
+            void                getPresetName(long devIdx, char *name);
+            long                getPresetIndex(char* objName);
+            void                removeElements();
             void                handleWindowClosed();
             bool                isWindowVisible();
             bool                isPreviewOnly() { return previewOnly; }
             bool                isInternal()    { return internal; }
     virtual void                reset() { }
+            void                savePreset();
+            void                savePresetAs(char* preset_name);
+            void                saveStateData(XmlElement& xmlParentNode, char* preset_name = NULL, bool global = false);
+            void                saveCustomStateData(XmlElement& xmlParentNode) {};
+            void                setIndex(int idx) { devIdx = idx; }
     virtual void                scanForPresets();
     virtual void                setBPM(float bpm) {};
     virtual void                setBufferSize(unsigned bufferSize) {};
     virtual void                setSampleRate(float sampleRate) {};
     virtual void                showWindow(bool show);
-            void                savePreset();
-            bool                setPresetByName(BrwEntry* preset);
-            bool                setPresetByIndex(long index) { return true; };
-            void                savePresetAs(char *preset_name);
-            void                saveStateData(XmlElement & xmlParentNode, char* preset_name = NULL, bool global = false);
-            void                saveCustomStateData(XmlElement & xmlParentNode) {};
-            bool                setPresetByName(std::string pname);
-            void                setIndex(int idx)  { devIdx = idx; }
+    virtual bool                setPresetByName(BrwEntry* preset);
+    virtual bool                setPresetByIndex(long index) { return true; };
+    virtual bool                setPresetByName(std::string pname);
 
             std::vector<std::string>&   getList()  { return pres; }
 
@@ -65,12 +71,6 @@ protected:
             std::vector<std::string>    pres;
 
             void                deletePresets();
-            BrwEntry*           getPreset(char* objName);
-            BrwEntry*           getPreset(long devIdx);
-            long                getNumPresets();
-            void                getPresetName(long devIdx, char *name);
-            long                getPresetIndex(char* objName);
-            void                removeElements();
             void                restoreStateData(XmlElement & xmlStateNode, bool global = false);
             void                restoreCustomStateData(XmlElement & xmlStateNode) {};
 };

@@ -385,11 +385,11 @@ void Instrument::drawSelf(Graphics& g)
 
     //setc(g, .0f);
     Gobj::setMyColor(g, .1f);
-    txtfit(g, FontSmall, objName, 25, 9, width - 26);
+    txtfit(g, FontSmall, objName, height+2, 9, width - (height+2));
 
     //setc(g, 1.f);
     Gobj::setMyColor(g, 1.f);
-    txtfit(g, FontSmall, objName, 26, 8, width - 26);
+    txtfit(g, FontSmall, objName, height+2, 8, width - (height+2));
 
 //    lineH(0, 0, width - 1);
 }
@@ -778,6 +778,8 @@ void Instrument::handleChildEvent(Gobj * obj, InputEvent& ev)
     {
         if (ev.clickDown)
         {
+            MInstrPanel->setCurrInstr(this);
+
             showWindow(!isWindowVisible());
         }
     }
@@ -1017,8 +1019,10 @@ void Instrument::reinsertNote(Note * note)
 
 void Instrument::remap()
 {
-    previewButton->setCoords1(31, height - 10, 20, 10);
+    volBox->setCoords1(width - 90, height - 10, 50, 10);
+    panBox->setCoords1(width - 150, height - 10, 50, 10);
 
+    previewButton->setCoords1(height + 2, height - 10, 20, 10);
     volBox->setCoords1(width - 82, height - 10, 50, 10);
     panBox->setCoords1(width - 149, height - 10, 50, 10);
 
@@ -1027,7 +1031,7 @@ void Instrument::remap()
     soloButt->setCoords1(width - bw*2 - 10, height - bw, bw, bw);
     muteButt->setCoords1(width - bw - 9, height - bw, bw, bw);
 
-    guiButton->setCoords1(0, 0, 16, 16);
+    guiButton->setCoords1(0, 0, height, height-1);
 
     ivu->setCoords1(width - 8, 0, 8, height);
 
