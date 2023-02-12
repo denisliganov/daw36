@@ -51,7 +51,7 @@ public:
             bool                isPointed(int mx, int my, Grid* grid);
             bool                isdel();
             bool                issel();
-    virtual bool                isshown();
+    virtual bool                isShown();
     virtual void                load(XmlElement* xmlNode);
     virtual void                move(float dtick, int dtrack);
             void                markSelected(bool sel);

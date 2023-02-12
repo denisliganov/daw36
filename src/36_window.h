@@ -63,6 +63,8 @@ public:
             std::string         showAlertBox(std::string message, std::string bt1 = "OK", std::string bt2 = "", std::string bt3 = "");
             void                setFocusToChild(SubWindow* sw);
             void                updateTitle();
+            void                focusLost(FocusChangeType cause);
+            void                focusGained(FocusChangeType cause);
 
 protected:
 

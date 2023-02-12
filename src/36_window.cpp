@@ -316,6 +316,16 @@ void MainWindow::deleteContextMenu()
     }
 }
 
+void MainWindow::focusLost(FocusChangeType cause)
+{
+    //minimizeChilds();
+}
+
+void MainWindow::focusGained(FocusChangeType)
+{
+    //maximizeChilds();
+}
+
 void MainWindow::showMenuWindow(WinObject* comp, int x, int y)
 {
     if(MenuWindow != NULL)
@@ -747,7 +757,7 @@ void JuceListener::redrawPerAction()
 
         for(Gobj* obj : mainComp->getWinObject().changedObjects)
         {
-            if (obj->isshown() && obj->isChanged())
+            if (obj->isShown() && obj->isChanged())
             {
                 if(obj->getObjGroup() != ObjGroup_Highlight)
                 {
@@ -779,7 +789,7 @@ void JuceListener::paint(Graphics& g)
 
     for (Gobj* obj : mainComp->getWinObject().highlights)
     {
-        if (obj->isshown())
+        if (obj->isShown())
         {
             obj->drawloop(g);
         }
@@ -1213,7 +1223,7 @@ WinObject::~WinObject()
     // Delete child objects here, to prevent issue when ~Gobj destructor unregisters
     // objects being deleted and catches an error, since the internal lists won't be valid after this
     // destructor
-    Gobj::delobjects();
+    Gobj::deleteAllObjects();
 
     deleteAndZero(hintBox);
 }
@@ -1344,7 +1354,7 @@ void WinObject::updActiveObject(InputEvent& ev)
     {
         if (lastActiveObj != NULL && lastActiveObj != this)
         {
-            lastActiveObj->setundermouse(false);
+            lastActiveObj->setUnderMouse(false);
 
             lastActiveObj->handleMouseLeave(ev);
         }

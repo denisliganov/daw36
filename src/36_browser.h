@@ -6,12 +6,11 @@
 
 #include <list>
 #include <string>
-
+#include <vector>
 
 #include "36_globals.h"
 #include "36_objects.h"
-#include "36_scroller.h"
-
+#include "36_paramobject.h"
 
 
 
@@ -27,35 +26,12 @@ typedef enum BrwMode
 }BrwMode;
 
 
-class Browser : public Scrolled
+class Browser : public ParamObject
 {
-protected:
-
-            void    disableAllEntries();
-
 public:
 
-            Browser(const char* dirpath);
+            Browser(std::string dirpath);
            ~Browser();
-
-            int                 brwIndex;
-            BrwMode             browsingMode;
-            BrwEntry*           currEntry;
-            int                 currIndex;
-            Instrument*         ipreview;
-            std::string         lastdir;
-            bool                plugsscanned;
-            std::string         path;
-            std::string         projectspath;
-            std::string         samplespath;
-            unsigned int        viewMask;
-
-            std::list<std::string>  directories;
-            std::list<BrwEntry*>    entries[Browse_Max];
-
-            Button36*           btSamples;
-            Button36*           btDevices;
-            Button36*           btPlugins;
 
             void                addSearchDir(std::string dir);
             void                activateMenuItem(std::string item);
@@ -85,7 +61,7 @@ public:
             FILE*               rescanFromVstFile();
             void                rescanDevices();
             void                setViewMask(unsigned int vmask);
-            void                scanDirForFiles(std::string path, std::string ext, bool recurs);
+            void                scanDirForFiles(std::string path, std::string ext, bool recurs, std::vector<std::string>& flist);
             void                setCurrentEntry(int index);
             void                setCurrentIndex(int index);
             void                setMode(BrwMode mode);
@@ -94,5 +70,37 @@ public:
             void                updateEntries();
             void                updateParamsData();
             void                updateCurrentHighlight();
+
+            BrwMode             browsingMode;
+
+protected:
+
+            int                 brwIndex;
+            BrwEntry*           currEntry;
+            int                 currIndex;
+            Instrument*         ipreview;
+            std::string         lastdir;
+            bool                plugsscanned;
+            std::string         path;
+            std::string         projectsPath;
+            std::string         samplesPath;
+            unsigned int        viewMask;
+
+            std::list<std::string>  directories;
+            std::vector<ListBoxx*>  listBoxes;
+
+            std::list<BrwEntry*>    entries[Browse_Max];
+
+            Button36*           btSamples;
+            Button36*           btDevices;
+            Button36*           btPlugins;
+
+            ListBoxx*           sampleList1;
+            ListBoxx*           vstList1;
+            ListBoxx*           internalList1;
+            ListBoxx*           projectsList1;
+
+private:
+            
 };
 

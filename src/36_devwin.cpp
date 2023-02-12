@@ -54,7 +54,7 @@ void DevParamObject::initAll()
 
         if (prm)
         {
-            ParamBox* box = box = new ParamBox(prm);
+            ParamBox* box = new ParamBox(prm);
 
             box->setCoords1(0, 0, boxWidth, boxHeight);
             box->setSliderOnly(false);
@@ -63,19 +63,18 @@ void DevParamObject::initAll()
         }
         else if (prmRad)
         {
-            RadioBox* box = new RadioBox(prmRad);
-            obj = box;
+            obj = new RadioBox(prmRad);
         }
         else if (prmSel)
         {
-            SelectorBox* box = new SelectorBox(prmSel);
-            obj = box;
+            obj = new SelectorBox(prmSel);
         }
         else if (prmTg)
         {
-            ToggleBox* box = new ToggleBox(prmTg);
-            obj = box;
+            obj = new ToggleBox(prmTg);
         }
+
+        addObject(obj);
 
         if (obj)
         {
@@ -83,7 +82,7 @@ void DevParamObject::initAll()
         }
     }
 
-    presetBox = new ListBoxx("Presets");
+    addObject(presetBox = new ListBoxx("Presets"));
 
     goTop();
 

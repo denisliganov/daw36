@@ -24,7 +24,7 @@ NumBox::NumBox()
 void NumBox::drawSelf(Graphics& g)
 {
     //fill(g, .2f);
-    fill(g, 0.44f);
+    fill(g, 0.3f);
 
     rect(g, 0.22f);
 }

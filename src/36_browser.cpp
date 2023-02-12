@@ -21,6 +21,7 @@
 #include "36_brwentry.h"
 #include "36_config.h"
 #include "36_textinput.h"
+#include "36_listbox.h"
 
 #include "juce_amalgamated.h"
 
@@ -73,7 +74,7 @@ public:
 };
 
 
-Browser::Browser(const char* dirpath)
+Browser::Browser(std::string dirpath)
 {
     path = dirpath;
 
@@ -91,12 +92,16 @@ Browser::Browser(const char* dirpath)
 
     addObject(btSamples = new GroupButton(3), xControls, yControls, buttonWidth, buttonHeight, "bt.brwsamples");
     xControls += buttonWidth + 4;
+
     addObject(btDevices = new GroupButton(3), xControls, yControls, buttonWidth, buttonHeight, "bt.brwdevs");
     xControls += buttonWidth + 4;
+
     addObject(btPlugins = new GroupButton(3), xControls, yControls, buttonWidth, buttonHeight, "bt.brwext");
+
     btSamples->setLedType(true);
     btDevices->setLedType(true);
     btPlugins->setLedType(true);
+
     btSamples->press();
 
     setCurrentIndex(3);
@@ -104,6 +109,7 @@ Browser::Browser(const char* dirpath)
     setViewMask(FType_Unknown | FType_VST | FType_Native | FType_Wave | FType_Projects);
 
     // Init internal and external devices
+
     update();
 }
 
@@ -148,6 +154,28 @@ void Browser::addEntry(BrwEntry* entry)
 void Browser::addSearchDir(std::string dir)
 {
     directories.push_back(dir);
+
+    auto const extpos = dir.find_last_of('\\');
+
+    if(extpos != std::string::npos)
+    {
+        std::string dirName = dir.substr(extpos + 1);
+
+        ListBoxx* lbox = new ListBoxx(dirName);
+
+        std::vector<std::string> fList;
+
+        scanDirForFiles(dir, "wav", true, fList);
+
+        lbox->setList(fList);
+
+        addObject(lbox);
+
+        listBoxes.push_back(lbox);
+
+        remapAndRedraw();
+    }
+
 }
 
 BrwEntry* Browser::addEntry(DevClass ec, std::string name, std::string path, std::string alias)
@@ -185,7 +213,7 @@ void Browser::activateEntry(BrwEntry* be)
 
 void Browser::cleanEntries()
 {
-    setVoffs(0);
+    //setVoffs(0);
 
     while(entries[browsingMode].size() > 0)
     {
@@ -294,24 +322,13 @@ void Browser::drawSelf(Graphics& g)
 
     for (auto be : entries[browsingMode])
     {
-        if (be->isshown())
+        if (be->isShown())
         {
             be->drawSelf(g);
         }
     }
 
     gPanelRect(g, x1, y2 - BottomPadHeight + 1, x2, y2);
-}
-
-void Browser::disableAllEntries()
-{
-    for(int i = Browse_Projects; i < Browse_Max; i++)
-    {
-        for(auto be : entries[i])
-        {
-            be->setVis(false);
-        }
-    }
 }
 
 void Browser::devScanProc(ScanThread* thread)
@@ -340,7 +357,8 @@ void Browser::devScanProc(ScanThread* thread)
         return ;
     }
 
-    /* scan local plugin folder */
+    // scan local plugin folder
+
     //_getdcwd(drive, working_directory, MAX_PATH_STRING - 1 );
     //sprintf_s(temppath, MAX_PATH_STRING, "%s%s", szWorkingDirectory, LOCAL_PLUGIN_FOLDER);
 
@@ -348,7 +366,8 @@ void Browser::devScanProc(ScanThread* thread)
 
     scanDirForDevs(temppath, mode, fhandle, thread);
 
-    /* Check whether environment has VST_PATH variable set*/
+    // Check whether environment has VST_PATH variable set
+
     envpath = getenv( "VST_PATH" );
 
     if (envpath != NULL)
@@ -482,25 +501,22 @@ void Browser::handleChildEvent(Gobj * obj, InputEvent& ev)
     if (obj == btDevices || obj == btPlugins || obj == btSamples)
     {
         if(obj == btDevices)
-            MBrowser->setMode(Browse_InternalDevs);
-        else if(obj == btPlugins)
-            MBrowser->setMode(Browse_ExternalDevs);
-        else if(obj == btSamples)
-            MBrowser->setMode(Browse_Samples);
-
-        /*
-        if (_MainObject->showFX->isshown())
         {
-           if(ev.clickDown)
-               _MainObject->showFX->handleMouseDown(ev);
-           else
-               _MainObject->showFX->handleMouseUp(ev);
-        }*/
+            MBrowser->setMode(Browse_InternalDevs);
+        }
+        else if(obj == btPlugins)
+        {
+            MBrowser->setMode(Browse_ExternalDevs);
+        }
+        else if(obj == btSamples)
+        {
+            MBrowser->setMode(Browse_Samples);
+        }
     }
-    else if (obj == vscr)
-    {
-        remapAndRedraw();
-    }
+    //else if (obj == vscr)
+    //{
+    //    remapAndRedraw();
+    //}
 }
 
 void Browser::handleMouseUp(InputEvent& ev)
@@ -551,7 +567,7 @@ void Browser::handleMouseWheel(InputEvent& ev)
 {
     float offsdelta = -(float)ev.wheelDelta*(BrwEntryHeight*2 + 3);
 
-    setVoffs(getVoffs() + offsdelta);
+    //setVoffs(getVoffs() + offsdelta);
 }
 
 void Browser::handleMouseDrag(InputEvent& ev)
@@ -607,7 +623,6 @@ bool Browser::isDevMode()
     return (browsingMode == Browse_InternalDevs || browsingMode == Browse_ExternalDevs);
 }
 
-
 void Browser::prreviewSample(bool down)
 {
     if(down)
@@ -639,19 +654,25 @@ void Browser::prreviewSample(bool down)
 
 void Browser::remap()
 {
-    disableAllEntries();
+    for(int i = Browse_Projects; i < Browse_Max; i++)
+    {
+        for(auto be : entries[i])
+        {
+            be->setVis(false);
+        }
+    }
 
     int cx = 0;
 
     int cy = MainLineHeight;
-    int cw = width - BrwScrollerWidth;
+    int cw = 200;
 
-    float visibleSpan = (float)(height - cy - BottomPadHeight - 1);
+    float lstHeight = (float)(height - cy - BottomPadHeight - 1);
 
-    int yentry = cy - (int)vscr->getOffset();
+    int yentry = cy;// -(int)vscr->getOffset();
     float fullSpan = 0;
 
-    confine(cx, cy, cx + cw - 1, cy + visibleSpan - 1);
+    confine(cx, cy, cx + cw - 1, cy + lstHeight - 1);
 
     int idx = 0;
 
@@ -677,15 +698,18 @@ void Browser::remap()
 
     confine(); // no args -> reset bounds
 
-    fullSpan += 64;
+    int xLists = cx + cw + 20;
+    putStart(xLists, cy);
 
-    vscr->setCoords1(width - BrwScrollerWidth + 1, cy, BrwScrollerWidth - 2, visibleSpan);
+    for (ListBoxx* lb : listBoxes)
+    {
+        putRight(lb, 150, lstHeight);
+    }
 
-    vscr->updBounds(fullSpan, float(visibleSpan), vscr->getOffset());
+    //fullSpan += 64;
+    //vscr->updBounds(fullSpan, float(lstHeight), vscr->getOffset());
+    //vscr->setCoords1(width - BrwScrollerWidth + 1, cy, BrwScrollerWidth - 2, lstHeight);
 
-    // dbg file browsing
-    //ShowFiles->SetXYWH(0, 0, bwidth, bheight);
-    //SetupFolders->SetXYWH(FxPanelMaxWidth - bwidth - tabX, tabY, bwidth, bheight);
 }
 
 void Browser::removeEntry(BrwEntry * entry)
@@ -797,7 +821,7 @@ void Browser::setMode(BrwMode mode)
         be->setEnable(true);
     }
 
-    setVoffs(0);
+    //setVoffs(0);
 
     remapAndRedraw();
 }
@@ -824,7 +848,9 @@ void Browser::scanDirForDevs(char *path, char mode, FILE* fhandle, ScanThread* t
             if(mode == 0)
             {
                 if (getEntryByPath(filename) != NULL)
+                {
                     continue;
+                }
             }
 
             //thread->setStatusMessage(thread->getStatusMessage + String(strrchr(filename, '\\') + 1);
@@ -851,18 +877,26 @@ void Browser::scanDirForDevs(char *path, char mode, FILE* fhandle, ScanThread* t
                 }
 
                 if(isgen)
+                {
                     dclass = DevClass_GenVst;
+                }
                 else
+                {
                     dclass = DevClass_EffVst;
+                }
             }
             else // Something wrong with module, probably invalid
             {
                 char * name = strrchr(filename, '\\');
 
                 if (name != NULL)
+                {
                     dname = ++name;
+                }
                 else
+                {
                     dname = "stub";
+                }
 
                 dclass = DevClass_Invalid;
             }
@@ -870,15 +904,20 @@ void Browser::scanDirForDevs(char *path, char mode, FILE* fhandle, ScanThread* t
             char * nm = strrchr(filename, '\\');
             
             if (nm != NULL)
+            {
                 dname = ++nm;
+            }
             else
+            {
                 dname = "stub";
+            }
             
             dclass = DevClass_Default;
 
             BrwEntry* dentry = addEntry(dclass, dname, dpath, "vst");
 
             // Store in effect list file
+
             fwrite(dentry, sizeof(BrwEntry), 1, fhandle);
         }
         while (FindNextFile(shandle, &founddata));
@@ -910,10 +949,8 @@ void Browser::scanDirForDevs(char *path, char mode, FILE* fhandle, ScanThread* t
     }
 }
 
-void Browser::scanDirForFiles(std::string scan_path, std::string extension, bool recurs)
+void  Browser::scanDirForFiles(std::string scan_path, std::string extension, bool recurs, std::vector<std::string>& flist)
 {
-    if(scan_path.size() > MAX_PATH_LENGTH) return;
-
     char tempPath[MAX_PATH_LENGTH];
 
     strcpy(tempPath, (char*)scan_path.data());
@@ -939,7 +976,7 @@ void Browser::scanDirForFiles(std::string scan_path, std::string extension, bool
                         {
                             sprintf(dirpath, "%s%s%s", (char*)scan_path.data(), founddata.cFileName, "\\");
 
-                            scanDirForFiles(dirpath, extension, recurs);
+                            scanDirForFiles(dirpath, extension, recurs, flist);
                         }
                     }
                 }
@@ -956,9 +993,12 @@ void Browser::scanDirForFiles(std::string scan_path, std::string extension, bool
 
                         if(ext == extension)
                         {
+                            flist.push_back(fname);
+
                             BrwEntry* fileEntry = new BrwEntry;
 
                             fileEntry->setObjName(fname);
+
                             fileEntry->path = scan_path + fname;
                             fileEntry->size = (founddata.nFileSizeHigh * (MAXDWORD)) + founddata.nFileSizeLow;
                             fileEntry->attrs = founddata.dwFileAttributes;
@@ -995,7 +1035,8 @@ void Browser::updateEntries()
 
     if(browsingMode == Browse_Samples)
     {
-        scanDirForFiles(samplespath, WavExt, true);
+        std::vector<std::string> flist;
+        scanDirForFiles(samplesPath, WavExt, true, flist);
     }
     else if(browsingMode == Browse_Projects)
     {
@@ -1010,10 +1051,14 @@ void Browser::updateEntries()
         {
             plugsscanned = true;
 
-            if(false && vstfileexists)
+            if(vstfileexists)
+            {
                 rescanFromVstFile();
+            }
             else
-                rescanDevices( );
+            {
+                rescanDevices();
+            }
          }
     }
     else if(browsingMode == Browse_InternalDevs)

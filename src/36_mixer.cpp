@@ -1110,7 +1110,7 @@ void Mixer::remap()
             {
                 instr->mixChannel->setCoords1(0, yCh, width, instr->getH());
             }
-            else if(instr->mixChannel->isshown())
+            else if(instr->mixChannel->isShown())
             {
                 instr->mixChannel->setVisible(false);
             }

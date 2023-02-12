@@ -1027,13 +1027,13 @@ void Instrument::remap()
     panBox->setCoords1(width - 150, height - 10, 50, 10);
 
     previewButton->setCoords1(height + 2, height - 10, 20, 10);
-    volBox->setCoords1(width - 82, height - 10, 50, 10);
+    volBox->setCoords1(width - 84, height - 10, 50, 10);
     panBox->setCoords1(width - 149, height - 10, 50, 10);
 
     int bw = 11;
 
-    soloButt->setCoords1(width - bw*2 - 10, height - bw, bw, bw);
-    muteButt->setCoords1(width - bw - 9, height - bw, bw, bw);
+    soloButt->setCoords1(width - bw*2 - 8, height - bw, bw, bw);
+    muteButt->setCoords1(width - bw - 8, height - bw, bw, bw);
 
     guiButton->setCoords1(0, 0, height, height-1);
 

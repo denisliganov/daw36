@@ -2,11 +2,12 @@
 #pragma once
 
 #include "36_globals.h"
+#include "36_paramobject.h"
 
 
 
 
-class ControlPanel : public Gobj
+class ControlPanel : public ParamObject
 {
 friend  MainWinObject;
 friend  MainEdit;

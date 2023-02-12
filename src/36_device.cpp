@@ -126,6 +126,7 @@ void Device36::scanForPresets()
                 if(xmlMainNode->hasTagName(T("ChaoticPreset"))/* && xmlMainNode->hasAttribute(T("FormatVersion"))*/)
                 {
                     BrwEntry *preset = new BrwEntry((Device36*)this);
+
                     preset->prindex = presets.size();
 
                     XmlElement* xmlHeader = xmlMainNode->getChildByName(T("Module"));
@@ -133,10 +134,10 @@ void Device36::scanForPresets()
                     if (xmlHeader != NULL)
                     {
                         String Str1 = xmlHeader->getStringAttribute(T("PresetEntry"));
-                        
+
                         preset->setObjName((const char*)Str1);
                         //Str1.copyToBuffer((const char*)preset->name.data(), min(Str1.length(), 255));
-                        
+
                         preset->path = filename;
 
                         if(preset->getObjName() == currPresetName)
@@ -450,7 +451,10 @@ void Device36::savePreset()
         nmstr.copyToBuffer(name, 25);
         savePresetAs(name);
 
-        if(MBrowser->browsingMode == Browse_Presets)  MBrowser->update();
+        if(MBrowser->browsingMode == Browse_Presets)
+        {
+            MBrowser->update();
+        }
     }
 }
 
@@ -480,7 +484,7 @@ void Device36::getPresetName(long index, char *name)
     }
 }
 
-BrwEntry* Device36::getPreset(long index)
+BrwEntry* Device36::getPresetByIndex(long index)
 {
     for(BrwEntry* pe : presets)
     {
@@ -490,11 +494,11 @@ BrwEntry* Device36::getPreset(long index)
     return NULL;
 }
 
-BrwEntry* Device36::getPreset(char* name)
+BrwEntry* Device36::getPresetByName(std::string preset_name)
 {
     for(BrwEntry* pe : presets)
     {
-        if (pe->getObjName() == name)
+        if (pe->getObjName() == preset_name)
         {
             return pe;
         }

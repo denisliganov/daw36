@@ -599,7 +599,7 @@ bool VstInstr::onUpdateDisplay()
 
     // Update pointer to current active preset
 
-    BrwEntry* updpreset = getPreset(vst2->getProgram());
+    BrwEntry* updpreset = getPresetByIndex(vst2->getProgram());
 
     if (currPreset != updpreset)
     {

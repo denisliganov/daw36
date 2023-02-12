@@ -9,13 +9,14 @@
 ParamObject::ParamObject()
 {
     border = 10;
-    xstart1 = ystart1 = border;
-    xstart2 = ystart2 = border;
+
+    putStart(border, border);
+
     groupSpacing = 8;
     objSpacing = 4;
+
     wndW = border;
     wndH = border;
-    horizPut = false;
 
     paramLocked = false;
 
@@ -114,49 +115,59 @@ void ParamObject::handleClose()
     }
 }
 
+void ParamObject::putStart(int x, int y)
+{
+    xstart1 = xstart2 = x;
+    ystart1 = ystart2 = y;
+}
+
 void ParamObject::putRight(Gobj* obj, int ow, int oh)
 {
-    if (obj)
-    {
-        Gobj::addObject(obj, xstart1, ystart1, ow, oh);
-    }
+    //Gobj::addObject(obj, xstart1, ystart1, ow, oh);
+    int w = ow > 0 ? ow : obj->getW();
+    int h = oh > 0 ? oh : obj->getH();
+
+    obj->setVis(true);
+    obj->setCoords1(xstart1, ystart1, w, h);
 
     xstart2 = xstart1;
-    ystart2 = ystart1 + oh + objSpacing;
+    ystart2 = ystart1 + h + objSpacing;
 
-    xstart1 += ow + objSpacing;
+    xstart1 += w + objSpacing;
 
     if (xstart1 > wndW)
     {
         wndW = xstart1;
     }
 
-    if (ystart1 + oh + objSpacing > wndH)
+    if (ystart1 + h + objSpacing > wndH)
     {
-        wndH = ystart1 + oh + objSpacing;
+        wndH = ystart1 + h + objSpacing;
     }
 }
 
 void ParamObject::putBelow(Gobj* obj, int ow, int oh)
 {
-    if (obj)
-    {
-        Gobj::addObject(obj, xstart2, ystart2, ow, oh);
-    }
+    //Gobj::addObject(obj, xstart2, ystart2, ow, oh);
+    int w = ow > 0 ? ow : obj->getW();
+    int h = oh > 0 ? oh : obj->getH();
+
+    obj->setVis(true);
+    obj->setCoords1(xstart2, ystart2, w, h);
 
     ystart1 = ystart2;
-    xstart1 = xstart2 + ow + objSpacing;
+    xstart1 = xstart2 + w + objSpacing;
 
-    ystart2 += oh + objSpacing;
+    ystart2 += h + objSpacing;
 
     if (ystart2 > wndH)
     {
         wndH = ystart2;
     }
 
-    if (xstart2 + ow + objSpacing > wndW)
+    if (xstart2 + w + objSpacing > wndW)
     {
-        wndW = xstart2 + ow + objSpacing;
+        wndW = xstart2 + w + objSpacing;
     }
 }
 

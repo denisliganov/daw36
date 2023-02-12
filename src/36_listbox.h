@@ -21,12 +21,6 @@ public:
 
 protected:
 
-            int                 border;
-            int                 currentEntry;
-            int                 scrWidth;
-
-            std::vector<std::string>  entries;
-
             void                drawSelf(Graphics& g);
             void                handleChildEvent(Gobj * obj,InputEvent & ev);
     virtual void                handleMouseDown(InputEvent& ev);
@@ -34,6 +28,14 @@ protected:
     virtual void                handleMouseDrag(InputEvent& ev);
     virtual void                handleMouseWheel(InputEvent& ev);
     virtual void                remap();
+
+private:
+
+            int                 border;
+            int                 currentEntry;
+            int                 scrWidth;
+
+            std::vector<std::string>  entries;
 };
 
 

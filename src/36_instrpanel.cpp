@@ -44,7 +44,7 @@ public:
 
         InstrHighlight() 
         {
-            settouchable(false);
+            setTouchable(false);
             
             instr = NULL;
         }
@@ -53,7 +53,7 @@ public:
         {
             instr = MInstrPanel->getCurrInstr();
 
-            if (instr && instr->isshown())
+            if (instr && instr->isShown())
             {
                 setCoordsAbs(0, instr->getY1() - 1, instr->getX2() + 5, instr->getY2() + 1);
                 //setCoords2(0, instr->getY1() - 1, instr->getX2() + 5, instr->getY2() + 1);
@@ -181,7 +181,7 @@ void InstrPanel::addInstrument(Instrument * i, Instrument * objAfter)
 
         MProject.setChange();
 
-        if(MMixer->isshown())
+        if(MMixer->isShown())
         {
             i->mixChannel->setEnable(true);
 

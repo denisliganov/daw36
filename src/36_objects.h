@@ -59,14 +59,31 @@ public:
             Gobj();
     virtual ~Gobj();
 
+            void                addObject(Gobj* o, ObjectGroup type);
+            void                addObject(Gobj* o, std::string id = "", ObjectGroup type = ObjGroup_Default);
+            void                addObject(Gobj* o, int xr, int yr, std::string id = "", ObjectGroup type = ObjGroup_Default);
+            void                addObject(Gobj* o, int xr, int yr, int ww, int hh, std::string id = "", ObjectGroup type = ObjGroup_Default);
+            void                addHighlight(Gobj* obj);
+    virtual void                activateMenuItem(std::string item) {};
+    virtual ContextMenu*        createContextMenu() {return NULL;};
+    virtual void                confine(int bxNew = -1, int byNew = -1, int bx1New = -1, int by1New = -1);
+    virtual bool                checkMouseTouching(int mx, int my);
+            void                deactivateDropBoxById(int dropbox_id);
+            void                deleteObject(Gobj* o);
+            void                deleteAllObjects();
+    virtual void                drawloop(Graphics& g);
+    virtual void                drawSelf(Graphics& g) {};
+    virtual void                drawover(Graphics& g) {};
+    virtual bool                drawDraggedObject(Graphics& g, Gobj* obj) { return false; };
+            void                defineHueColor(float hue, float sat) { colorHue = hue; colorSat = sat; }
+            void                defineMonoColor(float mono_level) { monoLevel = mono_level; }
       ObjectGroup               getObjGroup()                   { return objGroup; };
     std::string                 getObjId()                      { return objId; }
     std::string                 getObjName()                       { return objName; }
-    void                        setObjName(std::string title)      { objName = title; }
     virtual std::string         getHint()           { return hint; };
     virtual std::string         getClickHint()       { return ""; };
-            void                setHint(std::string h)              { hint = h; };
-
+            Gobj*               getParent()         { return parent; }
+            WinObject*          getWindow()         { return window; };
             int                 getX()              { return xRel; };
             int                 getY()              { return yRel; };
     virtual int                 getW()              { return width; };
@@ -75,51 +92,14 @@ public:
             int                 getY1()             { return y1; };
             int                 getX2()             { return x2; };
             int                 getY2()             { return y2; };
-
             int                 getDrawX1()         { return dx1; };
             int                 getDrawY1()         { return dy1; };
             int                 getDrawX2()         { return dx2; };
             int                 getDrawY2()         { return dy2; };
             int                 getDrawWidth()      { return dwidth; };
             int                 getDrawHeight()     { return dheight; };
-
-            bool                isChanged()         { return changed; }
-            bool                isEnabled()         {  return enabled; }
-    virtual bool                isshown()           { return (enabled && visible); }
-            bool                isundermouse()   { return undermouse; }
-            Gobj*               getParent()         { return parent; }
-            WinObject*          getWindow()         { return window; };
-            void                remapAndRedraw();
-
-            void                addObject(Gobj* o, ObjectGroup type);
-            void                addObject(Gobj* o, std::string id = "", ObjectGroup type = ObjGroup_Default);
-            void                addObject(Gobj* o, int xr, int yr, std::string id = "", ObjectGroup type = ObjGroup_Default);
-            void                addObject(Gobj* o, int xr, int yr, int ww, int hh, std::string id = "", ObjectGroup type = ObjGroup_Default);
-            void                addHighlight(Gobj* obj);
-            void                removeObject(Gobj* obj);
-            void                deleteObject(Gobj* o);
-            void                delobjects();
-
-            void                setParent(Gobj* parent);
-            void                setWindow(WinObject* w);
-            void                setVis(bool vis);
             Gobj*               getLastTouchedObject(int mx, int my);
-            void                settouchable(bool tch);
 
-    virtual void                setEnable(bool en);
-
-    virtual void                setCoords1(int xNew, int yNew, int wNew = -1, int hNew = -1);
-    virtual void                setCoords2(int xNew, int yNew, int x1New, int y1New);
-            void                setCoordsAbs(int ax1, int ay1, int ax2, int ay2);
-            void                setCoordsUn(int ax1, int ay1, int ax2, int ay2);
-    virtual void                setDrawAreaDirectly(int xabs1, int xabs2, int xabs3, int xabs4);
-            void                setWH(int w, int h);
-
-    virtual void                updCoords();
-    virtual void                remap() {}
-    virtual void                confine(int bxNew = -1, int byNew = -1, int bx1New = -1, int by1New = -1);
-    virtual bool                checkMouseTouching(int mx, int my);
-            void                setundermouse(bool hover);
     virtual void                handleMouseMove(InputEvent& ev) {}
     virtual void                handleMouseWheel(InputEvent& ev) {};
     virtual void                handleMouseDrag(InputEvent& ev) {};
@@ -128,25 +108,43 @@ public:
     virtual void                handleChildEvent(Gobj* obj, InputEvent& ev) {};
     virtual void                handleMouseEnter(InputEvent& ev) {};
     virtual void                handleMouseLeave(InputEvent& ev) {};
-
-    // drag'n'drop support
     virtual bool                handleObjDrag(DragAndDrop& drag, Gobj* obj, int mx, int my);
     virtual bool                handleObjDrop(Gobj* obj, int mx, int my, unsigned int flags);
-    virtual bool                drawDraggedObject(Graphics& g, Gobj* obj) { return false; };
 
+            bool                isChanged()         { return changed; }
+            bool                isON()              {  return enabled; }
+    virtual bool                isShown()           { return (enabled && visible); }
+            bool                isUnderMouse()      { return undermouse; }
+
+    virtual void                remap() {}
+            void                remapAndRedraw();
+            void                removeObject(Gobj* obj);
     virtual void                redraw(bool change = true);
-    virtual void                drawloop(Graphics& g);
-    virtual void                drawSelf(Graphics& g) {};
-    virtual void                drawover(Graphics& g) {};
 
-            // Drawing methods
+            void                setParent(Gobj* parent);
+            void                setWindow(WinObject* w);
+            void                setVis(bool vis);
+            void                setTouchable(bool tch);
+            void                setObjName(std::string title)      { objName = title; }
+    virtual void                setEnable(bool en);
+            void                setHint(std::string h)              { hint = h; };
+    virtual void                setCoords1(int xNew, int yNew, int wNew = -1, int hNew = -1);
+    virtual void                setCoords2(int xNew, int yNew, int x1New, int y1New);
+            void                setCoordsAbs(int ax1, int ay1, int ax2, int ay2);
+            void                setCoordsUn(int ax1, int ay1, int ax2, int ay2);
+    virtual void                setDrawAreaDirectly(int xabs1, int xabs2, int xabs3, int xabs4);
+            void                setWH(int w, int h);
+    virtual void                setMyColor(Graphics& g, float brightness=-1.f, float saturation = -1.f, float alpha=1.f);
+            void                setUnderMouse(bool hover);
+
+
             void                fill(Graphics& g, float clr, float alpha=1);
-            void                rect(Graphics& g, float clr, float alpha=1);
             void                fill(Graphics& g, uint32 clr, float b, float a=1);
-            void                rect(Graphics& g, uint32 clr, float b, float a=1);
             void                fill(Graphics& g, uint32 clr);
-            void                rect(Graphics& g, uint32 clr);
             void                fillx(Graphics& g,int x, int y, int w, int h);
+            void                rect(Graphics& g, float clr, float alpha=1);
+            void                rect(Graphics& g, uint32 clr, float b, float a=1);
+            void                rect(Graphics& g, uint32 clr);
             void                rectx(Graphics& g, int x, int y, int w, int h);
             void                lineH(Graphics& g, int ly, int lx1, int lx2);
             void                lineV(Graphics& g, int lx, int ly1, int ly2);
@@ -157,13 +155,8 @@ public:
             void                txtfit(Graphics& g, FontId fontId, std::string str, int x, int y, int maxwidth);
 
     // context menu suppott
-    virtual ContextMenu*        createContextMenu() {return NULL;};
-    virtual void                activateMenuItem(std::string item) {};
-            void                deactivateDropBoxById(int dropbox_id);
 
-    virtual void                setMyColor(Graphics& g, float brightness=-1.f, float saturation = -1.f, float alpha=1.f);
-            void                defineHueColor(float hue, float sat) { colorHue = hue; colorSat = sat; }
-            void                defineMonoColor(float mono_level) { monoLevel = mono_level; }
+    virtual void                updCoords();
 
 protected:
 

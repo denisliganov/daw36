@@ -37,7 +37,7 @@ public:
 
         Selection(Grid* grd)
         {
-            settouchable(false);
+            setTouchable(false);
 
             grid = grd;
         }
@@ -73,7 +73,7 @@ public:
 
         PlaceHighlight(Grid* grd)
         {
-            settouchable(false);
+            setTouchable(false);
 
             grid = grd;
 
@@ -88,7 +88,7 @@ public:
             tick = newTick;
             line = newLine;
 
-            if (grid->isundermouse())
+            if (grid->isUnderMouse())
             {
                 int ly = grid->getYfromLine(line);
                 int lh = grid->getLineHeight();
@@ -126,7 +126,7 @@ public:
         {
             setVis(false);
 
-            if((grid->isundermouse()) && grid->getDisplayMode() == GridDisplayMode_Bars && grid->mode != GridMode_Selecting)
+            if((grid->isUnderMouse()) && grid->getDisplayMode() == GridDisplayMode_Bars && grid->mode != GridMode_Selecting)
             {
                 if (grid->alignLine >= 0)
                 {
@@ -971,7 +971,7 @@ void Grid::changeBars(InputEvent& ev)
     {
         int noteX = note->getX1();
 
-        if (note->isshown() && (noteX >= tx1 && noteX <= tx2) && (!processSelectedOnly || note->issel()))
+        if (note->isShown() && (noteX >= tx1 && noteX <= tx2) && (!processSelectedOnly || note->issel()))
         {
             bool change = false;
 
@@ -1904,7 +1904,7 @@ void Grid::remapElements()
         /*
         for(Instrument* i : MInstrPanel->instrs)
         {
-            if(i->isshown())
+            if(i->isShown())
             {
                 visible.splice(visible.end(), i->getNotesFromRange(tickOffset, lastVisibleTick));
             }
@@ -1924,7 +1924,7 @@ void Grid::remapElements()
             }
             else
             {
-                if (el->isshown())
+                if (el->isShown())
                 {
                     if(visible.size() > 0)
                     {

@@ -33,6 +33,7 @@
 
 ControlPanel::ControlPanel()
 {
+    /*
     xButtons = 0;
     int yMenu = 4;
     int buttonWidth = 30;
@@ -119,7 +120,89 @@ ControlPanel::ControlPanel()
     addObject(btPans = new GroupButton(2), xButtons, yMenu,  buttonWidth, buttonHeight, "bt.pans"); 
     btPans->setLedType(true);
     xButtons += btPans->getW() + MenuGroupsSpacing;
+    */
 
+    addObject(fileMenu = new DropBox(0, "FILE"));
+                fileMenu->addItem("New");
+                fileMenu->addItem("Open");
+                fileMenu->addItem("");
+                fileMenu->addItem("Save");
+                fileMenu->addItem("Save As");
+                fileMenu->addItem("");
+                fileMenu->addItem("Load Project ");
+                //fileMenu->addItem("Render to WAV or MP3");
+                fileMenu->addItem("");
+                fileMenu->addItem("Render");
+                fileMenu->addItem("");
+                fileMenu->addItem("Exit");
+    addObject(editMenu = new DropBox(0, "EDIT"));
+                editMenu->addItem("Undo");
+                editMenu->addItem("Redo");
+                editMenu->addItem("");
+                editMenu->addItem("Delete Song");
+                editMenu->addItem("");
+                editMenu->addItem("Settings");
+    addObject(helpMenu = new DropBox(0, "HELP"));
+                helpMenu->addItem("Keys Reference");
+                helpMenu->addItem("");
+                helpMenu->addItem("About M");
+
+    addObject(btConfig = new Button36(true), "bt.cfg");
+    btConfig->setLedType(true);
+    addObject(btRender = new Button36(true), "bt.render");
+    btConfig->setLedType(true);
+    addObject(btPlay = new Button36(true), "bt.play");
+    addObject(btStop = new Button36(false), "bt.stop");
+    addObject(btRec = new Button36(false), "bt.rec");
+    addObject(btHome = new Button36(false), "bt.home");
+    addObject(btEnd = new Button36(false), "bt.end");
+    addObject(bpmBox = new BpmBox(120));
+    addObject(meterBox = new MeterBox(4, 4));
+    addObject(octaveBox = new OctaveBox(5));
+    addObject(snapMenu = new SnapMenu());
+    addObject(timeScreen = new TimeScreen(), "pos.display");
+    addObject(btBrowser = new GroupButton(2), "bt.browser");
+    addObject(btBarMode = new GroupButton(2), "bt.bars"); 
+    addObject(btVols = new GroupButton(2), "bt.vols"); 
+    addObject(btPans = new GroupButton(2), "bt.pans"); 
+
+    int buttonWidth = 30;
+    int buttonHeight = 30;
+
+    setBorder(4);
+
+    putStart(4, 4);
+    putRight(fileMenu);
+    putRight(editMenu);
+    putRight(helpMenu);
+    spaceRight();
+    putRight(btConfig, buttonWidth, buttonHeight);
+    putRight(btRender, buttonWidth, buttonHeight);
+    spaceRight();
+    spaceRight();
+    spaceRight();
+    putRight(btPlay, 52, buttonHeight);
+    putRight(btStop, 34, buttonHeight);
+    putRight(btRec, buttonWidth, buttonHeight);
+    putRight(btHome, buttonWidth, buttonHeight);
+    putRight(btEnd, buttonWidth, buttonHeight);
+    spaceRight();
+    putRight(timeScreen, 80, buttonHeight + 2);
+    putRight(meterBox, 54, buttonHeight + 2);
+    putRight(bpmBox, 70, buttonHeight + 2);
+    putRight(snapMenu, 64, buttonHeight + 2);
+    putRight(octaveBox, 30, buttonHeight + 2);
+    spaceRight();
+    spaceRight();
+    spaceRight();
+    putRight(btBrowser, buttonWidth*2, buttonHeight);
+    putRight(btBarMode, buttonWidth, buttonHeight);
+    putRight(btVols, buttonWidth, buttonHeight);
+    putRight(btPans, buttonWidth, buttonHeight);
+
+    xButtons = wndW + 50;
+
+    // Below controls sizes are flexible, depending on window size
 
     addObject(btZoomOut = new Button36(false), "bt.zoomout");
     addObject(btZoomIn = new Button36(false), "bt.zoomin");
@@ -144,17 +227,17 @@ void ControlPanel::remap()
 
     if(width - 30 > (xStartCoord + 30*2))
     {
-        if(!btScrollBack->isshown())
+        if(!btScrollBack->isShown())
         {
             btScrollBack->setEnable(true);
         }
 
-        if(!btScrollForth->isshown()) 
+        if(!btScrollForth->isShown()) 
         {
             btScrollForth->setEnable(true);
         }
 
-        if(!MGrid->hscr->isshown()) 
+        if(!MGrid->hscr->isShown()) 
         {
             MGrid->hscr->setEnable((true));
         }
@@ -239,7 +322,7 @@ void ControlPanel::handleChildEvent(Gobj* obj, InputEvent& ev)
     }
     else if(obj == btBrowser)
     {
-        if (MBrowser->isEnabled())
+        if (MBrowser->isON())
         {
             MObject->switchBrowser(false);
 

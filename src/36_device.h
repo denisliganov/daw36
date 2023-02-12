@@ -23,8 +23,8 @@ public:
             int                 getIndex() { return devIdx; }
             std::list<BrwEntry*>   getPresets() { return presets; }
             BrwEntry*           getCurrPreset() { return currPreset; }
-            BrwEntry*           getPreset(char* objName);
-            BrwEntry*           getPreset(long devIdx);
+            BrwEntry*           getPresetByName(std::string pr_name);
+            BrwEntry*           getPresetByIndex(long devIdx);
             long                getNumPresets();
             void                getPresetName(long devIdx, char *name);
             long                getPresetIndex(char* objName);

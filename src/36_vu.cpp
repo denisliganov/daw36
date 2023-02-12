@@ -25,7 +25,7 @@ void Vu_ShowCoolFalldown()
 
 ChanVU::ChanVU(bool vert)
 {
-    settouchable(false);
+    setTouchable(false);
 
     vertical = vert;
 
@@ -196,24 +196,30 @@ void InstrVU::drawSelf(Graphics & g)
 
     fill(g, .2f);
 
-    setc(g, 0xffFFB040);
+    //setc(g, 0xffFFB040);
+    setc(g, .4f);
 
     int yc = 0;
+    
+    while (yc < height)
+    {
+        fillx(g, 1, yc, width - 2, 1);
+        yc += 2;
+    }
+
+    yc = 0;
+    setc(g, .8f);
 
     while(yc < height)
     {
         if(yc < left)
         {
-            // gSetPixel(g, x1, y2 - yc); 
-            fillx(g, 0, yc, width, 1);
+            fillx(g, 1, height - yc - 1, width - 2, 1);
         }
-
         if(yc < right)
         {
-            // gSetPixel(g, x2, y2 - yc); 
-            fillx(g, 0, yc, width, 1);
+            fillx(g, 1, height - yc - 1, width - 2, 1);
         }
-
         yc += 2;
     }
 

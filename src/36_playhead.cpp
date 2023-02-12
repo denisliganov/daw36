@@ -17,7 +17,7 @@
 
 Playhead::Playhead(Grid* grd)
 {
-    settouchable(false);
+    setTouchable(false);
 
     grid = grd;
     posX = absX = relX = 0;

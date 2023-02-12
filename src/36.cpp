@@ -193,18 +193,18 @@ void MainWinObject::remap()
 
     MCtrllPanel->setCoords2(0, mainY1 - MainLineHeight - CtrlPanelHeight - 1, mainX2, mainY1 - MainLineHeight - 1);
 
-    if(MLanePanel->isEnabled())
+    if(MLanePanel->isON())
     {
         MLanePanel->setCoords2(mainX1 + 1, mainY2, mainX2, height - 1);
     }
 
     MInstrPanel->setCoords2(0, mainY1 - MainLineHeight + PanelGap, mainX1 - 1, mainY2 - 1);
 
-    if (MEdit->isEnabled())
+    if (MEdit->isON())
     {
         MEdit->setCoords2(mainX1 + 2, mainY1 - MainLineHeight + PanelGap, mainX2, mainY2 - 1);
     }
-    else if (MBrowser->isEnabled())
+    else if (MBrowser->isON())
     {
         MBrowser->setCoords2(mainX1 + 2, mainY1 - MainLineHeight + PanelGap, mainX2, mainY2 - 1);
     }

@@ -29,10 +29,27 @@ Gobj::Gobj()
     colorHue = -1;
     colorSat = -1;
 
-    xRel = yRel = 0;
-    x1 = y1 = x2 = y2 = width = height = 0;
-    dx1 = dy1 = dx2 = dy2 = dwidth = dheight = 0;
-    bx1 = by1 = bx2 = by2 = -1;
+    xRel = 0;
+    yRel = 0;
+    width = 0;
+    height = 0;
+    
+    x1 = 0;
+    y1 = 0;
+    x2 = 0;
+    y2 = 0;
+
+    dx1 = 0;
+    dy1 = 0;
+    dx2 = 0; 
+    dy2 = 0; 
+    dwidth = 0; 
+    dheight = 0;
+
+    bx1 = 0;
+    by1 = 0;
+    bx2 = 0;
+    by2 = 0;
 }
 
 Gobj::~Gobj()
@@ -42,10 +59,10 @@ Gobj::~Gobj()
         window->unregisterObject(this);
     }
 
-    delobjects();
+    deleteAllObjects();
 }
 
-void Gobj::delobjects()
+void Gobj::deleteAllObjects()
 {
     while(objs.size() > 0)
     {
@@ -260,22 +277,22 @@ void Gobj::updCoords()
         {
             // Override bounds with those of parent's, if they overlap
     
-            if (parent->bx1 > cx1) 
+            if (parent->bx1 && parent->bx1 > cx1)
             {
                 cx1 = (parent->bx1);
             }
     
-            if (parent->by1 > cy1) 
+            if (parent->by1 && parent->by1 > cy1)
             {
                 cy1 = (parent->by1);
             }
     
-            if (parent->bx2 < cx2) 
+            if (parent->bx2 && parent->bx2 < cx2)
             {
                 cx2 = (parent->bx2);
             }
     
-            if (parent->by2 < cy2) 
+            if (parent->by2 && parent->by2 < cy2)
             {
                 cy2 = (parent->by2);
             }
@@ -299,12 +316,12 @@ void Gobj::updCoords()
                 cy1 = parent->dy1;
             }
     
-            if(parent->dx2 < cx2)
+            if(parent->dx2 > 0 && parent->dx2 < cx2)
             {
                 cx2 = parent->dx2;
             }
     
-            if(parent->dy2 < cy2) 
+            if(parent->dy2 > 0 && parent->dy2 < cy2)
             {
                 cy2 = parent->dy2;
             }
@@ -373,7 +390,10 @@ void Gobj::confine(int x1r, int y1r, int x2r, int y2r)
     bx2 = (x2r == -1 ? width - 1 : x2r); 
     by2 = (y2r == -1 ? height - 1 : y2r);
 
-    int cx1 = dx1 - x1, cx2 = dx2 - x1, cy1 = dy1 - y1, cy2 = dy2 - y1;
+    int cx1 = dx1 - x1;
+    int cx2 = dx2 - x1; 
+    int cy1 = dy1 - y1;
+    int cy2 = dy2 - y1;
 
     if(cx1 > bx1) 
         bx1 = cx1;
@@ -415,7 +435,7 @@ void Gobj::remapAndRedraw()
 
 void Gobj::drawloop(Graphics& g)
 {
-    gr = &g;
+    //gr = &g;
 
     g.saveState();
     g.reduceClipRegion(dx1, dy1, dwidth, dheight);
@@ -426,7 +446,7 @@ void Gobj::drawloop(Graphics& g)
 
     for(Gobj* obj : objs)
     {
-        if(obj->isshown() && obj->objGroup != ObjGroup_Highlight)
+        if(obj->isShown() && obj->objGroup != ObjGroup_Highlight)
         {
             obj->drawloop(g);
         }
@@ -441,12 +461,12 @@ void Gobj::drawloop(Graphics& g)
     changed = false;
 }
 
-void Gobj::setundermouse(bool hover)
+void Gobj::setUnderMouse(bool hover)
 {
     undermouse = hover; 
 }
 
-void Gobj::settouchable(bool t)
+void Gobj::setTouchable(bool t)
 {
     touchable = t;
 }
@@ -470,7 +490,7 @@ bool Gobj::checkMouseTouching(int mx, int my)
 {
     if (touchable)
     {
-        if (isshown() && mx >= dx1 && mx <= dx2 && my >= dy1 && my <= dy2)
+        if (isShown() && mx >= dx1 && mx <= dx2 && my >= dy1 && my <= dy2)
         {
             if(!undermouse)
             {
@@ -657,7 +677,7 @@ Gobj* CheckNeighborObjectsY(std::list<Gobj*> &lst, std::string oname, int my, Go
 
     for(Gobj* o : lst)
     {
-        if(o->isshown() && o->getObjId().substr(0, oname.size()) == oname)
+        if(o->isShown() && o->getObjId().substr(0, oname.size()) == oname)
         {
             if(my > o->getY1() + o->getH()/2)
             {
@@ -690,7 +710,7 @@ Gobj* CheckNeighborObjectsX(std::list<Gobj*> &lst, std::string oname, int mx, Go
 
     for(Gobj* o : lst)
     {
-        if(o->isshown() && o->getObjId().substr(0, oname.size()) == oname)
+        if(o->isShown() && o->getObjId().substr(0, oname.size()) == oname)
         {
             if(mx > o->getX1() + o->getW()/2)
             {

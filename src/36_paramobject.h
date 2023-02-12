@@ -29,6 +29,15 @@ public:
     virtual void                setParamLock(bool lock) { paramLocked = lock; };
             void                setInvokeButton(Button36* bt) { invokeButton = bt; }
     virtual void                handleClose();
+            void                putStart(int x,int y);
+            void                putRight(Gobj* obj, int ow=-1, int oh=-1);
+            void                putBelow(Gobj* obj, int ow=-1, int oh=-1);
+            void                spaceRight();
+            void                spaceBelow();
+            void                setBorder(int brd)      { border = brd; }
+            void                goLeft();
+            void                goTop();
+            void                finalizePuts();
 
 protected:
 
@@ -48,16 +57,6 @@ protected:
 
             int                 wndW;
             int                 wndH;
-
-            bool                horizPut;
-
-            void                putRight(Gobj* obj, int ow, int oh);
-            void                putBelow(Gobj* obj, int ow, int oh);
-            void                spaceRight();
-            void                spaceBelow();
-            void                goLeft();
-            void                goTop();
-            void                finalizePuts();
 
 private:
 

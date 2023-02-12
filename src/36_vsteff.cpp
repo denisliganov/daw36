@@ -220,7 +220,7 @@ bool VstEffect::onUpdateDisplay()
 
     // Update pointer to current active preset
 
-    BrwEntry* updPreset = getPreset(vst2->getProgram());
+    BrwEntry* updPreset = getPresetByIndex(vst2->getProgram());
 
     if (currPreset != updPreset)
     {

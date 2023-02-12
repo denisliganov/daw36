@@ -153,7 +153,7 @@ void Element::removeTrigger(Trigger* tg)
     triggers.remove(tg);
 }
 
-bool Element::isshown()
+bool Element::isShown()
 {
     if(deleted || patt == NULL)
     {

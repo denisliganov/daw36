@@ -31,13 +31,14 @@ ConfigObject::ConfigObject()
     addParam(saturation = new Parameter("sat", 0.2f, 0, 1));
     addParam(brightness = new Parameter("brightness", 0, -1.f, 1.9f));
     addParam(bufferSize = new Parameter("Audio buffer size", 2048, 512, 16384-512, Units_Integer));
+
     bufferSize->setUnitString("samples");
 
-    knob1 = new Knob(hue);
-    knob2 = new Knob(saturation);
-    knob3 = new Knob(brightness);
+    Gobj::addObject(knob1 = new Knob(hue));
+    Gobj::addObject(knob2 = new Knob(saturation));
+    Gobj::addObject(knob3 = new Knob(brightness));
 
-    buffSizeBox = new ParamBox(bufferSize);
+    Gobj::addObject(buffSizeBox = new ParamBox(bufferSize));
 
     interpolationSelect = new ParamRadio("Interpolation (sample playback)");
     interpolationSelect->addOption("Linear");
@@ -45,32 +46,32 @@ ConfigObject::ConfigObject()
     interpolationSelect->addOption("6-point Polinomial");
     interpolationSelect->addOption("Sinc depth 64");
 
-    chooserBox = new RadioBox(interpolationSelect);
+    Gobj::addObject(chooserBox = new RadioBox(interpolationSelect));
 
-    outputDevices = new ListBoxx("Output devices");
-    outputDevices->addEntry("Output Device 1");
-    outputDevices->addEntry("Output Device 2");
+    Gobj::addObject(outputDevices = new ListBoxx("Output devices"));
+                outputDevices->addEntry("Output Device 1");
+                outputDevices->addEntry("Output Device 2");
 
     showASIOPanel = new Button36(false, "Show ASIO panel");
 
-    inputDevices = new ListBoxx("Input devices");
-    inputDevices->addEntry("IN Device1");
-    inputDevices->addEntry("IN Device2");
+    addObject(inputDevices = new ListBoxx("Input devices"));
+                inputDevices->addEntry("IN Device1");
+                inputDevices->addEntry("IN Device2");
 
-    midiOutDevices = new ListBoxx("MIDI OUT devices");
-    midiOutDevices->addEntry("Entry1");
-    midiOutDevices->addEntry("Entry2");
-    midiOutDevices->addEntry("Entry3");
+    addObject(midiOutDevices = new ListBoxx("MIDI OUT devices"));
+                midiOutDevices->addEntry("Entry1");
+                midiOutDevices->addEntry("Entry2");
+                midiOutDevices->addEntry("Entry3");
 
-    midiInDevices = new ListBoxx("MIDI IN devices");
-    midiInDevices->addEntry("Entry4Entry4Entry4Entry4Entry4");
-    midiInDevices->addEntry("Entry5");
-    midiInDevices->addEntry("Entry6Entry4Entry4");
-    midiInDevices->addEntry("Entry7Entry4Entry4Entry4Entry4Entry4");
-    midiInDevices->addEntry("Entry8Entry4");
-    midiInDevices->addEntry("Entry9");
-    midiInDevices->addEntry("Entry10");
-    midiInDevices->addEntry("Entry11");
+    addObject(midiInDevices = new ListBoxx("MIDI IN devices"));
+                midiInDevices->addEntry("Entry4Entry4Entry4Entry4Entry4");
+                midiInDevices->addEntry("Entry5");
+                midiInDevices->addEntry("Entry6Entry4Entry4");
+                midiInDevices->addEntry("Entry7Entry4Entry4Entry4Entry4Entry4");
+                midiInDevices->addEntry("Entry8Entry4");
+                midiInDevices->addEntry("Entry9");
+                midiInDevices->addEntry("Entry10");
+                midiInDevices->addEntry("Entry11");
 
 
     // Position all controls
