@@ -11,7 +11,7 @@
 
 
 
-ConfigObject::ConfigObject()
+ConfigWinObject::ConfigWinObject()
 {
 
 /*
@@ -99,17 +99,17 @@ ConfigObject::ConfigObject()
     setName("Configuration");
 }
 
-void ConfigObject::drawSelf(Graphics& g)
+void ConfigWinObject::drawSelf(Graphics& g)
 {
     fill(g, 0.4f);
 }
 
-void ConfigObject::handleChildEvent(Gobj * obj,InputEvent & ev)
+void ConfigWinObject::handleChildEvent(Gobj * obj,InputEvent & ev)
 {
     int a = 1;
 }
 
-void ConfigObject::handleParamUpdate(Param * param)
+void ConfigWinObject::handleParamUpdate(Param * param)
 {
     if(param == hue)
     {

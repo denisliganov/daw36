@@ -8,13 +8,19 @@
 
 
 
-class ConfigObject : public ParamObject
+class ConfigWinObject : public ParamObject
 {
 public:
 
-        ConfigObject();
+        ConfigWinObject();
 
 protected:
+
+        void                drawSelf(Graphics& g);
+        void                handleChildEvent(Gobj * obj,InputEvent & ev);
+        void                handleParamUpdate(Param * param = NULL);
+
+private:
 
         Parameter*          brightness;
         Parameter*          hue;
@@ -45,10 +51,6 @@ protected:
 
         Button36*           showASIOPanel;
 
-
-        void                drawSelf(Graphics& g);
-        void                handleChildEvent(Gobj * obj,InputEvent & ev);
-        void                handleParamUpdate(Param * param = NULL);
 };
 
 

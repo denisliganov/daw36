@@ -308,17 +308,15 @@ ContextMenu* Browser::createContextMenu()
 
 void Browser::drawSelf(Graphics& g)
 {
-    setc(g, 0.2f);
-
-    gFillRect(g, x1, y1 + MainLineHeight + 8, x2, y2);
+    //setc(g, 0.2f);
+    //gFillRect(g, x1, y1 + MainLineHeight + 8, x2, y2);
+    fill(g, .3f);
 
     setc(g, 0.25f);
-
     gFillRect(g, x1, y1, x2, y1 + MainLineHeight - 2);
 
-    setc(g, 0.28f);
-
-    g.drawHorizontalLine(y1, (float)x1, (float)x2);
+    //setc(g, 0.28f);
+    //g.drawHorizontalLine(y1, (float)x1, (float)x2);
 
     for (auto be : entries[browsingMode])
     {
@@ -328,7 +326,7 @@ void Browser::drawSelf(Graphics& g)
         }
     }
 
-    gPanelRect(g, x1, y2 - BottomPadHeight + 1, x2, y2);
+    //gPanelRect(g, x1, y2 - BottomPadHeight + 1, x2, y2);
 }
 
 void Browser::devScanProc(ScanThread* thread)
@@ -681,7 +679,9 @@ void Browser::remap()
         be->listIndex = idx++;
 
         if(currIndex == -1 && currEntry == be)
+        {
             currIndex = be->listIndex;
+        }
 
         if(yentry > (cy - BrwEntryHeight) && yentry < y2 && cw > 0)
         {
@@ -703,7 +703,7 @@ void Browser::remap()
 
     for (ListBoxx* lb : listBoxes)
     {
-        putRight(lb, 150, lstHeight);
+        putRight(lb, 200, lstHeight);
     }
 
     //fullSpan += 64;

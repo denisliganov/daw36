@@ -489,7 +489,7 @@ void TextCursor::handleKeyOrCharPressed(unsigned key, char character, unsigned f
             
                 case key_f2:
                 {
-                    SubWindow* wc = MObject->addWindow(new ConfigObject());
+                    SubWindow* wc = MObject->addWindow(new ConfigWinObject());
             
                     wc->setOpen(true);
             

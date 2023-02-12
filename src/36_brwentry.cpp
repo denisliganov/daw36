@@ -79,9 +79,9 @@ uint32 BrwEntry::getModeColor()
 void BrwEntry::drawDevEntry(Graphics& g, int x, int y, int w)
 {
     setc(g, 0.4f);
-    fillx(g, 0, 0, width - BrwEntryOffset, BrwEntryHeight);
+    fillx(g, 0, 0, width - 1, BrwEntryHeight);
     setc(g, 0.35f);
-    lineH(g, 0, 0, width-BrwEntryOffset);
+    lineH(g, 0, 0, width - 1);
 
     setc(g, 0.9f);
     txtfit(g, FontSmall, objName, 15, BrwEntryHeight - 3, width - 20);
@@ -94,9 +94,9 @@ void BrwEntry::drawFileEntry(Graphics& g, int x, int y, int w)
         std::string fname;
 
         setc(g, 0.4f);
-        fillx(g, 0, 0, width - BrwEntryOffset, BrwEntryHeight);
+        fillx(g, 0, 0, width - 1, BrwEntryHeight);
         setc(g, 0.35f);
-        lineH(g, 0, 0, width-BrwEntryOffset);
+        lineH(g, 0, 0, width - 1);
 
         setc(g, 0.9f);
 

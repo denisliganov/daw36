@@ -11,7 +11,6 @@
 
 
 #define BrwEntryHeight      (16)
-#define BrwEntryOffset      (1)
 
 
 const char WavExt[4] = "wav";

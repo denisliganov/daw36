@@ -13,7 +13,6 @@
 
 RenderWinObject::RenderWinObject()
 {
-
 /*
     Gobj::addObject(buffSizeBox = new Slider36(false), 10, 50, 120, 20);
     Gobj::addObject(pbox2 = new Slider36(false), 10, 72, 120, 20);

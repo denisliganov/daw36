@@ -4,7 +4,6 @@
 #include "36_globals.h"
 #include "36_window.h"
 #include "36_paramobject.h"
-#include "36_paramswin.h"
 
 
 
