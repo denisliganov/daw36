@@ -85,6 +85,7 @@ bool Playhead::handleAutomationRecording(float currStep)
 
     bool refreshcontent = false;
 
+    /*
     for(Parameter* recparam : recParams)
     {
         if(currStep >= recparam->env->gettick()) // only when playback position is not before the envelope
@@ -102,7 +103,6 @@ bool Playhead::handleAutomationRecording(float currStep)
                 newpnt = recparam->autoenv->addPoint(x, (recparam->getValue() - recparam->getOffset())/recparam->getRange(), false);
             }
 
-/*
             if(newpnt->tick < recparam->lastrecpoint->tick && newpnt->next != NULL)
             {
                 // This is the case when newly recorded point arrives before the last one. Happens most likely
@@ -131,7 +131,6 @@ bool Playhead::handleAutomationRecording(float currStep)
                     recparam->autoenv->setTickLength(x);
                 }
             }
-*/
 
             recparam->lastrecpoint = newpnt;
 
@@ -140,6 +139,7 @@ bool Playhead::handleAutomationRecording(float currStep)
             refreshcontent = true;
         }
     }
+    */
 
     return refreshcontent;
 };

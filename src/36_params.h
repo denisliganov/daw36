@@ -160,7 +160,17 @@ protected:
             std::string         prmValString;
 };
 
-class VolParam : public Param
+class VolParam : public Parameter
+{
+public:
+            VolParam(std::string param_name) : Parameter(param_name, 0.f, DAW_VOL_RANGE, 1.f, Units_dB) {}
+
+protected:
+            std::string         calcValStr(float uv);
+            float               calcOutputValue(float val);
+};
+
+class PanParam : public Parameter
 {
             
 };

@@ -23,7 +23,7 @@ public:
             void                calcForGrid(Grid* grid);
             void                drawOnGrid(Graphics& g, Grid* grid);
             int                 getNoteValue() { return noteValue; }
-            Parameter*          getVol() {return vol;}
+            VolParam*           getVol() {return vol;}
             Parameter*          getPan() {return pan;}
        Instrument*              getInstr() { return instr; }
             float               getFreq() { return freq; }
@@ -46,7 +46,7 @@ protected:
             Instrument*         instr;
             int                 noteValue;
             Parameter*          pan;
-            Parameter*          vol;
+            VolParam*           vol;
             int                 yBase;
 
             void                propagateTriggers(Pattern* pt);

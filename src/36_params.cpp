@@ -248,25 +248,7 @@ std::string Parameter::calcValStr(float val)
             } break;
             case Units_dB:
             {
-                if(type == Param_Vol)
-                {
-                    if(outVal == 0)
-                    {
-                        stdstr = "INF";
-                    }
-                    else
-                    {
-                        double pval = (amp2dB(val));
-
-                        sprintf(str, "%.2f", pval);
-
-                        stdstr = str;
-                    }
-                }
-                else
-                {
-                    sprintf(str, ("%.1f"), absVal);
-                }
+                sprintf(str, ("%.1f"), absVal);
             }break;
             case Units_dBGain:
             {
@@ -569,11 +551,7 @@ float Parameter::adjustForEditor(float val)
 
 float Parameter::calcOutputValue(float val)
 {
-    if(type == Param_Vol)
-    {
-        return GetVolOutput(val);
-    }
-    else if(type == Param_Freq)
+    if(type == Param_Freq)
     {
         if(reversed == false)
         {
@@ -671,6 +649,34 @@ void Parameter::setValueFromEnvelope(float envval, Envelope * env)
 
         //setLastVal(outVal);
     }
+}
+
+
+std::string VolParam::calcValStr(float val)
+{
+    std::string valStr;
+
+    if(outVal == 0)
+    {
+        valStr = "INF";
+    }
+    else
+    {
+        char str[100] = {};
+
+        double pval = (amp2dB(val));
+
+        sprintf(str, "%.2f", pval);
+
+        valStr = str;
+    }
+
+    return valStr;
+}
+
+float VolParam::calcOutputValue(float val)
+{
+    return GetVolOutput(val);
 }
 
 void ParamToggle::toggle()

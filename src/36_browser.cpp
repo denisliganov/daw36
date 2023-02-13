@@ -699,7 +699,7 @@ void Browser::remap()
     int xLists = cx + cw + 20;
     int fileBrwWidth = 250;
 
-    confine(xLists, cy, width - xLists - fileBrwWidth, lstHeight); // no args -> reset bounds
+    confine(xLists, cy, width - fileBrwWidth, height); // no args -> reset bounds
 
     putStart(xLists, cy);
 

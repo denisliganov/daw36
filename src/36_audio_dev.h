@@ -61,7 +61,6 @@ protected:
             int                 bufferSize;
             float               sampleRate;
 
-            Parameter*          MasterVol;
-
+            VolParam*           MasterVol;
 };
 

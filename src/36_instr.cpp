@@ -191,7 +191,7 @@ Instrument::Instrument()
     lastNotePan = 0;
     lastNoteVal = BaseNote;
 
-    addParam(vol = new Parameter("VOL", Param_Vol, 0.f, DAW_VOL_RANGE, 1.f, Units_dB));
+    addParam(vol = new VolParam("VOL"));
     addParam(pan = new Parameter("PAN", Param_Pan, -1.f, 1.f, 0.f, Units_Percent));
     
     addObject(volBox = new ParamBox(vol));

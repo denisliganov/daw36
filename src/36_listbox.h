@@ -34,6 +34,7 @@ private:
             int                 border;
             int                 currentEntry;
             int                 scrWidth;
+            int                 entryHeight;
 
             std::vector<std::string>  entries;
 };

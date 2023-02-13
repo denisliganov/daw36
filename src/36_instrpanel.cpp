@@ -109,7 +109,7 @@ InstrPanel::InstrPanel(Mixer* mixer)
 
     //addParamWithControl(masterVolume, "sl.vol", masterVolBox = new ParamBox(masterVolume));
 
-    masterVolume = new Parameter("Master", Param_Vol, 0.f, DAW_VOL_RANGE, 1.f, Units_dB);
+    masterVolume = new VolParam("Master");
 
     addObject(masterVolBox = new ParamBox(masterVolume));
 

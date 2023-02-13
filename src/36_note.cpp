@@ -40,7 +40,7 @@ Note::Note(Instrument* i, int note_val)
 
     dev = (Device36*)instr;
 
-    vol = new Parameter("Volume", Param_Vol, 0.f, DAW_VOL_RANGE, 1.f);
+    vol = new VolParam("Volume");
     pan = new Parameter("Panning", Param_Pan-1.f, 1.f, 0.f);
 
     setNote(note_val);

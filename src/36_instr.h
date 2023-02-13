@@ -81,7 +81,7 @@ public:
             SoloButton*         soloButt;
             BoolParam*          soloparam;
             InstrType           type;
-            Parameter*          vol;
+            VolParam*           vol;
             Knob*               volKnob;
             ParamBox*           volBox;
             float               volbase;    // Base environmental volume
