@@ -42,7 +42,7 @@ public:
             void                goToHome();
             void                goToEnd();
             bool                isPlaying()     { return playing->getValue(); }
-            void                propagate();
+            void                propagateChanges();
             void                reset();
             void                setTicksPerBeat(int tpb);
             void                setBeatsPerBar(int bpb);

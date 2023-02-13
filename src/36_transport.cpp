@@ -34,7 +34,7 @@ Transport::Transport(float bpm,int tpb,int bpb)
     playing = new ParamToggle("PLAYBACK", false);
 
     init = true;
-    propagate();
+    propagateChanges();
     init = false;
 }
 
@@ -143,7 +143,7 @@ float Transport::getTickFromFrame(long frame)
     return float(frame*invertedFPT);
 }
 
-void Transport::propagate()
+void Transport::propagateChanges()
 {
     float sr = MAudio != NULL ? MAudio->getSampleRate() : 44100;
 
@@ -177,7 +177,7 @@ void Transport::reset()
     ticksPerBeat = 4;
     beatsPerBar = 4;
 
-    propagate();
+    propagateChanges();
 }
 
 void Transport::stopParamsRecording()
@@ -263,21 +263,21 @@ void Transport::setBeatsPerMinute(float bpm)
 {
     beatsPerMinute = bpm;
 
-    propagate();
+    propagateChanges();
 }
 
 void Transport::setTicksPerBeat(int tpb)
 {
     ticksPerBeat = tpb;
 
-    propagate();
+    propagateChanges();
 }
 
 void Transport::setBeatsPerBar(int bpb)
 {
     beatsPerBar = bpb;
 
-    propagate();
+    propagateChanges();
 }
 
 void Transport::updTimeFromFrame()

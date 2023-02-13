@@ -173,8 +173,9 @@ void Timeline::drawSelf(Graphics & g)
 
         xCoord += barLenPixels;
     }
+
 /*
-    // draw small gradient
+    // small gradient
 
     float alpha = 0.1f;
 

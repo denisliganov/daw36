@@ -197,6 +197,7 @@
     <ClCompile Include="src\36_playhead.cpp" />
     <ClCompile Include="src\36_project.cpp" />
     <ClCompile Include="src\36_renderer.cpp" />
+    <ClCompile Include="src\36_renderwin.cpp" />
     <ClCompile Include="src\36_sampleinstr.cpp" />
     <ClCompile Include="src\36_samplewin.cpp" />
     <ClCompile Include="src\36_scroller.cpp" />
@@ -384,6 +385,7 @@
     <ClInclude Include="src\36_playhead.h" />
     <ClInclude Include="src\36_project.h" />
     <ClInclude Include="src\36_renderer.h" />
+    <ClInclude Include="src\36_renderwin.h" />
     <ClInclude Include="src\36_sampleinstr.h" />
     <ClInclude Include="src\36_samplewin.h" />
     <ClInclude Include="src\36_scroller.h" />

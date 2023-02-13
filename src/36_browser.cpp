@@ -696,9 +696,11 @@ void Browser::remap()
         fullSpan += BrwEntryHeight;
     }
 
-    confine(); // no args -> reset bounds
-
     int xLists = cx + cw + 20;
+    int fileBrwWidth = 250;
+
+    confine(xLists, cy, width - xLists - fileBrwWidth, lstHeight); // no args -> reset bounds
+
     putStart(xLists, cy);
 
     for (ListBoxx* lb : listBoxes)

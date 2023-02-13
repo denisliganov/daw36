@@ -191,15 +191,16 @@ Instrument::Instrument()
     lastNotePan = 0;
     lastNoteVal = BaseNote;
 
-    addParam(vol = new Parameter("VOL", Param_Vol, 1.f, 0.f, DAW_VOL_RANGE, Units_dB));
-    addParam(pan = new Parameter("PAN", Param_Pan, 0.f, -1.f, 2.f, Units_Percent));
+    addParam(vol = new Parameter("VOL", Param_Vol, 0.f, DAW_VOL_RANGE, 1.f, Units_dB));
+    addParam(pan = new Parameter("PAN", Param_Pan, -1.f, 1.f, 0.f, Units_Percent));
     
     addObject(volBox = new ParamBox(vol));
     volBox->setSliderOnly(true);
+
     addObject(panBox = new ParamBox(pan));
     panBox->setSliderOnly(true);
 
-    //addParamWithControl(muteparam = new BoolParam(false), "tg.mute", mute = new Button36(true));
+    //addParam(muteparam = new BoolParam(false), "tg.mute", mute = new Button36(true));
 
     muteparam = soloparam = NULL;
 

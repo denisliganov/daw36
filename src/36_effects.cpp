@@ -64,7 +64,7 @@ Eff::Eff()
 
     addObject(previewButton = new EffGuiButton(), MixChanWidth - 21, 0, 20, 15);
 
-    //addParamWithControl(new Parameter(1, 0, 1), "", sliderAmount = new Slider36(false));
+    //addParam(new Parameter(1, 0, 1), "", sliderAmount = new Slider36(false));
 }
 
 Eff::~Eff()
@@ -286,12 +286,12 @@ Filter1::Filter1()
     f_master = false;
     f_next = NULL;
 
-    addParamWithControl(cutoff = new Parameter("CUT", Param_Freq, 0.6f, 0.f, 1.f, Units_Hz));
-    addParamWithControl(resonance = new Parameter("RES", 0.f, 0.0f, .97f, Units_Percent));
+    addParam(cutoff = new Parameter("CUT", Param_Freq, 0.f, 1.f, 0.6f, Units_Hz));
+    addParam(resonance = new Parameter("RES", 0.0f, .97f, 0.f, Units_Percent));
 
-    //addParamWithControl(bandwidth = new Parameter("BW", 1.f, 0.25f, 3.75f, Units_Octave));
+    //addParam(bandwidth = new Parameter("BW", 0.25f, 4.f, 1.f, Units_Octave));
 
-    //Q = new Parameter(0.f, 0.f, 50.f, Param_Default);
+    //Q = new Parameter(0.f, 50.f, 0.f, Param_Default);
     //Q->SetName("Q");
     //Q->AddValueString(Units_Default);
     //AddParamWithParamcell(Q);
@@ -317,7 +317,7 @@ Filter1::Filter1()
     ftype->SetCurrentItemByName("LP12");
 
     x2 = new BoolParam("Mode", false, "x2");
-    addParamWithControl(x2);
+    addParam(x2);
     */
 }
 
@@ -428,9 +428,9 @@ EQ1::EQ1()
     uniqueId = MAKE_FOURCC('E','Q','0','1');
 
     //frequency = new Parameter(1000.0f, 20.0f, 19980.0f, Param_Default);
-    addParamWithControl(frequency = new Parameter("FREQ", Param_Freq, 0.5f, 0.f, 1.f, Units_Hz));
-    addParamWithControl(bandwidth = new Parameter("BW", 1.f, 0.25f, 3.75f, Units_Octave));
-    addParamWithControl(gain = new Parameter("GAIN", 0.f, -24.0f, 48.0f, Units_dBGain));
+    addParam(frequency = new Parameter("FREQ", Param_Freq, 0.f, 1.f, 0.5f, Units_Hz));
+    addParam(bandwidth = new Parameter("BW", 0.25f, 4.f, 1.f, Units_Octave));
+    addParam(gain = new Parameter("GAIN", -24.0f, 24.0f, 0.f, Units_dBGain));
 
     reset();
 }
@@ -491,13 +491,13 @@ GraphicEQ::GraphicEQ()
     f4 = dspCoreEqualizer.addBand(rosic::TwoPoleFilter::PEAK, 150, 0, 1);
     f9 = dspCoreEqualizer.addBand(rosic::TwoPoleFilter::LOW_SHELF, 70, 0, 1);
 
-    addParamWithControl(gain1 = new Parameter("8 KHz", 0.f, -24.0f, 48.0f, Units_dBGain));
-    addParamWithControl(gain6 = new Parameter("6.5 KHz", 0.f, -24.0f, 48.0f, Units_dBGain));
-    addParamWithControl(gain5 = new Parameter("3 KHz", 0.f, -24.0f, 48.0f, Units_dBGain));
-    addParamWithControl(gain2 = new Parameter("900 Hz", 0.f, -24.0f, 48.0f, Units_dBGain));
-    addParamWithControl(gain3 = new Parameter("500 Hz", 0.f, -24.0f, 48.0f, Units_dBGain));
-    addParamWithControl(gain4 = new Parameter("150 Hz", 0.f, -24.0f, 48.0f, Units_dBGain));
-    addParamWithControl(gain9 = new Parameter("70 Hz", 0.f, -24.0f, 48.0f, Units_dBGain));
+    addParam(gain1 = new Parameter("8 KHz", -24.0f, 48.0f, 0.f, Units_dBGain));
+    addParam(gain6 = new Parameter("6.5 KHz", -24.0f, 48.0f, 0.f, Units_dBGain));
+    addParam(gain5 = new Parameter("3 KHz", -24.0f, 48.0f, 0.f, Units_dBGain));
+    addParam(gain2 = new Parameter("900 Hz", -24.0f, 48.0f, 0.f, Units_dBGain));
+    addParam(gain3 = new Parameter("500 Hz", -24.0f, 48.0f, 0.f, Units_dBGain));
+    addParam(gain4 = new Parameter("150 Hz", -24.0f, 48.0f, 0.f, Units_dBGain));
+    addParam(gain9 = new Parameter("70 Hz", -24.0f, 48.0f, 0.f, Units_dBGain));
 
     reset();
 }
@@ -571,20 +571,19 @@ EQ3::EQ3()
     f3 = dspCoreEqualizer.addBand(rosic::TwoPoleFilter::LOW_SHELF, 100, 0);
 
 
-    addParamWithControl(freq2 = new Parameter("CENTERFREQ", Param_Freq, 0.6f, 0.f, 1.f, Units_Hz));
-    addParamWithControl(bandwidth = new Parameter("BW", 1.5f, 0.25f, 3.75f, Units_Octave));
+    addParam(freq2 = new Parameter("CENTERFREQ", Param_Freq, 0.f, 1.f, 0.6f, Units_Hz));
+    addParam(bandwidth = new Parameter("BW", 0.25f, 4.f, 1.5f, Units_Octave));
 
-    addParamWithControl(gain1 = new Parameter("HIGH", 0.f, -24.0f, 48.0f, Units_dBGain));
-    addParamWithControl(gain2 = new Parameter("CENTER", 0.f, -24.0f, 48.0f, Units_dBGain));
-    addParamWithControl(gain3 = new Parameter("LOW", 0.f, -24.0f, 48.0f, Units_dBGain));
+    addParam(gain1 = new Parameter("HIGH", -24.0f, 24.0f, 0.f, Units_dBGain));
+    addParam(gain2 = new Parameter("CENTER", -24.0f, 24.0f, 0.f, Units_dBGain));
+    addParam(gain3 = new Parameter("LOW", -24.0f, 24.0f, 0.f, Units_dBGain));
 
 /*
-    addParamWithControl(freq1 = new FrequencyParameter("High freq", 0.5, Units_Hz));
+    addParam(freq1 = new FrequencyParameter("High freq", 0.5, Units_Hz));
 
     freq3 = new FrequencyParameter("Low freq", 0.5, Units_Hz);
     AddParamWithParamcell(freq3);
 */
-
 
     reset();
 }
@@ -648,8 +647,8 @@ CTremolo::CTremolo()
     objName = "TR1";
     uniqueId = MAKE_FOURCC('T','R','E','M');
 
-    addParamWithControl(speed = new Parameter("SPEED", 1.f, 0.1f, 2.25f));
-    addParamWithControl(depth = new Parameter("DEPTH", 0.5f, 0.f, 1.0f));
+    addParam(speed = new Parameter("SPEED", 0.1f, 2.35f, 1.f));
+    addParam(depth = new Parameter("DEPTH", 0.f, 1.0f, 0.5f));
 
     reset();
 }
@@ -694,15 +693,14 @@ Compressor::Compressor()
     objName = "CMP";
     uniqueId = MAKE_FOURCC('C','O','M','P');
 
+    //addParam(mode = new BoolParam(false, "MODE", "LIMITER MODE"));
 
-    //addParamWithControl(mode = new BoolParam(false, "MODE", "LIMITER MODE"));
-
-    addParamWithControl(thresh = new Parameter("THRESH", 0.f, -60.0f, 60.0f, Units_dB));
-    addParamWithControl(ratio = new Parameter("RATIO", 1.0f, 1.0f, 30.0f));
-    addParamWithControl(knee = new Parameter("KNEE", 0.f, 0.0f, 48.0f, Units_dB));
-    addParamWithControl(attack = new Parameter("ATTACK", 10.f, 1.f, 90.0f, Units_ms));
-    addParamWithControl(release = new Parameter("RELEASE", 100.f, 10.f, 900.0f, Units_ms));
-    addParamWithControl(gain = new Parameter("GAIN", 0.f, 0.f, 30.0f, Units_dB));
+    addParam(thresh = new Parameter("THRESH", -60.0f, 0.0f, 0.f, Units_dB));
+    addParam(ratio = new Parameter("RATIO", 1.0f, 31.0f, 1.0f));
+    addParam(knee = new Parameter("KNEE", 0.0f, 48.0f, 0.f, Units_dB));
+    addParam(attack = new Parameter("ATTACK", 1.f, 91.0f, 10.f, Units_ms));
+    addParam(release = new Parameter("RELEASE", 10.f, 910.0f, 100.f, Units_ms));
+    addParam(gain = new Parameter("GAIN", 0.f, 30.0f, 0.f, Units_dB));
 
 /* // Unpredictable shit
     autogain = new BoolParam(false);
@@ -787,11 +785,11 @@ CWahWah::CWahWah()
     objName = "WAH";
     uniqueId = MAKE_FOURCC('W','A','H','W');
 
-    addParamWithControl(modfreq = new Parameter("MODFREQ", 1.25f, 0.1f, 4.9f, Units_Hz1));
-    addParamWithControl(depth = new Parameter("DEPTH", 48.f, 2.f, 46.f, Units_Semitones));
+    addParam(modfreq = new Parameter("MODFREQ", 0.1f, 5.f, 1.25f, Units_Hz1));
+    addParam(depth = new Parameter("DEPTH", 2.f, 48.f, 48.f, Units_Semitones));
 
-    //addParamWithControl(frequency = new Parameter("FREQ.", Param_Freq, 0.5f, 0.f, 1.f, Units_Hz));
-    //addParamWithControl(drywet = new Parameter("DRY/WET", 0.75f, 0.0f, 1.f, Units_DryWet));
+    //addParam(frequency = new Parameter("FREQ.", Param_Freq, 0.5f, 0.f, 1.f, Units_Hz));
+    //addParam(drywet = new Parameter("DRY/WET", 0.75f, 0.0f, 1.f, Units_DryWet));
 
     reset();
 }
@@ -846,9 +844,9 @@ CDistort::CDistort()
     objName = "DIS";
     uniqueId = MAKE_FOURCC('D','I','S','T');
 
-    addParamWithControl(drive = new Parameter("DRIVE", 32.0f, 0.0f, 48.f, Units_dB));
-    addParamWithControl(postgain = new Parameter("POSTGAIN", 0.0f, -48.0f, 48.f, Units_dB));
-    addParamWithControl(slope = new Parameter("SLOPE", 1.0f, -1.0f, 4.f));
+    addParam(drive = new Parameter("DRIVE", 0.0f, 48.f, 32.0f, Units_dB));
+    addParam(postgain = new Parameter("POSTGAIN", -48.0f, 0.f, 0.0f, Units_dB));
+    addParam(slope = new Parameter("SLOPE", -1.0f, 3.f, 1.0f));
 
     dspCoreDist.setOversampling(1);
     dspCoreDist.setAmount(10);
@@ -901,8 +899,8 @@ CBitCrusher::CBitCrusher()
     objName = "BC";
     uniqueId = MAKE_FOURCC('B','I','T','C');
 
-    addParamWithControl(decimation = new Parameter("DECIMATION", 1.0f, 1.0f, 127.f, Units_Integer));
-    addParamWithControl(quantization = new Parameter("QUANTIZATION", 0.0f, 0.0f, 1.f));
+    addParam(decimation = new Parameter("DECIMATION", 1.0f, 128.f, 1.0f, Units_Integer));
+    addParam(quantization = new Parameter("QUANTIZATION", 0.0f, 1.f, 0.0f));
 
     dspCoreBC.setAmount(1);
 
@@ -948,7 +946,7 @@ CStereo::CStereo()
     objName = "STR";
     uniqueId = MAKE_FOURCC('S','T','E','R');
 
-    addParamWithControl(offset = new Parameter("OFFSET", 10.0f, 1.0f, 99.f, Units_Integer));
+    addParam(offset = new Parameter("OFFSET", 1.0f, 100.f, 10.0f, Units_Integer));
 
     handleParamUpdate(offset);
 }
@@ -995,19 +993,19 @@ XDelay::XDelay() : dspCorePingPongDelay()
 
     addParam(delayMode = new ParamToggle("PING-PONG MODE", true));
 
-    addParamWithControl(delay = new Parameter("DELAY", 3, 0.5f, 19.5f, Units_Ticks));
+    addParam(delay = new Parameter("DELAY", 0.5f, 20.f, 3, Units_Ticks));
     delay->setInterval(0.25f);
-    addParamWithControl(amount = new Parameter("AMOUNT", 1.f, 0.f, 1.f, Units_Percent));
-    addParamWithControl(feedback = new Parameter("FEEDBACK", 55.f, 0.0f, 100.f, Units_Percent));
-    addParamWithControl(pan = new Parameter("PAN", 0.0f, -1.0f, 2.f));
+    addParam(amount = new Parameter("AMOUNT", 0.f, 1.f, 1.f, Units_Percent));
+    addParam(feedback = new Parameter("FEEDBACK", 0.0f, 100.f, 55.f, Units_Percent));
+    addParam(pan = new Parameter("PAN", -1.0f, 1.f, 0.0f));
 
     //highCut = new FrequencyParameter(0.2f);
     //highCut->SetName("HighCut");
     //highCut->AddValueString(Units_Hz);
     //AddParamWithParamcell(highCut);
 
-    addParamWithControl(lowcut = new Parameter("LOWCUT", Param_Freq, 0.9f, 0.f, 1.f, Units_Hz));
-    addParamWithControl(drywet = new Parameter("DRY/WET", .4f, 0.0f, 1.f, Units_DryWet));
+    addParam(lowcut = new Parameter("LOWCUT", Param_Freq, 0.f, 1.f, 0.9f, Units_Hz));
+    addParam(drywet = new Parameter("DRY/WET", 0.0f, 1.f, .4f, Units_DryWet));
 
     addParam(selectTypes = new ParamSelector("Define:"));
     selectTypes->addOption("1 tick", false);
@@ -1092,14 +1090,14 @@ CReverb::CReverb() : dspCoreReverb()
     objName = "RV1";
     uniqueId = MAKE_FOURCC('R','E','V','R');
 
-    addParamWithControl(preDelay  = new Parameter("PREDELAY", 0.0f, 0.0f, 200.0f, Units_ms));
-    addParamWithControl(roomsize = new Parameter("ROOM", 100.0f, 4.0f, 96.0f, Units_Integer));
-    addParamWithControl(decay = new Parameter("DECAY", 6.f, 1.0f, 14.f, Units_Seconds));
-    addParamWithControl(highCut = new Parameter("HIGHCUT", Param_Freq, 0.2f, 0.f, 1.f, Units_Hz));
-    addParamWithControl(lowCut = new Parameter("LOWCUT", Param_Freq, 1.0f, 0.f, 1.f, Units_Hz));
-    addParamWithControl(lowscale = new Parameter("LOW.SCALE", Param_Log, 0.5f, 0.1f, 100));
-    addParamWithControl(highscale = new Parameter("HIGH.SCALE", Param_Log, 0.24f, 0.1f, 100));
-    addParamWithControl(drywet = new Parameter("DRY/WET", .5f, 0.0f, 1.f, Units_DryWet));
+    addParam(preDelay  = new Parameter("PREDELAY", 0.0f, 200.0f, 0.0f, Units_ms));
+    addParam(roomsize = new Parameter("ROOM", 4.0f, 100.0f, 100.0f, Units_Integer));
+    addParam(decay = new Parameter("DECAY", 1.0f, 15.f, 6.f, Units_Seconds));
+    addParam(highCut = new Parameter("HIGHCUT", Param_Freq, 0.f, 1.f, 0.2f, Units_Hz));
+    addParam(lowCut = new Parameter("LOWCUT", Param_Freq, 0.f, 1.f, 1.0f, Units_Hz));
+    addParam(lowscale = new Parameter("LOW.SCALE", Param_Log, 0.1f, 100.1f, 0.5f));
+    addParam(highscale = new Parameter("HIGH.SCALE", Param_Log, 0.1f, 100.1f, 0.24f));
+    addParam(drywet = new Parameter("DRY/WET", 0.0f, 1.f, .5f, Units_DryWet));
 
     reset();
 }
@@ -1171,10 +1169,10 @@ CChorus::CChorus()
     dspCoreChorus = new rosic::Chorus(65535);
     dspCoreChorus->setTempoSync(false);
 
-    addParamWithControl(delay = new Parameter("DELAY", 5.f, 1.f, 49.0f, Units_ms));
-    addParamWithControl(freq = new Parameter("MODFREQ", 2.f, 0.1f, 4.9f, Units_Hz2));
-    addParamWithControl(depth = new Parameter("DEPTH", 0.25f, 0, 1.5f, Units_Semitones));
-    addParamWithControl(drywet = new Parameter("DRY/WET", 0.5f, 0.0f, 1.f, Units_DryWet));
+    addParam(delay = new Parameter("DELAY", 1.f, 50.0f, 5.f, Units_ms));
+    addParam(freq = new Parameter("MODFREQ", 0.1f, 4.9f, 2.f, Units_Hz2));
+    addParam(depth = new Parameter("DEPTH", 0, 1.5f, 0.25f, Units_Semitones));
+    addParam(drywet = new Parameter("DRY/WET", 0.0f, 1.f, 0.5f, Units_DryWet));
 }
 
 void CChorus::handleParamUpdate(Param* param)
@@ -1233,18 +1231,18 @@ CFlanger::CFlanger()
 
     reset();
 
-    addParamWithControl(frequency = new Parameter("DELAY", Param_Freq, 0.5f, 0.f, 1.f, Units_ms2));
+    addParam(frequency = new Parameter("DELAY", Param_Freq, 0.5f, 0.f, 1.f, Units_ms2));
 
     frequency->setReversed(true);
 
-    addParamWithControl(modfreq = new Parameter("MODFREQ", 3.f, 0.1f, 9.9f, Units_Seconds));
-    addParamWithControl(feedback = new Parameter("FEEDBACK", 0, -1.f, 2.f));
-    addParamWithControl(depth = new Parameter("DEPTH", 24.f, 2.f, 46.f, Units_Semitones));
+    addParam(modfreq = new Parameter("MODFREQ", 0.1f, 10.f, 3.f, Units_Seconds));
+    addParam(feedback = new Parameter("FEEDBACK", -1.f, 1.f, 0));
+    addParam(depth = new Parameter("DEPTH", 2.f, 48.f, 24.f, Units_Semitones));
 
     //    invert = new BoolParam("Invert wet signal", false, "Invert wet signal");
     //    AddParamWithParamcell(invert);
 
-    addParamWithControl(drywet = new Parameter("DRY/WET", 0.5f, 0.0f, 0.5f, Units_DryWet));
+    addParam(drywet = new Parameter("DRY/WET", 0.0f, 0.5f, 0.5f, Units_DryWet));
 }
 
 void CFlanger::handleParamUpdate(Param* param)
@@ -1311,17 +1309,17 @@ CPhaser::CPhaser()
 
     reset();
 
-    addParamWithControl(frequency = new Parameter("DELAY", Param_Freq, 0.5f, 0.f, 1.f, Units_ms2));
+    addParam(frequency = new Parameter("DELAY", Param_Freq, 0.f, 1.f, 0.5f, Units_ms2));
     frequency->setReversed(true);
-    addParamWithControl(modfreq = new Parameter("MODFREQ", 3.f, 0.1f, 9.9f, Units_Seconds));
-    addParamWithControl(feedback = new Parameter("FEEDBACK", 0, -1.f, 2.f));
-    addParamWithControl(depth = new Parameter("DEPTH", 24.f, 2.f, 46.f, Units_Semitones));
-    addParamWithControl(numstages = new Parameter("STAGES", 4, 1, 23, Units_Integer));
+    addParam(modfreq = new Parameter("MODFREQ", 0.1f, 10.f, 3.f, Units_Seconds));
+    addParam(feedback = new Parameter("FEEDBACK", -1.f, 1.f, 0));
+    addParam(depth = new Parameter("DEPTH", 2.f, 48.f, 24.f, Units_Semitones));
+    addParam(numstages = new Parameter("STAGES", 1, 24, 4, Units_Integer));
     numstages->setInterval(1);
-    addParamWithControl(stereo = new Parameter("STEREO", 0, 0, 180));
+    addParam(stereo = new Parameter("STEREO", 0, 180, 0));
     stereo->setInterval(1);
 
-    addParamWithControl(drywet = new Parameter("DRY/WET", 0.5f, 0.0f, 0.5f, Units_DryWet));
+    addParam(drywet = new Parameter("DRY/WET", 0.0f, 0.5f, 0.5f, Units_DryWet));
 
     dspCorePhaser.setFilterMode(rosic::AllpassChain::FIRST_ORDER_ALLPASS);
 }

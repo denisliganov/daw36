@@ -15,35 +15,16 @@ public:
 
 protected:
 
-        Parameter*          brightness;
-        Parameter*          hue;
-        Parameter*          saturation;
-        Parameter*          bufferSize;
-        ParamRadio*         pr;
+        ParamRadio*         format;
+        ParamRadio*         quality;
+        ParamRadio*         interpolation;
 
-        ListBoxx*           interpolation;
-        ListBoxx*           midiOutDevices;
-        ListBoxx*           midiInDevices;
-        ListBoxx*           outputDevices;
-        ListBoxx*           inputDevices;
+        RadioBox*           formatBox;
+        RadioBox*           qualityBox;
+        RadioBox*           interpolationBox;
 
-        ParamBox*           buffSizeBox;
-        ParamBox*           pbox2;
-        ParamBox*           pbox3;
-        ParamBox*           pbox4;
-        ParamBox*           pbox5;
-        ParamBox*           pbox6;
-
-        Knob*               knob1;
-        Knob*               knob2;
-        Knob*               knob3;
-        Knob*               knob4;
-
-        RadioBox*           chooserBox;
-        RadioBox*           rb2;
-
-        Button36*           showASIOPanel;
-
+        Button36*           startRender;
+        Button36*           openFolder;
 
         void                drawSelf(Graphics& g);
         void                handleChildEvent(Gobj * obj,InputEvent & ev);

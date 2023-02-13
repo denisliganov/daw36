@@ -7,97 +7,26 @@
 #include "36.h"
 #include "36_grid.h"
 #include "36_listbox.h"
-#include "36_numbox.h"
+#include "36_parambox.h"
 
 
 
 RenderWinObject::RenderWinObject()
 {
-/*
-    Gobj::addObject(buffSizeBox = new Slider36(false), 10, 50, 120, 20);
-    Gobj::addObject(pbox2 = new Slider36(false), 10, 72, 120, 20);
-    Gobj::addObject(pbox3 = new Slider36(false), 10, 94, 120, 20);
+    format = new ParamRadio("Format");
+    format->addOption("OGG");
+    format->addOption("WAV");
+    format->addOption("FLAC");
 
-    Gobj::addObject(midiDevices = new ListBoxx("List1"), 200, 50, 120, 100);
+    quality = new ParamRadio("Quality");
 
-    Gobj::addObject(knob1 = new Knob(new Parameter(0.5f)), 140, 190, 40, 40);
-    Gobj::addObject(knob2 = new Knob(new Parameter(0.5f)), 180, 190, 20, 20);
-*/
+    formatBox = new RadioBox(format);
+    qualityBox = new RadioBox(quality);
 
-    // Init params and controls
-
-    addParam(hue = new Parameter("hue", globalHue, 0, 1));
-    addParam(saturation = new Parameter("sat", 0.2f, 0, 1));
-    addParam(brightness = new Parameter("brightness", 0, -1.f, 1.9f));
-    addParam(bufferSize = new Parameter("buffsize", 2048, 512, 16384-512));
-
-    knob1 = new Knob(hue);
-    knob2 = new Knob(saturation);
-    knob3 = new Knob(brightness);
-    buffSizeBox = new ParamBox(bufferSize);
-
-    pr = new ParamRadio("Radio1");
-    pr->addOption("Opt1");
-    pr->addOption("Opt2");
-    pr->addOption("Opt3");
-    pr->addOption("Opt4");
-    pr->addOption("Opt15");
-
-    chooserBox = new RadioBox(pr);
-
-    outputDevices = new ListBoxx("Output devices");
-    outputDevices->addEntry("Device1");
-    outputDevices->addEntry("Device2");
-
-    showASIOPanel = new Button36(false, "Show ASIO panel");
-
-    inputDevices = new ListBoxx("Input devices");
-    inputDevices->addEntry("IN Device1");
-    inputDevices->addEntry("IN Device2");
-
-    midiOutDevices = new ListBoxx("MIDI OUT devices");
-    midiOutDevices->addEntry("Entry1");
-    midiOutDevices->addEntry("Entry2");
-    midiOutDevices->addEntry("Entry3");
-
-    midiInDevices = new ListBoxx("MIDI IN devices");
-    midiInDevices->addEntry("Entry4Entry4Entry4Entry4Entry4");
-    midiInDevices->addEntry("Entry5");
-    midiInDevices->addEntry("Entry6Entry4Entry4");
-    midiInDevices->addEntry("Entry7Entry4Entry4Entry4Entry4Entry4");
-    midiInDevices->addEntry("Entry8Entry4");
-    midiInDevices->addEntry("Entry9");
-    midiInDevices->addEntry("Entry10");
-    midiInDevices->addEntry("Entry11");
-
+    startRender = new Button36(false, "Render");
 
     // Position all controls
 
-    putRight(outputDevices, 280, 120);
-    putBelow(inputDevices, 280, 120);
-    putBelow(midiOutDevices, 280, 120);
-    putBelow(midiInDevices, 280, 120);
-
-    goTop();
-
-    putRight(buffSizeBox, 100, 20);
-    putBelow(showASIOPanel, 100, 20);
-    putBelow(chooserBox, 100, chooserBox->getH());
-
-    //goLeft();
-
-    //putSpace();
-    //putSpace();
-
-    //goTop();
-
-    //putSpace();
-
-    putBelow(knob1, 55, 70);
-    putBelow(knob2, 55, 70);
-    putBelow(knob3, 55, 70);
-
-    finalizePuts();
 }
 
 void RenderWinObject::drawSelf(Graphics& g)
@@ -112,40 +41,7 @@ void RenderWinObject::handleChildEvent(Gobj * obj,InputEvent & ev)
 
 void RenderWinObject::handleParamUpdate(Param * param)
 {
-    if(param == hue)
-    {
-        globalHue = hue->getOutVal();
-
-        MWindow->repaint();
-
-        MObject->redraw();
-        MGrid->redraw(false, true);
-    }
-    else if(param == saturation)
-    {
-        globalSaturation = saturation->getOutVal();
-
-        MWindow->repaint();
-
-        MObject->redraw();
-        MGrid->redraw(false, true);
-    }
-    else if(param == brightness)
-    {
-        brightnessCoeff = 2 - (1 + brightness->getOutVal());
-
-        MWindow->repaint();
-
-        MObject->redraw();
-        MGrid->redraw(false, true);
-    }
-
-    Gobj::redraw();
-
-    if(holderWindow)
-    {
-        holderWindow->repaint();
-    }
+    
 }
 
 

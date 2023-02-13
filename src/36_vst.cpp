@@ -754,12 +754,12 @@ void Vst2Plugin::extractParams()
             {
                 if ( (paramProp->flags & kVstParameterIsSwitch) != 0 )
                 {
-                    param = new Parameter(fVal, 0, 1.);
+                    param = new Parameter(0, 1, fVal);
                     param->setInterval(1.f);
                 }
                 else if ( (paramProp->flags & kVstParameterUsesFloatStep) != 0 )
                 {
-                    param = new Parameter(fVal, 0, 1.);
+                    param = new Parameter(0, 1, fVal);
                     param->setInterval(paramProp->smallStepFloat);
                 }
                 else if ( ((paramProp->flags & kVstParameterUsesIntStep) != 0) &&
@@ -767,17 +767,17 @@ void Vst2Plugin::extractParams()
                 {
                     float step = 1.0f/(paramProp->maxInteger - paramProp->minInteger);
 
-                    param = new Parameter(fVal, 0, 1.);
+                    param = new Parameter(0, 1, fVal);
                     param->setInterval(step);
                 }
                 else
                 {
-                    param = new Parameter(fVal, 0, 1);
+                    param = new Parameter(0, 1, fVal);
                 }
             }
             else
             {
-                param = new Parameter(fVal, 0, 1);
+                param = new Parameter(0, 1, fVal);
             }
 
             //copy only MAX_PARAM_NAME number of chars to prevent corruption
@@ -792,7 +792,7 @@ void Vst2Plugin::extractParams()
 
             param->setIndex(index);      // for VST purpose
 
-            addParamWithControl(param);
+            addParam(param);
 
             if (NULL != paramName)
             {

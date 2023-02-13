@@ -28,9 +28,9 @@ ConfigWinObject::ConfigWinObject()
     // Init params and controls
 
     addParam(hue = new Parameter("hue", globalHue, 0, 1));
-    addParam(saturation = new Parameter("sat", 0.2f, 0, 1));
-    addParam(brightness = new Parameter("brightness", 0, -1.f, 1.9f));
-    addParam(bufferSize = new Parameter("Audio buffer size", 2048, 512, 16384-512, Units_Integer));
+    addParam(saturation = new Parameter("sat", 0, 1, 0.2f));
+    addParam(brightness = new Parameter("brightness", -1.f, .9f, 0));
+    addParam(bufferSize = new Parameter("Audio buffer size", 512, 16384, 2048, Units_Integer));
 
     bufferSize->setUnitString("samples");
 

@@ -79,10 +79,10 @@ class Parameter : public Param
 {
 public:
             Parameter();
-            Parameter(float def_val, float offs, float rng);
-            Parameter(float def_val, float offs, float rng, ParamType ptype);
-            Parameter(std::string param_name, ParamType ptype, float def_val, float offs, float rng, UnitsType vt = Units_Default);
-            Parameter(std::string param_name, float def_val, float offs, float rng, UnitsType vt = Units_Default);
+            Parameter(float min_val, float max_val, float default_val);
+            Parameter(float min_val, float max_val, float default_val, ParamType ptype);
+            Parameter(std::string param_name, ParamType ptype, float min_val, float max_val, float default_val, UnitsType vt = Units_Default);
+            Parameter(std::string param_name, float min_val, float max_val, float default_val, UnitsType vt = Units_Default);
             Parameter(int p_value);
             Parameter(float def_val);
             virtual ~Parameter();
@@ -90,7 +90,7 @@ public:
             void                adjustFromControl(Control* ctrl, int step, float nval=-1, float min_step=0.1f);
             float               adjustForEditor(float val);
             void                blockEnvAffect() { envaffect = false; }
-            std::string         calcValStr(float uv);
+    virtual std::string         calcValStr(float uv);
             void                dequeueEnvelopeTrigger(Trigger* tg);
             void                enqueueEnvelopeTrigger(Trigger* tg);
             void                finishRecording();
@@ -111,7 +111,6 @@ public:
             void                handleRecordingFromControl(float ctrlval);
             bool                isRecording() { return recording; }
             void                load(XmlElement* xmlParamNode);
-            void                load4Preset(XmlElement* xmlParamNode);
     virtual void                reset();
     virtual void                setValue(float val);
     virtual void                setNormalizedValue(float nval);
@@ -159,6 +158,11 @@ protected:
             float               value;
 
             std::string         prmValString;
+};
+
+class VolParam : public Param
+{
+            
 };
 
 class ParamToggle : public Param

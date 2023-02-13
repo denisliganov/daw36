@@ -29,18 +29,6 @@ void ParamObject::addParam(Param* param)
     param->setEnvDirect(false);
 
     params.push_back(param);
-}
-
-void ParamObject::addParamWithControl(Param* param, std::string oname, Control* ctrl)
-{
-    addParam(param);
-
-    if (ctrl)
-    {
-        param->addControl(ctrl);
-
-        addObject(ctrl);
-    }
 
     handleParamUpdate(param);
 }

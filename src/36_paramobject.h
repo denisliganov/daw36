@@ -17,7 +17,6 @@ public:
             ParamObject();
 
     virtual void                addParam(Param* param);
-    virtual void                addParamWithControl(Param* param, std::string ctrl_name = "", Control* ctrl = NULL);
             void                dequeueParamEnvelope(Trigger* tgenv);
             void                enqueueParamEnvelope(Trigger* tgenv);
     virtual Param*              getParamByName(char *param_name);
@@ -25,10 +24,10 @@ public:
     virtual bool                getParamLock() { return paramLocked; };
     virtual std::list<Param*>   getParams() { return params; }
     virtual void                handleParamUpdate(Param* param = NULL) {};
+    virtual void                handleClose();
     virtual void                removeParam(Param* param);
     virtual void                setParamLock(bool lock) { paramLocked = lock; };
             void                setInvokeButton(Button36* bt) { invokeButton = bt; }
-    virtual void                handleClose();
             void                putStart(int x,int y);
             void                putRight(Gobj* obj, int ow=-1, int oh=-1);
             void                putBelow(Gobj* obj, int ow=-1, int oh=-1);

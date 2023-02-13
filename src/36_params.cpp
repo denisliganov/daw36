@@ -60,25 +60,25 @@ Parameter::Parameter()
 
 Parameter::Parameter(float def_val)
 {
-    paramInit("", Param_Default, def_val, 0, 1, Units_Default);
+    paramInit("", Param_Default, 0, 1, def_val, Units_Default);
 }
 
-Parameter::Parameter(float def_val, float offs, float rng)
+Parameter::Parameter(float min_val, float max_val, float default_val)
 {
-    paramInit("", Param_Default, def_val, offs, rng, Units_Default);
+    paramInit("", Param_Default, min_val, max_val, default_val, Units_Default);
 }
 
-Parameter::Parameter(std::string name, float def_val, float offs, float rng, UnitsType vt)
+Parameter::Parameter(std::string name, float min_val, float max_val, float default_val, UnitsType vt)
 {
-    paramInit(name, Param_Default, def_val, offs, rng, vt);
+    paramInit(name, Param_Default, min_val, max_val, default_val, vt);
 }
 
-Parameter::Parameter(std::string name, ParamType ptype, float def_val, float offs, float rng, UnitsType vt)
+Parameter::Parameter(std::string name, ParamType ptype, float min_val, float max_val, float default_val, UnitsType vt)
 {
-    paramInit(name, ptype, def_val, offs, rng, vt);
+    paramInit(name, ptype, min_val, max_val, default_val, vt);
 }
 
-void Parameter::paramInit(std::string name, ParamType pt, float def_val, float offs, float rng, UnitsType vt)
+void Parameter::paramInit(std::string name, ParamType pt, float min_val, float max_val, float default_val, UnitsType vt)
 {
     type = pt;
     unitsType = vt;
@@ -101,10 +101,10 @@ void Parameter::paramInit(std::string name, ParamType pt, float def_val, float o
     lastrecpoint = NULL;
     ctrlUpdatingFrom = NULL;
 
-    offset = offs;
-    range = rng;
+    offset = min_val;
+    range = max_val - min_val;
+    defaultValue = default_val;
 
-    defaultValue = def_val;
     outVal = 0;
     interval = -1;
     lastValue = -1;
@@ -116,8 +116,8 @@ void Parameter::paramInit(std::string name, ParamType pt, float def_val, float o
     {
         offset = 0;
         range = 1.f;
-        logoffset = offs;
-        logRange = rng;
+        logoffset = offset;
+        logRange = range;
     }
 
     params.push_front(this);
@@ -441,14 +441,6 @@ XmlElement* Parameter::save4Preset()
     return xmlParam;
 }
 
-void Parameter::load4Preset(XmlElement* xmlNode)
-{
-    float fval = (float)xmlNode->getDoubleAttribute(T("value"), defaultValue);
-
-    setValue(fval);
-    setDefValue(fval);
-}
-
 XmlElement* Parameter::save()
 {
     XmlElement * xmlParam = new XmlElement(T("Parameter"));
@@ -473,21 +465,11 @@ void Parameter::load(XmlElement* xmlNode)
     //char xname[MAX_PARAM_NAME];
     //xmlNode->getStringAttribute(T("name"), T("default")).copyToBuffer(xname, MAX_PARAM_NAME);
     //if(strcmp(name, xname) == 0)
-    {
-        if(type == Param_Bool)
-        {
-            BoolParam* bp = (BoolParam*)this;
 
-            bp->SetBoolValue(xmlNode->getBoolAttribute(T("bval"), bp->outval));
-        }
-        else
-        {
-            float fval = (float)xmlNode->getDoubleAttribute(T("value"), defaultValue);
+    float fval = (float)xmlNode->getDoubleAttribute(T("value"), defaultValue);
 
-            //setValue(fval);
-            //setDefValue(fval);
-        }
-    }
+    //setValue(fval);
+    //setDefValue(fval);
 }
 
 void Parameter::setNormalizedValue(float nval)

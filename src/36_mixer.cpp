@@ -131,11 +131,11 @@ void MixChannel::init(Instrument* ins)
 
         //addObject(volslider = new Slider36(true), "sl.vol");
         //addObject(panslider = new Slider36(false), "sl.pan");
-        //addParamWithControl(volParam = new Parameter("Volume", Param_Vol, 1.f, 0.f, DAW_VOL_RANGE, Units_dB), "sl.vol", volslider);
-        //addParamWithControl(panParam = new Parameter("Panning", Param_Pan, 0.f, -1.f, 2.f, Units_Percent), "sl.pan", panslider);
+        //addParam(volParam = new Parameter("Volume", Param_Vol, 1.f, 0.f, DAW_VOL_RANGE, Units_dB), "sl.vol", volslider);
+        //addParam(panParam = new Parameter("Panning", Param_Pan, 0.f, -1.f, 2.f, Units_Percent), "sl.pan", panslider);
 
-        addParam(volParam = new Parameter("Volume", Param_Vol, 1.f, 0.f, DAW_VOL_RANGE, Units_dB));
-        addParam(panParam = new Parameter("Panning", Param_Pan, 0.f, -1.f, 2.f, Units_Percent));
+        addParam(volParam = new Parameter("Volume", Param_Vol, 0.f, DAW_VOL_RANGE, 1.f, Units_dB));
+        addParam(panParam = new Parameter("Panning", Param_Pan, -1.f, 1.f, 0.f, Units_Percent));
 
         addObject(volKnob = new Knob(volParam));
         addObject(panKnob = new Knob(panParam));
@@ -163,8 +163,8 @@ void MixChannel::init(Instrument* ins)
         volKnob = NULL;
         volKnob = NULL;
 
-        addParamWithControl(volParam = new Parameter("Volume", Param_Vol, 1.f, 0.f, DAW_VOL_RANGE, Units_dB), "sl.vol", volslider = new Slider36(true));
-        addParamWithControl(panParam = new Parameter("Panning", Param_Pan, 0.f, -1.f, 2.f, Units_Percent), "sl.pan", panslider = new Slider36(true));
+        addParam(volParam = new Parameter("Volume", Param_Vol, 0.f, DAW_VOL_RANGE, 1.f, Units_dB));
+        addParam(panParam = new Parameter("Panning", Param_Pan, -1.f, 1.f, 0.f, Units_Percent));
 
         for(int mc = 0; mc < NUM_SENDS; mc++)
         {
