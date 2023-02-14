@@ -172,6 +172,7 @@
     <ClCompile Include="src\36_glyphs.cpp" />
     <ClCompile Include="src\36_grid.cpp" />
     <ClCompile Include="src\36_history.cpp" />
+    <ClCompile Include="src\36_infowin.cpp" />
     <ClCompile Include="src\36_init.cpp" />
     <ClCompile Include="src\36_instr.cpp" />
     <ClCompile Include="src\36_instrpanel.cpp" />
@@ -192,7 +193,6 @@
     <ClCompile Include="src\36_parambox.cpp" />
     <ClCompile Include="src\36_paramobject.cpp" />
     <ClCompile Include="src\36_params.cpp" />
-    <ClCompile Include="src\36_paramswin.cpp" />
     <ClCompile Include="src\36_pattern.cpp" />
     <ClCompile Include="src\36_playhead.cpp" />
     <ClCompile Include="src\36_project.cpp" />
@@ -204,6 +204,7 @@
     <ClCompile Include="src\36_slider.cpp" />
     <ClCompile Include="src\36_snapmenu.cpp" />
     <ClCompile Include="src\36_system.cpp" />
+    <ClCompile Include="src\36_template.cpp" />
     <ClCompile Include="src\36_text.cpp" />
     <ClCompile Include="src\36_textinput.cpp" />
     <ClCompile Include="src\36_timeline.cpp" />
@@ -358,6 +359,7 @@
     <ClInclude Include="src\36_glyphs.h" />
     <ClInclude Include="src\36_grid.h" />
     <ClInclude Include="src\36_history.h" />
+    <ClInclude Include="src\36_infowin.h" />
     <ClInclude Include="src\36_init.h" />
     <ClInclude Include="src\36_instr.h" />
     <ClInclude Include="src\36_instrpanel.h" />
@@ -380,7 +382,6 @@
     <ClInclude Include="src\36_parambox.h" />
     <ClInclude Include="src\36_paramobject.h" />
     <ClInclude Include="src\36_params.h" />
-    <ClInclude Include="src\36_paramswin.h" />
     <ClInclude Include="src\36_pattern.h" />
     <ClInclude Include="src\36_playhead.h" />
     <ClInclude Include="src\36_project.h" />
@@ -392,6 +393,7 @@
     <ClInclude Include="src\36_slider.h" />
     <ClInclude Include="src\36_snapmenu.h" />
     <ClInclude Include="src\36_system.h" />
+    <ClInclude Include="src\36_template.h" />
     <ClInclude Include="src\36_text.h" />
     <ClInclude Include="src\36_textinput.h" />
     <ClInclude Include="src\36_timeline.h" />

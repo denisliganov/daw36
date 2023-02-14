@@ -271,6 +271,8 @@ void LoadDefaultInstruments()
     MBrowser->addSearchDir("C:\\Program Files\\");
     MBrowser->addSearchDir("C:\\Samples\\");
     MBrowser->addSearchDir("C:\\Plugins\\");
+    MBrowser->addSearchDir(".\\Plugins\\");
+    MBrowser->addSearchDir(".\\Samples\\");
 
     MInstrPanel->addVst("Plugins\\mda Piano.dll", NULL);
     MInstrPanel->addVst("Plugins\\mda DX10.dll", NULL);

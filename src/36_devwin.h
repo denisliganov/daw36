@@ -2,14 +2,14 @@
 #pragma once
 
 #include "36_globals.h"
-#include "36_paramswin.h"
+#include "36_paramobject.h"
 
 
 class DevParamObject : public ParamObject
 {
 public:
 
-            DevParamObject(Device36* eff);
+            DevParamObject(Device36* dev);
 
 protected:
 

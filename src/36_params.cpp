@@ -226,25 +226,7 @@ std::string Parameter::calcValStr(float val)
                 break;
             case Units_Percent:
             {
-                if(type == Param_Pan)
-                {
-                    int pval = abs(int(absVal*100));
-
-                    stdstr = String(pval);
-
-                    if(value < 0)
-                    {
-                        stdstr = "<" + stdstr;
-                    }
-                    else if(value > 0)
-                    {
-                        stdstr = stdstr + ">";
-                    }
-                }
-                else
-                {
-                    sprintf(str, ("%.0f"), absVal);
-                }
+                sprintf(str, ("%.0f"), absVal);
             } break;
             case Units_dB:
             {
@@ -386,6 +368,7 @@ void Parameter::handleRecordingFromControl(float ctrlval)
 
 void Parameter::enqueueEnvelopeTrigger(Trigger* tg)
 {
+    /*
     tg->tgworking = true;
 
     // enqueue
@@ -403,7 +386,7 @@ void Parameter::enqueueEnvelopeTrigger(Trigger* tg)
 
     // New envelopes unblock the param ability to be changed by envelope
 
-    unblockEnvAffect();
+    unblockEnvAffect();*/
 }
 
 void Parameter::dequeueEnvelopeTrigger(Trigger* tg)
@@ -527,26 +510,12 @@ float Parameter::getDefaultValueNormalized()
 
 float Parameter::getEditorValue()
 {
-    if(type == Param_Pan)
-    {
-        return 1.f - getValueNormalized();
-    }
-    else
-    {
-        return getValueNormalized();
-    }
+    return getValueNormalized();
 }
 
 float Parameter::adjustForEditor(float val)
 {
-    if(type == Param_Pan)
-    {
-        return range - (val - offset) + offset;
-    }
-    else
-    {
-        return val;
-    }
+    return val;
 }
 
 float Parameter::calcOutputValue(float val)
@@ -674,10 +643,48 @@ std::string VolParam::calcValStr(float val)
     return valStr;
 }
 
+float PanParam::calcOutputValue(float val)
+{
+    return GetVolOutput(val);
+}
+
+std::string PanParam::calcValStr(float val)
+{
+    char str[100] = {};
+
+    float absVal = (val);
+
+    int pval = abs(int(absVal*100));
+
+    std::string valStr = String(pval);
+
+    if(value < 0)
+    {
+        valStr = "<" + valStr;
+    }
+    else if(value > 0)
+    {
+        valStr = valStr + ">";
+    }
+
+    return valStr;
+}
+
+float PanParam::adjustForEditor(float val)
+{
+    return range - (val - offset) + offset;
+}
+
+float PanParam::getEditorValue()
+{
+    return 1.f - getValueNormalized();
+}
+
 float VolParam::calcOutputValue(float val)
 {
     return GetVolOutput(val);
 }
+
 
 void ParamToggle::toggle()
 {

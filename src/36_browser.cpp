@@ -155,17 +155,25 @@ void Browser::addSearchDir(std::string dir)
 {
     directories.push_back(dir);
 
-    auto const extpos = dir.find_last_of('\\');
+    auto extpos = dir.find_last_of('\\');
 
     if(extpos != std::string::npos)
     {
         std::string dirName = dir.substr(extpos + 1);
 
+        if (dirName == "")
+        {
+            std::string dir1 = dir;
+            dir1.pop_back();
+            extpos = dir1.find_last_of('\\');
+            dirName = dir1.substr(extpos + 1);
+        }
+
         ListBoxx* lbox = new ListBoxx(dirName);
 
         std::vector<std::string> fList;
 
-        scanDirForFiles(dir, "wav", true, fList);
+        scanDirForFiles(dir, "", false, fList);
 
         lbox->setList(fList);
 
@@ -204,10 +212,7 @@ void Browser::activateEntry(BrwEntry* be)
     {
         BrwEntry* entry = (BrwEntry*)(be);
 
-        //if (entry->devclass == DevClass_GenInternal || entry->devclass == DevClass_GenVst)
-        {
-            MInstrPanel->loadInstrFromBrowser(be);
-        }
+        MInstrPanel->loadInstrFromBrowser(be);
     }
 }
 
@@ -968,7 +973,7 @@ void  Browser::scanDirForFiles(std::string scan_path, std::string extension, boo
         {
             if(strcmp(founddata.cFileName, ".") != 0 && !(founddata.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN))
             {
-                if(founddata.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+                if(0 && founddata.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
                 {
                     if(recurs)
                     {
@@ -993,7 +998,7 @@ void  Browser::scanDirForFiles(std::string scan_path, std::string extension, boo
 
                         ToLowerCase((char*)ext.data());
 
-                        if(ext == extension)
+                        if(ext == extension || extension == "")
                         {
                             flist.push_back(fname);
 
@@ -1011,6 +1016,12 @@ void  Browser::scanDirForFiles(std::string scan_path, std::string extension, boo
 
                             entries[browsingMode].push_back(fileEntry);
                         }
+                    }
+
+
+                    if (founddata.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+                    {
+                        int a = 1;
                     }
                 }
             }
@@ -1038,7 +1049,8 @@ void Browser::updateEntries()
     if(browsingMode == Browse_Samples)
     {
         std::vector<std::string> flist;
-        scanDirForFiles(samplesPath, WavExt, true, flist);
+
+        scanDirForFiles("Samples", WavExt, true, flist);
     }
     else if(browsingMode == Browse_Projects)
     {

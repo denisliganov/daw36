@@ -11,7 +11,7 @@
 #include "36_browser.h"
 #include "36_project.h"
 #include "36_window.h"
-#include "36_paramswin.h"
+#include "36_devwin.h"
 #include "36_vstwin.h"
 
 
@@ -97,7 +97,7 @@ SubWindow* VstEffect::createWindow()
     }
     else
     {
-        return window->addWindow(new ParamWin());
+        return window->addWindow(new DevParamObject(this));
     }
 }
 

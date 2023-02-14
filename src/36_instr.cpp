@@ -192,7 +192,7 @@ Instrument::Instrument()
     lastNoteVal = BaseNote;
 
     addParam(vol = new VolParam("VOL"));
-    addParam(pan = new Parameter("PAN", Param_Pan, -1.f, 1.f, 0.f, Units_Percent));
+    addParam(pan = new PanParam("PAN"));
     
     addObject(volBox = new ParamBox(vol));
     volBox->setSliderOnly(true);

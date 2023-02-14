@@ -14,7 +14,6 @@
 #include "36_vu.h"
 #include "36_controls.h"
 #include "36_init.h"
-#include "36_paramswin.h"
 #include "36_samplewin.h"
 #include "36_menu.h"
 #include "36_text.h"

@@ -129,13 +129,8 @@ void MixChannel::init(Instrument* ins)
 
         int slLen = MixChanWidth - 10;
 
-        //addObject(volslider = new Slider36(true), "sl.vol");
-        //addObject(panslider = new Slider36(false), "sl.pan");
-        //addParam(volParam = new Parameter("Volume", Param_Vol, 1.f, 0.f, DAW_VOL_RANGE, Units_dB), "sl.vol", volslider);
-        //addParam(panParam = new Parameter("Panning", Param_Pan, 0.f, -1.f, 2.f, Units_Percent), "sl.pan", panslider);
-
-        addParam(volParam = new VolParam("Master volume"));
-        addParam(panParam = new Parameter("Panning", Param_Pan, -1.f, 1.f, 0.f, Units_Percent));
+        addParam(volParam = new VolParam("Volume"));
+        addParam(panParam = new PanParam("Panning"));
 
         addObject(volKnob = new Knob(volParam));
         addObject(panKnob = new Knob(panParam));
@@ -164,7 +159,7 @@ void MixChannel::init(Instrument* ins)
         volKnob = NULL;
 
         addParam(volParam = new VolParam("Volume"));
-        addParam(panParam = new Parameter("Panning", Param_Pan, -1.f, 1.f, 0.f, Units_Percent));
+        addParam(panParam = new PanParam("Panning"));
 
         for(int mc = 0; mc < NUM_SENDS; mc++)
         {

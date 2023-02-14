@@ -30,29 +30,6 @@
 
 
 
-class EffGuiButton : public Button36
-{
-protected:
-
-        void drawSelf(Graphics& g)
-        {
-            Instrument* instr = (Instrument*)parent;
-
-           fill(g, 0.45f);
-
-           rect(g, 0.35f);
-        }
-
-        void handleMouseEnter(InputEvent & ev)  { redraw(); }
-        void handleMouseLeave(InputEvent & ev)  { redraw(); }
-        void handleMouseDrag(InputEvent & ev)   { parent->handleMouseDrag(ev); }
-        void handleMouseWheel(InputEvent & ev)   { parent->handleMouseWheel(ev); }
-        //void handleMouseUp(InputEvent & ev)     { redraw();  parent->redraw();  }
-
-public:
-
-        EffGuiButton() : Button36(true) {}
-};
 
 
 Eff::Eff()
@@ -62,7 +39,7 @@ Eff::Eff()
     bypass = false;
     devIdx = -1;
 
-    addObject(previewButton = new EffGuiButton(), MixChanWidth - 21, 0, 20, 15);
+    //addObject(previewButton = new EffGuiButton(), MixChanWidth - 21, 0, 20, 15);
 
     //addParam(new Parameter(1, 0, 1), "", sliderAmount = new Slider36(false));
 }
@@ -257,10 +234,7 @@ void Eff::handleMouseDrag(InputEvent& ev)
 
 void Eff::handleChildEvent(Gobj * obj, InputEvent& ev)
 {
-    if(obj == previewButton)
-    {
-        showWindow(previewButton->isPressed());
-    }
+    
 }
 
 SubWindow* Eff::createWindow()

@@ -88,7 +88,7 @@ public:
             virtual ~Parameter();
 
             void                adjustFromControl(Control* ctrl, int step, float nval=-1, float min_step=0.1f);
-            float               adjustForEditor(float val);
+    virtual float               adjustForEditor(float val);
             void                blockEnvAffect() { envaffect = false; }
     virtual std::string         calcValStr(float uv);
             void                dequeueEnvelopeTrigger(Trigger* tg);
@@ -105,7 +105,7 @@ public:
             float               getDefaultValue() { return defaultValue; }
             float               getValueNormalized();
             float               getDefaultValueNormalized();
-            float               getEditorValue();
+    virtual float               getEditorValue();
             bool                getReversed() { return reversed; }
             float               getInterval() { return interval; } 
             void                handleRecordingFromControl(float ctrlval);
@@ -172,7 +172,14 @@ protected:
 
 class PanParam : public Parameter
 {
-            
+public:
+            PanParam(std::string param_name) : Parameter(param_name, -1.f, 1.f, 0.f, Units_Percent) {}
+            float               adjustForEditor(float val);
+            float               getEditorValue();
+
+protected:
+            std::string         calcValStr(float uv);
+            float               calcOutputValue(float val);
 };
 
 class ParamToggle : public Param

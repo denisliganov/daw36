@@ -64,6 +64,7 @@ class Parameter;
 class ParamToggle;
 class ParamRadio;
 class ParamSelector;
+class InfoWin;
 class Renderer;
 class RadioBox;
 class Scroller;

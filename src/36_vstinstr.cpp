@@ -12,7 +12,6 @@
 #include "36.h"
 #include "36_browser.h"
 #include "36_vstwin.h"
-#include "36_paramswin.h"
 #include "36_devwin.h"
 
 
