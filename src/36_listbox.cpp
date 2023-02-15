@@ -18,16 +18,16 @@ ListBoxx::ListBoxx(std::string name)
 
 void ListBoxx::drawSelf(Graphics& g)
 {
-    setc(g, .1f);
+    setc(g, .3f);
     fillx(g, 0, headerHeight, width, height - headerHeight);
 
-    setc(g, 0.5f);
+    setc(g, 0.2f);
     rectx(g, 0, headerHeight, width, height - headerHeight);
 
-    setc(g, 0.35f);
+    setc(g, 0.4f);
     fillx(g, 0, 0, width, headerHeight - 2);
 
-    setc(g, 0.9f);
+    setc(g, 1.f);
     txtfit(g, FontBold, getObjName(), 3, headerHeight - 5, width);
 
     g.saveState();
@@ -57,15 +57,16 @@ void ListBoxx::drawSelf(Graphics& g)
             }
             else
             {
-                setc(g, 0.3f);
+                setc(g, 0.34f);
             }
 
-            fillx(g, 0, yoffs + y, w, entryHeight);
-            setc(g, 0.2f);
-            lineH(g, yoffs + y, 0, w);
+            fillx(g, 0, yoffs + y, w, entryHeight - 1);
+
+            //setc(g, 0.2f);
+            //lineH(g, yoffs + y, 0, w);
 
             setc(g, 1.f);
-            txtfit(g, fontId, e, 4, yoffs + y + entryHeight - 3, w - 2);
+            txtfit(g, fontId, e, 4, yoffs + y + entryHeight - 4, w - 2);
         }
         else if (yoffs > (vscr->getOffset() + vscr->getVisiblePart()))
         {

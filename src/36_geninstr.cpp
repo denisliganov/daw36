@@ -2,7 +2,7 @@
 #include "36_geninstr.h"
 #include "36_events_triggers.h"
 #include "36_note.h"
-#include "36_params.h"
+#include "36_paramnum.h"
 #include "36_pattern.h"
 #include "36_utils.h"
 

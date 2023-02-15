@@ -4,7 +4,7 @@
 #include "36_project.h"
 #include "36_objects.h"
 #include "36_vst.h"
-#include "36_params.h"
+#include "36_paramnum.h"
 #include "36_sampleinstr.h"
 #include "36_utils.h"
 #include "36_pattern.h"
@@ -313,7 +313,7 @@ ParamComponent::ParamComponent(Device36* dev)
 
                 BoolParam* bp = (BoolParam*)param;
 
-                AToggleButton* tg = new AToggleButton((char*)bp->getValString().data());
+                AToggleButton* tg = NULL;  new AToggleButton(true);
                 addAndMakeVisible(tg);
                 tg->setToggleState(bp->outval, false);
 

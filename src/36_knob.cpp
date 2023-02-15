@@ -2,7 +2,7 @@
 #include "rosic/rosic.h"
 
 #include "36_knob.h"
-#include "36_params.h"
+#include "36_paramnum.h"
 #include "36_utils.h"
 #include "36_draw.h"
 #include "36_macros.h"

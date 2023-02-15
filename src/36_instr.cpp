@@ -2,7 +2,6 @@
 
 #include "36.h"
 #include "36_instr.h"
-#include "36_params.h"
 #include "36_instrpanel.h"
 #include "36_vu.h"
 #include "36_edit.h"
@@ -22,6 +21,9 @@
 #include "36_events_triggers.h"
 #include "36_knob.h"
 #include "36_parambox.h"
+#include "36_paramvol.h"
+#include "36_parampan.h"
+
 
 //namespace M {
 
@@ -191,8 +193,8 @@ Instrument::Instrument()
     lastNotePan = 0;
     lastNoteVal = BaseNote;
 
-    addParam(vol = new VolParam("VOL"));
-    addParam(pan = new PanParam("PAN"));
+    addParam(vol = new ParamVol("VOL"));
+    addParam(pan = new ParamPan("PAN"));
     
     addObject(volBox = new ParamBox(vol));
     volBox->setSliderOnly(true);
@@ -858,10 +860,10 @@ void Instrument::load(XmlElement * instrNode)
     }
 
     bool mute = (instrNode->getIntAttribute(T("mute")) == 1);
-    muteparam->SetBoolValue(mute);
+    muteparam = mute;
 
     bool solo = (instrNode->getIntAttribute(T("Solo")) == 1);
-    soloparam->SetBoolValue(solo);
+    soloparam = solo;
 
     if(solo)
     {
@@ -903,7 +905,7 @@ void Instrument::preProcessTrigger(Trigger* tg, bool* skip, bool* fill, long num
     }
 
     // Check conditions for muting
-    if((muteparam != NULL && muteparam->getOutVal()) || !(SoloInstr == NULL || SoloInstr == this))
+    if(muteparam || !(SoloInstr == NULL || SoloInstr == this))
     {
         // If note just begun then there's nothing to declick. Set aaFilledCount to full for immediate muting
 

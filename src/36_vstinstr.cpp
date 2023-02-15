@@ -3,12 +3,12 @@
 #include "36_vst.h"
 #include "36_events_triggers.h"
 #include "36_note.h"
-#include "36_params.h"
+#include "36_paramnum.h"
+#include "36_paramvol.h"
 #include "36_pattern.h"
 #include "36_utils.h"
 #include "36_instrpanel.h"
 #include "36_project.h"
-#include "36_juce_components.h"
 #include "36.h"
 #include "36_browser.h"
 #include "36_vstwin.h"
@@ -235,10 +235,11 @@ void VstInstr::generateData(long num_frames, long mixbuffframe)
 {
     bool off = false;
 
+    /*
     if((muteparam != NULL && muteparam->getOutVal()) || (SoloInstr != NULL && SoloInstr != this))
     {
         off = true;
-    }
+    }*/
 
     fill = true;
 

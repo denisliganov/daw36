@@ -8,7 +8,6 @@
 #include "36_system.h"
 #include "36_element.h"
 #include "36_pattern.h"
-#include "36_params.h"
 #include "36_audio_dev.h"
 #include "36_instrpanel.h"
 #include "36_grid.h"

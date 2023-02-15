@@ -268,9 +268,10 @@ void GetStartupDir()
 //
 void LoadDefaultInstruments()
 {
-    MBrowser->addSearchDir("C:\\Program Files\\");
-    MBrowser->addSearchDir("C:\\Samples\\");
-    MBrowser->addSearchDir("C:\\Plugins\\");
+    //MBrowser->addSearchDir("C:\\Program Files\\");
+    //MBrowser->addSearchDir("C:\\Samples\\");
+    //MBrowser->addSearchDir("C:\\Plugins\\");
+
     MBrowser->addSearchDir(".\\Plugins\\");
     MBrowser->addSearchDir(".\\Samples\\");
 

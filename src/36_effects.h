@@ -57,10 +57,6 @@ protected:
             Parameter*          cutoff;
             Parameter*          resonance;
             Parameter*          bandwidth;
-            BoolParam*          x2;
-            BoolParam*          f1;
-            BoolParam*          f2;
-            BoolParam*          f3;
             bool                f_master;
             Filter1*            f_next;
 
@@ -98,7 +94,7 @@ protected:
             Parameter*          frequency;
             Parameter*          feedback;
             float*              fmemory;
-            BoolParam*          invert;
+            bool          invert;
             Parameter*          modfreq;
 };
 

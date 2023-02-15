@@ -62,7 +62,7 @@ public:
             int                 lastNoteVal;
             MixChannel*         mixChannel;
             EnableButton*       muteButt;
-            BoolParam*          muteparam;
+            bool                muteparam;
             Slider36*           mvol;
             Slider36*           mpan;
             std::list<Note*>    notes;
@@ -79,9 +79,9 @@ public:
             Pattern*            selfPattern;
             Note*               selfNote;
             SoloButton*         soloButt;
-            BoolParam*          soloparam;
+            bool                soloparam;
             InstrType           type;
-            VolParam*           vol;
+            ParamVol*           vol;
             Knob*               volKnob;
             ParamBox*           volBox;
             float               volbase;    // Base environmental volume

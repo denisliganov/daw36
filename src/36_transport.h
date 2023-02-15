@@ -7,7 +7,7 @@
 #include <forward_list>
 
 #include "36_globals.h"
-#include "36_params.h"
+//#include "36_params.h"
 
 
 
@@ -41,7 +41,7 @@ public:
             long                getFrameFromTick(float tick);
             void                goToHome();
             void                goToEnd();
-            bool                isPlaying()     { return playing->getValue(); }
+            bool                isPlaying();
             void                propagateChanges();
             void                reset();
             void                setTicksPerBeat(int tpb);

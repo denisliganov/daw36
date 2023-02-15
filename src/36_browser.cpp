@@ -7,7 +7,7 @@
 #include "36_effects.h"
 #include "36_vstinstr.h"
 #include "36_sampleinstr.h"
-#include "36_params.h"
+#include "36_paramnum.h"
 #include "36_instr.h"
 #include "36_instrpanel.h"
 #include "36_note.h"
@@ -107,6 +107,11 @@ Browser::Browser(std::string dirpath)
     setCurrentIndex(3);
 
     setViewMask(FType_Unknown | FType_VST | FType_Native | FType_Wave | FType_Projects);
+
+    addObject(fileBox = new ListBoxx("File browser"));
+
+    fileBox->addEntry("12345");
+    fileBox->addEntry("67890");
 
     // Init internal and external devices
 
@@ -315,13 +320,14 @@ void Browser::drawSelf(Graphics& g)
 {
     //setc(g, 0.2f);
     //gFillRect(g, x1, y1 + MainLineHeight + 8, x2, y2);
-    fill(g, .3f);
+    setc(g, 0.3f);
+    fillx(g, 0, MainLineHeight + 1, width, height);
 
     setc(g, 0.25f);
-    gFillRect(g, x1, y1, x2, y1 + MainLineHeight - 2);
+    fillx(g, 0, 0, width, MainLineHeight);
 
-    //setc(g, 0.28f);
-    //g.drawHorizontalLine(y1, (float)x1, (float)x2);
+    setc(g, 0.28f);
+    lineH(g, 0, 0, width - 1);
 
     for (auto be : entries[browsingMode])
     {
@@ -667,10 +673,10 @@ void Browser::remap()
 
     int cx = 0;
 
-    int cy = MainLineHeight;
+    int cy = MainLineHeight + 1;
     int cw = 200;
 
-    float lstHeight = (float)(height - cy - BottomPadHeight - 1);
+    float lstHeight = (float)(height - cy - 1);
 
     int yentry = cy;// -(int)vscr->getOffset();
     float fullSpan = 0;
@@ -706,6 +712,8 @@ void Browser::remap()
 
     confine(xLists, cy, width - fileBrwWidth, height); // no args -> reset bounds
 
+    setObjSpacing(2);
+
     putStart(xLists, cy);
 
     for (ListBoxx* lb : listBoxes)
@@ -713,10 +721,13 @@ void Browser::remap()
         putRight(lb, 200, lstHeight);
     }
 
+    confine();
+
+    fileBox->setCoords1(width - fileBrwWidth + 2, cy, fileBrwWidth - 4, lstHeight);
+
     //fullSpan += 64;
     //vscr->updBounds(fullSpan, float(lstHeight), vscr->getOffset());
     //vscr->setCoords1(width - BrwScrollerWidth + 1, cy, BrwScrollerWidth - 2, lstHeight);
-
 }
 
 void Browser::removeEntry(BrwEntry * entry)
@@ -973,7 +984,7 @@ void  Browser::scanDirForFiles(std::string scan_path, std::string extension, boo
         {
             if(strcmp(founddata.cFileName, ".") != 0 && !(founddata.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN))
             {
-                if(0 && founddata.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+                if(founddata.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
                 {
                     if(recurs)
                     {
@@ -1016,12 +1027,6 @@ void  Browser::scanDirForFiles(std::string scan_path, std::string extension, boo
 
                             entries[browsingMode].push_back(fileEntry);
                         }
-                    }
-
-
-                    if (founddata.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
-                    {
-                        int a = 1;
                     }
                 }
             }

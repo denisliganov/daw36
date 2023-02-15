@@ -2,7 +2,6 @@
 
 #include "36.h"
 #include "36_button.h"
-#include "36_params.h"
 #include "36_controls.h"
 #include "36_glyphs.h"
 #include "36_ctrlpanel.h"

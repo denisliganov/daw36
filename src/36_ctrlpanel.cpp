@@ -17,7 +17,6 @@
 #include "36_transport.h"
 #include "36_audio_dev.h"
 #include "36_draw.h"
-#include "36_juce_windows.h"
 #include "36_vu.h"
 #include "36_edit.h"
 #include "36_playhead.h"

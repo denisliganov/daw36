@@ -4,7 +4,9 @@
 
 
 #include "36_note.h"
-#include "36_params.h"
+#include "36_paramnum.h"
+#include "36_paramvol.h"
+#include "36_parampan.h"
 #include "36_keyboard.h"
 #include "36_textinput.h"
 #include "36_events_triggers.h"
@@ -40,8 +42,8 @@ Note::Note(Instrument* i, int note_val)
 
     dev = (Device36*)instr;
 
-    vol = new VolParam("Volume");
-    pan = new PanParam("Panning");
+    vol = new ParamVol("Volume");
+    pan = new ParamPan("Panning");
 
     setNote(note_val);
 

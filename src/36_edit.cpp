@@ -17,9 +17,10 @@
 #include "36_transport.h"
 #include "36_events_triggers.h"
 #include "36_utils.h"
-#include "36_params.h"
 #include "36_snapmenu.h"
 #include "36_keyboard.h"
+#include "36_paramvol.h"
+#include "36_parampan.h"
 
 
 

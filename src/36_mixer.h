@@ -48,7 +48,7 @@ public:
             std::list<Eff*>     effs;
             Instrument*         instr;
             float               inbuff[MAX_BUFF_SIZE*2];
-            BoolParam*          muteparam;
+            bool                muteparam;
             MixChannel*         mchanout;
             int                 mutecount;
             bool                master;
@@ -57,10 +57,10 @@ public:
             Slider36*           panslider;
             Knob*               panKnob;
             Parameter*          panParam;
-            BoolParam*          soloparam;
+            bool                soloparam;
             SendSingle          sends[NUM_SENDS];
             Button36*           solotoggle;
-            VolParam*           volParam;
+            ParamVol*           volParam;
             ChanVU*             vu;
             Slider36*           volslider;
             Knob*               volKnob;

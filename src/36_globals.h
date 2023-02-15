@@ -13,7 +13,6 @@
 class Audio36;
 class AuxKeys;
 class AlertBox;
-class BoolParam;
 class Browser;
 class BpmBox;
 class BrwEntry;
@@ -83,7 +82,7 @@ class Transport;
 class TimeScreen;
 class TextString;
 class TextCursor;
-class VolParam;
+class ParamVol;
 class VstEffect;
 class Vst2Plugin;
 class Vst2Host;

@@ -1,12 +1,9 @@
 
 #include "36_renderwin.h"
-#include "36_slider.h"
-#include "36_knob.h"
-#include "36_params.h"
+#include "36_paramradio.h"
 #include "36_draw.h"
 #include "36.h"
-#include "36_grid.h"
-#include "36_listbox.h"
+#include "36_button.h"
 #include "36_parambox.h"
 
 

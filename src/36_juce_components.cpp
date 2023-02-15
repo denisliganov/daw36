@@ -9,7 +9,7 @@
 #include "36_grid.h"
 #include "36_vu.h"
 #include "36_pattern.h"
-#include "36_params.h"
+#include "36_paramnum.h"
 #include "36_audio_dev.h"
 #include "36_utils.h"
 #include "36_renderer.h"

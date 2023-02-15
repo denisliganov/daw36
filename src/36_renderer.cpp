@@ -3,7 +3,6 @@
 #include "36_renderer.h"
 #include "36_pattern.h"
 #include "36_audio_dev.h"
-#include "36_juce_components.h"
 #include "36.h"
 #include "36_transport.h"
 #include "36_audiomanager.h"

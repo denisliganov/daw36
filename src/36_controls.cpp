@@ -4,7 +4,6 @@
 
 
 
-
 Control::Control()
 {
     param = NULL;

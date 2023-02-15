@@ -89,6 +89,8 @@ protected:
             std::list<std::string>  directories;
             std::vector<ListBoxx*>  listBoxes;
 
+            ListBoxx*           fileBox;
+
             std::list<BrwEntry*>    entries[Browse_Max];
 
             Button36*           btSamples;

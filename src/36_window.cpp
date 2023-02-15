@@ -4,8 +4,6 @@
 #include "36_config.h"
 #include "36_globals.h"
 #include "36_window.h"
-#include "36_juce_components.h"
-#include "36_juce_windows.h"
 #include "36_keyboard.h"
 #include "36_project.h"
 #include "36_config.h"

@@ -5,12 +5,9 @@
 #include "36_textinput.h"
 #include "36_objects.h"
 #include "36_utils.h"
-#include "36_params.h"
 #include "36_keyboard.h"
-#include "36_juce_components.h"
 #include "36_pattern.h"
-
-
+#include "36_draw.h"
 
 
 

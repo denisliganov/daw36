@@ -5,7 +5,6 @@
 #include "36_sampleinstr.h"
 #include "36_events_triggers.h"
 #include "36_note.h"
-#include "36_params.h"
 #include "36_pattern.h"
 #include "36_utils.h"
 #include "36_audio_dev.h"
@@ -15,7 +14,8 @@
 #include "36_draw.h"
 #include "36_renderer.h"
 #include "36_transport.h"
-
+#include "36_paramvol.h"
+#include "36_paramnum.h"
 
 
 //Sample buffer for sinc interpolation

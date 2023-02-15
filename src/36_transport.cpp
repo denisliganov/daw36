@@ -14,8 +14,8 @@
 #include "36_edit.h"
 #include "36_numbox.h"
 #include "36_vst.h"
-#include "36_params.h"
-
+#include "36_paramnum.h"
+#include "36_paramtoggle.h"
 
 
 
@@ -141,6 +141,11 @@ long Transport::getFrameFromTick(float tick)
 float Transport::getTickFromFrame(long frame)
 {
     return float(frame*invertedFPT);
+}
+
+bool Transport::isPlaying()
+{ 
+    return playing->getValue(); 
 }
 
 void Transport::propagateChanges()

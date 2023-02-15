@@ -3,7 +3,7 @@
 #include "36_events_triggers.h"
 #include "36_audio_dev.h"
 #include "36.h"
-#include "36_params.h"
+#include "36_paramnum.h"
 #include "36_env.h"
 #include "36_grid.h"
 #include "36_utils.h"

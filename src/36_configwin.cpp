@@ -2,12 +2,13 @@
 #include "36_configwin.h"
 #include "36_slider.h"
 #include "36_knob.h"
-#include "36_params.h"
 #include "36_draw.h"
 #include "36.h"
 #include "36_grid.h"
 #include "36_listbox.h"
 #include "36_parambox.h"
+#include "36_paramnum.h"
+#include "36_paramradio.h"
 
 
 
@@ -83,7 +84,7 @@ ConfigWinObject::ConfigWinObject()
     putBelow(midiInDevices, 280, 120);
     goTop();
     spaceRight();
-    putRight(buffSizeBox, 200, 20);
+    putRight(buffSizeBox, 200, 30);
     putBelow(showASIOPanel, 200, 20);
     spaceBelow();
     putBelow(chooserBox, 200, chooserBox->getH());
@@ -111,6 +112,7 @@ void ConfigWinObject::handleChildEvent(Gobj * obj,InputEvent & ev)
 
 void ConfigWinObject::handleParamUpdate(Param * param)
 {
+/*
     if(param == hue)
     {
         globalHue = hue->getOutVal();
@@ -137,7 +139,7 @@ void ConfigWinObject::handleParamUpdate(Param * param)
 
         MObject->redraw();
         MGrid->redraw(false, true);
-    }
+    }*/
 
     Gobj::redraw();
 

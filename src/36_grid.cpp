@@ -10,7 +10,6 @@
 #include "36_ctrlpanel.h"
 #include "36_instrpanel.h"
 #include "36_vstinstr.h"
-#include "36_params.h"
 #include "36_history.h"
 #include "36_instr.h"
 #include "36_lane.h"
@@ -26,6 +25,8 @@
 #include "36_dragndrop.h"
 #include "36_macros.h"
 #include "36_events_triggers.h"
+#include "36_paramnum.h"
+#include "36_paramvol.h"
 
 
 

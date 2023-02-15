@@ -3,7 +3,7 @@
 #include "36_history.h"
 #include "36_grid.h"
 #include "36_edit.h"
-#include "36_params.h"
+#include "36_paramnum.h"
 #include "36_element.h"
 #include "36_project.h"
 #include "36_note.h"

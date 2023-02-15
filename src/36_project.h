@@ -1,14 +1,12 @@
 
 #pragma once
 
-
-
 #include <forward_list>
 #include <list>
 
-
 #include "36_globals.h"
 #include "36_config.h"
+
 
 //namespace M {
 

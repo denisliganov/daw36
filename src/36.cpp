@@ -18,7 +18,6 @@
 #include "36_grid.h"
 #include "36_browser.h"
 #include "36_history.h"
-#include "36_juce_windows.h"
 #include "36_mixer.h"
 #include "36_transport.h"
 #include "36_lane.h"
@@ -113,7 +112,6 @@ MainWinObject::MainWinObject()
     InstrControlWidth =     220;
     InstrScrollerWidth =    16;
     InstrHeight =           32;
-    BottomPadHeight =       0; //16;
     FxPanelMaxWidth =       360;
     LeftGap =               26;
     LineNumWidth =          18;

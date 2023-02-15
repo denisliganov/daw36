@@ -3,7 +3,7 @@
 #include "36_grid.h"
 #include "36_draw.h"
 #include "36.h"
-#include "36_params.h"
+#include "36_paramnum.h"
 #include "36_history.h"
 #include "36_playhead.h"
 #include "36_element.h"
@@ -16,7 +16,7 @@
 #include "36_instr.h"
 #include "36_edit.h"
 #include "36_auxkeys.h"
-
+#include "36_paramvol.h"
 
 
 
@@ -319,7 +319,7 @@ void Lane::process(bool leftbt, int mx, int my, unsigned flags)
                 {
                     Note* elNote = (Note*)el;
 
-                    Parameter* locvol = elNote->vol;
+                    Parameter* locvol = (Parameter*)elNote->vol;
 
                     if (setDefault)
                     {

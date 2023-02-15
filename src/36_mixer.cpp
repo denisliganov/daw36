@@ -4,7 +4,8 @@
 #include "36_mixer.h"
 #include "36_slider.h"
 #include "36_button.h"
-#include "36_params.h"
+#include "36_paramvol.h"
+#include "36_parampan.h"
 #include "36_vu.h"
 #include "36_browser.h"
 #include "36_effects.h"
@@ -129,8 +130,8 @@ void MixChannel::init(Instrument* ins)
 
         int slLen = MixChanWidth - 10;
 
-        addParam(volParam = new VolParam("Volume"));
-        addParam(panParam = new PanParam("Panning"));
+        addParam(volParam = new ParamVol("Volume"));
+        addParam(panParam = new ParamPan("Panning"));
 
         addObject(volKnob = new Knob(volParam));
         addObject(panKnob = new Knob(panParam));
@@ -158,8 +159,8 @@ void MixChannel::init(Instrument* ins)
         volKnob = NULL;
         volKnob = NULL;
 
-        addParam(volParam = new VolParam("Volume"));
-        addParam(panParam = new PanParam("Panning"));
+        addParam(volParam = new ParamVol("Volume"));
+        addParam(panParam = new ParamPan("Panning"));
 
         for(int mc = 0; mc < NUM_SENDS; mc++)
         {
@@ -370,14 +371,14 @@ void MixChannel::process(int num_frames, float* out_buff)
         float panv, volv, volL, volR;
 
         bool off = false;
-
+        /*
         if(muteparam != NULL)
         {
-            if(!muteparam->getOutVal() || (SoloMixChannel != NULL && SoloMixChannel != this))
+            if(!muteparam || (SoloMixChannel != NULL && SoloMixChannel != this))
             {
                 off = true;
             }
-        }
+        }*/
 
         bool fill;
 
@@ -596,8 +597,8 @@ void MixChannel::save(XmlElement * xmlChanNode)
 
     //xmlChanNode->addChildElement(amount1->save());
 
-    xmlChanNode->setAttribute(T("Mute"), muteparam->getOutVal() ? 1 : 0);
-    xmlChanNode->setAttribute(T("Solo"), soloparam->getOutVal() ? 1 : 0);
+    xmlChanNode->setAttribute(T("Mute"), muteparam);
+    xmlChanNode->setAttribute(T("Solo"), soloparam);
     xmlChanNode->setAttribute(T("VOffset"), voffs);
 
     for(Eff* eff : effs)
@@ -626,13 +627,13 @@ void MixChannel::save(XmlElement * xmlChanNode)
 void MixChannel::load(XmlElement * xmlNode)
 {
     voffs = xmlNode->getIntAttribute(T("VOffset"));
-    bool bval = xmlNode->getBoolAttribute(T("Mute"));
-    muteparam->SetBoolValue(bval);
-    bval = xmlNode->getBoolAttribute(T("Solo"));
-    soloparam->SetBoolValue(bval);
+    muteparam = xmlNode->getBoolAttribute(T("Mute"));
+    soloparam = xmlNode->getBoolAttribute(T("Solo"));
 
-    if(soloparam->getOutVal())
+    if (soloparam)
+    {
         SoloMixChannel = this;
+    }
 
     XmlElement* xmlParam = NULL;
 

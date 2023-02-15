@@ -11,7 +11,6 @@
 #include "36_globals.h"
 #include "36_grid.h"
 #include "36_history.h"
-#include "36_juce_components.h"
 #include "36_instrpanel.h"
 #include "36_instr.h"
 #include "36_keyboard.h"

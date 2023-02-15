@@ -1,7 +1,6 @@
 
 #include "36_makeup.h"
 #include "36_slider.h"
-#include "36_params.h"
 #include "36_draw.h"
 #include "36.h"
 #include "36_grid.h"

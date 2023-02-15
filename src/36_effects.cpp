@@ -4,31 +4,28 @@
 
 #include <direct.h>
 
-#include "36_effects.h"
-#include "36_menu.h"
-#include "36_mixer.h"
-#include "36_vst.h"
-#include "36_project.h"
-#include "36_history.h"
-#include "36_pattern.h"
-#include "36_params.h"
-#include "36_audio_dev.h"
-#include "36_transport.h"
-#include "36_browser.h"
-#include "36_utils.h"
-#include "36_button.h"
-#include "36_draw.h"
-#include "36_text.h"
-#include "36_config.h"
-#include "36_instr.h"
-#include "36_instrpanel.h"
-#include "36_slider.h"
-#include "36_macros.h"
 #include "36.h"
+#include "36_audio_dev.h"
+#include "36_browser.h"
+#include "36_button.h"
+#include "36_config.h"
+#include "36_draw.h"
 #include "36_devwin.h"
-
-
-
+#include "36_effects.h"
+#include "36_history.h"
+#include "36_menu.h"
+#include "36_macros.h"
+#include "36_mixer.h"
+#include "36_project.h"
+#include "36_params.h"
+#include "36_paramnum.h"
+#include "36_paramtoggle.h"
+#include "36_paramradio.h"
+#include "36_paramselector.h"
+#include "36_transport.h"
+#include "36_text.h"
+#include "36_utils.h"
+#include "36_vst.h"
 
 
 
@@ -297,6 +294,7 @@ Filter1::Filter1()
 
 void Filter1::handleParamUpdate(Param* param)
 {
+    /*
     if(param == f1)
     {
         if(f1->getOutVal())
@@ -318,7 +316,8 @@ void Filter1::handleParamUpdate(Param* param)
             dspCoreCFilter3.setMode(rosic::LadderFilterParameters::BANDPASS_12_12);
         }
     }
-    else if(param == cutoff)
+    else */
+    if(param == cutoff)
     {
         dspCoreCFilter3.setCutoff((double)cutoff->getOutVal());
     }
@@ -332,6 +331,7 @@ void Filter1::handleParamUpdate(Param* param)
         //dspCoreCFilter2.setBandwidth(bandwidth->outval);
         //v_bandwidth->SetValue(bandwidth->outval);
     }
+    /*
     else if(param == x2)
     {
         if(x2->outval == true)
@@ -343,7 +343,7 @@ void Filter1::handleParamUpdate(Param* param)
             dspCoreCFilter3.setOutputStage(2);
         }
     }
-
+    /*
     if(f_master == true)
     {
         Filter1* f = f_next;
@@ -369,7 +369,7 @@ void Filter1::handleParamUpdate(Param* param)
 
             f = f->f_next;
         }
-    }
+    }*/
 }
 
 void Filter1::reset()
@@ -1243,10 +1243,11 @@ void CFlanger::handleParamUpdate(Param* param)
     {
         dspCoreFlanger.setFeedbackFactor(feedback->getOutVal());
     }
+    /*
     else if(param == invert)
     {
         dspCoreFlanger.setNegativePolarity(invert->outval);
-    }
+    }*/
 }
 
 void CFlanger::reset()

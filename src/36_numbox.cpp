@@ -10,7 +10,6 @@
 #include "36_window.h"
 #include "36_text.h"
 #include "36_macros.h"
-#include "36_params.h"
 #include "36_utils.h"
 #include "36_device.h"
 #include "36_instr.h"

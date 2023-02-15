@@ -9,7 +9,7 @@
 #include "36_vstinstr.h"
 #include "36_instrpanel.h"
 #include "36_renderer.h"
-#include "36_params.h"
+#include "36_paramvol.h"
 #include "36_mixer.h"
 #include "36_vu.h"
 #include "36_utils.h"
@@ -78,7 +78,7 @@ Audio36::Audio36(float smpRate)
         JAudManager->setAudioDeviceSetup(setup, false);
     }
 
-    MasterVol = new VolParam("Master volume");
+    MasterVol = new ParamVol("Master volume");
     MasterVol->setEnvDirect(false);
 
     globalMute = mixMute = false;

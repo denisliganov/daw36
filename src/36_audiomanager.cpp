@@ -340,7 +340,7 @@ AudioIODeviceType* JuceAudioDeviceManager::findType (const String& inputName, co
 
     return 0;
 }
-
+/*
 void JuceAudioDeviceManager::addDeviceNamesToComboBox (AComboBox& combo) const
 {
     int n = 0;
@@ -362,6 +362,7 @@ void JuceAudioDeviceManager::addDeviceNamesToComboBox (AComboBox& combo) const
 
     combo.addItem (TRANS("<< no audio device >>"), -1);
 }
+*/
 
 void JuceAudioDeviceManager::getAudioDeviceSetup (AudioDeviceSetup& setup)
 {

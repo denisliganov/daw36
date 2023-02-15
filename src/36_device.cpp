@@ -12,7 +12,6 @@
 #include "36_ctrlpanel.h"
 #include "36_mixer.h"
 #include "36_instrpanel.h"
-#include "36_juce_windows.h"
 #include "36_brwentry.h"
 #include "36_edit.h"
 #include "36_events_triggers.h"

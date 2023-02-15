@@ -2,7 +2,6 @@
 #pragma once
 
 #include "36_globals.h"
-#include "36_juce_components.h"
 
 
 
@@ -339,7 +338,7 @@ public:
         The only reason this is in this class is so that it can divide DSound
         and ASIO devices into labelled sections, which makes it look much neater.
     */
-    void addDeviceNamesToComboBox (AComboBox& combo) const;
+ //   void addDeviceNamesToComboBox (AComboBox& combo) const;
 
     /** Returns a list of the types of device supported.
     */

@@ -12,7 +12,6 @@
 #include "36_instr.h"
 #include "36_vst.h"
 #include "36_effects.h"
-#include "36_params.h"
 #include "36_keyboard.h"
 #include "36_pattern.h"
 #include "36_button.h"
@@ -22,7 +21,6 @@
 #include "36_utils.h"
 #include "36_grid.h"
 #include "36_vu.h"
-#include "36_juce_windows.h"
 #include "36_transport.h"
 #include "36_textinput.h"
 #include "36_edit.h"
@@ -324,9 +322,8 @@ bool Project36::loadProjectData(File chosenFile, LoadThread* thread)
             Octave = xmlMainNode->getIntAttribute(T("Octave"));
 
             // Load and set master volume
-
+/*
             XmlElement* xmlChild = NULL;
-
             forEachXmlChildElementWithTagName(*xmlMainNode, xmlChild, T("Parameter"))
             {
                 String sname = xmlChild->getStringAttribute(T("name"));
@@ -335,7 +332,7 @@ bool Project36::loadProjectData(File chosenFile, LoadThread* thread)
                 {
                 //    MasterVol->Load(xmlChild);
                 }
-            }
+            }*/
 
             // Load all instruments
             forEachXmlChildElementWithTagName(*xmlMainNode, xmlChild, T("Instrument"))

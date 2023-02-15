@@ -23,7 +23,7 @@
 #include "36_grid.h"
 #include "36_edit.h"
 #include "36_keyboard.h"
-#include "36_params.h"
+#include "36_paramvol.h"
 #include "36_slider.h"
 #include "36_knob.h"
 #include "36_parambox.h"
@@ -109,7 +109,7 @@ InstrPanel::InstrPanel(Mixer* mixer)
 
     //addParamWithControl(masterVolume, "sl.vol", masterVolBox = new ParamBox(masterVolume));
 
-    masterVolume = new VolParam("Master");
+    masterVolume = new ParamVol("Master");
 
     addObject(masterVolBox = new ParamBox(masterVolume));
 

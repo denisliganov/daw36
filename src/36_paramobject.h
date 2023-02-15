@@ -37,6 +37,8 @@ public:
             void                goLeft();
             void                goTop();
             void                finalizePuts();
+            void                setObjSpacing(int os) { objSpacing = os; }
+            void                setGroupSpacing(int gs) { groupSpacing = gs; }
 
 protected:
 
