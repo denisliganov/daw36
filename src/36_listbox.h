@@ -29,7 +29,7 @@ protected:
     virtual void                handleMouseWheel(InputEvent& ev);
     virtual void                remap();
 
-private:
+//private:
 
             int                 border;
             int                 currentEntry;

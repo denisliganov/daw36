@@ -156,7 +156,22 @@ void Browser::addEntry(BrwEntry* entry)
     entries[browsingMode].push_back(entry);
 }
 
-void Browser::addSearchDir(std::string dir)
+void Browser::addInternalModules(std::string dir)
+{
+    
+}
+
+void Browser::addPluginsDir(std::string dir, bool folders, bool recursive)
+{
+    
+}
+
+void Browser::addFileBrowser()
+{
+    
+}
+
+void Browser::addSearchDir(std::string dir, bool folders, bool recursive)
 {
     directories.push_back(dir);
 
