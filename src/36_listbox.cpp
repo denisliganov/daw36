@@ -127,7 +127,7 @@ void ListBoxx::remap()
 {
     if (entries.size() * entryHeight > height)
     {
-        vscr->setCoords1(width - 12, headerHeight + 1, 11, height - headerHeight - 2);
+        vscr->setCoords1(width - 12, headerHeight + 1, 12, height - headerHeight - 2);
 
         vscr->updBounds(entries.size() * entryHeight, height, vscr->getOffset());
     }

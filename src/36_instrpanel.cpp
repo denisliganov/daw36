@@ -10,6 +10,7 @@
 #include "36_scroller.h"
 #include "36_vu.h"
 #include "36_mixer.h"
+#include "36_mixchannel.h"
 #include "36_browser.h"
 #include "36_project.h"
 #include "36_utils.h"

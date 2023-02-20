@@ -36,46 +36,47 @@ class BrwEntry : public Gobj
 {
 public:
 
-        BrwEntry() {};
-        BrwEntry(FileType ft, long s, unsigned a, std::string nm, std::string pth);
-        BrwEntry(DevClass dclass, std::string nm, std::string pth, std::string al);
-        BrwEntry(Device36* preset_dev);
+            BrwEntry() {};
+            BrwEntry(FileType ft, long s, unsigned a, std::string nm, std::string pth);
+            BrwEntry(DevClass dclass, std::string nm, std::string pth, std::string al);
+            BrwEntry(Device36* preset_dev);
 
-        virtual ~BrwEntry() {};
+            virtual ~BrwEntry() {};
 
-        int             listIndex;
-        std::string     path;
-        FileType        ftype;
-        long            size;
-        unsigned int    attrs;
-        DevClass        devClass;
-        std::string     alias;
-        long            prindex;
-        Device36*       dev;
-        Browser*        browser;
+            void                handleMouseWheel(InputEvent& ev)    { parent->handleMouseWheel(ev); };
+            void                handleMouseDrag(InputEvent& ev)     { parent->handleMouseDrag(ev); }
+            void                handleMouseDown(InputEvent& ev)     { parent->handleMouseDown(ev); }
+            void                handleMouseUp(InputEvent& ev)       { parent->handleMouseUp(ev); }
 
-        void            handleMouseWheel(InputEvent& ev)    { parent->handleMouseWheel(ev); };
-        void            handleMouseDrag(InputEvent& ev)     { parent->handleMouseDrag(ev); }
-        void            handleMouseDown(InputEvent& ev)     { parent->handleMouseDown(ev); }
-        void            handleMouseUp(InputEvent& ev)       { parent->handleMouseUp(ev); }
+            bool                isGenerator()       {return (devClass == DevClass_GenInternal || devClass == DevClass_GenVst || devClass == DevClass_Invalid);};
+            bool                isNative()          {return (devClass == DevClass_GenInternal || devClass == DevClass_EffInternal);};
+            bool                isExternal()        {return (devClass == DevClass_GenVst || devClass == DevClass_EffVst || devClass == DevClass_Default);};
+            bool                isEffect()          {return (devClass == DevClass_EffInternal || devClass == DevClass_EffVst || devClass == DevClass_Invalid);};
 
-        bool            isGenerator()       {return (devClass == DevClass_GenInternal || devClass == DevClass_GenVst || devClass == DevClass_Invalid);};
-        bool            isNative()          {return (devClass == DevClass_GenInternal || devClass == DevClass_EffInternal);};
-        bool            isExternal()        {return (devClass == DevClass_GenVst || devClass == DevClass_EffVst || devClass == DevClass_Default);};
-        bool            isEffect()          {return (devClass == DevClass_EffInternal || devClass == DevClass_EffVst || devClass == DevClass_Invalid);};
+            ContextMenu*        createContextMenu();
 
-        ContextMenu*    createContextMenu();
+            void                activateMenuItem(std::string item);
 
-        void            activateMenuItem(std::string item);
+            uint32              getModeColor();
+            void                drawDevEntry(Graphics& g, int xo, int ycoord, int w);
+            void                drawFileEntry(Graphics& g, int xo, int ycoord, int w);
+            void                drawSelf(Graphics & g);
 
-        uint32          getModeColor();
-        void            drawDevEntry(Graphics& g, int xo, int ycoord, int w);
-        void            drawFileEntry(Graphics& g, int xo, int ycoord, int w);
-        void            drawSelf(Graphics & g);
+//protected:
+            std::string         alias;
+            unsigned int        attrs;
+            Browser*            browser;
+            DevClass            devClass;
+            Device36*           dev;
+            FileType            ftype;
+            int                 listIndex;
+            std::string         path;
+            long                prindex;
+            long                size;
 };
 
 
-
 FileType GetFileTypeByExtension(std::string extension);
+
 
 

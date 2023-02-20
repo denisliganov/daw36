@@ -13,7 +13,7 @@ class ListBoxx : public Scrolled
 public:
             ListBoxx(std::string name);
 
-            void                addEntry(std::string entry)                     { entries.push_back(entry); }
+            void                addEntry(std::string entry)                     { entries.push_back(entry); remap();}
             void                setList(std::vector<std::string>&  entries_list)  { entries = entries_list; }
             void                setCurrent(int curr)                            { currentEntry = curr; }
             int                 getCurrent()                                    { return currentEntry; }

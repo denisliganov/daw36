@@ -33,11 +33,14 @@ public:
             Browser(std::string dirpath);
            ~Browser();
 
-            void                addSearchDir(std::string dir);
             void                activateMenuItem(std::string item);
             void                addEntry(BrwEntry* entry);
             BrwEntry*           addEntry(DevClass ec, std::string name, std::string path = "", std::string alias ="");
             void                activateEntry(BrwEntry* be);
+            void                addFileBox();
+            void                addSearchDir(std::string dir, bool folders=false, bool recursive=false);
+            void                addPluginsDir(std::string dir, bool folders=false, bool recursive=false);
+            void                addInternalModules(std::string dir);
             ContextMenu*        createContextMenu();
             bool                checkMouseTouching(int mx, int my);
             void                clearVstFile();

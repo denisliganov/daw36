@@ -4,7 +4,6 @@
 #include "36_project.h"
 #include "36_audio_dev.h"
 #include "36_renderer.h"
-#include "36_mixer.h"
 #include "36_ctrlpanel.h"
 #include "36_instrpanel.h"
 #include "36_sampleinstr.h"
@@ -379,7 +378,7 @@ bool Project36::loadProjectData(File chosenFile, LoadThread* thread)
 
                 if(mchan != NULL)
                 {
-                    mchan->load(xmlChild);
+                    //mchan->load(xmlChild);
 
                     forEachXmlChildElementWithTagName(*xmlChild, xmlChildEff, T("Effect"))
                     {
@@ -536,27 +535,12 @@ void Project36::saveProjectData(File chosenFile)
         i->save(xmlInstr);
         xmlProjectMain.addChildElement(xmlInstr);
         XmlElement* xmlMChan = new XmlElement(T("MixChannel"));
-        i->mixChannel->save(xmlMChan);
+        //i->mixChannel->save(xmlMChan);
         xmlProjectMain.addChildElement(xmlMChan);
     }
 
     //
     // Save sends and master
-
-    for(int sc = 0; sc < NUM_SENDS; sc++)
-    {
-        XmlElement* xmlMChan = new XmlElement(T("MixChannel"));
-
-        MMixer->sendChannel[sc]->save(xmlMChan);
-
-        xmlProjectMain.addChildElement(xmlMChan);
-    }
-
-    XmlElement* xmlMChan = new XmlElement(T("MixChannel"));
-
-    MMixer->masterChannel->save(xmlMChan);
-
-    xmlProjectMain.addChildElement(xmlMChan);
 
     // Save patterns, elements
 

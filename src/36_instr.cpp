@@ -7,14 +7,12 @@
 #include "36_edit.h"
 #include "36_pattern.h"
 #include "36_utils.h"
-#include "36_vst.h"
-#include "36_textinput.h"
 #include "36_browser.h"
 #include "36_mixer.h"
+#include "36_mixchannel.h"
 #include "36_audio_dev.h"
 #include "36_menu.h"
 #include "36_draw.h"
-#include "36_slider.h"
 #include "36_button.h"
 #include "36_project.h"
 #include "36_text.h"
@@ -102,13 +100,12 @@ protected:
         {
             Instrument* instr = (Instrument*)parent;
 
-            instr->setMyColor(g, .6f);
+            instr->setMyColor(g, .5f);
 
             fillx(g, 0, 0, width, height);
 
-            instr->setMyColor(g, .8f);
-
-            rectx(g, 0, 0, width, height);
+            //instr->setMyColor(g, .8f);
+            //rectx(g, 0, 0, width, height);
 
             bool wVis = instr->isWindowVisible();
 
@@ -397,6 +394,18 @@ void Instrument::drawSelf(Graphics& g)
     //setc(g, 1.f);
     Gobj::setMyColor(g, 1.f);
     txtfit(g, FontSmall, objName, height+2, 8, width - (height+2));
+
+
+
+    //Colour clr = Colour(100, 110, 110);
+
+    //Colour clr = Colour(Gobj::colorHue, Gobj::colorSat, 1, 1);
+
+    //float s = .4f;
+    //float b = .8f;
+    //float a = 1;
+    //Colour clr = Colour(colorHue, s, b, a);
+    //drawGlassRect1(g, (float)x1, (float)y1, width, height, clr, 1, 8, false, false, false, false);
 
 //    lineH(0, 0, width - 1);
 }

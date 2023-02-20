@@ -100,16 +100,6 @@ void Knob::remap()
 
 void Knob::drawSelf(Graphics& g)
 {
-/*
-    if(parentImage == NULL)
-    {
-        parentImage = window->createSnapshot(x1, y1, width, height);
-    }
-    else
-    {
-        gDrawImageRegion(g, parentImage, x1, y1, dwidth, dheight);
-    }*/
-
     Instrument* instr = dynamic_cast<Instrument*>(parent);
 
     fill(g, .3f);
@@ -150,7 +140,9 @@ void Knob::drawSelf(Graphics& g)
         float singleAngle = 1.f/(2*PI);
         float ratio = 1.f/(2*PI*rad);
         float singlePixelAngle = ratio*2*PI;
+
         gSetMonoColor(g, .2f);
+
         gPie(g, x1+1, y1+1, width-2, height-2, PI + angleOffset + oa, PI + angleOffset + oa);
     }
 

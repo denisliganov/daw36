@@ -64,8 +64,11 @@ void MakeUpObject::drawSelf(Graphics& g)
     drawGlassRect1(g, (float)390, (float)80, 50, 60, clr, 0, 0, true, true, true, true);
 
 
+
+
+
     clr = Colour(140, 140, 220);
-    drawGlassRect(g, (float)250, (float)200, 220, 80, clr, 1, 28, false, false, false, false);
+    drawGlassRect(g, (float)250, (float)200, 220, 80, clr, 1, 20, false, false, false, false);
 
 
     drawGlassRound(g,  50, 200, 60, Colour(125, 125, 100), 1);

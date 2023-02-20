@@ -74,5 +74,7 @@ void BrowserList::drawSelf(Graphics& g)
     g.restoreState();
 }
 
-
+void BrowserList::handleMouseDown(InputEvent& ev)
+{
+}
 

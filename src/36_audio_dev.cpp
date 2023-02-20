@@ -11,6 +11,7 @@
 #include "36_renderer.h"
 #include "36_paramvol.h"
 #include "36_mixer.h"
+#include "36_mixchannel.h"
 #include "36_vu.h"
 #include "36_utils.h"
 #include "36.h"

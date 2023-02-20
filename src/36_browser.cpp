@@ -2,6 +2,7 @@
 
 #include "36_globals.h"
 #include "36_browser.h"
+#include "36_browserlist.h"
 #include "36_scroller.h"
 #include "36_utils.h"
 #include "36_effects.h"
@@ -156,17 +157,39 @@ void Browser::addEntry(BrwEntry* entry)
     entries[browsingMode].push_back(entry);
 }
 
+void Browser::addFileBox()
+{
+    fileBox = new BrowserList("Browse files");
+
+    
+}
+
 void Browser::addInternalModules(std::string dir)
 {
-    
+    BrowserList* intList = new BrowserList("Internal modules");
+
+
+
+/*
+    addEntry(DevClass_EffInternal, "1-band Equalizer",  "",     "eff.eq1");
+    addEntry(DevClass_EffInternal, "3-band Equalizer",  "",     "eff.eq3");
+    addEntry(DevClass_EffInternal, "Graphic Equalizer", "",     "eff.grapheq");
+    addEntry(DevClass_EffInternal, "Delay",             "",     "eff.delay");
+    addEntry(DevClass_EffInternal, "Compressor",        "",     "eff.comp");
+    addEntry(DevClass_EffInternal, "Reverb",            "",     "eff.reverb");
+    addEntry(DevClass_EffInternal, "Chorus",            "",     "eff.chorus");
+    addEntry(DevClass_EffInternal, "Flanger",           "",     "eff.flanger");
+    addEntry(DevClass_EffInternal, "Phaser",            "",     "eff.phaser");
+    addEntry(DevClass_EffInternal, "WahWah",            "",     "eff.wah");
+    addEntry(DevClass_EffInternal, "Distortion",        "",     "eff.dist");
+    addEntry(DevClass_EffInternal, "BitCrusher",        "",     "eff.bitcrush");
+    addEntry(DevClass_EffInternal, "Stereoizer",        "",     "eff.stereo");
+    addEntry(DevClass_EffInternal, "Filter1",           "",     "eff.filter1");
+    addEntry(DevClass_EffInternal, "Tremolo",           "",     "eff.tremolo");
+    */
 }
 
 void Browser::addPluginsDir(std::string dir, bool folders, bool recursive)
-{
-    
-}
-
-void Browser::addFileBrowser()
 {
     
 }

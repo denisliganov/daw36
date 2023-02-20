@@ -7,7 +7,7 @@
 #include "36_draw.h"
 #include "36_device.h"
 #include "36_instr.h"
-#include "36_mixer.h"
+
 
 
 
@@ -122,7 +122,7 @@ std::string Slider36::getHint()
 void Slider36::drawSelf(Graphics& g)
 {
     Instrument* instr = dynamic_cast<Instrument*>(parent);
-    MixChannel* mc = dynamic_cast<MixChannel*>(parent);
+    //MixChannel* mc = dynamic_cast<MixChannel*>(parent);
 
     fill(g, .4f);
 

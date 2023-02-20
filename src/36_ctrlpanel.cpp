@@ -11,7 +11,6 @@
 #include "36_menu.h"
 #include "36_button.h"
 #include "36_sampleinstr.h"
-#include "36_mixer.h"
 #include "36_project.h"
 #include "36_pattern.h"
 #include "36_transport.h"
