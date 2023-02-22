@@ -9,8 +9,6 @@ ListBoxx::ListBoxx(std::string name)
 
     setFontId(FontSmall);
 
-    border = 1;
-
     scrWidth = 12;
 
     entryHeight = headerHeight;
@@ -18,10 +16,10 @@ ListBoxx::ListBoxx(std::string name)
 
 void ListBoxx::drawSelf(Graphics& g)
 {
-    setc(g, .3f);
+    setc(g, .25f);
     fillx(g, 0, headerHeight, width, height - headerHeight);
 
-    setc(g, 0.2f);
+    setc(g, 0.15f);
     rectx(g, 0, headerHeight, width, height - headerHeight);
 
     setc(g, 0.4f);

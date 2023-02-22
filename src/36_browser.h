@@ -79,6 +79,9 @@ public:
 protected:
 
             int                 brwIndex;
+            Button36*           btSamples;
+            Button36*           btDevices;
+            Button36*           btPlugins;
             BrwEntry*           currEntry;
             int                 currIndex;
             Instrument*         ipreview;
@@ -96,14 +99,10 @@ protected:
 
             std::list<BrwEntry*>    entries[Browse_Max];
 
-            Button36*           btSamples;
-            Button36*           btDevices;
-            Button36*           btPlugins;
-
-            ListBoxx*           sampleList1;
-            ListBoxx*           vstList1;
-            ListBoxx*           internalList1;
-            ListBoxx*           projectsList1;
+            BrowserList*        sampleList1;
+            BrowserList*        vstList1;
+            BrowserList*        internalList1;
+            BrowserList*        projectsList1;
 
 private:
             

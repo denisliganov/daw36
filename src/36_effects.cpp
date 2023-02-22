@@ -33,7 +33,6 @@
 Eff::Eff()
 {
     muteCount = 0;
-    visible = false;
     bypass = false;
     devIdx = -1;
 
@@ -84,8 +83,8 @@ void Eff::drawSelf(Graphics& g)
 
     int th = gGetTextHeight(FontSmall);
 
-    setc(g, .0f);
-    txtfit(g, FontSmall, objName, 3, th - 2, width - 2);
+    //setc(g, .0f);
+    //txtfit(g, FontSmall, objName, 3, th - 2, width - 2);
 
     setc(g, 1.f);
     txtfit(g, FontSmall, objName, 1, th - 4, width - 2);

@@ -25,17 +25,17 @@ typedef enum EntryType
 }EntryType;
 
 
-class ListEntry : public Gobj
+class BrwListEntry : public Gobj
 {
 public:
 
-            ListEntry(std::string name, std::string path);
+            BrwListEntry(std::string name, std::string path, EntryType entry_type);
 
 protected:
 
-            bool                isDirectory;
+            std::string         filePath;
+            EntryType           type;
 
-            std::string         type;
 };
 
 
@@ -44,13 +44,19 @@ class BrowserList  : public ListBoxx
 public:
 
             BrowserList(std::string name);
+            void                addEntry(BrwListEntry* entry)                     { brwEntries.push_back(entry); remap(); }
+            void                setList(std::vector<BrwListEntry*>&  entries_list)  { brwEntries = entries_list;  remap(); }
+            void                setCurrent(int curr)                            { currentEntry = curr; }
+            int                 getCurrent()                                    { return currentEntry; }
+            std::string         getCurrentName()                                { return brwEntries[currentEntry]; }
 
 protected:
 
             void                drawSelf(Graphics& g);
             void                handleMouseDown(InputEvent & ev);
 
-            std::vector<ListEntry*>     brwEntries;
+            std::vector<BrwListEntry*>     brwEntries;
+            int                 currentEntry;
 };
 
 

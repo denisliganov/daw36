@@ -3,6 +3,19 @@
 
 
 
+
+
+BrwListEntry::BrwListEntry(std::string name, std::string path, EntryType entry_type)
+{
+    setObjName(name);
+
+    filePath = path;
+
+    type = entry_type;
+}
+
+
+
 BrowserList::BrowserList(std::string name) : ListBoxx(name)
 {
     
@@ -32,7 +45,7 @@ void BrowserList::drawSelf(Graphics& g)
     int scrWidth = 10;
     int entryNum = 0;
 
-    for (auto e : entries)
+    for (auto entry : brwEntries)
     {
         if (yoffs + headerHeight >= 0)
         {
@@ -58,7 +71,7 @@ void BrowserList::drawSelf(Graphics& g)
             //lineH(g, yoffs + y, 0, w);
 
             setc(g, 1.f);
-            txtfit(g, fontId, e, 4, yoffs + y + entryHeight - 4, w - 2);
+            txtfit(g, fontId, entry->getObjName(), 4, yoffs + y + entryHeight - 4, w - 2);
         }
         else if (yoffs > (vscr->getOffset() + vscr->getVisiblePart()))
         {
@@ -76,5 +89,7 @@ void BrowserList::drawSelf(Graphics& g)
 
 void BrowserList::handleMouseDown(InputEvent& ev)
 {
+    
 }
+
 

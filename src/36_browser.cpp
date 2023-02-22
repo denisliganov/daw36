@@ -166,9 +166,9 @@ void Browser::addFileBox()
 
 void Browser::addInternalModules(std::string dir)
 {
-    BrowserList* intList = new BrowserList("Internal modules");
+    internalList1 = new BrowserList("Internal modules");
 
-
+    
 
 /*
     addEntry(DevClass_EffInternal, "1-band Equalizer",  "",     "eff.eq1");
@@ -358,10 +358,11 @@ void Browser::drawSelf(Graphics& g)
 {
     //setc(g, 0.2f);
     //gFillRect(g, x1, y1 + MainLineHeight + 8, x2, y2);
-    setc(g, 0.3f);
+
+    setc(g, 0.15f);
     fillx(g, 0, MainLineHeight + 1, width, height);
 
-    setc(g, 0.25f);
+    setc(g, 0.2f);
     fillx(g, 0, 0, width, MainLineHeight);
 
     setc(g, 0.28f);
