@@ -95,7 +95,7 @@ protected:
             std::list<std::string>  directories;
             std::vector<ListBoxx*>  listBoxes;
 
-            ListBoxx*           fileBox;
+            BrowserList*        fileBox;
 
             std::list<BrwEntry*>    entries[Browse_Max];
 

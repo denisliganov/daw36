@@ -13,7 +13,7 @@
 
 typedef enum EntryType
 {
-    Entry_Unknown           = 0x1,
+    Entry_Default           = 0x1,
     Entry_Directory         = 0x2,
     Entry_Wave              = 0x4,
     Entry_VST               = 0x8,
@@ -29,7 +29,9 @@ class BrwListEntry : public Gobj
 {
 public:
 
-            BrwListEntry(std::string name, std::string path, EntryType entry_type);
+            BrwListEntry(std::string name, std::string path="", EntryType entry_type=Entry_Default);
+            EntryType           getType()   { return type; }
+            std::string         getPath()   { return filePath; }
 
 protected:
 
@@ -48,15 +50,21 @@ public:
             void                setList(std::vector<BrwListEntry*>&  entries_list)  { brwEntries = entries_list;  remap(); }
             void                setCurrent(int curr)                            { currentEntry = curr; }
             int                 getCurrent()                                    { return currentEntry; }
-            std::string         getCurrentName()                                { return brwEntries[currentEntry]; }
+            BrwListEntry*       getCurrentName()                                { return brwEntries[currentEntry]; }
 
 protected:
 
             void                drawSelf(Graphics& g);
             void                handleMouseDown(InputEvent & ev);
+            void                handleMouseWheel(InputEvent& ev);
+            void                handleMouseUp(InputEvent& ev);
+    virtual void                remap();
+            void                scanDirForFiles(std::string scan_path, std::string extension, bool recurs);
 
             std::vector<BrwListEntry*>     brwEntries;
             int                 currentEntry;
+
+            std::string         currDir;
 };
 
 

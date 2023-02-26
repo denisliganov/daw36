@@ -150,6 +150,7 @@
     <ClCompile Include="src\36_audiomanager.cpp" />
     <ClCompile Include="src\36_audio_dev.cpp" />
     <ClCompile Include="src\36_auxkeys.cpp" />
+    <ClCompile Include="src\36_browserlist.cpp" />
     <ClCompile Include="src\36_dropbox.cpp" />
     <ClCompile Include="src\36_edit.cpp" />
     <ClCompile Include="src\36_devwin.cpp" />
@@ -184,6 +185,7 @@
     <ClCompile Include="src\36_makeup.cpp" />
     <ClCompile Include="src\36_menu.cpp" />
     <ClCompile Include="src\36_midi.cpp" />
+    <ClCompile Include="src\36_mixchannel.cpp" />
     <ClCompile Include="src\36_mixer.cpp" />
     <ClCompile Include="src\36_note.cpp" />
     <ClCompile Include="src\36_numbox.cpp" />
@@ -339,6 +341,7 @@
     <ClInclude Include="src\36_audiomanager.h" />
     <ClInclude Include="src\36_audio_dev.h" />
     <ClInclude Include="src\36_auxkeys.h" />
+    <ClInclude Include="src\36_browserlist.h" />
     <ClInclude Include="src\36_dropbox.h" />
     <ClInclude Include="src\36_edit.h" />
     <ClInclude Include="src\36_devwin.h" />
@@ -376,6 +379,7 @@
     <ClInclude Include="src\36_menu.h" />
     <ClInclude Include="src\36_midi.h" />
     <ClInclude Include="src\36_midi_def.h" />
+    <ClInclude Include="src\36_mixchannel.h" />
     <ClInclude Include="src\36_mixer.h" />
     <ClInclude Include="src\36_note.h" />
     <ClInclude Include="src\36_numbox.h" />

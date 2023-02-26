@@ -35,7 +35,9 @@ typedef enum FontId
     void    gLoadImages();
     void    gLoadFonts();
     Font*   gGetFontById(FontId id);
+    int     gTextS(Graphics& g, FontId fontId, String str, int x, int y);
     int     gText(Graphics& g, FontId fontId, std::string str, int x, int y);
+    void    gTextFitS(Graphics& g, FontId fontId, String str, int x, int y, int maxwidth);
     void    gTextFit(Graphics& g, FontId fontId, std::string str, int x, int y, int maxwidth);
     int     gGetTextWidth(FontId fontId, std::string str);
     int     gGetTextHeight(FontId fontId);

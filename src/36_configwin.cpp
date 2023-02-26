@@ -1,4 +1,6 @@
 
+
+#include "36_audiomanager.h"
 #include "36_configwin.h"
 #include "36_slider.h"
 #include "36_knob.h"
@@ -50,8 +52,10 @@ ConfigWinObject::ConfigWinObject()
     Gobj::addObject(chooserBox = new RadioBox(interpolationSelect));
 
     Gobj::addObject(outputDevices = new ListBoxx("Output devices"));
-                outputDevices->addEntry("Output Device 1");
-                outputDevices->addEntry("Output Device 2");
+//                outputDevices->addEntry("Output Device 1");
+//                outputDevices->addEntry("Output Device 2");
+
+    JAudManager->addDeviceNamesToListBox(*outputDevices);
 
     showASIOPanel = new Button36(false, "Show ASIO panel");
 

@@ -1,9 +1,9 @@
 
 #include "36_audiomanager.h"
 #include "36_audio_dev.h"
+#include "36_listbox.h"
 #include "36_config.h"
-
-
+#include "36_utils.h"
 
 
 
@@ -340,6 +340,7 @@ AudioIODeviceType* JuceAudioDeviceManager::findType (const String& inputName, co
 
     return 0;
 }
+
 /*
 void JuceAudioDeviceManager::addDeviceNamesToComboBox (AComboBox& combo) const
 {
@@ -363,6 +364,45 @@ void JuceAudioDeviceManager::addDeviceNamesToComboBox (AComboBox& combo) const
     combo.addItem (TRANS("<< no audio device >>"), -1);
 }
 */
+
+void JuceAudioDeviceManager::addDeviceNamesToListBox (ListBoxx& lb) const
+{
+    int n = 0;
+
+    for (int i = 0; i < availableDeviceTypes.size(); ++i)
+    {
+        AudioIODeviceType* const type = availableDeviceTypes[i];
+
+        //if (availableDeviceTypes.size() > 1)
+        //    combo.addSectionHeading (type->getTypeName() + T(" devices:"));
+
+        const StringArray names (type->getDeviceNames (useInputNames));
+
+        for (int j = 0; j < names.size(); ++j)
+        {
+            int l = names[j].length();
+
+            //char lenStr[100];
+            //Num2String(l, lenStr);
+
+            char* nameString = (char*)malloc(l + 1);
+
+            nameString[l] = 0;
+
+            String s = names[j];
+
+            names[j].copyToBuffer((char*)nameString, l);
+
+            lb.addEntry(nameString);
+
+           // free(nameString);
+        }
+
+        lb.addEntry("---");
+    }
+
+    //lb.addItem (TRANS("<< no audio device >>"), -1);
+}
 
 void JuceAudioDeviceManager::getAudioDeviceSetup (AudioDeviceSetup& setup)
 {

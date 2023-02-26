@@ -10,9 +10,9 @@
 
 class JuceAudioCallback : public AudioIODeviceCallback
 {
-    void audioDeviceStopped();
-    void audioDeviceAboutToStart (AudioIODevice* device);
-    void audioDeviceIOCallback (const float** inputChannelData, int totalNumInputChannels, float** outputChannelData, int totalNumOutputChannels, int numSamples);
+            void                audioDeviceStopped();
+            void                audioDeviceAboutToStart (AudioIODevice* device);
+            void                audioDeviceIOCallback (const float** inputChannelData, int totalNumInputChannels, float** outputChannelData, int totalNumOutputChannels, int numSamples);
 };
 
 
@@ -339,6 +339,8 @@ public:
         and ASIO devices into labelled sections, which makes it look much neater.
     */
  //   void addDeviceNamesToComboBox (AComboBox& combo) const;
+
+    void addDeviceNamesToListBox(ListBoxx& lb) const;
 
     /** Returns a list of the types of device supported.
     */

@@ -109,10 +109,8 @@ Browser::Browser(std::string dirpath)
 
     setViewMask(FType_Unknown | FType_VST | FType_Native | FType_Wave | FType_Projects);
 
-    addObject(fileBox = new ListBoxx("File browser"));
+    addObject(fileBox = new BrowserList("File browser"));
 
-    fileBox->addEntry("12345");
-    fileBox->addEntry("67890");
 
     // Init internal and external devices
 
@@ -747,7 +745,8 @@ void Browser::remap()
     }
 
     int xLists = cx + cw + 20;
-    int fileBrwWidth = 250;
+
+    int fileBrwWidth = 300;
 
     confine(xLists, cy, width - fileBrwWidth, height); // no args -> reset bounds
 

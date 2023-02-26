@@ -11,7 +11,7 @@ ListBoxx::ListBoxx(std::string name)
 
     scrWidth = 12;
 
-    entryHeight = headerHeight;
+    entryHeight = textHeight + 5;
 }
 
 void ListBoxx::drawSelf(Graphics& g)
@@ -19,8 +19,8 @@ void ListBoxx::drawSelf(Graphics& g)
     setc(g, .25f);
     fillx(g, 0, headerHeight, width, height - headerHeight);
 
-    setc(g, 0.15f);
-    rectx(g, 0, headerHeight, width, height - headerHeight);
+    //setc(g, 0.15f);
+    //rectx(g, 0, headerHeight, width, height - headerHeight);
 
     setc(g, 0.4f);
     fillx(g, 0, 0, width, headerHeight - 2);
@@ -125,9 +125,9 @@ void ListBoxx::remap()
 {
     if (entries.size() * entryHeight > height)
     {
-        vscr->setCoords1(width - 12, headerHeight + 1, 12, height - headerHeight - 2);
+        vscr->setCoords1(width - 12, headerHeight, 12, height - (headerHeight));
 
-        vscr->updBounds(entries.size() * entryHeight, height, vscr->getOffset());
+        vscr->updBounds(entries.size() * entryHeight + 3*entryHeight, height, vscr->getOffset());
     }
     else
     {

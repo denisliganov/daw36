@@ -30,7 +30,8 @@
 
 #include <mutex>
 
-//namespace M {
+
+
 
 JuceAudioDeviceManager*     JAudManager = NULL;
 JuceAudioCallback*          JAudCallBack = NULL;
@@ -582,6 +583,4 @@ void Audio36::initMetronome()
 
     beatSample = new Sample((float*)MetroWavs::beatwav, NULL, sf_info);
 }
-
-//}
 

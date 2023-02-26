@@ -108,7 +108,7 @@ MainWinObject::MainWinObject()
     AuxCtrlWidth =          0;
     AuxHeight =             40;
     CtrlPanelHeight =       50;
-    GridScrollWidth =       32;
+    GridScrollWidth =       16;
     InstrControlWidth =     220;
     InstrScrollerWidth =    16;
     InstrHeight =           32;

@@ -15,6 +15,7 @@ class AuxKeys;
 class AlertBox;
 class Browser;
 class BpmBox;
+class BrowserList;
 class BrwEntry;
 class Button36;
 class ChanVU;
@@ -170,6 +171,8 @@ extern HelperPanel*     MHelperPanel;
 extern Browser*         MBrowser;
 extern Pattern*         MPattern;
 extern TextCursor*      MCursor;
+
+extern JuceAudioDeviceManager*     JAudManager;
 
 extern MixChannel*      SoloMixChannel;
 extern Instrument*      SoloInstr;

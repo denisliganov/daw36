@@ -80,7 +80,17 @@ int gText(Graphics& g, FontId fontId, std::string str, int x, int y)
     g.drawSingleLineText(s, x, y);
 
     return font->getStringWidth(s);
+}
 
+int gTextS(Graphics& g, FontId fontId, String str, int x, int y)
+{
+    Font* font = gGetFontById(fontId);
+
+    g.setFont(*font);
+
+    g.drawSingleLineText(str, x, y);
+
+    return font->getStringWidth(str);
 }
 
 void gTextFit(Graphics& g, FontId fontId, std::string str, int x, int y, int maxwidth)
@@ -107,6 +117,33 @@ void gTextFit(Graphics& g, FontId fontId, std::string str, int x, int y, int max
     gText(g, fontId, str1, x, y);
 }
 
+void gTextFitS(Graphics& g, FontId fontId, String str, int x, int y, int maxwidth)
+{
+    Font* font = gGetFontById(fontId);
+    int wi = font->getStringWidth(str);
+    int ww = font->getStringWidth(String(".."));
+
+    int pos = str.length() - 1;
+
+    String str1 = str;
+
+    while((wi > (maxwidth - ww)) && pos-- >= 0)
+    {
+        int sw = font->getStringWidth(str1.substring(pos, pos));
+
+        wi -= sw;
+
+        str1 = str1.substring(0, pos - 1);
+    }
+
+    if(pos >= 0 && pos < str.length())
+    {
+        str1 += "..";
+    }
+
+    gTextS(g, fontId, str1, x, y);
+}
+
 int gNoteString(Graphics& g, int x, int y, int note, bool relative)
 {
     bool neg = false;
@@ -131,7 +168,7 @@ int gNoteString(Graphics& g, int x, int y, int note, bool relative)
         }
     }
 
-    int nw = gText(g, FontSmall, note_table[abs(nnum)], x, y);
+    int nw = gText(g, FontSmall, (std::string)note_table[abs(nnum)], x, y);
 
     char oct[3];
 
@@ -144,7 +181,7 @@ int gNoteString(Graphics& g, int x, int y, int note, bool relative)
         oct[2] = 0;
     }
 
-    nw += gText(g, FontSmall, oct, x + nw, y);
+    nw += gText(g, FontSmall, (std::string)oct, x + nw, y);
 
     return nw;
 }
@@ -175,7 +212,7 @@ Image* gGetTextImage(Graphics& g, FontId fontId, const char* text, uint32 color)
 
         imgContext.setColour(Colour(color));
 
-        gText(imgContext, fontId, text, 0, (int)(gGetTextHeight(fontId)));
+        gText(imgContext, fontId, (std::string)text, 0, (int)(gGetTextHeight(fontId)));
 
         return image;
     }
