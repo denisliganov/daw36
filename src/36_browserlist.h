@@ -60,6 +60,7 @@ protected:
             void                handleMouseDown(InputEvent & ev);
             void                handleMouseWheel(InputEvent& ev);
             void                handleMouseUp(InputEvent& ev);
+            void                handleMouseDrag(InputEvent & ev);
     virtual void                remap();
             void                scanDirForFiles(std::string scan_path, std::string extension, bool recurs);
 

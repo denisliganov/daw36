@@ -42,6 +42,7 @@ public:
             void                hideFX();
             bool                isFxShowing()   { return fxShowing; }
             Instrument*         loadInstrFromBrowser(BrwEntry* fdi);
+            Instrument*         loadInstrFromNewBrowser(BrwListEntry* ble);
             VstInstr*           loadVst(const char* path, VstInstr* otherVst);
             Sample*             loadSample(const char* path);
             void                placeBefore(Instrument* instr, Instrument* before);

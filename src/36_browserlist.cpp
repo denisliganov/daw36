@@ -2,7 +2,7 @@
 #include "36_browserlist.h"
 #include "36_config.h"
 #include "36_utils.h"
-
+#include "36.h"
 
 
 BrwListEntry::BrwListEntry(std::string name, std::string path, EntryType entry_type)
@@ -76,11 +76,9 @@ void BrowserList::drawSelf(Graphics& g)
             //setc(g, 0.2f);
             //lineH(g, yoffs + y, 0, w);
 
-            if (entry->getType() == Entry_Directory)
-            {
-                setc(g, 1.f);
-            }
-            else if (entry->getType() == Entry_Wave)
+            setc(g, 1.f);
+
+            if (entry->getType() == Entry_Wave)
             {
                 setc(g, 0xff8AFF8A);
             }
@@ -88,12 +86,20 @@ void BrowserList::drawSelf(Graphics& g)
             {
                 setc(g, 0xff8A8AFF);
             }
-            else
+            else if (entry->getType() == Entry_Default)
             {
                 setc(g, .8f);
             }
 
-            txtfit(g, fontId, entry->getObjName(), 4, yoffs + y + entryHeight - 4, w - 2);
+            int xc = 10;
+            if (entry->getType() == Entry_LevelDirectory)
+            {
+                xc = 5;
+            }
+
+            txtfit(g, fontId, entry->getObjName(), xc, yoffs + y + entryHeight - 4, w - 2);
+
+
         }
         else if (yoffs > (vscr->getOffset() + vscr->getVisiblePart()))
         {
@@ -144,19 +150,25 @@ void BrowserList::handleMouseWheel(InputEvent& ev)
 
 void BrowserList::composeList()
 {
-    addEntry(new BrwListEntry("@", "", Entry_DiskSelector));
+    addEntry(new BrwListEntry("***", "", Entry_DiskSelector));
 
     std::string s = currDir;
     std::string::size_type pos1 = currDir.find_first_of("\\");
 
+    std::string::size_type pos0 = 0;
+
     while (pos1 != std::string::npos)
     {
-        std::string part = s.substr(0, pos1);
-        
-        addEntry(new BrwListEntry(part, "", Entry_LevelDirectory));
+        pos0 += pos1;
+
+        std::string path = currDir.substr(0, pos0) + "\\";
+
+        pos0++;
+
+        addEntry(new BrwListEntry("\\" + s.substr(0, pos1) + "\\", path, Entry_LevelDirectory));
 
         s = s.substr(pos1 + 1);
-        
+
         pos1 = s.find_first_of("\\");
     }
 
@@ -169,10 +181,12 @@ void BrowserList::handleMouseUp(InputEvent& ev)
 {
     if (currentEntry >= 0)
     {
-        if (brwEntries[currentEntry]->getType() == Entry_Directory)
+        if (brwEntries[currentEntry]->getType() == Entry_Directory ||
+            brwEntries[currentEntry]->getType() == Entry_LevelDirectory ||
+            brwEntries[currentEntry]->getType() == Entry_DiskDrive)
         {
             std::string prevDir = "";
-    
+
             if (brwEntries[currentEntry]->getObjName() == "[..]")
             {
                 std::string::size_type pos = currDir.find_last_of("\\");
@@ -182,7 +196,6 @@ void BrowserList::handleMouseUp(InputEvent& ev)
                     currDir.pop_back();
 
                     pos = currDir.find_last_of("\\");
-                  //  int a = 1;
                 }
 
                 prevDir = currDir.substr(pos + 1); // the part after the slash
@@ -192,18 +205,60 @@ void BrowserList::handleMouseUp(InputEvent& ev)
             {
                 currDir = brwEntries[currentEntry]->getPath();
             }
-    
+
             deleteEntries();
 
-            currDir += "\\";
+            //currDir += "\\";
 
             composeList();
-    
+
+            remapAndRedraw();
+        }
+        else if (brwEntries[currentEntry]->getType() == Entry_DiskSelector)
+        {
+            deleteEntries();
+
+            long drv = GetLogicalDrives();
+
+            long check = 1;
+            int num = 1;
+            char letter = 0x41;
+            char lstr[4] = {0, ':', '\\', 0};
+
+            while(num < 32)
+            {
+                if(check & drv)
+                {
+                    lstr[0] = letter;
+
+                    addEntry(new BrwListEntry(lstr, lstr, Entry_DiskDrive));
+                }
+
+                letter++;
+                check *= 2;
+                num++;
+            }
+
             remapAndRedraw();
         }
     }
 
     parent->handleChildEvent(this, ev);
+}
+
+void BrowserList::handleMouseDrag(InputEvent & ev)
+{
+    if (currentEntry >= 0)
+    {
+        if (brwEntries[currentEntry]->getType() == Entry_Wave ||
+            brwEntries[currentEntry]->getType() == Entry_DLL)
+        {
+            if(MObject->canDrag(this))
+            {
+                MObject->dragAdd(brwEntries[currentEntry], ev.mouseX, ev.mouseY);
+            }
+        }
+    }
 }
 
 void BrowserList::remap()
@@ -241,17 +296,15 @@ void BrowserList::scanDirForFiles(std::string scan_path, std::string extension, 
                 {
                     std::string fname = founddata.cFileName;
 
-                    EntryType etype = Entry_Directory;
-
                     if (strcmp(founddata.cFileName, "..") == 0)
                     {
-                        //etype = Entry_LevelDirectory;
-                    }
-                    else
-                    {
+                        continue;
                     }
 
-                    addEntry(new BrwListEntry("[" + fname + "]", scan_path + fname, etype));
+                    EntryType etype = Entry_Directory;
+
+                    //addEntry(new BrwListEntry("[" + fname + "]", scan_path + fname + "\\", etype));
+                    addEntry(new BrwListEntry(fname, scan_path + fname + "\\", etype));
 
                     if(recurs)
                     {

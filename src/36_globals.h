@@ -17,6 +17,7 @@ class Browser;
 class BpmBox;
 class BrowserList;
 class BrwEntry;
+class BrwListEntry;
 class Button36;
 class ChanVU;
 class Control;

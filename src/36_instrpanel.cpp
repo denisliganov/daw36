@@ -3,6 +3,7 @@
 
 #include "rosic/rosic.h"
 
+#include "36_browserlist.h"
 #include "36_globals.h"
 #include "36_instrpanel.h"
 #include "36_vstinstr.h"
@@ -471,6 +472,7 @@ bool InstrPanel::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
 
 bool InstrPanel::handleObjDrop(Gobj * obj, int mx, int my, unsigned int flags)
 {
+    BrwListEntry* ble = dynamic_cast<BrwListEntry*>(obj);
     BrwEntry* be = dynamic_cast<BrwEntry*>(obj);
 
     Instrument* i = NULL;
@@ -478,6 +480,10 @@ bool InstrPanel::handleObjDrop(Gobj * obj, int mx, int my, unsigned int flags)
     if(be)
     {
         i = loadInstrFromBrowser(be);
+    }
+    else if (ble)
+    {
+        i = loadInstrFromNewBrowser(ble);
     }
     else
     {
@@ -573,6 +579,36 @@ Instrument* InstrPanel::loadInstrFromBrowser(BrwEntry * be)
     else 
     {
         VstInstr* vstgen = addVst(be->path.data(), NULL);
+
+        ni = (Instrument*)vstgen;
+    }
+
+    if(ni)
+    {
+        setCurrInstr(ni);
+    }
+
+    return ni;
+}
+
+Instrument* InstrPanel::loadInstrFromNewBrowser(BrwListEntry* ble)
+{
+    if (getNumInstrs() >= 36)
+    {
+        MWindow->showAlertBox("Can't load more than 36 instruments");
+
+        return NULL;
+    }
+
+    Instrument* ni = NULL;
+
+    if (ble->getType() == Entry_Wave)
+    {
+        ni = (Instrument*)addSample(ble->getPath().data());
+    }
+    else if (ble->getType() == Entry_DLL)
+    {
+        VstInstr* vstgen = addVst(ble->getPath().data(), NULL);
 
         ni = (Instrument*)vstgen;
     }
