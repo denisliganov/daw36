@@ -448,11 +448,6 @@ void Device36::savePreset()
 
         nmstr.copyToBuffer(name, 25);
         savePresetAs(name);
-
-        if(MBrowser->browsingMode == Browse_Presets)
-        {
-            MBrowser->update();
-        }
     }
 }
 

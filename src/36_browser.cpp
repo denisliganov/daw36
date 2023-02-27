@@ -700,6 +700,11 @@ void Browser::prreviewSample(bool down)
 
 void Browser::remap()
 {
+/*
+    int yentry = cy;// -(int)vscr->getOffset();
+    float fullSpan = 0;
+    int idx = 0;
+
     for(int i = Browse_Projects; i < Browse_Max; i++)
     {
         for(auto be : entries[i])
@@ -708,19 +713,7 @@ void Browser::remap()
         }
     }
 
-    int cx = 0;
-
-    int cy = MainLineHeight + 1;
-    int cw = 200;
-
-    float lstHeight = (float)(height - cy - 1);
-
-    int yentry = cy;// -(int)vscr->getOffset();
-    float fullSpan = 0;
-
     confine(cx, cy, cx + cw - 1, cy + lstHeight - 1);
-
-    int idx = 0;
 
     for(auto be : entries[browsingMode])
     {
@@ -744,7 +737,17 @@ void Browser::remap()
         fullSpan += BrwEntryHeight;
     }
 
-    int xLists = cx + cw + 20;
+    //fullSpan += 64;
+    //vscr->updBounds(fullSpan, float(lstHeight), vscr->getOffset());
+    //vscr->setCoords1(width - BrwScrollerWidth + 1, cy, BrwScrollerWidth - 2, lstHeight);
+*/
+
+    int cx = 0;
+    int cy = MainLineHeight + 1;
+    int cw = 200;
+    float lstHeight = (float)(height - cy - 1);
+
+    int xLists = cx;
 
     int fileBrwWidth = 300;
 
@@ -762,10 +765,6 @@ void Browser::remap()
     confine();
 
     fileBox->setCoords1(width - fileBrwWidth + 2, cy, fileBrwWidth - 4, lstHeight);
-
-    //fullSpan += 64;
-    //vscr->updBounds(fullSpan, float(lstHeight), vscr->getOffset());
-    //vscr->setCoords1(width - BrwScrollerWidth + 1, cy, BrwScrollerWidth - 2, lstHeight);
 }
 
 void Browser::removeEntry(BrwEntry * entry)
