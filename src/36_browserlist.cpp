@@ -24,7 +24,7 @@ BrowserList::BrowserList(std::string name) : ListBoxx(name)
 
     currDir = WorkDirectory;
 
-    scanDirForFiles(currDir, "", false);
+    composeList();
 }
 
 void BrowserList::drawSelf(Graphics& g)
@@ -80,10 +80,19 @@ void BrowserList::drawSelf(Graphics& g)
             {
                 setc(g, 1.f);
             }
+            else if (entry->getType() == Entry_Wave)
+            {
+                setc(g, 0xff8AFF8A);
+            }
+            else if (entry->getType() == Entry_DLL)
+            {
+                setc(g, 0xff8A8AFF);
+            }
             else
             {
                 setc(g, .8f);
             }
+
             txtfit(g, fontId, entry->getObjName(), 4, yoffs + y + entryHeight - 4, w - 2);
         }
         else if (yoffs > (vscr->getOffset() + vscr->getVisiblePart()))
@@ -100,6 +109,14 @@ void BrowserList::drawSelf(Graphics& g)
     g.restoreState();
 }
 
+void BrowserList::deleteEntries()
+{
+    while(brwEntries.size() > 0)
+    {
+        delete brwEntries[brwEntries.size() - 1];
+        brwEntries.pop_back();
+    }
+}
 
 void BrowserList::handleMouseDown(InputEvent& ev)
 {
@@ -111,28 +128,10 @@ void BrowserList::handleMouseDown(InputEvent& ev)
         {
             currentEntry = entry;
 
-            if (ev.doubleClick)
-            {
-                if (brwEntries[currentEntry]->getType() == Entry_Directory)
-                {
-                    currDir = brwEntries[currentEntry]->getPath();
-
-                    while(brwEntries.size() > 0)
-                    {
-                        delete brwEntries[brwEntries.size() - 1];
-                        brwEntries.pop_back();
-                    }
-
-                    scanDirForFiles(currDir + "\\", "", false);
-
-                    remapAndRedraw();
-                }
-            }
-
             parent->handleChildEvent(this, ev);
-        }
 
-        redraw();
+            redraw();
+        }
     }
 }
 
@@ -143,8 +142,67 @@ void BrowserList::handleMouseWheel(InputEvent& ev)
     remapAndRedraw();
 }
 
+void BrowserList::composeList()
+{
+    addEntry(new BrwListEntry("@", "", Entry_DiskSelector));
+
+    std::string s = currDir;
+    std::string::size_type pos1 = currDir.find_first_of("\\");
+
+    while (pos1 != std::string::npos)
+    {
+        std::string part = s.substr(0, pos1);
+        
+        addEntry(new BrwListEntry(part, "", Entry_LevelDirectory));
+
+        s = s.substr(pos1 + 1);
+        
+        pos1 = s.find_first_of("\\");
+    }
+
+    scanDirForFiles(currDir, "", false);
+
+    currentEntry = -1;
+}
+
 void BrowserList::handleMouseUp(InputEvent& ev)
 {
+    if (currentEntry >= 0)
+    {
+        if (brwEntries[currentEntry]->getType() == Entry_Directory)
+        {
+            std::string prevDir = "";
+    
+            if (brwEntries[currentEntry]->getObjName() == "[..]")
+            {
+                std::string::size_type pos = currDir.find_last_of("\\");
+
+                if (currDir.size() == pos + 1)
+                {
+                    currDir.pop_back();
+
+                    pos = currDir.find_last_of("\\");
+                  //  int a = 1;
+                }
+
+                prevDir = currDir.substr(pos + 1); // the part after the slash
+                currDir = currDir.substr(0, pos);  // the part till the slash
+            }
+            else
+            {
+                currDir = brwEntries[currentEntry]->getPath();
+            }
+    
+            deleteEntries();
+
+            currDir += "\\";
+
+            composeList();
+    
+            remapAndRedraw();
+        }
+    }
+
     parent->handleChildEvent(this, ev);
 }
 
@@ -182,7 +240,18 @@ void BrowserList::scanDirForFiles(std::string scan_path, std::string extension, 
                 if(founddata.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
                 {
                     std::string fname = founddata.cFileName;
-                    addEntry(new BrwListEntry("[" + fname + "]", scan_path + fname, Entry_Directory));
+
+                    EntryType etype = Entry_Directory;
+
+                    if (strcmp(founddata.cFileName, "..") == 0)
+                    {
+                        //etype = Entry_LevelDirectory;
+                    }
+                    else
+                    {
+                    }
+
+                    addEntry(new BrwListEntry("[" + fname + "]", scan_path + fname, etype));
 
                     if(recurs)
                     {
@@ -220,9 +289,18 @@ void BrowserList::scanDirForFiles(std::string scan_path, std::string extension, 
                         {
                             //flist.push_back(fname);
 
-                            BrwListEntry* fileEntry = new BrwListEntry(fname, scan_path + fname, Entry_Default);
+                            EntryType etype = Entry_Default;
 
-                            addEntry(fileEntry);
+                            if(ext == "wav")
+                            {
+                                etype = Entry_Wave;
+                            }
+                            else if(ext == "dll")
+                            {
+                                etype = Entry_DLL;
+                            }
+
+                            addEntry(new BrwListEntry(fname, scan_path + fname, etype));
 
                             //fileEntry->setObjName(fname);
                             //fileEntry->path = scan_path + fname;

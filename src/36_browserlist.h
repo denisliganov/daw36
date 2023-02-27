@@ -16,7 +16,7 @@ typedef enum EntryType
     Entry_Default           = 0x1,
     Entry_Directory         = 0x2,
     Entry_Wave              = 0x4,
-    Entry_VST               = 0x8,
+    Entry_DLL               = 0x8,
     Entry_Native            = 0x10,
     Entry_Projects          = 0x20,
     Entry_LevelDirectory    = 0x40,
@@ -54,7 +54,9 @@ public:
 
 protected:
 
+            void                composeList();
             void                drawSelf(Graphics& g);
+            void                deleteEntries();
             void                handleMouseDown(InputEvent & ev);
             void                handleMouseWheel(InputEvent& ev);
             void                handleMouseUp(InputEvent& ev);
