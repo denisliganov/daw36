@@ -111,10 +111,51 @@ Browser::Browser(std::string dirpath)
 
     addObject(fileBox = new BrowserList("File browser"));
 
+    internalList1 = new BrowserList("Internal modules");
+
+/*
+    addEntry(DevClass_EffInternal, "1-band Equalizer",  "",     "eff.eq1");
+    addEntry(DevClass_EffInternal, "3-band Equalizer",  "",     "eff.eq3");
+    addEntry(DevClass_EffInternal, "Graphic Equalizer", "",     "eff.grapheq");
+    addEntry(DevClass_EffInternal, "Delay",             "",     "eff.delay");
+    addEntry(DevClass_EffInternal, "Compressor",        "",     "eff.comp");
+    addEntry(DevClass_EffInternal, "Reverb",            "",     "eff.reverb");
+    addEntry(DevClass_EffInternal, "Chorus",            "",     "eff.chorus");
+    addEntry(DevClass_EffInternal, "Flanger",           "",     "eff.flanger");
+    addEntry(DevClass_EffInternal, "Phaser",            "",     "eff.phaser");
+    addEntry(DevClass_EffInternal, "WahWah",            "",     "eff.wah");
+    addEntry(DevClass_EffInternal, "Distortion",        "",     "eff.dist");
+    addEntry(DevClass_EffInternal, "BitCrusher",        "",     "eff.bitcrush");
+    addEntry(DevClass_EffInternal, "Stereoizer",        "",     "eff.stereo");
+    addEntry(DevClass_EffInternal, "Filter1",           "",     "eff.filter1");
+    addEntry(DevClass_EffInternal, "Tremolo",           "",     "eff.tremolo");
+    */
 
     // Init internal and external devices
 
     update();
+}
+
+
+void Browser::initInternalDevices()
+{
+    addEntry(DevClass_EffInternal, "1-band Equalizer",  "",     "eff.eq1");
+    addEntry(DevClass_EffInternal, "3-band Equalizer",  "",     "eff.eq3");
+    addEntry(DevClass_EffInternal, "Graphic Equalizer", "",     "eff.grapheq");
+    addEntry(DevClass_EffInternal, "Delay",             "",     "eff.delay");
+    addEntry(DevClass_EffInternal, "Compressor",        "",     "eff.comp");
+    addEntry(DevClass_EffInternal, "Reverb",            "",     "eff.reverb");
+    addEntry(DevClass_EffInternal, "Chorus",            "",     "eff.chorus");
+    addEntry(DevClass_EffInternal, "Flanger",           "",     "eff.flanger");
+    addEntry(DevClass_EffInternal, "Phaser",            "",     "eff.phaser");
+    addEntry(DevClass_EffInternal, "WahWah",            "",     "eff.wah");
+    addEntry(DevClass_EffInternal, "Distortion",        "",     "eff.dist");
+    addEntry(DevClass_EffInternal, "BitCrusher",        "",     "eff.bitcrush");
+    addEntry(DevClass_EffInternal, "Stereoizer",        "",     "eff.stereo");
+    addEntry(DevClass_EffInternal, "Filter1",           "",     "eff.filter1");
+    addEntry(DevClass_EffInternal, "Tremolo",           "",     "eff.tremolo");
+
+    //addEntry(EffClass_Generator, EffType_Synth1, "internal://synth1", "D36 Synthesizer");
 }
 
 Browser::~Browser()
@@ -155,43 +196,6 @@ void Browser::addEntry(BrwEntry* entry)
     entries[browsingMode].push_back(entry);
 }
 
-void Browser::addFileBox()
-{
-    fileBox = new BrowserList("Browse files");
-
-    
-}
-
-void Browser::addInternalModules(std::string dir)
-{
-    internalList1 = new BrowserList("Internal modules");
-
-    
-
-/*
-    addEntry(DevClass_EffInternal, "1-band Equalizer",  "",     "eff.eq1");
-    addEntry(DevClass_EffInternal, "3-band Equalizer",  "",     "eff.eq3");
-    addEntry(DevClass_EffInternal, "Graphic Equalizer", "",     "eff.grapheq");
-    addEntry(DevClass_EffInternal, "Delay",             "",     "eff.delay");
-    addEntry(DevClass_EffInternal, "Compressor",        "",     "eff.comp");
-    addEntry(DevClass_EffInternal, "Reverb",            "",     "eff.reverb");
-    addEntry(DevClass_EffInternal, "Chorus",            "",     "eff.chorus");
-    addEntry(DevClass_EffInternal, "Flanger",           "",     "eff.flanger");
-    addEntry(DevClass_EffInternal, "Phaser",            "",     "eff.phaser");
-    addEntry(DevClass_EffInternal, "WahWah",            "",     "eff.wah");
-    addEntry(DevClass_EffInternal, "Distortion",        "",     "eff.dist");
-    addEntry(DevClass_EffInternal, "BitCrusher",        "",     "eff.bitcrush");
-    addEntry(DevClass_EffInternal, "Stereoizer",        "",     "eff.stereo");
-    addEntry(DevClass_EffInternal, "Filter1",           "",     "eff.filter1");
-    addEntry(DevClass_EffInternal, "Tremolo",           "",     "eff.tremolo");
-    */
-}
-
-void Browser::addPluginsDir(std::string dir, bool folders, bool recursive)
-{
-    
-}
-
 void Browser::addSearchDir(std::string dir, bool folders, bool recursive)
 {
     directories.push_back(dir);
@@ -221,6 +225,11 @@ void Browser::addSearchDir(std::string dir, bool folders, bool recursive)
         addObject(lbox);
 
         listBoxes.push_back(lbox);
+
+        ///
+
+        BrowserList* blist = new BrowserList(dirName);
+
 
         remapAndRedraw();
     }
@@ -259,8 +268,6 @@ void Browser::activateEntry(BrwEntry* be)
 
 void Browser::cleanEntries()
 {
-    //setVoffs(0);
-
     while(entries[browsingMode].size() > 0)
     {
         BrwEntry* be = entries[browsingMode].front();
@@ -270,23 +277,6 @@ void Browser::cleanEntries()
 
     currIndex = -1;
     currEntry = NULL;
-}
-
-bool Browser::checkMouseTouching(int mx,int my)
-{
-    bool val =  Gobj::checkMouseTouching(mx, my);
-
-    //if(val)  brwindex = (my - y1 - MainLineHeight - (int)mainoffs)/BrwEntryHeight;
-
-    for(auto entry : entries[browsingMode])
-    {
-        if(entry->checkMouseTouching(mx, my))
-        {
-            brwIndex = entry->listIndex;
-        }
-    }
-
-    return val;
 }
 
 void Browser::clearVstFile()
@@ -544,25 +534,7 @@ BrwEntry* Browser::getEntryByPath(char* path)
 
 void Browser::handleChildEvent(Gobj * obj, InputEvent& ev)
 {
-    if (obj == btDevices || obj == btPlugins || obj == btSamples)
-    {
-        if(obj == btDevices)
-        {
-            MBrowser->setMode(Browse_InternalDevs);
-        }
-        else if(obj == btPlugins)
-        {
-            MBrowser->setMode(Browse_ExternalDevs);
-        }
-        else if(obj == btSamples)
-        {
-            MBrowser->setMode(Browse_Samples);
-        }
-    }
-    //else if (obj == vscr)
-    //{
-    //    remapAndRedraw();
-    //}
+
 }
 
 void Browser::handleMouseUp(InputEvent& ev)
@@ -635,28 +607,6 @@ void Browser::handleMouseDrag(InputEvent& ev)
             }
         }
     }
-}
-
-
-void Browser::initInternalDevices()
-{
-    addEntry(DevClass_EffInternal, "1-band Equalizer",  "",     "eff.eq1");
-    addEntry(DevClass_EffInternal, "3-band Equalizer",  "",     "eff.eq3");
-    addEntry(DevClass_EffInternal, "Graphic Equalizer", "",     "eff.grapheq");
-    addEntry(DevClass_EffInternal, "Delay",             "",     "eff.delay");
-    addEntry(DevClass_EffInternal, "Compressor",        "",     "eff.comp");
-    addEntry(DevClass_EffInternal, "Reverb",            "",     "eff.reverb");
-    addEntry(DevClass_EffInternal, "Chorus",            "",     "eff.chorus");
-    addEntry(DevClass_EffInternal, "Flanger",           "",     "eff.flanger");
-    addEntry(DevClass_EffInternal, "Phaser",            "",     "eff.phaser");
-    addEntry(DevClass_EffInternal, "WahWah",            "",     "eff.wah");
-    addEntry(DevClass_EffInternal, "Distortion",        "",     "eff.dist");
-    addEntry(DevClass_EffInternal, "BitCrusher",        "",     "eff.bitcrush");
-    addEntry(DevClass_EffInternal, "Stereoizer",        "",     "eff.stereo");
-    addEntry(DevClass_EffInternal, "Filter1",           "",     "eff.filter1");
-    addEntry(DevClass_EffInternal, "Tremolo",           "",     "eff.tremolo");
-
-    //addEntry(EffClass_Generator, EffType_Synth1, "internal://synth1", "D36 Synthesizer");
 }
 
 bool Browser::isFileMode()
@@ -860,26 +810,6 @@ void Browser::setCurrentIndex(int index)
     currIndex = index;
 }
 
-void Browser::setMode(BrwMode mode)
-{
-    for(auto be : entries[browsingMode])
-    {
-        be->setEnable(false);
-    }
-
-    browsingMode = mode;
-
-    update();
-
-    for(auto be : entries[browsingMode])
-    {
-        be->setEnable(true);
-    }
-
-    //setVoffs(0);
-
-    remapAndRedraw();
-}
 
 void Browser::scanDirForDevs(char *path, char mode, FILE* fhandle, ScanThread* thread)
 {
@@ -1137,47 +1067,10 @@ void Browser::updateEntries()
 
                 it++;
             }
-
-            updateCurrentHighlight();
         }
     }
 
     // if(currDir != NULL)
     //    ::SetCurrentDirectory(currDir);
-}
-
-void Browser::updateCurrentHighlight()
-{
-    switch(browsingMode)
-    {
-        case Browse_Presets:
-        {
-            Device36* dev = NULL;
-
-            if(MInstrPanel->getCurrInstr() != NULL)
-            {
-                dev = (Device36*)MInstrPanel->getCurrInstr();
-            }
-
-            if(dev != NULL)
-            {
-                for(BrwEntry* be : entries[browsingMode])
-                {
-                    if (be != NULL && be == dev->getCurrPreset())
-                    {
-                        currIndex = be->listIndex;
-                        break;
-                    }
-                }
-            }
-        }
-
-        break;
-
-        default:
-            break;
-    }
-
-    redraw();
 }
 

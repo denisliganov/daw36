@@ -37,12 +37,8 @@ public:
             void                addEntry(BrwEntry* entry);
             BrwEntry*           addEntry(DevClass ec, std::string name, std::string path = "", std::string alias ="");
             void                activateEntry(BrwEntry* be);
-            void                addFileBox();
             void                addSearchDir(std::string dir, bool folders=false, bool recursive=false);
-            void                addPluginsDir(std::string dir, bool folders=false, bool recursive=false);
-            void                addInternalModules(std::string dir);
             ContextMenu*        createContextMenu();
-            bool                checkMouseTouching(int mx, int my);
             void                clearVstFile();
             void                cleanEntries();
             void                devScanProc(ScanThread* thread);
@@ -67,12 +63,9 @@ public:
             void                scanDirForFiles(std::string path, std::string ext, bool recurs, std::vector<std::string>& flist);
             void                setCurrentEntry(int index);
             void                setCurrentIndex(int index);
-            void                setMode(BrwMode mode);
             void                scanDirForDevs(char *path, char mode, FILE* fhandle, ScanThread* thread);
             void                update();
             void                updateEntries();
-            void                updateParamsData();
-            void                updateCurrentHighlight();
 
             BrwMode             browsingMode;
 
@@ -92,8 +85,9 @@ protected:
             std::string         samplesPath;
             unsigned int        viewMask;
 
-            std::list<std::string>  directories;
-            std::vector<ListBoxx*>  listBoxes;
+            std::list<std::string>      directories;
+            std::vector<ListBoxx*>      listBoxes;
+            std::vector<BrowserList*>   brwLists;
 
             BrowserList*        fileBox;
 

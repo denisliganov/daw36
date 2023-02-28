@@ -11,6 +11,19 @@
 
 
 
+
+
+typedef enum BrwListType
+{
+    BrwList_Files,
+    BrwList_Projects,
+    BrwList_WavSamples,
+    BrwList_SoundFonts,
+    BrwList_InternalModules,
+    BrwList_VST2,
+    BrwList_VST3,
+}BrwListType;
+
 typedef enum EntryType
 {
     Entry_Default           = 0x1,
@@ -45,12 +58,12 @@ class BrowserList  : public ListBoxx
 {
 public:
 
-            BrowserList(std::string name);
+            BrowserList(std::string name, BrwListType t = BrwList_Files);
             void                addEntry(BrwListEntry* entry)                     { brwEntries.push_back(entry); remap(); }
-            void                setList(std::vector<BrwListEntry*>&  entries_list)  { brwEntries = entries_list;  remap(); }
-            void                setCurrent(int curr)                            { currentEntry = curr; }
             int                 getCurrent()                                    { return currentEntry; }
             BrwListEntry*       getCurrentName()                                { return brwEntries[currentEntry]; }
+            void                setList(std::vector<BrwListEntry*>&  entries_list)  { brwEntries = entries_list;  remap(); }
+            void                setCurrent(int curr)                            { currentEntry = curr; }
 
 protected:
 
@@ -64,10 +77,11 @@ protected:
     virtual void                remap();
             void                scanDirForFiles(std::string scan_path, std::string extension, bool recurs);
 
-            std::vector<BrwListEntry*>     brwEntries;
-            int                 currentEntry;
+            std::vector<BrwListEntry*>      brwEntries;
+            int                             currentEntry;
+            std::string                     currDir;
 
-            std::string         currDir;
+            BrwListType                     type;
 };
 
 

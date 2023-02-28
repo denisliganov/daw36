@@ -799,7 +799,9 @@ void InstrPanel::remap()
     }
     else
     {
-        btShowFX->setCoords1(0, 0, 28, 28);
+        int btW = 28;
+
+        btShowFX->setCoords1(width - btW - 1, 0, btW, btW);
 
         mixr->setVis(false);
     }

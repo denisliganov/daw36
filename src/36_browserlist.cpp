@@ -5,6 +5,8 @@
 #include "36.h"
 
 
+
+
 BrwListEntry::BrwListEntry(std::string name, std::string path, EntryType entry_type)
 {
     setObjName(name);
@@ -16,13 +18,15 @@ BrwListEntry::BrwListEntry(std::string name, std::string path, EntryType entry_t
 
 
 
-BrowserList::BrowserList(std::string name) : ListBoxx(name)
+BrowserList::BrowserList(std::string name, BrwListType t) : ListBoxx(name)
 {
     setFontId(FontDix);
 
     headerHeight = textHeight + 8;
 
     currDir = WorkDirectory;
+
+    type = t;
 
     composeList();
 }
