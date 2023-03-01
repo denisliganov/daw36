@@ -1782,7 +1782,7 @@ Vst2Plugin* Vst2Host::loadModuleFromFile(char* path)
     return plug;
 }
 
-bool Vst2Host::checkModule(char *path, bool *isGenerator, char* name)
+bool Vst2Host::checkModule(char *path, bool *is_generator, char* name)
 {
     bool ret_val = false;
 
@@ -1805,16 +1805,16 @@ bool Vst2Host::checkModule(char *path, bool *isGenerator, char* name)
 
             if(catg == kPlugCategSynth || catg == kPlugCategGenerator)
             {
-                *isGenerator = true;
+                *is_generator = true;
             }
             else
             {
-                *isGenerator = false;
+                *is_generator = false;
             }
         }
         else
         {
-            *isGenerator = true;
+            *is_generator = true;
         }
 
         ret_val = true;

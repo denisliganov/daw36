@@ -116,19 +116,6 @@ class MainWindow;
 
 
 
-
-
-
-typedef enum DevClass
-{
-    DevClass_Default,
-    DevClass_GenVst,
-    DevClass_EffVst,
-    DevClass_GenInternal,
-    DevClass_EffInternal,
-    DevClass_Invalid
-}DevClass;
-
 typedef long tframe;
 
 

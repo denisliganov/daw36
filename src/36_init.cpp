@@ -41,6 +41,7 @@ HWND                WinHWND;
 // Full path to program's working directory
 char *              WorkDirectory;
 
+std::string         WorkDir;
 
 
 void        GetCurrentDir();
@@ -272,8 +273,6 @@ void LoadDefaultInstruments()
     //MBrowser->addSearchDir("C:\\Samples\\");
     //MBrowser->addSearchDir("C:\\Plugins\\");
 
-    MBrowser->addSearchDir(".\\Plugins\\");
-    MBrowser->addSearchDir(".\\Samples\\");
 
     MInstrPanel->addVst("Plugins\\mda Piano.dll", NULL);
     MInstrPanel->addVst("Plugins\\mda DX10.dll", NULL);

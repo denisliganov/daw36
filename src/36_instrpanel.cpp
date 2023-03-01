@@ -473,15 +473,10 @@ bool InstrPanel::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
 bool InstrPanel::handleObjDrop(Gobj * obj, int mx, int my, unsigned int flags)
 {
     BrwListEntry* ble = dynamic_cast<BrwListEntry*>(obj);
-    BrwEntry* be = dynamic_cast<BrwEntry*>(obj);
 
     Instrument* i = NULL;
 
-    if(be)
-    {
-        i = loadInstrFromBrowser(be);
-    }
-    else if (ble)
+    if (ble)
     {
         i = loadInstrFromNewBrowser(ble);
     }
@@ -559,36 +554,6 @@ void InstrPanel::updateInstrIndexes()
     {
         instr->setIndex(idx++);
     }
-}
-
-Instrument* InstrPanel::loadInstrFromBrowser(BrwEntry * be)
-{
-    if (getNumInstrs() >= 36)
-    {
-        MWindow->showAlertBox("Can't load more than 36 instruments");
-
-        return NULL;
-    }
-
-    Instrument* ni = NULL;
-
-    if(be->ftype == FType_Wave)
-    {
-        ni = (Instrument*)addSample(be->path.data());
-    }
-    else 
-    {
-        VstInstr* vstgen = addVst(be->path.data(), NULL);
-
-        ni = (Instrument*)vstgen;
-    }
-
-    if(ni)
-    {
-        setCurrInstr(ni);
-    }
-
-    return ni;
 }
 
 Instrument* InstrPanel::loadInstrFromNewBrowser(BrwListEntry* ble)
@@ -789,9 +754,11 @@ void InstrPanel::remap()
 
     confine();
 
+    int btW = 28;
+
     if (fxShowing)
     {
-        btHideFX->setCoords1(FxPanelMaxWidth, 0, 28, 28);
+        btHideFX->setCoords1(width - btW - 1, 0, btW, btW);
 
         confine(10, instrListY, FxPanelMaxWidth, height);
 
@@ -799,8 +766,6 @@ void InstrPanel::remap()
     }
     else
     {
-        int btW = 28;
-
         btShowFX->setCoords1(width - btW - 1, 0, btW, btW);
 
         mixr->setVis(false);

@@ -55,7 +55,6 @@ protected:
             BrwEntry*           currPreset;
             std::string         currPresetName;
             int                 devIdx;
-            DevClass            devClass;
             std::string         filePath;
             SubWindow*          guiWindow;
             bool                internal;

@@ -47,22 +47,6 @@ BrwEntry::BrwEntry(Device36* preset_dev) : dev(preset_dev)
 {
 }
 
-ContextMenu* BrwEntry::createContextMenu()
-{
-    return NULL;
-/*
-    Menu* menu = new Menu(Obj_MenuPopup);
-
-    ((Browser*)parent)->setCurrentEntry(listIndex);
-
-    menu->AddItem("Open location");
-    menu->AddItem("Delete file");
-    menu->AddItem("Load");
-
-    return menu;
-    */
-}
-
 void BrwEntry::activateMenuItem(std::string item)
 {
     if(item == "Open location")
@@ -113,14 +97,7 @@ void BrwEntry::drawSelf(Graphics & g)
     g.saveState();
     g.reduceClipRegion(dx1, dy1, dwidth, dheight);
     
-    if (isGenerator() || isEffect())
-    {
-        drawDevEntry(g, x1, y1, width);
-    }
-    else
-    {
-        drawFileEntry(g, x1, y1, width);
-    }
+    drawFileEntry(g, x1, y1, width);
 
     // Entry highlight
 /*

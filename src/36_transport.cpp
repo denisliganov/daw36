@@ -225,12 +225,13 @@ void Transport::togglePlayback()
         {
             for(Parameter* param : globalParams)
             {
+                /*
                 param->lastsetframe = 0;
         
                 if(param->envtweaked)
                 {
                     param->reset();
-                }
+                }*/
             }
         }
 

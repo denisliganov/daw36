@@ -31,10 +31,11 @@ typedef enum EntryType
     Entry_Wave              = 0x4,
     Entry_DLL               = 0x8,
     Entry_Native            = 0x10,
-    Entry_Projects          = 0x20,
+    Entry_Project           = 0x20,
     Entry_LevelDirectory    = 0x40,
     Entry_DiskSelector      = 0x80,
-    Entry_DiskDrive         = 0x100
+    Entry_DiskDrive         = 0x100,
+    Entry_Preset            = 0x200,
 }EntryType;
 
 
@@ -47,6 +48,9 @@ public:
             std::string         getPath()   { return filePath; }
 
 protected:
+
+            void                handleMouseDown(InputEvent & ev) { parent->handleChildEvent(this, ev); }
+            void                handleMouseUp(InputEvent& ev) { parent->handleChildEvent(this, ev); }
 
             std::string         filePath;
             EntryType           type;
@@ -74,6 +78,8 @@ protected:
             void                handleMouseWheel(InputEvent& ev);
             void                handleMouseUp(InputEvent& ev);
             void                handleMouseDrag(InputEvent & ev);
+            void                handleChildEvent(Gobj * obj,InputEvent & ev);
+            void                previewSample(BrwListEntry* ble, bool down);
     virtual void                remap();
             void                scanDirForFiles(std::string scan_path, std::string extension, bool recurs);
 

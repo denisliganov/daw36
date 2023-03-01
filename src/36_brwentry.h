@@ -32,6 +32,18 @@ typedef enum FileType
 }FileType;
 
 
+typedef enum DevClass
+{
+    DevClass_Default,
+    DevClass_GenVst,
+    DevClass_EffVst,
+    DevClass_GenInternal,
+    DevClass_EffInternal,
+    DevClass_Invalid
+}DevClass;
+
+
+
 class BrwEntry : public Gobj
 {
 public:
@@ -47,13 +59,6 @@ public:
             void                handleMouseDrag(InputEvent& ev)     { parent->handleMouseDrag(ev); }
             void                handleMouseDown(InputEvent& ev)     { parent->handleMouseDown(ev); }
             void                handleMouseUp(InputEvent& ev)       { parent->handleMouseUp(ev); }
-
-            bool                isGenerator()       {return (devClass == DevClass_GenInternal || devClass == DevClass_GenVst || devClass == DevClass_Invalid);};
-            bool                isNative()          {return (devClass == DevClass_GenInternal || devClass == DevClass_EffInternal);};
-            bool                isExternal()        {return (devClass == DevClass_GenVst || devClass == DevClass_EffVst || devClass == DevClass_Default);};
-            bool                isEffect()          {return (devClass == DevClass_EffInternal || devClass == DevClass_EffVst || devClass == DevClass_Invalid);};
-
-            ContextMenu*        createContextMenu();
 
             void                activateMenuItem(std::string item);
 
