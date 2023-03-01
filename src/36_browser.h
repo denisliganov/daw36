@@ -31,8 +31,6 @@ class Browser : public ParamObject
 public:
 
             Browser(std::string dirpath);
-           ~Browser();
-
             void                activateMenuItem(std::string item);
             void                addEntry(BrwEntry* entry);
             BrwEntry*           addEntry(DevClass ec, std::string name, std::string path = "", std::string alias ="");
@@ -40,7 +38,6 @@ public:
             void                addSearchDir(std::string dir, bool folders=false, bool recursive=false);
             ContextMenu*        createContextMenu();
             void                clearVstFile();
-            void                cleanEntries();
             void                devScanProc(ScanThread* thread);
             void                drawSelf(Graphics& g);
             BrwEntry*           getEntryByIndex(int index);
@@ -50,7 +47,6 @@ public:
             void                handleMouseDown(InputEvent& ev);
             void                handleMouseUp(InputEvent& ev);
             void                handleChildEvent(Gobj * obj, InputEvent& ev);
-            void                initInternalDevices();
             bool                isFileMode();
             bool                isDevMode();
             void                prreviewSample(bool down);
@@ -59,10 +55,7 @@ public:
             void                remap();
             FILE*               rescanFromVstFile();
             void                rescanDevices();
-            void                setViewMask(unsigned int vmask);
             void                scanDirForFiles(std::string path, std::string ext, bool recurs, std::vector<std::string>& flist);
-            void                setCurrentEntry(int index);
-            void                setCurrentIndex(int index);
             void                scanDirForDevs(char *path, char mode, FILE* fhandle, ScanThread* thread);
             void                update();
             void                updateEntries();
@@ -72,9 +65,7 @@ public:
 protected:
 
             int                 brwIndex;
-            Button36*           btSamples;
-            Button36*           btDevices;
-            Button36*           btPlugins;
+
             BrwEntry*           currEntry;
             int                 currIndex;
             Instrument*         ipreview;
@@ -89,12 +80,14 @@ protected:
             std::vector<ListBoxx*>      listBoxes;
             std::vector<BrowserList*>   brwLists;
 
-            BrowserList*        fileBox;
-
             std::list<BrwEntry*>    entries[Browse_Max];
+
+
+            BrowserList*        fileBox;
 
             BrowserList*        sampleList1;
             BrowserList*        vstList1;
+            BrowserList*        vstList2;
             BrowserList*        internalList1;
             BrowserList*        projectsList1;
 

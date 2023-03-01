@@ -18,17 +18,75 @@ BrwListEntry::BrwListEntry(std::string name, std::string path, EntryType entry_t
 
 
 
-BrowserList::BrowserList(std::string name, BrwListType t) : ListBoxx(name)
+BrowserList::BrowserList(std::string name, std::string path, BrwListType t) : ListBoxx(name)
 {
     setFontId(FontDix);
 
     headerHeight = textHeight + 8;
 
-    currDir = WorkDirectory;
-
     type = t;
 
+    currDir = path;
+
     composeList();
+}
+
+void BrowserList::composeList()
+{
+    if (type == BrwList_Files)
+    {
+        addEntry(new BrwListEntry("***", "", Entry_DiskSelector));
+
+        std::string s = currDir;
+        std::string::size_type pos1 = currDir.find_first_of("\\");
+
+        std::string::size_type pos0 = 0;
+
+        while (pos1 != std::string::npos)
+        {
+            pos0 += pos1;
+
+            std::string path = currDir.substr(0, pos0) + "\\";
+
+            pos0++;
+
+            addEntry(new BrwListEntry("\\" + s.substr(0, pos1) + "\\", path, Entry_LevelDirectory));
+
+            s = s.substr(pos1 + 1);
+
+            pos1 = s.find_first_of("\\");
+        }
+
+        scanDirForFiles(currDir, "", false);
+    }
+    else if (type == BrwList_InternalModules)
+    {
+        addEntry(new BrwListEntry("1-band Equalizer",  "eff.eq1",       Entry_Native));
+        addEntry(new BrwListEntry("3-band Equalizer",  "eff.eq3",       Entry_Native));
+        addEntry(new BrwListEntry("Graphic Equalizer", "eff.grapheq",   Entry_Native));
+        addEntry(new BrwListEntry("Delay",             "eff.delay",     Entry_Native));
+        addEntry(new BrwListEntry("Compressor",        "eff.comp",      Entry_Native));
+        addEntry(new BrwListEntry("Reverb",            "eff.reverb",    Entry_Native));
+        addEntry(new BrwListEntry("Chorus",            "eff.chorus",    Entry_Native));
+        addEntry(new BrwListEntry("Flanger",           "eff.flanger",   Entry_Native));
+        addEntry(new BrwListEntry("Phaser",            "eff.phaser",    Entry_Native));
+        addEntry(new BrwListEntry("WahWah",            "eff.wah",       Entry_Native));
+        addEntry(new BrwListEntry("Distortion",        "eff.dist",      Entry_Native));
+        addEntry(new BrwListEntry("BitCrusher",        "eff.bitcrush",  Entry_Native));
+        addEntry(new BrwListEntry("Stereoizer",        "eff.stereo",    Entry_Native));
+        addEntry(new BrwListEntry("Filter1",           "eff.filter1",   Entry_Native));
+        addEntry(new BrwListEntry("Tremolo",           "eff.tremolo",   Entry_Native));
+    }
+    else if (type == BrwList_WavSamples)
+    {
+        scanDirForFiles(currDir, "wav", true);
+    }
+    else if (type == BrwList_VST2 || type == BrwList_VST3)
+    {
+        scanDirForFiles(currDir, "dll", true);
+    }
+
+    currentEntry = -1;
 }
 
 void BrowserList::drawSelf(Graphics& g)
@@ -80,30 +138,44 @@ void BrowserList::drawSelf(Graphics& g)
             //setc(g, 0.2f);
             //lineH(g, yoffs + y, 0, w);
 
-            setc(g, 1.f);
+            int xc = 5;
 
-            if (entry->getType() == Entry_Wave)
+            if (type == BrwList_Files)
+            {
+                setc(g, 1.f);
+
+                if (entry->getType() == Entry_Wave)
+                {
+                    setc(g, 0xff8AFF8A);
+                }
+                else if (entry->getType() == Entry_DLL)
+                {
+                    setc(g, 0xff8A8AFF);
+                }
+                else if (entry->getType() == Entry_Default)
+                {
+                    setc(g, .8f);
+                }
+
+                if (entry->getType() != Entry_LevelDirectory)
+                {
+                    xc = 10;
+                }
+            }
+            else if (type == BrwList_InternalModules)
+            {
+                setc(g, 0xff8AEFFF);
+            }
+            else if (type == BrwList_WavSamples)
             {
                 setc(g, 0xff8AFF8A);
             }
-            else if (entry->getType() == Entry_DLL)
+            else if (type == BrwList_VST2)
             {
                 setc(g, 0xff8A8AFF);
             }
-            else if (entry->getType() == Entry_Default)
-            {
-                setc(g, .8f);
-            }
-
-            int xc = 10;
-            if (entry->getType() == Entry_LevelDirectory)
-            {
-                xc = 5;
-            }
 
             txtfit(g, fontId, entry->getObjName(), xc, yoffs + y + entryHeight - 4, w - 2);
-
-
         }
         else if (yoffs > (vscr->getOffset() + vscr->getVisiblePart()))
         {
@@ -150,35 +222,6 @@ void BrowserList::handleMouseWheel(InputEvent& ev)
     vscr->handleMouseWheel(ev); //setOffset(vscr->getOffset() - ev.wheelDelta);
 
     remapAndRedraw();
-}
-
-void BrowserList::composeList()
-{
-    addEntry(new BrwListEntry("***", "", Entry_DiskSelector));
-
-    std::string s = currDir;
-    std::string::size_type pos1 = currDir.find_first_of("\\");
-
-    std::string::size_type pos0 = 0;
-
-    while (pos1 != std::string::npos)
-    {
-        pos0 += pos1;
-
-        std::string path = currDir.substr(0, pos0) + "\\";
-
-        pos0++;
-
-        addEntry(new BrwListEntry("\\" + s.substr(0, pos1) + "\\", path, Entry_LevelDirectory));
-
-        s = s.substr(pos1 + 1);
-
-        pos1 = s.find_first_of("\\");
-    }
-
-    scanDirForFiles(currDir, "", false);
-
-    currentEntry = -1;
 }
 
 void BrowserList::handleMouseUp(InputEvent& ev)
@@ -305,10 +348,13 @@ void BrowserList::scanDirForFiles(std::string scan_path, std::string extension, 
                         continue;
                     }
 
-                    EntryType etype = Entry_Directory;
+                    if (!recurs)
+                    {
+                        EntryType etype = Entry_Directory;
 
-                    //addEntry(new BrwListEntry("[" + fname + "]", scan_path + fname + "\\", etype));
-                    addEntry(new BrwListEntry(fname, scan_path + fname + "\\", etype));
+                        //addEntry(new BrwListEntry("[" + fname + "]", scan_path + fname + "\\", etype));
+                        addEntry(new BrwListEntry(fname, scan_path + fname + "\\", etype));
+                    }
 
                     if(recurs)
                     {
@@ -342,7 +388,7 @@ void BrowserList::scanDirForFiles(std::string scan_path, std::string extension, 
 
                         ToLowerCase((char*)ext.data());
 
-                        //if(ext == extension || extension == "")
+                        if(ext == extension || extension == "")
                         {
                             //flist.push_back(fname);
 

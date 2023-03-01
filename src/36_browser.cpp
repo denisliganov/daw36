@@ -84,83 +84,16 @@ Browser::Browser(std::string dirpath)
     ipreview = NULL;
     plugsscanned = false;
 
-    browsingMode = Browse_Samples;
-
-    int xControls = 8;
-    int yControls = 2;
-    int buttonWidth = 25;
-    int buttonHeight = 24;
-
-    addObject(btSamples = new GroupButton(3), xControls, yControls, buttonWidth, buttonHeight, "bt.brwsamples");
-    xControls += buttonWidth + 4;
-
-    addObject(btDevices = new GroupButton(3), xControls, yControls, buttonWidth, buttonHeight, "bt.brwdevs");
-    xControls += buttonWidth + 4;
-
-    addObject(btPlugins = new GroupButton(3), xControls, yControls, buttonWidth, buttonHeight, "bt.brwext");
-
-    btSamples->setLedType(true);
-    btDevices->setLedType(true);
-    btPlugins->setLedType(true);
-
-    btSamples->press();
-
-    setCurrentIndex(3);
-
-    setViewMask(FType_Unknown | FType_VST | FType_Native | FType_Wave | FType_Projects);
-
-    addObject(fileBox = new BrowserList("File browser"));
-
-    internalList1 = new BrowserList("Internal modules");
-
-/*
-    addEntry(DevClass_EffInternal, "1-band Equalizer",  "",     "eff.eq1");
-    addEntry(DevClass_EffInternal, "3-band Equalizer",  "",     "eff.eq3");
-    addEntry(DevClass_EffInternal, "Graphic Equalizer", "",     "eff.grapheq");
-    addEntry(DevClass_EffInternal, "Delay",             "",     "eff.delay");
-    addEntry(DevClass_EffInternal, "Compressor",        "",     "eff.comp");
-    addEntry(DevClass_EffInternal, "Reverb",            "",     "eff.reverb");
-    addEntry(DevClass_EffInternal, "Chorus",            "",     "eff.chorus");
-    addEntry(DevClass_EffInternal, "Flanger",           "",     "eff.flanger");
-    addEntry(DevClass_EffInternal, "Phaser",            "",     "eff.phaser");
-    addEntry(DevClass_EffInternal, "WahWah",            "",     "eff.wah");
-    addEntry(DevClass_EffInternal, "Distortion",        "",     "eff.dist");
-    addEntry(DevClass_EffInternal, "BitCrusher",        "",     "eff.bitcrush");
-    addEntry(DevClass_EffInternal, "Stereoizer",        "",     "eff.stereo");
-    addEntry(DevClass_EffInternal, "Filter1",           "",     "eff.filter1");
-    addEntry(DevClass_EffInternal, "Tremolo",           "",     "eff.tremolo");
-    */
+    addObject(fileBox = new BrowserList("File browser", WorkDirectory, BrwList_Files));
+    addObject(projectsList1 = new BrowserList("Projects", "", BrwList_Projects));
+    addObject(internalList1 = new BrowserList("Internal modules", "", BrwList_InternalModules));
+    addObject(sampleList1 = new BrowserList("Samples", "", BrwList_WavSamples));
+    addObject(vstList1 = new BrowserList("VST1", VST_EXT_PATH_1, BrwList_VST2));
+    addObject(vstList2 = new BrowserList("VST2", VST_EXT_PATH_2, BrwList_VST2));
 
     // Init internal and external devices
 
     update();
-}
-
-
-void Browser::initInternalDevices()
-{
-    addEntry(DevClass_EffInternal, "1-band Equalizer",  "",     "eff.eq1");
-    addEntry(DevClass_EffInternal, "3-band Equalizer",  "",     "eff.eq3");
-    addEntry(DevClass_EffInternal, "Graphic Equalizer", "",     "eff.grapheq");
-    addEntry(DevClass_EffInternal, "Delay",             "",     "eff.delay");
-    addEntry(DevClass_EffInternal, "Compressor",        "",     "eff.comp");
-    addEntry(DevClass_EffInternal, "Reverb",            "",     "eff.reverb");
-    addEntry(DevClass_EffInternal, "Chorus",            "",     "eff.chorus");
-    addEntry(DevClass_EffInternal, "Flanger",           "",     "eff.flanger");
-    addEntry(DevClass_EffInternal, "Phaser",            "",     "eff.phaser");
-    addEntry(DevClass_EffInternal, "WahWah",            "",     "eff.wah");
-    addEntry(DevClass_EffInternal, "Distortion",        "",     "eff.dist");
-    addEntry(DevClass_EffInternal, "BitCrusher",        "",     "eff.bitcrush");
-    addEntry(DevClass_EffInternal, "Stereoizer",        "",     "eff.stereo");
-    addEntry(DevClass_EffInternal, "Filter1",           "",     "eff.filter1");
-    addEntry(DevClass_EffInternal, "Tremolo",           "",     "eff.tremolo");
-
-    //addEntry(EffClass_Generator, EffType_Synth1, "internal://synth1", "D36 Synthesizer");
-}
-
-Browser::~Browser()
-{
-    ///
 }
 
 void Browser::activateMenuItem(std::string item)
@@ -214,23 +147,6 @@ void Browser::addSearchDir(std::string dir, bool folders, bool recursive)
             dirName = dir1.substr(extpos + 1);
         }
 
-        ListBoxx* lbox = new ListBoxx(dirName);
-
-        std::vector<std::string> fList;
-
-        scanDirForFiles(dir, "", false, fList);
-
-        lbox->setList(fList);
-
-        addObject(lbox);
-
-        listBoxes.push_back(lbox);
-
-        ///
-
-        BrowserList* blist = new BrowserList(dirName);
-
-
         remapAndRedraw();
     }
 
@@ -266,19 +182,6 @@ void Browser::activateEntry(BrwEntry* be)
     }
 }
 
-void Browser::cleanEntries()
-{
-    while(entries[browsingMode].size() > 0)
-    {
-        BrwEntry* be = entries[browsingMode].front();
-
-        entries[browsingMode].remove(be);
-    }
-
-    currIndex = -1;
-    currEntry = NULL;
-}
-
 void Browser::clearVstFile()
 {
     char   list_path[MAX_PATH_LENGTH] = {0};
@@ -297,7 +200,7 @@ ContextMenu* Browser::createContextMenu()
     {
         redraw();
 
-        setCurrentEntry(brwIndex);
+        //setCurrentEntry(brwIndex);
 
         ContextMenu* menu = new ContextMenu(this);
 
@@ -539,46 +442,12 @@ void Browser::handleChildEvent(Gobj * obj, InputEvent& ev)
 
 void Browser::handleMouseUp(InputEvent& ev)
 {
-    if( browsingMode == Browse_Samples)
-    {
-        prreviewSample(false);
-    }
+
 }
 
 void Browser::handleMouseDown(InputEvent& ev)
 {
-    if(browsingMode == Browse_ExternalDevs ||
-       browsingMode == Browse_InternalDevs ||
-       browsingMode == Browse_Samples ||
-       browsingMode == Browse_Projects)
-    {
-        BrwEntry* be = getEntryByIndex(brwIndex);
 
-        if(be  != NULL)
-        {
-            if(ev.doubleClick && currIndex == brwIndex)     // double click
-            {
-                activateEntry(be );
-            }
-            else
-            {
-                setCurrentEntry(brwIndex);
-
-                if(browsingMode == Browse_Samples)  prreviewSample(true);
-            }
-        }
-    }
-    else if (browsingMode == Browse_Presets)
-    {
-        setCurrentEntry(brwIndex);
-
-        BrwEntry* prd = getEntryByIndex(brwIndex);
-
-        if(prd != NULL)
-        {
-            activateEntry(prd);
-        }
-    }
 }
 
 void Browser::handleMouseWheel(InputEvent& ev)
@@ -590,23 +459,7 @@ void Browser::handleMouseWheel(InputEvent& ev)
 
 void Browser::handleMouseDrag(InputEvent& ev)
 {
-    if(isFileMode() || isDevMode())
-    {
-        if(brwIndex >= 0 && MObject->canDrag(this))
-        {
-            if(isFileMode())
-            {
-                if(currEntry != NULL)
-                {
-                    MObject->dragAdd(currEntry, ev.mouseX, ev.mouseY);
-                }
-            }
-            else if (isDevMode())
-            {
-                MObject->dragAdd(currEntry, ev.mouseX, ev.mouseY);
-            }
-        }
-    }
+    
 }
 
 bool Browser::isFileMode()
@@ -693,7 +546,7 @@ void Browser::remap()
 */
 
     int cx = 0;
-    int cy = MainLineHeight + 1;
+    int cy = 0;
     int cw = 200;
     float lstHeight = (float)(height - cy - 1);
 
@@ -707,10 +560,15 @@ void Browser::remap()
 
     putStart(xLists, cy);
 
-    for (ListBoxx* lb : listBoxes)
-    {
-        putRight(lb, 200, lstHeight);
-    }
+    putRight(internalList1, 250, lstHeight);
+    putRight(sampleList1, 250, lstHeight);
+    putRight(vstList1, 250, lstHeight);
+    putRight(vstList2, 250, lstHeight);
+    putRight(projectsList1, 250, lstHeight);
+
+
+    //for (ListBoxx* lb : listBoxes)
+    //    putRight(lb, 200, lstHeight);
 
     confine();
 
@@ -780,34 +638,6 @@ FILE* Browser::rescanFromVstFile()
     }
 
     return fhandle;
-}
-
-void Browser::setCurrentEntry(int index)
-{
-    for(BrwEntry* be : entries[browsingMode])
-    {
-        if(be->listIndex == index)
-        {
-            currEntry = be;
-            currIndex = index;
-
-            redraw();
-
-            break;
-        }
-    }
-}
-
-void Browser::setViewMask(unsigned int vmask)
-{
-    // Defines mask filter for supported files
-
-    viewMask = vmask;
-}
-
-void Browser::setCurrentIndex(int index)
-{
-    currIndex = index;
 }
 
 
@@ -1018,17 +848,7 @@ void Browser::updateEntries()
 
     SetCurrentDirectory(WorkDirectory);
 
-    if(browsingMode == Browse_Samples)
-    {
-        std::vector<std::string> flist;
-
-        scanDirForFiles("Samples", WavExt, true, flist);
-    }
-    else if(browsingMode == Browse_Projects)
-    {
-        // Recursively search for files with ProjExt extension
-    }
-    else if(browsingMode == Browse_ExternalDevs)
+    if(browsingMode == Browse_ExternalDevs)
     {
         File vstfile(PLUGIN_LIST_FILENAME);
         bool vstfileexists = vstfile.exists();
@@ -1046,10 +866,6 @@ void Browser::updateEntries()
                 rescanDevices();
             }
          }
-    }
-    else if(browsingMode == Browse_InternalDevs)
-    {
-        initInternalDevices();
     }
     else if(browsingMode == Browse_Presets)
     {
