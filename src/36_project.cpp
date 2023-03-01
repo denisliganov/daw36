@@ -611,11 +611,6 @@ bool Project36::saveProject(bool as)
 
         MObject->redraw();
 
-        if(MBrowser->browsingMode == Browse_Projects)
-        {
-            MBrowser->update();
-        }
-
         return false;
     }
 }

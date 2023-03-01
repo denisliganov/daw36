@@ -48,7 +48,7 @@ public:
     virtual bool                setPresetByIndex(long index) { return true; };
     virtual bool                setPresetByName(std::string pname);
 
-            std::vector<std::string>&   getList()  { return pres; }
+            std::vector<std::string>&   getPresetList()  { return pres; }
 
 protected:
 

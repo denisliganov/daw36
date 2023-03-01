@@ -82,14 +82,14 @@ void Parameter::paramInit(std::string name, ParamType pt, float min_val, float m
         logRange = range;
     }
 
-    params.push_front(this);
+    globalParams.push_front(this);
 
     setValue(defaultValue);
 }
 
 Parameter::~Parameter()
 {
-    params.remove(this);
+    globalParams.remove(this);
 }
 
 std::string Parameter::getUnitString()

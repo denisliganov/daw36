@@ -20,7 +20,7 @@
 
 
 std::list<Parameter*>           recParams;
-std::forward_list<Parameter*>   params;
+std::forward_list<Parameter*>   globalParams;
 
 
 
@@ -220,6 +220,19 @@ void Transport::togglePlayback()
     else
     {
         GPlaying = true; // start playing
+
+        //if(paraminit)
+        {
+            for(Parameter* param : globalParams)
+            {
+                param->lastsetframe = 0;
+        
+                if(param->envtweaked)
+                {
+                    param->reset();
+                }
+            }
+        }
 
         MPattern->activate();
     }

@@ -32,9 +32,6 @@ public:
 
             Browser(std::string dirpath);
             void                activateMenuItem(std::string item);
-            void                addEntry(BrwEntry* entry);
-            BrwEntry*           addEntry(DevClass ec, std::string name, std::string path = "", std::string alias ="");
-            void                activateEntry(BrwEntry* be);
             void                addSearchDir(std::string dir, bool folders=false, bool recursive=false);
             ContextMenu*        createContextMenu();
             void                clearVstFile();
@@ -57,7 +54,6 @@ public:
             void                rescanDevices();
             void                scanDirForFiles(std::string path, std::string ext, bool recurs, std::vector<std::string>& flist);
             void                scanDirForDevs(char *path, char mode, FILE* fhandle, ScanThread* thread);
-            void                update();
             void                updateEntries();
 
             BrwMode             browsingMode;
@@ -85,6 +81,7 @@ protected:
 
             BrowserList*        fileBox;
 
+            BrowserList*        plugList;
             BrowserList*        sampleList1;
             BrowserList*        vstList1;
             BrowserList*        vstList2;

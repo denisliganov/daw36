@@ -87,22 +87,15 @@ Browser::Browser(std::string dirpath)
     addObject(fileBox = new BrowserList("File browser", WorkDirectory, BrwList_Files));
     addObject(projectsList1 = new BrowserList("Projects", "", BrwList_Projects));
     addObject(internalList1 = new BrowserList("Internal modules", "", BrwList_InternalModules));
-    addObject(sampleList1 = new BrowserList("Samples", "", BrwList_WavSamples));
+    addObject(sampleList1 = new BrowserList("Samples", WorkDirectory, BrwList_WavSamples));
+    addObject(plugList = new BrowserList("Plugins", WorkDirectory, BrwList_VST2));
     addObject(vstList1 = new BrowserList("VST1", VST_EXT_PATH_1, BrwList_VST2));
     addObject(vstList2 = new BrowserList("VST2", VST_EXT_PATH_2, BrwList_VST2));
-
-    // Init internal and external devices
-
-    update();
 }
 
 void Browser::activateMenuItem(std::string item)
 {
-    if(item == "Load as instrument")
-    {
-        MInstrPanel->loadInstrFromBrowser(currEntry);
-    }
-    else if(item == "Rescan plugins")
+    if(item == "Rescan plugins")
     {
         rescanDevices();
     }
@@ -111,8 +104,6 @@ void Browser::activateMenuItem(std::string item)
         File f(currEntry->path.data());
 
         f.deleteFile();
-
-        update();
     }
     else if(item == "Open project")
     {
@@ -120,13 +111,6 @@ void Browser::activateMenuItem(std::string item)
 
         MProject.loadProject(&f);
     }
-}
-
-void Browser::addEntry(BrwEntry* entry)
-{
-    addObject(entry);
-
-    entries[browsingMode].push_back(entry);
 }
 
 void Browser::addSearchDir(std::string dir, bool folders, bool recursive)
@@ -150,36 +134,6 @@ void Browser::addSearchDir(std::string dir, bool folders, bool recursive)
         remapAndRedraw();
     }
 
-}
-
-BrwEntry* Browser::addEntry(DevClass ec, std::string name, std::string path, std::string alias)
-{
-    BrwEntry* entry = new BrwEntry(ec, name, path, alias);
-
-    addEntry(entry);
-
-    return entry;
-}
-
-void Browser::activateEntry(BrwEntry* be)
-{
-    if(isFileMode())
-    {
-        if (be->ftype == FType_Projects)
-        {
-            MProject.loadProject(&(File(be->path.data())));
-        }
-        else if (be->ftype == FType_Wave)
-        {
-            MInstrPanel->loadInstrFromBrowser(be);
-        }
-    }
-    else if (isDevMode())
-    {
-        BrwEntry* entry = (BrwEntry*)(be);
-
-        MInstrPanel->loadInstrFromBrowser(be);
-    }
 }
 
 void Browser::clearVstFile()
@@ -258,14 +212,6 @@ void Browser::drawSelf(Graphics& g)
 
     setc(g, 0.28f);
     lineH(g, 0, 0, width - 1);
-
-    for (auto be : entries[browsingMode])
-    {
-        if (be->isShown())
-        {
-            be->drawSelf(g);
-        }
-    }
 
     //gPanelRect(g, x1, y2 - BottomPadHeight + 1, x2, y2);
 }
@@ -503,48 +449,6 @@ void Browser::prreviewSample(bool down)
 
 void Browser::remap()
 {
-/*
-    int yentry = cy;// -(int)vscr->getOffset();
-    float fullSpan = 0;
-    int idx = 0;
-
-    for(int i = Browse_Projects; i < Browse_Max; i++)
-    {
-        for(auto be : entries[i])
-        {
-            be->setVis(false);
-        }
-    }
-
-    confine(cx, cy, cx + cw - 1, cy + lstHeight - 1);
-
-    for(auto be : entries[browsingMode])
-    {
-        be->listIndex = idx++;
-
-        if(currIndex == -1 && currEntry == be)
-        {
-            currIndex = be->listIndex;
-        }
-
-        if(yentry > (cy - BrwEntryHeight) && yentry < y2 && cw > 0)
-        {
-            be->setCoords1(cx, yentry, cw, BrwEntryHeight);
-        }
-        else
-        {
-            be->setVis(false);
-        }
-
-        yentry += BrwEntryHeight;
-        fullSpan += BrwEntryHeight;
-    }
-
-    //fullSpan += 64;
-    //vscr->updBounds(fullSpan, float(lstHeight), vscr->getOffset());
-    //vscr->setCoords1(width - BrwScrollerWidth + 1, cy, BrwScrollerWidth - 2, lstHeight);
-*/
-
     int cx = 0;
     int cy = 0;
     int cw = 200;
@@ -562,6 +466,7 @@ void Browser::remap()
 
     putRight(internalList1, 250, lstHeight);
     putRight(sampleList1, 250, lstHeight);
+    putRight(plugList, 250, lstHeight);
     putRight(vstList1, 250, lstHeight);
     putRight(vstList2, 250, lstHeight);
     putRight(projectsList1, 250, lstHeight);
@@ -729,11 +634,11 @@ void Browser::scanDirForDevs(char *path, char mode, FILE* fhandle, ScanThread* t
             
             dclass = DevClass_Default;
 
-            BrwEntry* dentry = addEntry(dclass, dname, dpath, "vst");
+            //BrwEntry* dentry = addEntry(dclass, dname, dpath, "vst");
 
             // Store in effect list file
 
-            fwrite(dentry, sizeof(BrwEntry), 1, fhandle);
+            //fwrite(dentry, sizeof(BrwEntry), 1, fhandle);
         }
         while (FindNextFile(shandle, &founddata));
 
@@ -833,14 +738,6 @@ void  Browser::scanDirForFiles(std::string scan_path, std::string extension, boo
     }
 }
 
-void Browser::update()
-{
-    if(entries[browsingMode].size() == 0)
-    {
-        updateEntries();
-    }
-}
-
 void Browser::updateEntries()
 {
     WIN32_FIND_DATA founddata = {0};
@@ -866,24 +763,6 @@ void Browser::updateEntries()
                 rescanDevices();
             }
          }
-    }
-    else if(browsingMode == Browse_Presets)
-    {
-        Device36* dev = MInstrPanel->getCurrInstr();
-
-        if(dev != NULL)
-        {
-            dev->scanForPresets();
-
-            auto it = dev->getPresets().begin();
-
-            for(BrwEntry* pe : dev->getPresets())
-            {
-                addEntry(pe);
-
-                it++;
-            }
-        }
     }
 
     // if(currDir != NULL)

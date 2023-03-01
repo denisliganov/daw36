@@ -26,6 +26,7 @@ public:
             void                copyParams(Pattern* newPatt);
             void                deactivate();
             void                deleteAllElements(bool flush, bool preventundo);
+            void                drawOnGrid(Graphics& g, Grid* grid);
             double              getPlayTick();
             void                getSmallestCountDown(long* count);
             long                getFrame();
@@ -35,6 +36,7 @@ public:
             long                getLastElementFrame();
          std::list<Element*>&   getElems()  { return elems; }
             Pattern*            getBasePattern()    { return ptBase; }
+    virtual void                handleMouseUp(InputEvent& ev);
             void                init(char* nm, bool tracks);
             bool                isLooped();
             bool                isPlaying();
@@ -42,8 +44,6 @@ public:
             bool                isBounded()     { return ranged; }
             void                load(XmlElement* xmlNode);
             void                move(float dtick, int dtrack);
-    virtual void                handleMouseUp(InputEvent& ev);
-            void                drawOnGrid(Graphics& g, Grid* grid);
             void                processEnvelopes(long buffframe, long num_frames, long curr_frame);
             void                placeTrigger(Trigger* tg);
             void                preInitTriggers(long frame, bool activate_env, bool paraminit = true);

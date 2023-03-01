@@ -53,7 +53,7 @@ public:
             void                activateEffectMenuItem(Eff* eff, std::string mi);
             void                activateMenuItem(std::string mi);
             void                addEffect(Eff* eff);
-            Eff*                addEffectFromBrowser(BrwEntry* de);
+            Eff*                addEffectFromBrowser(BrwListEntry* de);
             ContextMenu*        createContextMenu();
             ContextMenu*        createContextMenuForEffect(Eff* eff);
             void                drawSelf(Graphics& g);

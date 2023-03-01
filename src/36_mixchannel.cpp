@@ -7,6 +7,7 @@
 #include "36_parampan.h"
 #include "36_vu.h"
 #include "36_browser.h"
+#include "36_browserlist.h"
 #include "36_effects.h"
 #include "36_vst.h"
 #include "36_utils.h"
@@ -273,20 +274,415 @@ void MixChannel::addEffect(Eff* eff)
     ReleaseMutex(MixerMutex);
 }
 
-void MixChannel::removeEffect(Eff* eff)
+Eff* MixChannel::addEffectFromBrowser(BrwListEntry * de)
 {
-    effs.remove(eff);
+    Eff* eff = NULL;
 
-    if(effs.empty())
+    if(de->getType() == Entry_DLL)
     {
-        voffs = 0;
+        VstEffect* vsteff = new VstEffect((char*)de->getPath().data());
+
+        eff = vsteff;
+    }
+    else
+    {
+        eff = CreateEffect(de->getPath());
     }
 
-    eff->setMixChannel(NULL);
+    if(eff != NULL)
+    {
+        addEffect(eff);
 
-    removeObject(eff);
+        MMixer->setCurrentEffect(eff);
+    }
+
+    return eff;
+}
+
+void MixChannel::deleteEffect(Eff* eff)
+{
+    WaitForSingleObject(MixerMutex, INFINITE);
+
+    effs.remove(eff);
+
+    deleteObject(eff);
 
     remapAndRedraw();
+
+    MProject.setChange();
+
+    ReleaseMutex(MixerMutex);
+}
+
+void MixChannel::doSend(float * sendbuff, float amount, int num_frames)
+{
+    if(sendbuff != NULL)
+    {
+        float outL, outR;
+
+        int i = 0;
+        int fc = 0;
+
+        while(i < num_frames)
+        {
+            outL = outbuff[fc];
+            outR = outbuff[fc + 1];
+
+            sendbuff[fc++] += outL*amount;
+            sendbuff[fc++] += outR*amount;
+
+            i++;
+        }
+    }
+}
+
+void MixChannel::save(XmlElement * xmlChanNode)
+{
+    //xmlChanNode->setAttribute(T("Index"), instr->instrAlias);
+
+    xmlChanNode->addChildElement(volParam->save());
+    xmlChanNode->addChildElement(panParam->save());
+
+    //xmlChanNode->addChildElement(amount1->save());
+
+    xmlChanNode->setAttribute(T("Mute"), muteparam);
+    xmlChanNode->setAttribute(T("Solo"), soloparam);
+    xmlChanNode->setAttribute(T("VOffset"), voffs);
+
+    for(Eff* eff : effs)
+    {
+        XmlElement* xmlEff = new XmlElement(T("Effect"));
+
+        eff->save(xmlEff);
+
+        xmlChanNode->addChildElement(xmlEff);
+    }
+
+    /*
+    Parameter* pParam = this->firstParam;
+    while (pParam != NULL)
+    {
+        if(pParam->IsPresetable())
+        {
+            XmlElement * xmlParam = pParam->save();
+            xmlChanNode->addChildElement(xmlParam);
+        }
+        pParam = pParam->next;
+    }
+    */
+}
+
+void MixChannel::load(XmlElement * xmlNode)
+{
+    voffs = xmlNode->getIntAttribute(T("VOffset"));
+    muteparam = xmlNode->getBoolAttribute(T("Mute"));
+    soloparam = xmlNode->getBoolAttribute(T("Solo"));
+
+    if (soloparam)
+    {
+        SoloMixChannel = this;
+    }
+
+    XmlElement* xmlParam = NULL;
+
+    forEachXmlChildElementWithTagName(*xmlNode, xmlParam, T("Parameter"))
+    {
+        String sname = xmlParam->getStringAttribute(T("devName"));
+
+        if(sname == T("Vol"))
+            volParam->load(xmlParam);
+        else if(sname == T("Pan"))
+            panParam->load(xmlParam);
+
+        /*
+        else if(sname == T("send1.amount"))
+        {
+            amount1->load(xmlParam);
+        }
+        */
+    }
+}
+
+ContextMenu* MixChannel::createContextMenu()
+{
+    ContextMenu* menu = new ContextMenu(this);
+
+    menu->addMenuItem("1-band Equalizer");
+    menu->addMenuItem("3-band Equalizer");
+    menu->addMenuItem("Graphic Equalizer");
+    menu->addMenuItem("Delay");
+    menu->addMenuItem("Reverb");
+    menu->addMenuItem("Flanger");
+    menu->addMenuItem("Phaser");
+    menu->addMenuItem("Filter");
+    menu->addMenuItem("WahWah");
+    menu->addMenuItem("Distortion");
+    menu->addMenuItem("Compressor");
+    menu->addMenuItem("Stereo Expander");
+
+    return menu;
+}
+
+ContextMenu* MixChannel::createContextMenuForEffect(Eff* eff)
+{
+    ContextMenu* menu = new ContextMenu(eff);
+
+    menu->addMenuItem("Delete");
+    menu->addMenuItem("Clone");
+    menu->addMenuItem("Replace");
+
+    return menu;
+}
+
+void MixChannel::activateEffectMenuItem(Eff * eff, std::string mi)
+{
+    if(mi == "Delete")
+    {
+        deleteEffect(eff);
+    }
+}
+
+void MixChannel::activateMenuItem(std::string mi)
+{
+    Eff* eff = NULL;
+
+    if(mi == "1-band Equalizer")
+    {
+        eff = CreateEffect("eff.eq1");
+    }
+    else if(mi == "3-band Equalizer")
+    {
+        eff = CreateEffect("eff.eq3");
+    }
+    else if(mi == "Graphic Equalizer")
+    {
+        eff = CreateEffect("eff.grapheq");
+    }
+    else if(mi == "Delay")
+    {
+        eff = CreateEffect("eff.delay");
+    }
+    else if(mi == "Reverb")
+    {
+        eff = CreateEffect("eff.reverb");
+    }
+    else if(mi == "Flanger")
+    {
+        eff = CreateEffect("eff.flanger");
+    }
+    else if(mi == "Phaser")
+    {
+        eff = CreateEffect("eff.phaser");
+    }
+    else if(mi == "Filter")
+    {
+        eff = CreateEffect("eff.filter1");
+    }
+    else if(mi == "WahWah")
+    {
+        eff = CreateEffect("eff.wah");
+    }
+    else if(mi == "Distortion")
+    {
+        eff = CreateEffect("eff.dist");
+    }
+    else if(mi == "Compressor")
+    {
+        eff = CreateEffect("eff.comp");
+    }
+    else if(mi == "Stereo Expander")
+    {
+        eff = CreateEffect("eff.stereo");
+    }
+
+    if(eff != NULL)
+    {
+        WaitForSingleObject(MixerMutex, INFINITE);
+
+        addEffect(eff);
+
+        MMixer->setCurrentEffect(eff);
+
+        ReleaseMutex(MixerMutex);
+    }
+
+    redraw();
+}
+
+void MixChannel::handleMouseWheel(InputEvent& ev)
+{
+    //
+}
+
+void MixChannel::handleMouseDown(InputEvent& ev)
+{
+    if(instr != NULL)
+    {
+        MInstrPanel->setCurrInstr(instr);
+
+        //if(ev.keyFlags & kbd_ctrl && ev.mouseY < y1 + MixerTopHeight)
+        {
+        //    instr->preview();
+        }
+    }
+}
+
+void MixChannel::handleMouseUp(InputEvent& ev)
+{
+    MAudio->releaseAllPreviews();
+
+    //if(ev.mouseY < y1 + MixerTopHeight)
+    {
+        if(instr != NULL)
+        {
+            //_MInstrPanel->setCurrentInstrument(instr);
+        }
+    }
+}
+
+bool MixChannel::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
+{
+    Gobj* o1 = NULL;
+    Gobj* o2 = NULL;
+
+    Gobj* o = CheckNeighborObjectsX(objs, "eff", mx, (Gobj**)&o1, (Gobj**)&o2);
+
+    redraw();
+
+    dropObj = o;
+
+    int xh = x1 + 1;
+    int yh1 = y1;
+    int yh2 = y2;
+
+/*
+    if(o2 != NULL)
+    {
+        xh = o2->getX1() + 1;
+        yh1 = o2->getY1();
+        yh2 = o2->getY2();
+    }
+*/
+
+    if(o1 != NULL)
+    {
+        xh = o1->getX2() + 1;
+        yh1 = o1->getY1();
+        yh2 = o1->getY2();
+    }
+
+    drag.dropHighlightVertical->setCoordsUn(xh - 4, yh1, xh + 4, yh2);
+
+    int tw = gGetTextWidth(FontSmall, obj->getObjName());
+    int th = gGetTextHeight(FontSmall);
+
+    drag.setCoords1(mx - tw/2, my - th/2, tw, th);
+
+    return true;
+}
+
+bool MixChannel::handleObjDrop(Gobj * obj,int mx,int my,unsigned flags)
+{
+    Eff* eff = NULL;
+
+   // BrwEntry* be = dynamic_cast<BrwEntry*>(obj);
+    BrwListEntry* ble = dynamic_cast<BrwListEntry*>(obj);
+
+/*
+    if(be)
+    {
+        eff = addEffectFromBrowser((BrwEntry*)obj);
+        
+        if(eff != NULL)
+        {
+            placeEffectBefore(eff, (Eff*)dropObj);
+        }
+        else
+        {
+            MWindow->showAlertBox("Can't load effect");
+        }
+
+        return true;
+    }
+    else */
+    if(ble)
+    {
+        eff = addEffectFromBrowser((BrwListEntry*)obj);
+        
+        if(eff != NULL)
+        {
+            placeEffectBefore(eff, (Eff*)dropObj);
+        }
+        else
+        {
+            MWindow->showAlertBox("Can't load effect");
+        }
+
+        return true;
+    }
+    else
+    {
+        eff = dynamic_cast<Eff*>(obj);
+
+        if(eff)
+        {
+            WaitForSingleObject(MixerMutex, INFINITE);
+            //std::unique_lock<std::mutex> lock(MixMutex);
+
+            if(flags & kbd_ctrl)
+            {
+                eff = eff->clone();
+            }
+            else if(eff != dropObj)
+            {
+                eff->getMixChannel()->removeEffect(eff);
+            }
+
+            if(eff != dropObj)
+            {
+                addEffect(eff);
+
+                placeEffectBefore(eff, (Eff*)dropObj);
+            }
+
+            remapAndRedraw();
+
+            ReleaseMutex(MixerMutex);
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
+void MixChannel::placeEffectBefore(Eff* eff, Eff* before)
+{
+    WaitForSingleObject(MixerMutex, INFINITE);
+
+    effs.remove(eff);
+
+    auto it = effs.begin();
+
+    if(before == NULL)      // Insert to end
+    {
+        it = effs.end();
+    }
+    else
+    {
+        for(; it != effs.end() && *it != before; it++);
+    }
+
+    effs.insert(it, eff);
+
+    remapAndRedraw();
+
+    if(instr)
+    {
+        // MInstrPanel->setCurrInstr(instr);
+    }
+
+    ReleaseMutex(MixerMutex);
 }
 
 void MixChannel::process(int num_frames, float* out_buff)
@@ -552,270 +948,20 @@ void MixChannel::process(int num_frames, float* out_buff)
     }
 }
 
-void MixChannel::doSend(float * sendbuff, float amount, int num_frames)
+void MixChannel::removeEffect(Eff* eff)
 {
-    if(sendbuff != NULL)
-    {
-        float outL, outR;
-
-        int i = 0;
-        int fc = 0;
-
-        while(i < num_frames)
-        {
-            outL = outbuff[fc];
-            outR = outbuff[fc + 1];
-
-            sendbuff[fc++] += outL*amount;
-            sendbuff[fc++] += outR*amount;
-
-            i++;
-        }
-    }
-}
-
-void MixChannel::save(XmlElement * xmlChanNode)
-{
-    //xmlChanNode->setAttribute(T("Index"), instr->instrAlias);
-
-    xmlChanNode->addChildElement(volParam->save());
-    xmlChanNode->addChildElement(panParam->save());
-
-    //xmlChanNode->addChildElement(amount1->save());
-
-    xmlChanNode->setAttribute(T("Mute"), muteparam);
-    xmlChanNode->setAttribute(T("Solo"), soloparam);
-    xmlChanNode->setAttribute(T("VOffset"), voffs);
-
-    for(Eff* eff : effs)
-    {
-        XmlElement* xmlEff = new XmlElement(T("Effect"));
-
-        eff->save(xmlEff);
-
-        xmlChanNode->addChildElement(xmlEff);
-    }
-
-    /*
-    Parameter* pParam = this->firstParam;
-    while (pParam != NULL)
-    {
-        if(pParam->IsPresetable())
-        {
-            XmlElement * xmlParam = pParam->save();
-            xmlChanNode->addChildElement(xmlParam);
-        }
-        pParam = pParam->next;
-    }
-    */
-}
-
-void MixChannel::load(XmlElement * xmlNode)
-{
-    voffs = xmlNode->getIntAttribute(T("VOffset"));
-    muteparam = xmlNode->getBoolAttribute(T("Mute"));
-    soloparam = xmlNode->getBoolAttribute(T("Solo"));
-
-    if (soloparam)
-    {
-        SoloMixChannel = this;
-    }
-
-    XmlElement* xmlParam = NULL;
-
-    forEachXmlChildElementWithTagName(*xmlNode, xmlParam, T("Parameter"))
-    {
-        String sname = xmlParam->getStringAttribute(T("devName"));
-
-        if(sname == T("Vol"))
-            volParam->load(xmlParam);
-        else if(sname == T("Pan"))
-            panParam->load(xmlParam);
-
-        /*
-        else if(sname == T("send1.amount"))
-        {
-            amount1->load(xmlParam);
-        }
-        */
-    }
-}
-
-ContextMenu* MixChannel::createContextMenu()
-{
-    ContextMenu* menu = new ContextMenu(this);
-
-    menu->addMenuItem("1-band Equalizer");
-    menu->addMenuItem("3-band Equalizer");
-    menu->addMenuItem("Graphic Equalizer");
-    menu->addMenuItem("Delay");
-    menu->addMenuItem("Reverb");
-    menu->addMenuItem("Flanger");
-    menu->addMenuItem("Phaser");
-    menu->addMenuItem("Filter");
-    menu->addMenuItem("WahWah");
-    menu->addMenuItem("Distortion");
-    menu->addMenuItem("Compressor");
-    menu->addMenuItem("Stereo Expander");
-
-    return menu;
-}
-
-ContextMenu* MixChannel::createContextMenuForEffect(Eff* eff)
-{
-    ContextMenu* menu = new ContextMenu(eff);
-
-    menu->addMenuItem("Delete");
-    menu->addMenuItem("Clone");
-    menu->addMenuItem("Replace");
-
-    return menu;
-}
-
-void MixChannel::activateEffectMenuItem(Eff * eff, std::string mi)
-{
-    if(mi == "Delete")
-    {
-        deleteEffect(eff);
-    }
-}
-
-void MixChannel::activateMenuItem(std::string mi)
-{
-    Eff* eff = NULL;
-
-    if(mi == "1-band Equalizer")
-    {
-        eff = CreateEffect("eff.eq1");
-    }
-    else if(mi == "3-band Equalizer")
-    {
-        eff = CreateEffect("eff.eq3");
-    }
-    else if(mi == "Graphic Equalizer")
-    {
-        eff = CreateEffect("eff.grapheq");
-    }
-    else if(mi == "Delay")
-    {
-        eff = CreateEffect("eff.delay");
-    }
-    else if(mi == "Reverb")
-    {
-        eff = CreateEffect("eff.reverb");
-    }
-    else if(mi == "Flanger")
-    {
-        eff = CreateEffect("eff.flanger");
-    }
-    else if(mi == "Phaser")
-    {
-        eff = CreateEffect("eff.phaser");
-    }
-    else if(mi == "Filter")
-    {
-        eff = CreateEffect("eff.filter1");
-    }
-    else if(mi == "WahWah")
-    {
-        eff = CreateEffect("eff.wah");
-    }
-    else if(mi == "Distortion")
-    {
-        eff = CreateEffect("eff.dist");
-    }
-    else if(mi == "Compressor")
-    {
-        eff = CreateEffect("eff.comp");
-    }
-    else if(mi == "Stereo Expander")
-    {
-        eff = CreateEffect("eff.stereo");
-    }
-
-    if(eff != NULL)
-    {
-        WaitForSingleObject(MixerMutex, INFINITE);
-
-        addEffect(eff);
-
-        MMixer->setCurrentEffect(eff);
-
-        ReleaseMutex(MixerMutex);
-    }
-
-    redraw();
-}
-
-void MixChannel::deleteEffect(Eff* eff)
-{
-    WaitForSingleObject(MixerMutex, INFINITE);
-
     effs.remove(eff);
 
-    deleteObject(eff);
+    if(effs.empty())
+    {
+        voffs = 0;
+    }
+
+    eff->setMixChannel(NULL);
+
+    removeObject(eff);
 
     remapAndRedraw();
-
-    MProject.setChange();
-
-    ReleaseMutex(MixerMutex);
-}
-
-Eff* MixChannel::addEffectFromBrowser(BrwEntry * de)
-{
-    Eff* eff = NULL;
-
-    if(de->isExternal())
-    {
-        VstEffect* vsteff = new VstEffect((char*)de->path.data());
-
-        eff = vsteff;
-    }
-    else
-    {
-        eff = CreateEffect(de->alias);
-    }
-
-    if(eff != NULL)
-    {
-        addEffect(eff);
-
-        MMixer->setCurrentEffect(eff);
-    }
-
-    return eff;
-}
-
-void MixChannel::handleMouseWheel(InputEvent& ev)
-{
-    //
-}
-
-void MixChannel::handleMouseDown(InputEvent& ev)
-{
-    if(instr != NULL)
-    {
-        MInstrPanel->setCurrInstr(instr);
-
-        //if(ev.keyFlags & kbd_ctrl && ev.mouseY < y1 + MixerTopHeight)
-        {
-        //    instr->preview();
-        }
-    }
-}
-
-void MixChannel::handleMouseUp(InputEvent& ev)
-{
-    MAudio->releaseAllPreviews();
-
-    //if(ev.mouseY < y1 + MixerTopHeight)
-    {
-        if(instr != NULL)
-        {
-            //_MInstrPanel->setCurrentInstrument(instr);
-        }
-    }
 }
 
 void MixChannel::setBufferSize(unsigned int bufferSize)
@@ -832,134 +978,6 @@ void MixChannel::setSampleRate(float sampleRate)
     {
         eff->setSampleRate(sampleRate);
     }
-}
-
-
-void MixChannel::placeEffectBefore(Eff* eff, Eff* before)
-{
-    WaitForSingleObject(MixerMutex, INFINITE);
-
-    effs.remove(eff);
-
-    auto it = effs.begin();
-
-    if(before == NULL)      // Insert to end
-    {
-        it = effs.end();
-    }
-    else
-    {
-        for(; it != effs.end() && *it != before; it++);
-    }
-
-    effs.insert(it, eff);
-
-    remapAndRedraw();
-
-    if(instr)
-    {
-        // MInstrPanel->setCurrInstr(instr);
-    }
-
-    ReleaseMutex(MixerMutex);
-}
-
-bool MixChannel::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
-{
-    Gobj* o1 = NULL;
-    Gobj* o2 = NULL;
-
-    Gobj* o = CheckNeighborObjectsX(objs, "eff", mx, (Gobj**)&o1, (Gobj**)&o2);
-
-    redraw();
-
-    dropObj = o;
-
-    int xh = x1 + 1;
-    int yh1 = y1;
-    int yh2 = y2;
-
-/*
-    if(o2 != NULL)
-    {
-        xh = o2->getX1() + 1;
-        yh1 = o2->getY1();
-        yh2 = o2->getY2();
-    }
-*/
-
-    if(o1 != NULL)
-    {
-        xh = o1->getX2() + 1;
-        yh1 = o1->getY1();
-        yh2 = o1->getY2();
-    }
-
-    drag.dropHighlightVertical->setCoordsUn(xh - 4, yh1, xh + 4, yh2);
-
-    int tw = gGetTextWidth(FontSmall, obj->getObjName());
-    int th = gGetTextHeight(FontSmall);
-
-    drag.setCoords1(mx - tw/2, my - th/2, tw, th);
-
-    return true;
-}
-
-bool MixChannel::handleObjDrop(Gobj * obj,int mx,int my,unsigned flags)
-{
-    Eff* eff = NULL;
-
-    BrwEntry* be = dynamic_cast<BrwEntry*>(obj);
-
-    if(be)
-    {
-        eff = addEffectFromBrowser((BrwEntry*)obj);
-        
-        if(eff != NULL)
-        {
-            placeEffectBefore(eff, (Eff*)dropObj);
-        }
-        else
-        {
-            MWindow->showAlertBox("Can't load effect");
-        }
-
-        return true;
-    }
-    else
-    {
-        eff = dynamic_cast<Eff*>(obj);
-
-        if(eff)
-        {
-            WaitForSingleObject(MixerMutex, INFINITE);
-            //std::unique_lock<std::mutex> lock(MixMutex);
-
-            if(flags & kbd_ctrl)
-            {
-                eff = eff->clone();
-            }
-            else if(eff != dropObj)
-            {
-                eff->getMixChannel()->removeEffect(eff);
-            }
-
-            if(eff != dropObj)
-            {
-                addEffect(eff);
-
-                placeEffectBefore(eff, (Eff*)dropObj);
-            }
-
-            remapAndRedraw();
-
-            ReleaseMutex(MixerMutex);
-        }
-
-        return true;
-    }
-
-    return false;
 }
 
 void MixChannel::reset()

@@ -99,7 +99,7 @@ void DevParamObject::initAll()
         putRight(presetBox, 150, wndH - border);
     }
 
-    presetBox->setList(device->getList());
+    presetBox->setList(device->getPresetList());
 
     finalizePuts();
 

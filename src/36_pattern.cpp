@@ -683,18 +683,6 @@ bool Pattern::isLooped()
 
 void Pattern::preInitTriggers(long frame, bool activate_env, bool paraminit)
 {
-    if(paraminit)
-    {
-        for(Parameter* param : params)
-        {
-            param->lastsetframe = 0;
-
-            if(param->envtweaked)
-            {
-                param->reset();
-            }
-        }
-    }
 
     for(Event* ev : events)
     {

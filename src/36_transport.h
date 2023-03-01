@@ -12,7 +12,7 @@
 
 
 extern std::list<Parameter*>           recParams;
-extern std::forward_list<Parameter*>   params;
+extern std::forward_list<Parameter*>   globalParams;
 
 
 

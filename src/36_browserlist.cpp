@@ -298,7 +298,8 @@ void BrowserList::handleMouseDrag(InputEvent & ev)
     if (currentEntry >= 0)
     {
         if (brwEntries[currentEntry]->getType() == Entry_Wave ||
-            brwEntries[currentEntry]->getType() == Entry_DLL)
+            brwEntries[currentEntry]->getType() == Entry_DLL ||
+            brwEntries[currentEntry]->getType() == Entry_Native)
         {
             if(MObject->canDrag(this))
             {
