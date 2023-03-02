@@ -90,22 +90,9 @@ void Eff::drawSelf(Graphics& g)
     txtfit(g, FontSmall, objName, 1, th - 4, width - 2);
 }
 
-Eff* Eff::makeClone(Eff* eff)
-{
-    auto itr1 = params.begin();
-    auto itr2 = eff->params.begin();
-
-    for(; itr1 != params.end(); itr1++, itr2++)
-    {
-        ((Parameter*)(*itr2))->setValue(((Parameter*)(*itr1))->getValue());
-    }
-
-    return eff;
-}
-
 Eff* Eff::clone()
 { 
-    return makeClone(CreateEffect(objId));
+    return CreateEffect(objId);
 }
 
 ContextMenu* Eff::createContextMenu()
@@ -121,59 +108,6 @@ void Eff::activateMenuItem(std::string item)
 void Eff::setMixChannel(MixChannel* mc)
 {
     mixChannel = mc;
-}
-
-void Eff::process(float* in_buff, float* out_buff, int num_frames)
-{
-    if(envelopes == NULL && (bypass == false || muteCount < DECLICK_COUNT))
-    {
-        processData(in_buff, out_buff, num_frames);
-    }
-    else if(envelopes != NULL)
-    {
-        long frames_to_process;
-        long buffframe = 0;
-        long frames_remaining = num_frames;
-
-        while(frames_remaining > 0)
-        {
-            if(frames_remaining > 32)
-            {
-                frames_to_process = 32;
-            }
-            else
-            {
-                frames_to_process = frames_remaining;
-            }
-
-            /*
-            tgenv = envelopes;
-            while(tgenv != NULL)
-            {
-                env = (Envelope*)tgenv->el;
-                if(buffframe >= env->last_buffframe)
-                {
-                    param = env->param;
-                    param->SetValueFromEnvelope(env->buffoutval[buffframe], env);
-                }
-                tgenv = tgenv->group_prev;
-            }
-            */
-
-            if(bypass == false || muteCount < DECLICK_COUNT)
-            {
-                processData(&in_buff[buffframe*2], &out_buff[buffframe*2], frames_to_process);
-            }
-
-            frames_remaining -= frames_to_process;
-            buffframe += frames_to_process;
-        }
-    }
-
-    if(bypass == true && muteCount >= DECLICK_COUNT)
-    {
-        memcpy(out_buff, in_buff, num_frames*2*sizeof(float));
-    }
 }
 
 void Eff::save(XmlElement * xmlEff)

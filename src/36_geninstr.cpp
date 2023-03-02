@@ -40,16 +40,16 @@ void Generator::CheckBounds(Note* gnote, Trigger* tg, long num_frames)
 
         finished = envVol->isOutOfBounds(tg->framePhase);
 
-        endframe = num_frames - (tg->framePhase - envVol->getFrameLength());
+        endFrame = num_frames - (tg->framePhase - envVol->getFrameLength());
 
         if(finished)
         {
             tg->setState(TS_Finished);
         }
 
-        if(endframe < 0)
+        if(endFrame < 0)
         {
-            endframe = 0;
+            endFrame = 0;
         }
     }
 }

@@ -73,7 +73,7 @@ public:
             void                deleteAllObjects();
     virtual void                drawloop(Graphics& g);
     virtual void                drawSelf(Graphics& g) {};
-    virtual void                drawover(Graphics& g) {};
+    virtual void                drawOverChildren(Graphics& g) {};
     virtual bool                drawDraggedObject(Graphics& g, Gobj* obj) { return false; };
             void                defineHueColor(float hue, float sat) { colorHue = hue; colorSat = sat; }
             void                defineMonoColor(float mono_level) { monoLevel = mono_level; }

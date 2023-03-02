@@ -50,6 +50,8 @@ Note* CreateNote(float tick, int line, Instrument* instr, int note_val, float le
         newNote = new Note(instr, note_val);
     }
 
+    instr->addNote(newNote);
+
     newNote->setPos(tick, line);
 
     newNote->getVol()->setValue(vol);

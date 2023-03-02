@@ -10,7 +10,7 @@ class Note : public Element
 {
 friend  Grid;
 friend  Lane;
-friend  Instrument;
+friend  Device36;
 friend  Pattern;
 
 public:
@@ -37,7 +37,8 @@ public:
             void                setInstr(Instrument* i) { instr = i; }
             void                setNote(int note_value);
             void                setPos(float tick,int line);
-
+            void                propagateTriggers(Pattern* pt);
+            void                unpropagateTriggers(Pattern* pt);
 protected:
 
             int                 barStart;
@@ -49,8 +50,6 @@ protected:
             ParamVol*           vol;
             int                 yBase;
 
-            void                propagateTriggers(Pattern* pt);
-            void                unpropagateTriggers(Pattern* pt);
             void                move(float dtick, int dtrack);
             void                save(XmlElement* xmlNode);
             void                load(XmlElement* xmlNode);

@@ -237,9 +237,12 @@ void Event::activateTriggers(bool deactonly)
 
                         if(tg->isActive())
                         {
-                            ii->getInstr()->flowTriggers(tg, tg);
+                            ii->getInstr()->fadeBetweenTriggers(tg, tg);
 
-                            if(tg->isActive())  tg->stop();     // it could change 
+                            if(tg->isActive())
+                            {
+                                tg->stop();     // it could change 
+                            }
                         }
 
                          tg->start(0);

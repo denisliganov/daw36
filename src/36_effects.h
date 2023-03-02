@@ -19,26 +19,17 @@ public:
             virtual Eff*        clone();
             void                drawSelf(Graphics& g);
             MixChannel*         getMixChannel() { return mixChannel; }
-            int                 getMuteCount()  { return muteCount; }
-            bool                getBypass()     { return bypass; }
             void                handleMouseUp(InputEvent& ev);
             void                handleMouseDown(InputEvent& ev);
             void                handleMouseDrag(InputEvent& ev);
             void                handleChildEvent(Gobj * obj, InputEvent& ev);
             virtual void        load(XmlElement* xmlEff);
-    virtual Eff*                makeClone(Eff* eff);
-    virtual void                processData(float* in_buff, float* out_buff, int num_frames) {};
-    virtual void                process(float* in_buff, float* out_buff, int num_frames);
             void                remap();
             virtual void        save(XmlElement* xmlEff);
             virtual void        setMixChannel(MixChannel* ncell);
 
-            int                 muteCount;
-
 private:
 
-            bool                bypass;
-            bool                folded;
             MixChannel*         mixChannel;
 };
 

@@ -753,6 +753,7 @@ void MixChannel::process(int num_frames, float* out_buff)
         float panv, volv, volL, volR;
 
         bool off = false;
+
         /*
         if(muteparam != NULL)
         {

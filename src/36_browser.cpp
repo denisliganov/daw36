@@ -32,8 +32,6 @@
 
 
 
-
-
 Browser::Browser(std::string dirpath)
 {
     ipreview = NULL;
@@ -49,16 +47,7 @@ Browser::Browser(std::string dirpath)
 
 void Browser::drawSelf(Graphics& g)
 {
-/*
-    setc(g, 0.15f);
-    fillx(g, 0, MainLineHeight + 1, width, height);
-
-    setc(g, 0.2f);
-    fillx(g, 0, 0, width, MainLineHeight);
-
-    setc(g, 0.28f);
-    lineH(g, 0, 0, width - 1);
-*/
+    
 }
 
 void Browser::handleChildEvent(Gobj * obj, InputEvent& ev)

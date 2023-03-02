@@ -7,7 +7,6 @@
 
 
 
-//namespace M {
 
 
 class VstInstr: public Instrument
@@ -18,16 +17,16 @@ public:
     virtual ~VstInstr();
             void                addNoteEvent(int note, long num_frames, long frame_phase, long total_frames, float volume);
             void                checkBounds(Note* gnote, Trigger* tg, long num_frames);
-            virtual SubWindow*   createWindow();
+            virtual SubWindow*  createWindow();
             void                deactivateTrigger(Trigger* tg);
-            bool                isLoaded() { return vst2 != NULL; }
-            void                flowTriggers(Trigger* tgfrom, Trigger* tgto) {}; // stub to avoid any action here
+            void                fadeBetweenTriggers(Trigger* tgfrom, Trigger* tgto) {}; // stub to avoid any action here
             std::list<Param*>   getParams() { return vst2->getParams(); }
-            void                generateData(long num_frames = 0, long mixbuffframe = 0);
+            void                generateData(long num_frames = 0, long mix_buff_frame = 0);
+            bool                isLoaded() { return vst2 != NULL; }
             void                load(XmlElement* instrNode);
             bool                onUpdateDisplay();
-            void                postProcessTrigger(Trigger* tg = NULL, long num_frames = 0, long buffframe = 0, long mixbuffframe = 0, long remaining = 0);
-            long                processTrigger(Trigger* tg, long num_frames = 0, long buffframe = 0);
+            void                postProcessTrigger(Trigger* tg = NULL, long num_frames = 0, long buff_frame = 0, long mix_buff_frame = 0, long remaining = 0);
+            long                processTrigger(Trigger* tg, long num_frames = 0, long buff_frame = 0);
             void                postNoteON(int note, float vol);
             void                postNoteOFF(int note, int velocity);
             void                reset();
@@ -37,7 +36,7 @@ public:
             void                setSampleRate(float sampleRate);
             bool                setPresetByName(std::string pname);
             bool                setPresetByIndex(long index);
-            void                vstProcess(long num_frames, long buffframe);
+            void                vstProcess(long num_frames, long buff_frame);
 
 private:
 
@@ -48,7 +47,6 @@ private:
             Vst2Plugin*         vst2;
 };
 
-//}
 
 
  

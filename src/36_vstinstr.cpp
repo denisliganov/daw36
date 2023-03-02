@@ -5,6 +5,7 @@
 #include "36_note.h"
 #include "36_paramnum.h"
 #include "36_paramvol.h"
+#include "36_parampan.h"
 #include "36_pattern.h"
 #include "36_utils.h"
 #include "36_instrpanel.h"
@@ -14,9 +15,6 @@
 #include "36_vstwin.h"
 #include "36_devwin.h"
 
-
-
-//namespace M {
 
 
 
@@ -131,7 +129,7 @@ long VstInstr::processTrigger(Trigger* tg, long num_frames, long buffframe)
     return num_frames;
 }
 
-void VstInstr::postProcessTrigger(Trigger* tg, long num_frames, long buffframe, long mixbuffframe, long remaining)
+void VstInstr::postProcessTrigger(Trigger* tg, long num_frames, long buff_frame, long mix_buff_frame, long remaining)
 {
     float       panVal;
     float       volL, volR;
@@ -154,14 +152,14 @@ void VstInstr::postProcessTrigger(Trigger* tg, long num_frames, long buffframe, 
         penv1 = (Envelope*)pan->env;
     }
 
-    tc = mixbuffframe*2;
-    tc0 = buffframe*2;
+    tc = mix_buff_frame*2;
+    tc0 = buff_frame*2;
 
     for(long cc = 0; cc < num_frames; cc++)
     {
         if(penv1 != NULL)
         {
-            panVal = penv1->buffoutval[mixbuffframe + cc];
+            panVal = penv1->buffoutval[mix_buff_frame + cc];
 
             // update pan
             // PanConstantRule(pan, &volL, &volR);
@@ -186,7 +184,7 @@ void VstInstr::deactivateTrigger(Trigger* tg)
     Instrument::deactivateTrigger(tg);
 }
 
-void VstInstr::vstProcess(long num_frames, long buffframe)
+void VstInstr::vstProcess(long num_frames, long buff_frame)
 {
     /*
     struct VstEvents            // a block of events for the current audio block
@@ -217,7 +215,7 @@ void VstInstr::vstProcess(long num_frames, long buffframe)
         vst2->aeffProcessEvents(events);
     }
 
-    vst2->processData(NULL, &dataBuff[buffframe*2], num_frames);
+    vst2->processData(NULL, &dataBuff[buff_frame*2], num_frames);
 
     numEvents = 0;
 
@@ -231,7 +229,7 @@ void VstInstr::vstProcess(long num_frames, long buffframe)
 
 }
 
-void VstInstr::generateData(long num_frames, long mixbuffframe)
+void VstInstr::generateData(long num_frames, long mix_buff_frame)
 {
     bool off = false;
 
@@ -241,7 +239,7 @@ void VstInstr::generateData(long num_frames, long mixbuffframe)
         off = true;
     }*/
 
-    fill = true;
+    bool fill = true;
 
     for(auto itr = activeTriggers.begin(); itr != activeTriggers.end(); )
     {
@@ -264,7 +262,7 @@ void VstInstr::generateData(long num_frames, long mixbuffframe)
         Trigger* tgenv;
         long frames_to_process;
         long frames_remaining = num_frames;
-        long buffframe = 0;
+        long buffFrame = 0;
 
         while(frames_remaining > 0)
         {
@@ -284,16 +282,16 @@ void VstInstr::generateData(long num_frames, long mixbuffframe)
                 env = (Envelope*)tgenv->el;
 
                 param = ((Envelope*)tgenv->el)->param;
-                param->setValueFromEnvelope(env->buff[mixbuffframe + buffframe], env);
+                param->setValueFromEnvelope(env->buff[mix_buff_frame + buffFrame], env);
 
                 tgenv = tgenv->group_prev;
             }
 
-            vstProcess(frames_to_process, buffframe);
+            vstProcess(frames_to_process, buffFrame);
 
             frames_remaining -= frames_to_process;
 
-            buffframe += frames_to_process;
+            buffFrame += frames_to_process;
         }
     }
 
@@ -350,9 +348,9 @@ void VstInstr::generateData(long num_frames, long mixbuffframe)
 
     if(fill)
     {
-        postProcessTrigger(NULL, num_frames, 0, mixbuffframe);
+        postProcessTrigger(NULL, num_frames, 0, mix_buff_frame);
 
-        fillMixChannel(num_frames, 0, mixbuffframe);
+        fillMixChannel(num_frames, 0, mix_buff_frame);
     }
 }
 
@@ -623,6 +621,5 @@ SubWindow* VstInstr::createWindow()
     }
 }
 
-//}
 
 

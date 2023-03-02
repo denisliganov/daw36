@@ -50,8 +50,6 @@ Note::Note(Instrument* i, int note_val)
     ticklen = (float)MTransp->getTicksPerBeat();
 
     tick2 = tick1 + ticklen;
-
-    instr->addNote(this);
 }
 
 Note::~Note()

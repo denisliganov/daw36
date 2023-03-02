@@ -141,7 +141,8 @@ void Sample::activateTrigger(Trigger* tg)
 
 void Sample::copyDataToClonedInstrument(Instrument * instr)
 {
-    Instrument::makeClone(instr);
+    //Instrument::makeClone(instr);
+    
     Sample* nsample = (Sample*)instr;
 
     delete nsample->envVol;
@@ -173,7 +174,7 @@ bool Sample::checkBounds(SampleNote* samplent, Trigger* tg, long num_frames)
             //endframe = num_frames - ANTIALIASING_FRAMES;
             //if(endframe < 0)
 
-            endframe = 0;
+            endFrame = 0;
         }
         else if(tg->framePhase >= samplent->framelen)
         {
@@ -661,11 +662,13 @@ void Sample::load(XmlElement * instrNode)
     }
 }
 
-long Sample::processTrigger(Trigger * tg, long num_frames, long buffframe)
+long Sample::processTrigger(Trigger * tg, long num_frames, long buff_frame)
 {
     SampleNote* samplent = (SampleNote*)tg->el;
-    fill = true;
-    skip = false;
+
+    bool fill = true;
+
+    bool skip = false;
 
     // Initial stuff
 
@@ -674,11 +677,11 @@ long Sample::processTrigger(Trigger * tg, long num_frames, long buffframe)
     tg->vol_val = tg->volBase;
     tg->pan_val = tg->panBase;
 
-    preProcessTrigger(tg, &skip, &fill, num_frames, buffframe);
+    preProcessTrigger(tg, &skip, &fill, num_frames, buff_frame);
 
     if(!skip)
     {
-        long cc, tc0 = buffframe*2;
+        long cc, tc0 = buff_frame*2;
         float sd1, sd2;
 
         for(cc = 0; cc < num_frames; cc++)

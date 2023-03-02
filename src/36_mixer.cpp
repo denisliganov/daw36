@@ -239,8 +239,6 @@ MixChannel* Mixer::addMixChannel(Instrument * instr)
 
     addObject(mixChannel, "");
 
-    addObject(instr->butt = new Button36(true), "");
-
     ReleaseMutex(MixerMutex);
 
     return mixChannel;

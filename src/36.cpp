@@ -230,8 +230,6 @@ void MainWinObject::remap()
             MInstrPanel->btHideFX->setEnable(false);
             MInstrPanel->btShowFX->setEnable(true);
         }
-
-        //MCtrllPanel->showFX->setCoords1(MCtrllPanel->xShowHide, MCtrllPanel->yShowHide, 30, 30);
     }
     else
     {
@@ -240,8 +238,6 @@ void MainWinObject::remap()
             MInstrPanel->btShowFX->setEnable(false);
             MInstrPanel->btHideFX->setEnable(true);
         }
-
-        //MCtrllPanel->hideFX->setCoords1(MCtrllPanel->xShowHide, MCtrllPanel->yShowHide, 30, 30);
     }
 
     redraw();

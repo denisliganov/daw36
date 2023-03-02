@@ -5,15 +5,21 @@
 
 #include "36_device.h"
 #include "36_params.h"
+#include "36_paramvol.h"
+#include "36_parampan.h"
 #include "36_slider.h"
 #include "36_button.h"
+#include "36_config.h"
 #include "36_browser.h"
 #include "36_instr.h"
+#include "36_mixchannel.h"
 #include "36_ctrlpanel.h"
 #include "36_instrpanel.h"
 #include "36_brwentry.h"
 #include "36_edit.h"
 #include "36_events_triggers.h"
+#include "36_utils.h"
+
 
 #include <direct.h>
 
@@ -23,8 +29,25 @@ Device36::Device36()
 {
     internal = true;
     previewOnly = false;
+    muteparam = soloparam = false;
 
     uniqueId = -1;
+
+    devIdx = -1;
+    rampCounterV = 0;
+    cfsV = 0;
+    rampCount = 512;
+
+    envVol = NULL;
+    mixChannel = NULL;
+
+    lastNoteLength = 4;
+    lastNoteVol = 1;
+    lastNotePan = 0;
+    lastNoteVal = BaseNote;
+
+    addParam(vol = new ParamVol("VOL"));
+    addParam(pan = new ParamPan("PAN"));
 
     currPreset = NULL;
     envelopes = NULL;
@@ -85,6 +108,66 @@ void Device36::deletePresets()
         delete pe;
     }
 }
+
+
+void Device36::processData(float* in_buff, float* out_buff, int num_frames)
+{
+    
+}
+
+void Device36::process(float* in_buff, float* out_buff, int num_frames)
+{
+    if(envelopes == NULL && (bypass == false || muteCount < DECLICK_COUNT))
+    {
+        processData(in_buff, out_buff, num_frames);
+    }
+    else if(envelopes != NULL)
+    {
+        long framesToProcess;
+        long buffFrame = 0;
+        long framesRemaining = num_frames;
+
+        while(framesRemaining > 0)
+        {
+            if(framesRemaining > 32)
+            {
+                framesToProcess = 32;
+            }
+            else
+            {
+                framesToProcess = framesRemaining;
+            }
+
+            /*
+            tgenv = envelopes;
+            while(tgenv != NULL)
+            {
+                env = (Envelope*)tgenv->el;
+                if(buffframe >= env->last_buffframe)
+                {
+                    param = env->param;
+                    param->SetValueFromEnvelope(env->buffoutval[buffframe], env);
+                }
+                tgenv = tgenv->group_prev;
+            }
+            */
+
+            if(bypass == false || muteCount < DECLICK_COUNT)
+            {
+                processData(&in_buff[buffFrame*2], &out_buff[buffFrame*2], framesToProcess);
+            }
+
+            framesRemaining -= framesToProcess;
+            buffFrame += framesToProcess;
+        }
+    }
+
+    if(bypass == true && muteCount >= DECLICK_COUNT)
+    {
+        memcpy(out_buff, in_buff, num_frames*2*sizeof(float));
+    }
+}
+
 
 void Device36::scanForPresets()
 {
@@ -532,4 +615,597 @@ void Device36::handleWindowClosed()
 {
     redraw();
 }
+
+void Device36::activateTrigger(Trigger* tg)
+{
+    Note* note = (Note*)tg->el;
+
+    tg->outsync = false;
+    tg->tgworking = true;
+    tg->muted = false;
+    tg->broken = false;
+    tg->framePhase = 0;
+    tg->auCount = 0;
+    tg->volBase = note->vol->getOutVal();
+    tg->panBase = note->pan->getOutVal();
+
+    tg->setState(TS_Sustain);
+
+    tg->noteVal = note->getNoteValue();
+    tg->freq = note->freq;
+
+    tg->wt_pos = 0;
+
+    activeTriggers.remove(tg);
+    activeTriggers.push_back(tg);
+}
+
+void Device36::addNote(Note * note)
+{
+    std::list<Note*>::iterator it = notes.begin();
+
+    while(1)
+    {
+        if (it == notes.end())
+        {
+            notes.insert(it, note);
+            break;
+        }
+
+        Note* n = *it;
+
+        if(n->gettick() > note->gettick())
+        {
+            notes.insert(it, note);
+            break;
+        }
+        else if (n->gettick() == note->gettick())
+        {
+            if(n->getNoteValue() < note->getNoteValue())
+            {
+                notes.insert(it, note);
+                break;
+            }
+        }
+
+        it++;
+    }
+}
+
+void Device36::deactivateTrigger(Trigger* tg)
+{
+    activeTriggers.remove(tg);
+
+    tg->tgworking = false;
+}
+
+// Perform fadeout or fadein antialiasing
+//
+// [IN]     stuff
+//
+void Device36::deClick(Trigger* tg, long num_frames, long buff_frame, long mix_buff_frame, long buff_remaining)
+{
+    long tc0;
+
+    float mul;
+
+    if(tg->aaOUT)
+    {
+        int nc = 0;
+
+        tc0 = buff_frame*2;
+
+        while(nc < num_frames)
+        {
+            if(tg->aaCount > 0)
+            {
+                mul = (float)tg->aaCount/DECLICK_COUNT;
+
+                inBuff[tc0] *= mul;
+                inBuff[tc0 + 1] *= mul;
+
+                tc0++; tc0++;
+
+                tg->aaCount--;
+            }
+            else
+            {
+                inBuff[tc0] = 0;
+                inBuff[tc0 + 1] = 0;
+
+                tc0++; tc0++;
+            }
+
+            nc++;
+        }
+
+        if(tg->aaCount == 0)
+        {
+            tg->aaOUT = false;
+        }
+    }
+    else if(tg->aaIN)
+    {
+        int nc = 0;
+
+        tc0 = buff_frame*2;
+
+        while(nc < num_frames && tg->aaCount > 0)
+        {
+            mul = (float)(DECLICK_COUNT - tg->aaCount)/DECLICK_COUNT;
+
+            inBuff[tc0] *= mul;
+            inBuff[tc0 + 1] *= mul;
+
+            tc0++;
+            tc0++;
+            nc++;
+
+            tg->aaCount--;
+        }
+
+        if(tg->aaCount == 0)
+        {
+            tg->aaIN = false;
+        }
+    }
+
+    // Check if finished
+
+    bool aaU = false;
+    int aaStart;
+
+    if(tg->tgState == TS_SoftFinish)
+    {
+        // Finished case
+
+        aaU = true;
+
+        if(tg->auCount == 0)
+        {
+            aaStart = endFrame - DECLICK_COUNT;
+
+            if(aaStart < 0)
+            {
+                aaStart = 0;
+            }
+        }
+        else
+        {
+            tg->setState(TS_Finished);
+
+            aaStart = 0;
+        }
+    }
+
+    // Finish declick processing
+
+    if(aaU == true)
+    {
+        jassert(aaStart >= 0);
+
+        if(aaStart >= 0)
+        {
+            tc0 = buff_frame*2 + aaStart*2;
+
+            while(aaStart < num_frames)
+            {
+                if(tg->auCount < DECLICK_COUNT)
+                {
+                    tg->auCount++;
+
+                    mul = float(DECLICK_COUNT - tg->auCount)/DECLICK_COUNT;
+
+                    inBuff[tc0] *= mul;
+                    inBuff[tc0 + 1] *= mul;
+
+                    tc0++;
+                    tc0++;
+                }
+                else
+                {
+                    inBuff[tc0] = 0;
+                    inBuff[tc0 + 1] = 0;
+
+                    tc0++;
+                    tc0++;
+                }
+
+                aaStart++;
+            }
+        }
+    }
+}
+
+void Device36::forceStop()
+{
+restart:
+
+    for(Trigger* tg :activeTriggers)
+    {
+        tg->stop();
+
+        goto restart;
+    }
+}
+
+//
+// This function helps to declick when we're forcing note removal due to lack of free voice slots
+//
+void Device36::fadeBetweenTriggers(Trigger* tgfrom, Trigger* tgto)
+{
+    memset(outBuff, 0, rampCount*sizeof(float)*2);
+    memset(inBuff, 0, rampCount*sizeof(float)*2);
+    memset(tgto->auxbuff, 0, rampCount*sizeof(float)*2);
+
+    long actual = workTrigger(tgfrom, rampCount, rampCount, 0, 0);
+
+    for(int ic = 0; ic < actual; ic++)
+    {
+        outBuff[ic*2] *= float(actual - ic)/actual;
+        outBuff[ic*2 + 1] *= float(actual - ic)/actual;
+    }
+
+    memcpy(tgto->auxbuff, outBuff, actual*sizeof(float)*2);
+
+    tgto->lcount = (float)rampCount;
+}
+
+void Device36::generateData(long num_frames, long mix_buff_frame)
+{
+    long        frames_remaining;
+    long        frames_to_process;
+    long        actual;
+    long        buffframe;
+    long        mbframe;
+    Trigger*    tgenv;
+
+    memset(outBuff, 0, num_frames*sizeof(float)*2);
+
+    frames_remaining = num_frames;
+    buffframe = 0;
+    mbframe = mix_buff_frame;
+
+    while(frames_remaining > 0)
+    {
+        if(frames_remaining > BUFF_CHUNK_SIZE)
+        {
+            frames_to_process = BUFF_CHUNK_SIZE;
+        }
+        else
+        {
+            frames_to_process = frames_remaining;
+        }
+
+        // Process envelopes for this instrument
+        tgenv = envelopes;
+
+        // Rewind to the very first, to provide correct envelopes overriding
+        while(tgenv != NULL && tgenv->group_prev != NULL) 
+        {
+            tgenv = tgenv->group_prev;
+        }
+
+        // Now process them all
+
+        while(tgenv != NULL)
+        {
+            /*
+            env = (Envelope*)tgenv->el;
+            if(env->newbuff && buffframe >= env->last_buffframe)
+            {
+                param = env->param;
+                param->SetValueFromEnvelope(env->buff[mixbuffframe + buffframe], env);
+            }
+            */
+
+            tgenv = tgenv->group_next;
+        }
+
+        /*
+        // Process activeTriggers for the current chunk
+        tg = tg_first;
+        while(tg != NULL)
+        {
+            tgnext = tg->loc_act_next;
+            // Clean inBuff to ensure obsolete data won't be used
+            memset(inBuff, 0, num_frames*sizeof(float)*2);
+            actual = workTrigger(tg, frames_to_process, frames_remaining, buffframe, mbframe);
+            tg = tgnext;
+        }
+        */
+
+        for(auto itr = activeTriggers.begin(); itr != activeTriggers.end(); )
+        {
+            // Clean inBuff to ensure obsolete data won't be used
+
+            memset(inBuff, 0, num_frames*sizeof(float)*2);
+
+            Trigger* tg = *itr;
+
+            itr++;
+
+            actual = workTrigger(tg, frames_to_process, frames_remaining, buffframe, mbframe);
+        }
+
+        frames_remaining -= frames_to_process;
+        buffframe += frames_to_process;
+        mbframe += frames_to_process;
+    }
+
+    // Send data to assigned mixer channel
+
+    fillMixChannel(num_frames, 0, mix_buff_frame);
+}
+
+long Device36::workTrigger(Trigger * tg, long num_frames, long remaining, long buff_frame, long mix_buff_frame)
+{
+    pan0 = pan1 = pan2 = pan3 = 0;
+
+    endFrame = 0;
+
+    /// Init volume base. Volume base consist of volumes, that don't change during the whole filling session.
+    /// it's then multiplied to dynamic tg->vol_val value in postProcessTrigger.
+
+    volbase = 1; // tg->tgPatt->vol->outval; // Pattern static paramSet
+
+    volbase *= DAW_INVERTED_VOL_RANGE;
+
+    // Init pans
+    pan1 = 0;
+    pan2 = 0; // tg->tgPatt->pan->outval;     // Pattern's local panning
+    pan3 = pan->getOutVal();     // Instrument's panning
+
+
+    long actual_num_frames = processTrigger(tg, num_frames, buff_frame);
+
+    if(actual_num_frames > 0)
+    {
+        postProcessTrigger(tg, actual_num_frames, buff_frame, mix_buff_frame, remaining - actual_num_frames);
+    }
+
+    if(tg->lcount > 0)
+    {
+        for(int ic = 0; ic < actual_num_frames; ic++)
+        {
+            outBuff[(buff_frame + ic)*2] += tg->auxbuff[int(rampCount - tg->lcount)*2];
+            outBuff[(buff_frame + ic)*2 + 1] += tg->auxbuff[int(rampCount - tg->lcount)*2 + 1];
+
+            tg->lcount--;
+
+            if(tg->lcount == 0)
+            {
+                break;
+            }
+        }
+    }
+
+    // If trigger was finished during processing, deactivate it here
+
+    if(tg->tgState == TS_Finished)
+    {
+        tg->stop();
+    }
+
+    return actual_num_frames;
+}
+
+void Device36::preProcessTrigger(Trigger* tg, bool* skip, bool* fill, long num_frames, long buffframe)
+{
+    if(tg->broken)
+    {
+        // Per break or mute we could leave filling for two or more times, if there're not enough num_frames
+        // to cover ANTIALIASING_FRAMES number
+
+        if(tg->aaFilledCount >= DECLICK_COUNT)
+        {
+           *fill = false;
+           *skip = true;
+
+            tg->setState(TS_Finished);
+        }
+        else
+        {
+            tg->aaFilledCount += num_frames;
+        }
+    }
+
+    // Check conditions for muting
+    if(muteparam || !(SoloInstr == NULL || SoloInstr == this))
+    {
+        // If note just begun then there's nothing to declick. Set aaFilledCount to full for immediate muting
+
+        if(tg->framePhase == 0)
+        {
+            tg->muted = true;
+            tg->aaFilledCount = DECLICK_COUNT;
+        }
+
+        if(tg->muted == false)
+        {
+            // If note was already playig, then need to continue until DECLICK_COUNT number of frames are filled
+
+            tg->muted = true;
+            tg->aaOUT = true;
+            tg->aaCount = DECLICK_COUNT;
+            tg->aaFilledCount = num_frames;
+        }
+        else
+        {
+            if(tg->aaFilledCount >= DECLICK_COUNT)
+            {
+               *fill = false;
+            }
+            else
+            {
+                tg->aaFilledCount += num_frames;
+            }
+        }
+    }
+    else if(*fill == true)
+    {
+        if(tg->muted)
+        {
+            tg->muted = false;
+            tg->aaIN = true;
+            tg->aaCount = DECLICK_COUNT;
+        }
+    }
+}
+
+// Post-process data, generated per trigger. 
+// Apply all high-level params, envelopes and fill corresponding mixcell.
+//
+// [IN]
+//    tg            - trigger being processed.
+//    num_frames    - number of frames to process.
+//    curr_frame    - global timing frame number.
+//    buffframe     - global buffering offset.
+//
+void Device36::postProcessTrigger(Trigger* tg, long num_frames, long buff_frame, long mix_buff_frame, long buff_remaining)
+{
+    float       vol, pan;
+    float       volL, volR;
+    long        tc, tc0;
+
+
+    deClick(tg, num_frames, buff_frame, mix_buff_frame, buff_remaining);
+
+    vol = tg->vol_val*volbase;
+
+    pan0 = tg->pan_val;
+
+    tc = mix_buff_frame*2;
+    tc0 = buff_frame*2;
+
+    for(long cc = 0; cc < num_frames; cc++)
+    {
+        // pan0 is unchanged
+        // then to pattern/env
+
+        // pan2 is unchanged
+        // then to instrument/env
+
+        pan = (((pan0*(1 - c_abs(pan1)) + pan1)*(1 - c_abs(pan2)) + pan2)*(1 - c_abs(pan3)) + pan3);
+
+        //tg->lastpan = pan;
+        ////PanLinearRule(pan, &volL, &volR);
+        //pan = 0;
+        //volL = volR = 1;
+        //if(pan > 0)
+        //    volL -= pan;
+        //else if(pan < 0)
+        //    volR += pan;
+        //PanConstantRule(pan, &volL, &volR);
+
+        int ai = int((PI_F*(pan + 1)/4)/wt_angletoindex);
+
+        volL = wt_cosine[ai];
+        volR = wt_sine[ai];
+
+        outBuff[tc0] += inBuff[tc0]*vol*volL;
+        outBuff[tc0 + 1] += inBuff[tc0 + 1]*vol*volR;
+
+        tc0++;
+        tc0++;
+    }
+}
+
+void Device36::fillMixChannel(long num_frames, long buff_frame, long mix_buff_frame)
+{
+    float volVal = vol->getOutVal();
+
+    if(vol->lastValue == -1)
+    {
+        vol->setLastVal(vol->getOutVal());
+    }
+    else if(vol->lastValue != vol->getOutVal())
+    {
+        if(rampCounterV == 0)
+        {
+            cfsV = float(vol->getOutVal() - vol->lastValue)/DECLICK_COUNT;
+
+            volVal = vol->lastValue;
+
+            rampCounterV = DECLICK_COUNT;
+        }
+        else
+        {
+            volVal = vol->lastValue + (DECLICK_COUNT - rampCounterV)*cfsV;
+        }
+    }
+    else if(rampCounterV > 0) // (paramSet->vol->lastval == paramSet->vol->outval)
+    {
+        rampCounterV = 0;
+        cfsV = 0;
+    }
+
+    float lMax, rMax, outL, outR;
+    lMax = rMax = 0;
+
+    long tc0 = buff_frame*2;
+    long tc = mix_buff_frame*2;
+
+    for(long cc = 0; cc < num_frames; cc++)
+    {
+        if(rampCounterV > 0)
+        {
+            volVal += cfsV;
+
+            rampCounterV--;
+
+            if(rampCounterV == 0)
+            {
+                vol->setLastVal(vol->getOutVal());
+            }
+        }
+
+        outL = outBuff[tc0++]*volVal;
+        outR = outBuff[tc0++]*volVal;
+
+        if (mixChannel != NULL)
+        {
+            mixChannel->inbuff[tc++] += outL;
+            mixChannel->inbuff[tc++] += outR;
+        }
+
+        if(c_abs(outL) > lMax)
+        {
+            lMax = outL;
+        }
+
+        if(c_abs(outR) > rMax)
+        {
+            rMax = outR;
+        }
+    }
+
+    // Update VU
+
+    //ivu->setValues(lMax, rMax);
+}
+
+void Device36::removeNote(Note * note)
+{
+    notes.remove(note);
+}
+
+void Device36::reinsertNote(Note * note)
+{
+    notes.remove(note);
+
+    addNote(note);
+}
+
+void Device36::setLastParams(float last_length,float last_vol,float last_pan, int last_val)
+{
+    lastNoteLength = last_length;
+    lastNoteVol = last_vol;
+    lastNotePan = last_pan;
+    lastNoteVal = last_val;
+}
+
+
+
+
 

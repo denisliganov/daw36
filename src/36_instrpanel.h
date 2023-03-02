@@ -12,7 +12,6 @@
 #include <list>
 
 
-// namespace M {
 
 
 class InstrPanel : public Gobj
@@ -72,5 +71,4 @@ protected:
             std::list<Instrument*>              instrs;
 };
 
-//};
 

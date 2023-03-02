@@ -452,7 +452,7 @@ void Gobj::drawloop(Graphics& g)
         }
     }
 
-    drawover(g);
+    drawOverChildren(g);
 
     g.restoreState();
 
