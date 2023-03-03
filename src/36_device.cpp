@@ -70,9 +70,9 @@ Device36::~Device36()
 
     if(guiWindow)
     {
-        //guiWindow->setOpen(false);
-        //guiWindow->closeButtonPressed();
-        //window->deleteWindow(guiWindow);
+        guiWindow->setOpen(false);
+        guiWindow->closeButtonPressed();
+        window->deleteWindow(guiWindow);
     }
 
     removeElements();
@@ -843,8 +843,8 @@ void Device36::fillOutputBuffer(float* out_buff, long num_frames, long buff_fram
         outL = outBuff[tc0++]*volVal;
         outR = outBuff[tc0++]*volVal;
 
-        out_buff[tc++] += outL;
-        out_buff[tc++] += outR;
+        out_buff[tc++] = outL;
+        out_buff[tc++] = outR;
 
         if(c_abs(outL) > lMax)
         {
@@ -929,76 +929,82 @@ void Device36::generateData(float* in_buff, float* out_buff, long num_frames, lo
     long        mbframe;
 
     memset(outBuff, 0, num_frames*sizeof(float)*2);
+    //memset(outBuff, 0, MAX_BUFF_SIZE*2);
 
     framesRemaining = num_frames;
     buffFrame = 0;
     mbframe = mix_buff_frame;
 
-    while(framesRemaining > 0)
+
+/*  if(envelopes == NULL && (bypass == false || muteCount < DECLICK_COUNT))
     {
-        if(framesRemaining > BUFF_PROCESSING_CHUNK_SIZE)
-        {
-            framesToProcess = BUFF_PROCESSING_CHUNK_SIZE;
-        }
-        else
-        {
-            framesToProcess = framesRemaining;
-        }
-
-        /*
-        // Process envelopes for this instrument
-        Trigger* tgenv = envelopes;
-
-        // Rewind to the very first, to provide correct envelopes overriding
-        while(tgenv != NULL && tgenv->group_prev != NULL) 
-        {
-            tgenv = tgenv->group_prev;
-        }
-
-        // Now process them all
-
-        while(tgenv != NULL)
-        {
-            env = (Envelope*)tgenv->el;
-            if(env->newbuff && buffframe >= env->last_buffframe)
-            {
-                param = env->param;
-                param->SetValueFromEnvelope(env->buff[mixbuffframe + buffframe], env);
-            }
-
-            tgenv = tgenv->group_next;
-        }
-        */
-
-
-        for (auto itr = activeTriggers.begin(); itr != activeTriggers.end();)
-        {
-            // Clear buffer to avoid using obsolete data
-
-            memset(tempBuff, 0, num_frames*sizeof(float)*2);
-
-            Trigger* tg = *itr;
-
-            itr++;
-
-            actual = workTrigger(tg, framesToProcess, framesRemaining, buffFrame, mbframe);
-        }
-
-        // Currently just overwrite data in out buffer
-        if(bypass == false || muteCount < DECLICK_COUNT)
-        {
-            if (in_buff != NULL)
-            {
-                processDSP(&in_buff[buffFrame*2], &outBuff[buffFrame*2], framesToProcess);
-            }
-        }
-
-        framesRemaining -= framesToProcess;
-        buffFrame += framesToProcess;
-        mbframe += framesToProcess;
+        processDSP(in_buff, outBuff, num_frames);
     }
+    else*/
+    {
+        while(framesRemaining > 0)
+        {
+            if(framesRemaining > BUFF_PROCESSING_CHUNK_SIZE)
+            {
+                framesToProcess = BUFF_PROCESSING_CHUNK_SIZE;
+            }
+            else
+            {
+                framesToProcess = framesRemaining;
+            }
 
-    // Send data to assigned mixer channel
+            /*
+            // Process envelopes for this instrument
+            Trigger* tgenv = envelopes;
+
+            // Rewind to the very first, to provide correct envelopes overriding
+            while(tgenv != NULL && tgenv->group_prev != NULL) 
+            {
+                tgenv = tgenv->group_prev;
+            }
+
+            // Now process them all
+
+            while(tgenv != NULL)
+            {
+                env = (Envelope*)tgenv->el;
+                if(env->newbuff && buffframe >= env->last_buffframe)
+                {
+                    param = env->param;
+                    param->SetValueFromEnvelope(env->buff[mixbuffframe + buffframe], env);
+                }
+
+                tgenv = tgenv->group_next;
+            }
+            */
+
+
+            for (auto itr = activeTriggers.begin(); itr != activeTriggers.end();)
+            {
+                // Clear buffer to avoid using obsolete data
+
+                memset(tempBuff, 0, num_frames*sizeof(float)*2);
+
+                Trigger* tg = *itr;
+
+                itr++;
+
+                actual = workTrigger(tg, framesToProcess, framesRemaining, buffFrame, mbframe);
+            }
+
+            if(bypass == false || muteCount < DECLICK_COUNT)
+            {
+                if (in_buff != NULL)
+                {
+                    processDSP(&in_buff[buffFrame*2], &outBuff[buffFrame*2], framesToProcess);
+                }
+            }
+
+            framesRemaining -= framesToProcess;
+            buffFrame += framesToProcess;
+            mbframe += framesToProcess;
+        }
+    }
 
     fillOutputBuffer(out_buff, num_frames, 0, mix_buff_frame);
 }

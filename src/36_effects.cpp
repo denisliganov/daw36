@@ -170,7 +170,7 @@ void Eff::handleChildEvent(Gobj * obj, InputEvent& ev)
 
 SubWindow* Eff::createWindow()
 {
-    SubWindow* win =  window->addWindow(new DevParamObject(this));
+    SubWindow* win =  window->addWindow((WinObject*)new DevParamObject(this));
 
     //int xb = window->getLastEvent().mouseX + 20;
     //int yb = window->getLastEvent().mouseY - guiWindow->getHeight()/2;

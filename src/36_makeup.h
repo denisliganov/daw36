@@ -7,7 +7,7 @@
 
 
 
-class MakeUpObject : public ParamObject
+class MakeUpObject : public ParamObject, WinObject
 {
 protected:
 

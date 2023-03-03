@@ -71,6 +71,9 @@ public:
             void                save(XmlElement* xmlChanNode);
             void                setBufferSize(unsigned int bufferSize);
             void                setSampleRate(float sampleRate);
+
+//            void                handleMouseLeave(InputEvent & ev) {}
+//            void                handleMouseEnter(InputEvent & ev) {}
 };
 
 

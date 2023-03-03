@@ -5,7 +5,7 @@
 #include "36_paramobject.h"
 
 
-class DevParamObject : public ParamObject
+class DevParamObject : public ParamObject, WinObject
 {
 public:
 

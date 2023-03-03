@@ -59,16 +59,16 @@ ConfigWinObject::ConfigWinObject()
 
     showASIOPanel = new Button36(false, "Show ASIO panel");
 
-    addObject(inputDevices = new ListBoxx("Input devices"));
+    Gobj::addObject(inputDevices = new ListBoxx("Input devices"));
                 inputDevices->addEntry("IN Device1");
                 inputDevices->addEntry("IN Device2");
 
-    addObject(midiOutDevices = new ListBoxx("MIDI OUT devices"));
+    Gobj::addObject(midiOutDevices = new ListBoxx("MIDI OUT devices"));
                 midiOutDevices->addEntry("Entry1");
                 midiOutDevices->addEntry("Entry2");
                 midiOutDevices->addEntry("Entry3");
 
-    addObject(midiInDevices = new ListBoxx("MIDI IN devices"));
+    Gobj::addObject(midiInDevices = new ListBoxx("MIDI IN devices"));
                 midiInDevices->addEntry("Entry4Entry4Entry4Entry4Entry4");
                 midiInDevices->addEntry("Entry5");
                 midiInDevices->addEntry("Entry6Entry4Entry4");
@@ -101,12 +101,14 @@ ConfigWinObject::ConfigWinObject()
 */
     finalizePuts();
 
+    setWidthHeight(Gobj::getW(), Gobj::getH());
+
     setName("Configuration");
 }
 
 void ConfigWinObject::drawSelf(Graphics& g)
 {
-    fill(g, 0.4f);
+    Gobj::fill(g, 0.4f);
 }
 
 void ConfigWinObject::handleChildEvent(Gobj * obj,InputEvent & ev)

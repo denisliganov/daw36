@@ -437,7 +437,7 @@ void ControlPanel::handleChildEvent(Gobj* obj, InputEvent& ev)
 
                     co->setInvokeButton(btConfig);
 
-                    cw = MObject->addWindow(co);
+                    cw = MObject->addWindow((WinObject*)co);
                 }
 
                 cw->setOpen(!cw->isOpen());
@@ -452,7 +452,7 @@ void ControlPanel::handleChildEvent(Gobj* obj, InputEvent& ev)
 
                     ro->setInvokeButton(btRender);
 
-                    rw = MObject->addWindow(ro);
+                    rw = MObject->addWindow((WinObject*)ro);
                 }
 
                 rw->setOpen(!rw->isOpen());

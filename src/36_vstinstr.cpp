@@ -616,7 +616,8 @@ SubWindow* VstInstr::createWindow()
     }
     else
     {
-        return window->addWindow(new DevParamObject(this));
+        DevParamObject* d = new DevParamObject(this);
+        return window->addWindow((WinObject*)d);
     }
 }
 

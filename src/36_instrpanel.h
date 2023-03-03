@@ -14,7 +14,7 @@
 
 
 
-class InstrPanel : public Gobj
+class InstrPanel : public ParamObject
 {
 friend Audio36;
 

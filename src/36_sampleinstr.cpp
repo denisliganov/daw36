@@ -239,7 +239,7 @@ bool Sample::checkBounds(SampleNote* samplent, Trigger* tg, long num_frames)
 
 SubWindow* Sample::createWindow()
 {
-    return window->addWindow(new SampleObject());
+    return window->addWindow((WinObject*)new SampleObject());
 }
 
 // Return pixel length for a number of frames, depending on sample rate and current tick width

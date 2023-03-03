@@ -276,7 +276,6 @@ protected:
             CommonWindow*       holderWindow;
             Hintbox*            hintBox;
             Gobj*               hintObj;
-            Gobj*               lastActiveObj;
             InputEvent          lastEvent;
 
             std::list<Gobj*>    changedObjects;

@@ -747,7 +747,7 @@ void InstrPanel::remap()
             }
             else
             {
-                i->setVisible(false);
+                i->setVis(false);
             }
 
             yoffs += InstrHeight + 1;

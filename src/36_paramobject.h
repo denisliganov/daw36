@@ -10,7 +10,7 @@
 
 
 
-class ParamObject : public WinObject
+class ParamObject : public Gobj
 {
 public:
 
@@ -19,24 +19,24 @@ public:
     virtual void                addParam(Param* param);
             void                dequeueParamEnvelope(Trigger* tgenv);
             void                enqueueParamEnvelope(Trigger* tgenv);
+            void                finalizePuts();
     virtual Param*              getParamByName(char *param_name);
     virtual Param*              getParamByIndex(int devIdx);
     virtual bool                getParamLock() { return paramLocked; };
     virtual std::list<Param*>   getParams() { return params; }
+            void                goLeft();
+            void                goTop();
     virtual void                handleParamUpdate(Param* param = NULL) {};
     virtual void                handleClose();
-    virtual void                removeParam(Param* param);
-    virtual void                setParamLock(bool lock) { paramLocked = lock; };
-            void                setInvokeButton(Button36* bt) { invokeButton = bt; }
             void                putStart(int x,int y);
             void                putRight(Gobj* obj, int ow=-1, int oh=-1);
             void                putBelow(Gobj* obj, int ow=-1, int oh=-1);
+    virtual void                removeParam(Param* param);
+    virtual void                setParamLock(bool lock) { paramLocked = lock; };
+            void                setInvokeButton(Button36* bt) { invokeButton = bt; }
             void                spaceRight();
             void                spaceBelow();
             void                setBorder(int brd)      { border = brd; }
-            void                goLeft();
-            void                goTop();
-            void                finalizePuts();
             void                setObjSpacing(int os) { objSpacing = os; }
             void                setGroupSpacing(int gs) { groupSpacing = gs; }
 

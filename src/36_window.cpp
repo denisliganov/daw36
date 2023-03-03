@@ -1199,7 +1199,7 @@ int Hintbox::getDesktopWindowStyleFlags() const
 WinObject::WinObject() : JuceComponent(this)
 {
     activeObj = NULL;
-    lastActiveObj = NULL;
+    //lastActiveObj = NULL;
     holderWindow = NULL;
     hintObj = NULL;
     dragDistance = 0;
@@ -1345,6 +1345,8 @@ void WinObject::updateHint(InputEvent& ev)
 
 void WinObject::updActiveObject(InputEvent& ev)
 {
+    Gobj* lastActiveObj = activeObj;
+
     activeObj = getLastTouchedObject(ev.mouseX, ev.mouseY);
 
     if (activeObj != lastActiveObj)
@@ -1356,7 +1358,7 @@ void WinObject::updActiveObject(InputEvent& ev)
             lastActiveObj->handleMouseLeave(ev);
         }
 
-        lastActiveObj = activeObj;
+        //lastActiveObj = activeObj;
     }
 
     if (activeObj == this)
@@ -1534,11 +1536,12 @@ void WinObject::unregisterObject(Gobj * obj)
     {
         vus.remove(obj);
     }
-    
+
+    /*
     if(lastActiveObj == obj)
     {
         lastActiveObj = NULL;
-    }
+    }*/
     
     if(activeObj == obj)
     {

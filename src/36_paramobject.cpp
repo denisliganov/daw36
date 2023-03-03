@@ -200,6 +200,8 @@ void ParamObject::goTop()
 
 void ParamObject::finalizePuts()
 {
-    WinObject::setWidthHeight(wndW + border, wndH + border);
+    //WinObject::setWidthHeight(wndW + border, wndH + border);
+
+    setWH(wndW + border, wndH + border);
 }
 

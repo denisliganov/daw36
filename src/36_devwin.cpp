@@ -79,7 +79,7 @@ void DevParamObject::initAll()
             obj = new ToggleBox(prmTg);
         }
 
-        addObject(obj);
+        Gobj::addObject(obj);
 
         if (obj)
         {
@@ -87,7 +87,7 @@ void DevParamObject::initAll()
         }
     }
 
-    addObject(presetBox = new ListBoxx("Presets"));
+    Gobj::addObject(presetBox = new ListBoxx("Presets"));
 
     goTop();
 
@@ -121,7 +121,7 @@ void DevParamObject::handleChildEvent(Gobj * obj,InputEvent & ev)
     {
         device->setPresetByName(presetBox->getCurrentName());
 
-        redraw();
+        Gobj::redraw();
     }
 }
 

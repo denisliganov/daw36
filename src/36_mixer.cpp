@@ -121,7 +121,7 @@ void Mixer::remap()
             }
             else if(instr->mixChannel->isShown())
             {
-                instr->mixChannel->setVisible(false);
+                instr->mixChannel->setVis(false);
             }
 
             yCh += InstrHeight + 1;

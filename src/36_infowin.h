@@ -6,7 +6,7 @@
 
 
 
-class InfoWin : public ParamObject
+class InfoWin : public ParamObject, WinObject
 {
 public:
 
