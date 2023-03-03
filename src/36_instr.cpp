@@ -166,7 +166,7 @@ Instrument::Instrument()
 {
     selfPattern = NULL;
     selfNote = NULL;
-    
+
     addObject(volBox = new ParamBox(vol));
     volBox->setSliderOnly(true);
 
@@ -181,6 +181,7 @@ Instrument::Instrument()
     addObject(soloButt = new SoloButton());
 
     addObject(ivu = new InstrVU(), ObjGroup_VU);
+
     ivu->setEnable(false);
 }
 

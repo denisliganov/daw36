@@ -170,8 +170,8 @@ void VstInstr::postProcessTrigger(Trigger* tg, long num_frames, long buff_frame,
             volR = wt_sine[ai];
         }
     
-        outBuff[tc0] = dataBuff[tc0++]*volL;
-        outBuff[tc0] = dataBuff[tc0++]*volR;
+        outBuff[tc0] = tempBuff[tc0++]*volL;
+        outBuff[tc0] = tempBuff[tc0++]*volR;
     }
 }
 
@@ -215,7 +215,7 @@ void VstInstr::vstProcess(long num_frames, long buff_frame)
         vst2->aeffProcessEvents(events);
     }
 
-    vst2->processData(NULL, &dataBuff[buff_frame*2], num_frames);
+    vst2->processDSP(NULL, &tempBuff[buff_frame*2], num_frames);
 
     numEvents = 0;
 
@@ -229,7 +229,7 @@ void VstInstr::vstProcess(long num_frames, long buff_frame)
 
 }
 
-void VstInstr::generateData(long num_frames, long mix_buff_frame)
+void VstInstr::generateData(float* in_buff, float* out_buff, long num_frames, long mix_buff_frame)
 {
     bool off = false;
 
@@ -249,7 +249,7 @@ void VstInstr::generateData(long num_frames, long mix_buff_frame)
     }
 
     memset(outBuff, 0, num_frames*sizeof(float)*2);
-    memset(dataBuff, 0, num_frames*sizeof(float)*2);
+    memset(tempBuff, 0, num_frames*sizeof(float)*2);
 
     if(envelopes == NULL)
     {
@@ -266,26 +266,25 @@ void VstInstr::generateData(long num_frames, long mix_buff_frame)
 
         while(frames_remaining > 0)
         {
-            if(frames_remaining > BUFF_CHUNK_SIZE)
+            if(frames_remaining > BUFF_PROCESSING_CHUNK_SIZE)
             {
-                frames_to_process = BUFF_CHUNK_SIZE;
+                frames_to_process = BUFF_PROCESSING_CHUNK_SIZE;
             }
             else
             {
                 frames_to_process = frames_remaining;
             }
 
+            /*
             tgenv = envelopes;
-
             while(tgenv != NULL)
             {
                 env = (Envelope*)tgenv->el;
-
                 param = ((Envelope*)tgenv->el)->param;
                 param->setValueFromEnvelope(env->buff[mix_buff_frame + buffFrame], env);
-
                 tgenv = tgenv->group_prev;
             }
+            */
 
             vstProcess(frames_to_process, buffFrame);
 
@@ -311,8 +310,8 @@ void VstInstr::generateData(long num_frames, long mix_buff_frame)
                     muteCount--;
                 }
 
-                dataBuff[tc*2] *= aa;
-                dataBuff[tc*2 + 1] *= aa;
+                tempBuff[tc*2] *= aa;
+                tempBuff[tc*2 + 1] *= aa;
 
                 tc++;
             }
@@ -334,8 +333,8 @@ void VstInstr::generateData(long num_frames, long mix_buff_frame)
                     muteCount++;
                 }
 
-                dataBuff[tc*2] *= aa;
-                dataBuff[tc*2 + 1] *= aa;
+                tempBuff[tc*2] *= aa;
+                tempBuff[tc*2 + 1] *= aa;
 
                 tc++;
             }
@@ -350,7 +349,7 @@ void VstInstr::generateData(long num_frames, long mix_buff_frame)
     {
         postProcessTrigger(NULL, num_frames, 0, mix_buff_frame);
 
-        fillMixChannel(num_frames, 0, mix_buff_frame);
+        fillOutputBuffer(out_buff, num_frames, 0, mix_buff_frame);
     }
 }
 

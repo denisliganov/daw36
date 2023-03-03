@@ -55,6 +55,7 @@ public:
             Knob*               volKnob;
             ParamBox*           volBox;
             ParamBox*           panBox;
+            MixChannel*         mixChannel;
 
 
             void                addMixChannel();
@@ -67,6 +68,7 @@ virtual Instrument*             clone();
             std::string         getAlias()                          {return instrAlias;};
             float               getLastNoteLength()                 { return lastNoteLength; }
         std::list <Element*>    getNotesFromRange(float tick_offset, float lastVisibleTick);
+            MixChannel*         getMixChannel() { return mixChannel; }
             void                handleMouseDown(InputEvent& ev);
             void                handleMouseUp(InputEvent& ev);
             void                handleMouseWheel(InputEvent& ev);

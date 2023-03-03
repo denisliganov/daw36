@@ -43,9 +43,6 @@ public:
             bool                isInternal()    { return internal; }
 
 
-    virtual void                processData(float* in_buff, float* out_buff, int num_frames);
-    virtual void                process(float* in_buff, float* out_buff, int num_frames);
-
     virtual void                reset() { }
             void                savePreset();
             void                savePresetAs(char* preset_name);
@@ -61,18 +58,20 @@ public:
     virtual bool                setPresetByIndex(long index) { return true; };
     virtual bool                setPresetByName(std::string pname);
 
-
     virtual void                activateTrigger(Trigger* tg);
     virtual void                deactivateTrigger(Trigger* tg);
             void                fadeBetweenTriggers(Trigger* tgfrom, Trigger* tgto);
-    virtual void                deClick(Trigger* tg, long num_frames = 0, long buff_frame = 0, long mix_buff_frame = 0, long remaining = 0);
-    virtual void                generateData(long num_frames = 0, long buff_frame = 0);
+    virtual void                deClick(Trigger* tg, long num_frames, long buff_frame = 0, long mix_buff_frame = 0, long remaining = 0);
+    virtual void                generateData(float* in_buff, float* out_buff, long num_frames, long mix_buff_frame = 0);
     virtual void                preProcessTrigger(Trigger* tg, bool* skip, bool* fill, long num_frames, long buff_frame = 0);
     virtual long                processTrigger(Trigger* tg, long num_frames = 0, long buff_frame = 0) {return 0;};
     virtual void                postProcessTrigger(Trigger* tg, long num_frames = 0, long buff_frame = 0, long mix_buff_frame = 0, long remaining = 0);
     virtual long                workTrigger(Trigger* tg, long num_frames, long remaining, long buff_frame, long mix_buff_frame);
 
-            void                fillMixChannel(long num_frames, long buff_frame, long mix_buff_frame);
+    virtual void                processDSP(float* in_buff, float* out_buff, int num_frames);
+    virtual void                process(float* in_buff, float* out_buff, int num_frames);
+
+            void                fillOutputBuffer(float* out_buff, long num_frames, long buff_frame, long mix_buff_frame);
 
             void                addNote(Note* note);
             void                removeNote(Note* note);
@@ -84,15 +83,14 @@ public:
             float               cfsV;
             long                endFrame;  // last frame to fill
             Envelope*           envVol;
-            MixChannel*         mixChannel;
 
             float               volbase;
             float               pan0, pan1, pan2, pan3;
             int                 rampCount;
             float               rampCounterV;
-            float               dataBuff[MAX_BUFF_SIZE*2];     // Initial data
-            float               inBuff[MAX_BUFF_SIZE*2];       // Data after separate DSP
-            float               outBuff[MAX_BUFF_SIZE*2];      // Output after postprocessing
+
+            float               tempBuff[MAX_BUFF_SIZE*2];     // Data for single trigger
+            float               outBuff[MAX_BUFF_SIZE*2];      // Date for whole session
 
             ParamVol*           vol;
             ParamPan*           pan;

@@ -84,7 +84,7 @@ public:
             ~Vst2Plugin();
             bool                    loadFromDll(const char *nm) throw(...);
             long                    vstDispatch(const int opcode, const int index, const int value, void* const ptr, float opt);
-            void                    processData(float* in_buff, float* out_buff, int num_frames);
+            void                    processDSP(float* in_buff, float* out_buff, int num_frames);
             void                    processEvents(VstEvents *events);
             void                    setParam(long index, float Value);
             float                   getParam(long index);

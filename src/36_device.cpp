@@ -39,7 +39,6 @@ Device36::Device36()
     rampCount = 512;
 
     envVol = NULL;
-    mixChannel = NULL;
 
     lastNoteLength = 4;
     lastNoteVol = 1;
@@ -106,65 +105,6 @@ void Device36::deletePresets()
         presets.remove(pe);
 
         delete pe;
-    }
-}
-
-
-void Device36::processData(float* in_buff, float* out_buff, int num_frames)
-{
-    
-}
-
-void Device36::process(float* in_buff, float* out_buff, int num_frames)
-{
-    if(envelopes == NULL && (bypass == false || muteCount < DECLICK_COUNT))
-    {
-        processData(in_buff, out_buff, num_frames);
-    }
-    else if(envelopes != NULL)
-    {
-        long framesToProcess;
-        long buffFrame = 0;
-        long framesRemaining = num_frames;
-
-        while(framesRemaining > 0)
-        {
-            if(framesRemaining > 32)
-            {
-                framesToProcess = 32;
-            }
-            else
-            {
-                framesToProcess = framesRemaining;
-            }
-
-            /*
-            tgenv = envelopes;
-            while(tgenv != NULL)
-            {
-                env = (Envelope*)tgenv->el;
-                if(buffframe >= env->last_buffframe)
-                {
-                    param = env->param;
-                    param->SetValueFromEnvelope(env->buffoutval[buffframe], env);
-                }
-                tgenv = tgenv->group_prev;
-            }
-            */
-
-            if(bypass == false || muteCount < DECLICK_COUNT)
-            {
-                processData(&in_buff[buffFrame*2], &out_buff[buffFrame*2], framesToProcess);
-            }
-
-            framesRemaining -= framesToProcess;
-            buffFrame += framesToProcess;
-        }
-    }
-
-    if(bypass == true && muteCount >= DECLICK_COUNT)
-    {
-        memcpy(out_buff, in_buff, num_frames*2*sizeof(float));
     }
 }
 
@@ -701,8 +641,8 @@ void Device36::deClick(Trigger* tg, long num_frames, long buff_frame, long mix_b
             {
                 mul = (float)tg->aaCount/DECLICK_COUNT;
 
-                inBuff[tc0] *= mul;
-                inBuff[tc0 + 1] *= mul;
+                tempBuff[tc0] *= mul;
+                tempBuff[tc0 + 1] *= mul;
 
                 tc0++; tc0++;
 
@@ -710,8 +650,8 @@ void Device36::deClick(Trigger* tg, long num_frames, long buff_frame, long mix_b
             }
             else
             {
-                inBuff[tc0] = 0;
-                inBuff[tc0 + 1] = 0;
+                tempBuff[tc0] = 0;
+                tempBuff[tc0 + 1] = 0;
 
                 tc0++; tc0++;
             }
@@ -734,8 +674,8 @@ void Device36::deClick(Trigger* tg, long num_frames, long buff_frame, long mix_b
         {
             mul = (float)(DECLICK_COUNT - tg->aaCount)/DECLICK_COUNT;
 
-            inBuff[tc0] *= mul;
-            inBuff[tc0 + 1] *= mul;
+            tempBuff[tc0] *= mul;
+            tempBuff[tc0 + 1] *= mul;
 
             tc0++;
             tc0++;
@@ -796,16 +736,16 @@ void Device36::deClick(Trigger* tg, long num_frames, long buff_frame, long mix_b
 
                     mul = float(DECLICK_COUNT - tg->auCount)/DECLICK_COUNT;
 
-                    inBuff[tc0] *= mul;
-                    inBuff[tc0 + 1] *= mul;
+                    tempBuff[tc0] *= mul;
+                    tempBuff[tc0 + 1] *= mul;
 
                     tc0++;
                     tc0++;
                 }
                 else
                 {
-                    inBuff[tc0] = 0;
-                    inBuff[tc0 + 1] = 0;
+                    tempBuff[tc0] = 0;
+                    tempBuff[tc0 + 1] = 0;
 
                     tc0++;
                     tc0++;
@@ -835,7 +775,7 @@ restart:
 void Device36::fadeBetweenTriggers(Trigger* tgfrom, Trigger* tgto)
 {
     memset(outBuff, 0, rampCount*sizeof(float)*2);
-    memset(inBuff, 0, rampCount*sizeof(float)*2);
+    memset(tempBuff, 0, rampCount*sizeof(float)*2);
     memset(tgto->auxbuff, 0, rampCount*sizeof(float)*2);
 
     long actual = workTrigger(tgfrom, rampCount, rampCount, 0, 0);
@@ -851,34 +791,163 @@ void Device36::fadeBetweenTriggers(Trigger* tgfrom, Trigger* tgto)
     tgto->lcount = (float)rampCount;
 }
 
-void Device36::generateData(long num_frames, long mix_buff_frame)
+void Device36::fillOutputBuffer(float* out_buff, long num_frames, long buff_frame, long mix_buff_frame)
 {
-    long        frames_remaining;
-    long        frames_to_process;
-    long        actual;
-    long        buffframe;
-    long        mbframe;
-    Trigger*    tgenv;
+    float volVal = vol->getOutVal();
 
-    memset(outBuff, 0, num_frames*sizeof(float)*2);
-
-    frames_remaining = num_frames;
-    buffframe = 0;
-    mbframe = mix_buff_frame;
-
-    while(frames_remaining > 0)
+    if(vol->lastValue == -1)
     {
-        if(frames_remaining > BUFF_CHUNK_SIZE)
+        vol->setLastVal(vol->getOutVal());
+    }
+    else if(vol->lastValue != vol->getOutVal())
+    {
+        if(rampCounterV == 0)
         {
-            frames_to_process = BUFF_CHUNK_SIZE;
+            cfsV = float(vol->getOutVal() - vol->lastValue)/DECLICK_COUNT;
+
+            volVal = vol->lastValue;
+
+            rampCounterV = DECLICK_COUNT;
         }
         else
         {
-            frames_to_process = frames_remaining;
+            volVal = vol->lastValue + (DECLICK_COUNT - rampCounterV)*cfsV;
+        }
+    }
+    else if(rampCounterV > 0) // (paramSet->vol->lastval == paramSet->vol->outval)
+    {
+        rampCounterV = 0;
+        cfsV = 0;
+    }
+
+    float lMax, rMax, outL, outR;
+    lMax = rMax = 0;
+
+    long tc0 = buff_frame*2;
+    long tc = mix_buff_frame*2;
+
+    for(long cc = 0; cc < num_frames; cc++)
+    {
+        if(rampCounterV > 0)
+        {
+            volVal += cfsV;
+
+            rampCounterV--;
+
+            if(rampCounterV == 0)
+            {
+                vol->setLastVal(vol->getOutVal());
+            }
         }
 
+        outL = outBuff[tc0++]*volVal;
+        outR = outBuff[tc0++]*volVal;
+
+        out_buff[tc++] += outL;
+        out_buff[tc++] += outR;
+
+        if(c_abs(outL) > lMax)
+        {
+            lMax = outL;
+        }
+
+        if(c_abs(outR) > rMax)
+        {
+            rMax = outR;
+        }
+    }
+
+    // Update VU
+
+    //ivu->setValues(lMax, rMax);
+}
+
+void Device36::processDSP(float* in_buff, float* out_buff, int num_frames)
+{
+    
+}
+
+void Device36::process(float* in_buff, float* out_buff, int num_frames)
+{
+    if(envelopes == NULL && (bypass == false || muteCount < DECLICK_COUNT))
+    {
+        processDSP(in_buff, out_buff, num_frames);
+    }
+    else if(envelopes != NULL)
+    {
+        long framesToProcess;
+        long buffFrame = 0;
+        long framesRemaining = num_frames;
+
+        while(framesRemaining > 0)
+        {
+            if(framesRemaining > BUFF_PROCESSING_CHUNK_SIZE)
+            {
+                framesToProcess = BUFF_PROCESSING_CHUNK_SIZE;
+            }
+            else
+            {
+                framesToProcess = framesRemaining;
+            }
+
+            /*
+            tgenv = envelopes;
+            while(tgenv != NULL)
+            {
+                env = (Envelope*)tgenv->el;
+                if(buffframe >= env->last_buffframe)
+                {
+                    param = env->param;
+                    param->SetValueFromEnvelope(env->buffoutval[buffframe], env);
+                }
+                tgenv = tgenv->group_prev;
+            }
+            */
+
+            if(bypass == false || muteCount < DECLICK_COUNT)
+            {
+                processDSP(&in_buff[buffFrame*2], &out_buff[buffFrame*2], framesToProcess);
+            }
+
+            framesRemaining -= framesToProcess;
+            buffFrame += framesToProcess;
+        }
+    }
+
+    if(bypass == true && muteCount >= DECLICK_COUNT)
+    {
+        memcpy(out_buff, in_buff, num_frames*2*sizeof(float));
+    }
+}
+
+void Device36::generateData(float* in_buff, float* out_buff, long num_frames, long mix_buff_frame)
+{
+    long        framesRemaining;
+    long        framesToProcess;
+    long        actual;
+    long        buffFrame;
+    long        mbframe;
+
+    memset(outBuff, 0, num_frames*sizeof(float)*2);
+
+    framesRemaining = num_frames;
+    buffFrame = 0;
+    mbframe = mix_buff_frame;
+
+    while(framesRemaining > 0)
+    {
+        if(framesRemaining > BUFF_PROCESSING_CHUNK_SIZE)
+        {
+            framesToProcess = BUFF_PROCESSING_CHUNK_SIZE;
+        }
+        else
+        {
+            framesToProcess = framesRemaining;
+        }
+
+        /*
         // Process envelopes for this instrument
-        tgenv = envelopes;
+        Trigger* tgenv = envelopes;
 
         // Rewind to the very first, to provide correct envelopes overriding
         while(tgenv != NULL && tgenv->group_prev != NULL) 
@@ -890,52 +959,48 @@ void Device36::generateData(long num_frames, long mix_buff_frame)
 
         while(tgenv != NULL)
         {
-            /*
             env = (Envelope*)tgenv->el;
             if(env->newbuff && buffframe >= env->last_buffframe)
             {
                 param = env->param;
                 param->SetValueFromEnvelope(env->buff[mixbuffframe + buffframe], env);
             }
-            */
 
             tgenv = tgenv->group_next;
         }
-
-        /*
-        // Process activeTriggers for the current chunk
-        tg = tg_first;
-        while(tg != NULL)
-        {
-            tgnext = tg->loc_act_next;
-            // Clean inBuff to ensure obsolete data won't be used
-            memset(inBuff, 0, num_frames*sizeof(float)*2);
-            actual = workTrigger(tg, frames_to_process, frames_remaining, buffframe, mbframe);
-            tg = tgnext;
-        }
         */
 
-        for(auto itr = activeTriggers.begin(); itr != activeTriggers.end(); )
-        {
-            // Clean inBuff to ensure obsolete data won't be used
 
-            memset(inBuff, 0, num_frames*sizeof(float)*2);
+        for (auto itr = activeTriggers.begin(); itr != activeTriggers.end();)
+        {
+            // Clear buffer to avoid using obsolete data
+
+            memset(tempBuff, 0, num_frames*sizeof(float)*2);
 
             Trigger* tg = *itr;
 
             itr++;
 
-            actual = workTrigger(tg, frames_to_process, frames_remaining, buffframe, mbframe);
+            actual = workTrigger(tg, framesToProcess, framesRemaining, buffFrame, mbframe);
         }
 
-        frames_remaining -= frames_to_process;
-        buffframe += frames_to_process;
-        mbframe += frames_to_process;
+        // Currently just overwrite data in out buffer
+        if(bypass == false || muteCount < DECLICK_COUNT)
+        {
+            if (in_buff != NULL)
+            {
+                processDSP(&in_buff[buffFrame*2], &outBuff[buffFrame*2], framesToProcess);
+            }
+        }
+
+        framesRemaining -= framesToProcess;
+        buffFrame += framesToProcess;
+        mbframe += framesToProcess;
     }
 
     // Send data to assigned mixer channel
 
-    fillMixChannel(num_frames, 0, mix_buff_frame);
+    fillOutputBuffer(out_buff, num_frames, 0, mix_buff_frame);
 }
 
 long Device36::workTrigger(Trigger * tg, long num_frames, long remaining, long buff_frame, long mix_buff_frame)
@@ -1103,86 +1168,12 @@ void Device36::postProcessTrigger(Trigger* tg, long num_frames, long buff_frame,
         volL = wt_cosine[ai];
         volR = wt_sine[ai];
 
-        outBuff[tc0] += inBuff[tc0]*vol*volL;
-        outBuff[tc0 + 1] += inBuff[tc0 + 1]*vol*volR;
+        outBuff[tc0] += tempBuff[tc0]*vol*volL;
+        outBuff[tc0 + 1] += tempBuff[tc0 + 1]*vol*volR;
 
         tc0++;
         tc0++;
     }
-}
-
-void Device36::fillMixChannel(long num_frames, long buff_frame, long mix_buff_frame)
-{
-    float volVal = vol->getOutVal();
-
-    if(vol->lastValue == -1)
-    {
-        vol->setLastVal(vol->getOutVal());
-    }
-    else if(vol->lastValue != vol->getOutVal())
-    {
-        if(rampCounterV == 0)
-        {
-            cfsV = float(vol->getOutVal() - vol->lastValue)/DECLICK_COUNT;
-
-            volVal = vol->lastValue;
-
-            rampCounterV = DECLICK_COUNT;
-        }
-        else
-        {
-            volVal = vol->lastValue + (DECLICK_COUNT - rampCounterV)*cfsV;
-        }
-    }
-    else if(rampCounterV > 0) // (paramSet->vol->lastval == paramSet->vol->outval)
-    {
-        rampCounterV = 0;
-        cfsV = 0;
-    }
-
-    float lMax, rMax, outL, outR;
-    lMax = rMax = 0;
-
-    long tc0 = buff_frame*2;
-    long tc = mix_buff_frame*2;
-
-    for(long cc = 0; cc < num_frames; cc++)
-    {
-        if(rampCounterV > 0)
-        {
-            volVal += cfsV;
-
-            rampCounterV--;
-
-            if(rampCounterV == 0)
-            {
-                vol->setLastVal(vol->getOutVal());
-            }
-        }
-
-        outL = outBuff[tc0++]*volVal;
-        outR = outBuff[tc0++]*volVal;
-
-        if (mixChannel != NULL)
-        {
-            mixChannel->inbuff[tc++] += outL;
-            mixChannel->inbuff[tc++] += outR;
-        }
-
-        if(c_abs(outL) > lMax)
-        {
-            lMax = outL;
-        }
-
-        if(c_abs(outR) > rMax)
-        {
-            rMax = outR;
-        }
-    }
-
-    // Update VU
-
-    //ivu->setValues(lMax, rMax);
 }
 
 void Device36::removeNote(Note * note)

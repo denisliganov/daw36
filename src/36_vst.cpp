@@ -407,7 +407,7 @@ void Vst2Plugin::editIdle()
 //   out_buff  - pointer to the processed data (in internal program format)
 //   buff_size - num of data frames (pair of L & R channel value) in incoming stream buffer
 
-void Vst2Plugin::processData(float* in_buff, float* out_buff, int buff_size)
+void Vst2Plugin::processDSP(float* in_buff, float* out_buff, int buff_size)
 {
     int i,j;
 

@@ -39,7 +39,7 @@ public:
             Filter1();
 
             void                handleParamUpdate(Param* param = NULL);
-            void                processData(float* in_buff, float* out_buff, int num_frames);
+            void                processDSP(float* in_buff, float* out_buff, int num_frames);
             void                reset();
 
 protected:
@@ -59,7 +59,7 @@ class CChorus : public Eff
 public:
             CChorus();
             void                handleParamUpdate(Param* param = NULL);
-            void                processData(float* in_buff, float* out_buff, int num_frames);
+            void                processDSP(float* in_buff, float* out_buff, int num_frames);
             void                reset();
 
 protected:
@@ -75,7 +75,7 @@ class CFlanger : public Eff
 public:
             CFlanger();
             void                handleParamUpdate(Param* param = NULL);
-            void                processData(float* in_buff, float* out_buff, int num_frames);
+            void                processDSP(float* in_buff, float* out_buff, int num_frames);
             void                reset();
 
 protected:
@@ -94,7 +94,7 @@ class CPhaser : public Eff
 public:
             CPhaser();
             void                handleParamUpdate(Param* param = NULL);
-            void                processData(float* in_buff, float* out_buff, int num_frames);
+            void                processDSP(float* in_buff, float* out_buff, int num_frames);
             void                reset();
 
 protected:
@@ -114,7 +114,7 @@ class EQ1 : public Eff
 public:
             EQ1();
             void                handleParamUpdate(Param* param = NULL);
-            void                processData(float* in_buff, float* out_buff, int num_frames);
+            void                processDSP(float* in_buff, float* out_buff, int num_frames);
             void                reset();
 
 protected:
@@ -130,7 +130,7 @@ public:
             GraphicEQ();
 
             void                handleParamUpdate(Param* param = NULL);
-            void                processData(float* in_buff, float* out_buff, int num_frames);
+            void                processDSP(float* in_buff, float* out_buff, int num_frames);
             void                reset();
 
 protected:
@@ -145,7 +145,7 @@ public:
             EQ3();
 
             void                handleParamUpdate(Param* param = NULL);
-            void                processData(float* in_buff, float* out_buff, int num_frames);
+            void                processDSP(float* in_buff, float* out_buff, int num_frames);
             void                reset();
 
 protected:
@@ -162,7 +162,7 @@ public:
             XDelay();
 
             void                handleParamUpdate(Param* param = NULL);
-            void                processData(float* in_buff, float* out_buff, int num_frames);
+            void                processDSP(float* in_buff, float* out_buff, int num_frames);
             void                reset();
 
 protected:
@@ -186,7 +186,7 @@ public:
             CTremolo();
 
             void                handleParamUpdate(Param* param = NULL);
-            void                processData(float* in_buff, float* out_buff, int num_frames);
+            void                processDSP(float* in_buff, float* out_buff, int num_frames);
             void                reset();
 
 protected:
@@ -202,7 +202,7 @@ public:
             Compressor();
 
             void                handleParamUpdate(Param* param = NULL);
-            void                processData(float* in_buff, float* out_buff, int num_frames);
+            void                processDSP(float* in_buff, float* out_buff, int num_frames);
             void                reset();
 
 protected:
@@ -222,7 +222,7 @@ class CWahWah : public Eff
 public:
             CWahWah();
 
-            void                processData(float* in_buff, float* out_buff, int num_frames);
+            void                processDSP(float* in_buff, float* out_buff, int num_frames);
             void                reset();
             void                handleParamUpdate(Param* param = NULL);
 
@@ -239,7 +239,7 @@ public:
             CDistort();
 
             void                handleParamUpdate(Param* param = NULL);
-            void                processData(float* in_buff, float* out_buff, int num_frames);
+            void                processDSP(float* in_buff, float* out_buff, int num_frames);
             void                reset();
 
 protected:
@@ -256,7 +256,7 @@ public:
             CBitCrusher();
 
             void                handleParamUpdate(Param* param = NULL);
-            void                processData(float* in_buff, float* out_buff, int num_frames);
+            void                processDSP(float* in_buff, float* out_buff, int num_frames);
             void                reset();
 
 protected:
@@ -272,7 +272,7 @@ public:
             CStereo();
 
             void                handleParamUpdate(Param* param = NULL);
-            void                processData(float* in_buff, float* out_buff, int num_frames);
+            void                processDSP(float* in_buff, float* out_buff, int num_frames);
             void                reset();
 
 protected:
@@ -288,7 +288,7 @@ public:
             CReverb();
 
             void                handleParamUpdate(Param* param = NULL);
-            void                processData(float* in_buff, float* out_buff, int num_frames);
+            void                processDSP(float* in_buff, float* out_buff, int num_frames);
             void                reset();
 
 protected:

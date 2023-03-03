@@ -21,7 +21,7 @@ public:
             void                deactivateTrigger(Trigger* tg);
             void                fadeBetweenTriggers(Trigger* tgfrom, Trigger* tgto) {}; // stub to avoid any action here
             std::list<Param*>   getParams() { return vst2->getParams(); }
-            void                generateData(long num_frames = 0, long mix_buff_frame = 0);
+            void                generateData(float* in_buff, float* out_buff, long num_frames = 0, long mix_buff_frame = 0);
             bool                isLoaded() { return vst2 != NULL; }
             void                load(XmlElement* instrNode);
             bool                onUpdateDisplay();

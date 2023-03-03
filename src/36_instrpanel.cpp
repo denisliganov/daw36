@@ -431,7 +431,9 @@ void InstrPanel::generateAll(long num_frames, long mixbuffframe)
 {
     for(Instrument* instr : instrs)
     {
-        instr->generateData(num_frames, mixbuffframe);
+        MixChannel* mchan = instr->getMixChannel();
+
+        instr->generateData(NULL, mchan->inbuff, num_frames, mixbuffframe);
     }
 }
 

@@ -311,7 +311,7 @@ void Filter1::reset()
     dspCoreCFilter3.reset();
 }
 
-void Filter1::processData(float* in_buff, float* out_buff, int num_frames)
+void Filter1::processDSP(float* in_buff, float* out_buff, int num_frames)
 {
     double inOutL;
     double inOutR;
@@ -364,7 +364,7 @@ void EQ1::reset()
 	dspCoreEq1.reset();
 }
 
-void EQ1::processData(float* in_buff, float* out_buff, int num_frames)
+void EQ1::processDSP(float* in_buff, float* out_buff, int num_frames)
 {
     double inOutL;
     double inOutR;
@@ -447,7 +447,7 @@ void GraphicEQ::reset()
     dspCoreEqualizer.reset();
 }
 
-void GraphicEQ::processData(float* in_buff, float* out_buff, int num_frames)
+void GraphicEQ::processDSP(float* in_buff, float* out_buff, int num_frames)
 {
     double inOutL;
     double inOutR;
@@ -533,7 +533,7 @@ void EQ3::reset()
     dspCoreEqualizer.reset();
 }
 
-void EQ3::processData(float* in_buff, float* out_buff, int num_frames)
+void EQ3::processDSP(float* in_buff, float* out_buff, int num_frames)
 {
     double inOutL;
     double inOutR;
@@ -578,7 +578,7 @@ void CTremolo::reset()
     dspCoreCTremolo.resetOscillatorPhases();
 }
 
-void CTremolo::processData(float* in_buff, float* out_buff, int num_frames)
+void CTremolo::processDSP(float* in_buff, float* out_buff, int num_frames)
 {
     dspCoreCTremolo.setTempoInBPM(MTransp->getBeatsPerMinute());
 
@@ -670,7 +670,7 @@ void Compressor::reset()
 	dspCoreComp.reset();
 }
 
-void Compressor::processData(float* in_buff, float* out_buff, int num_frames)
+void Compressor::processDSP(float* in_buff, float* out_buff, int num_frames)
 {
     double inOutL;
     double inOutR;
@@ -729,7 +729,7 @@ void CWahWah::reset()
     dspCoreWah.reset();
 }
 
-void CWahWah::processData(float* in_buff, float* out_buff, int num_frames)
+void CWahWah::processDSP(float* in_buff, float* out_buff, int num_frames)
 {
     double inOutL;
     double inOutR;
@@ -784,7 +784,7 @@ void CDistort::reset()
 	dspCoreDist.reset();
 }
 
-void CDistort::processData(float* in_buff, float* out_buff, int num_frames)
+void CDistort::processDSP(float* in_buff, float* out_buff, int num_frames)
 {
     double inOutL;
     double inOutR;
@@ -833,7 +833,7 @@ void CBitCrusher::reset()
     dspCoreBC.reset();
 }
 
-void CBitCrusher::processData(float* in_buff, float* out_buff, int num_frames)
+void CBitCrusher::processDSP(float* in_buff, float* out_buff, int num_frames)
 {
     double inOutL;
     double inOutR;
@@ -872,7 +872,7 @@ void CStereo::reset()
     //dspCoreStereo.reset();
 }
 
-void CStereo::processData(float* in_buff, float* out_buff, int num_frames)
+void CStereo::processDSP(float* in_buff, float* out_buff, int num_frames)
 {
     double inOutL;
     double inOutR;
@@ -973,7 +973,7 @@ void XDelay::reset()
     dspCorePingPongDelay.reset();
 }
 
-void XDelay::processData(float* in_buff, float* out_buff, int num_frames)
+void XDelay::processDSP(float* in_buff, float* out_buff, int num_frames)
 {
     dspCorePingPongDelay.setTempoInBPM(MTransp->getBeatsPerMinute());
 
@@ -1051,7 +1051,7 @@ void CReverb::reset()
     dspCoreReverb.reset();
 }
 
-void CReverb::processData(float* in_buff, float* out_buff, int num_frames)
+void CReverb::processDSP(float* in_buff, float* out_buff, int num_frames)
 {
     double inOutL;
     double inOutR;
@@ -1108,7 +1108,7 @@ void CChorus::reset()
     //dspCoreChorus.reset();
 }
 
-void CChorus::processData(float* in_buff, float* out_buff, int num_frames)
+void CChorus::processDSP(float* in_buff, float* out_buff, int num_frames)
 {
     double inOutL;
     double inOutR;
@@ -1189,7 +1189,7 @@ void CFlanger::reset()
     dspCoreFlanger.reset();
 }
 
-void CFlanger::processData(float* in_buff, float* out_buff, int num_frames)
+void CFlanger::processDSP(float* in_buff, float* out_buff, int num_frames)
 {
     double inOutL;
     double inOutR;
@@ -1273,7 +1273,7 @@ void CPhaser::reset()
     dspCorePhaser.reset();
 }
 
-void CPhaser::processData(float* in_buff, float* out_buff, int num_frames)
+void CPhaser::processDSP(float* in_buff, float* out_buff, int num_frames)
 {
     double inOutL;
     double inOutR;

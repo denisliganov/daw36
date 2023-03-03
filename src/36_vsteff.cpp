@@ -195,12 +195,12 @@ void VstEffect::load(XmlElement * xmlEff)
     vst2->load(xmlEff);
 }
 
-void VstEffect::processData(float * in_buff,float * out_buff,int num_frames)
+void VstEffect::processDSP(float * in_buff,float * out_buff,int num_frames)
 {
     // pVSTCollector->AcquireSema();
     // pPlug->pEffect->EffResume();
 
-    vst2->processData(in_buff, out_buff, num_frames);
+    vst2->processDSP(in_buff, out_buff, num_frames);
 
     // pPlug->pEffect->EffSuspend();
     // pVSTCollector->ReleaseSema();

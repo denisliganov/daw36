@@ -24,7 +24,7 @@ public:
             void                handleMouseDown(InputEvent& ev);
             void                load(XmlElement* xmlEff);
             bool                onUpdateDisplay();
-            void                processData(float* in_buff, float* out_buff, int num_frames);
+            void                processDSP(float* in_buff, float* out_buff, int num_frames);
             void                processEvents(VstEvents *pEvents);
             void                reset();
             void                setBPM(float bpm);

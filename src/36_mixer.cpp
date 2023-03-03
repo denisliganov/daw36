@@ -37,14 +37,6 @@ void Mixer::init()
 
     currentEffect = NULL;
 
-    for(int sc = 0; sc < NUM_SENDS; sc++)
-    {
-        addObject(sendChannel[sc] = new MixChannel(), "mchan.send");
-
-        sendChannel[sc]->chanTitle = "Send #";
-        sendChannel[sc]->chanTitle += char(short(sc + 48));
-    }
-
     addObject(masterChannel = new MixChannel(), "mchan.master");
 
     masterChannel->master = true;
@@ -57,11 +49,6 @@ void Mixer::cleanBuffers(int num_frames)
     for(Instrument* instr : MInstrPanel->getInstrs())
     {
         memset(instr->mixChannel->inbuff, 0, sizeof(float)*num_frames*2);
-    }
-
-    for(int sc = 0; sc < NUM_SENDS; sc++)
-    {
-        memset(sendChannel[sc]->inbuff, 0, sizeof(float)*num_frames*2);
     }
 
     memset(masterChannel->inbuff, 0, sizeof(float)*num_frames*2);
@@ -88,11 +75,6 @@ void Mixer::mixAll(int num_frames)
         }
     }
 
-    for(int sc = 0; sc < NUM_SENDS; sc++)
-    {
-        sendChannel[sc]->process(num_frames, masterChannel->inbuff);
-    }
-
     masterChannel->process(num_frames, NULL);
 
     ReleaseMutex(MixerMutex);
@@ -104,9 +86,6 @@ void Mixer::resetAll()
     {
         instr->mixChannel->reset();
     }
-
-    for(int sc = 0; sc < NUM_SENDS; sc++)
-        sendChannel[sc]->reset();
 
     masterChannel->reset();
 }
@@ -219,11 +198,6 @@ void Mixer::updateChannelIndexes()
     for(Instrument* instr : MInstrPanel->getInstrs())
     {
         instr->mixChannel->setIndex(idx++);
-    }
-
-    for(int sc = 0; sc < NUM_SENDS; sc++)
-    {
-        sendChannel[sc]->setIndex(idx++);
     }
 
     masterChannel->setIndex(idx++);

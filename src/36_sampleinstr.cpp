@@ -697,15 +697,15 @@ long Sample::processTrigger(Trigger * tg, long num_frames, long buff_frame)
                 {
                     getMonoData(tg->wt_pos, &sd1);
 
-                    inBuff[tc0++] = sd1*tg->envVal1;
-                    inBuff[tc0++] = sd1*tg->envVal1;
+                    tempBuff[tc0++] = sd1*tg->envVal1;
+                    tempBuff[tc0++] = sd1*tg->envVal1;
                 }
                 else if(2 == sample_info.channels) // Stereo sample
                 {
                     getStereoData(tg->wt_pos, &sd1, &sd2);
 
-                    inBuff[tc0++] = sd1*tg->envVal1;
-                    inBuff[tc0++] = sd2*tg->envVal1;
+                    tempBuff[tc0++] = sd1*tg->envVal1;
+                    tempBuff[tc0++] = sd2*tg->envVal1;
                 }
             }
 

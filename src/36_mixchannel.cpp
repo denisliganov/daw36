@@ -120,9 +120,7 @@ void MixChannel::init(Instrument* ins)
 
     master = false;
 
-    voffs = 0;
-    contentheight = 0;
-    mutecount = 0;
+    muteCount = 0;
 
     if(ins != NULL)
     {
@@ -147,8 +145,6 @@ void MixChannel::init(Instrument* ins)
         soloparam = NULL;
         mutetoggle = NULL;
         solotoggle = NULL;
-        volslider = NULL;
-        panslider = NULL;
         volKnob = NULL;
         volKnob = NULL;
 
@@ -347,7 +343,6 @@ void MixChannel::save(XmlElement * xmlChanNode)
 
     xmlChanNode->setAttribute(T("Mute"), muteparam);
     xmlChanNode->setAttribute(T("Solo"), soloparam);
-    xmlChanNode->setAttribute(T("VOffset"), voffs);
 
     for(Eff* eff : effs)
     {
@@ -374,7 +369,6 @@ void MixChannel::save(XmlElement * xmlChanNode)
 
 void MixChannel::load(XmlElement * xmlNode)
 {
-    voffs = xmlNode->getIntAttribute(T("VOffset"));
     muteparam = xmlNode->getBoolAttribute(T("Mute"));
     soloparam = xmlNode->getBoolAttribute(T("Solo"));
 
@@ -691,27 +685,27 @@ void MixChannel::process(int num_frames, float* out_buff)
     {
         for(Eff* eff : effs)
         {
-            eff->process(inbuff, outbuff, num_frames);
+            eff->generateData(inbuff, outbuff, num_frames);
 
             if(eff->getBypass() == false)
             {
                 // Copy output back to input for the next effect to process
 
-                if(eff->getMuteCount() > 0)
+                if(eff->muteCount > 0)
                 {
                     long tc = 0;
                     float aa;
 
                     while(tc < num_frames)
                     {
-                        aa = float(DECLICK_COUNT - eff->getMuteCount())/DECLICK_COUNT;
+                        aa = float(DECLICK_COUNT - eff->muteCount)/DECLICK_COUNT;
 
                         inbuff[tc*2] = inbuff[tc*2]*(1.f - aa) + outbuff[tc*2]*aa;
                         inbuff[tc*2 + 1] = inbuff[tc*2 + 1]*(1.f - aa) + outbuff[tc*2 + 1]*aa;
 
                         tc++;
 
-                        if(eff->getMuteCount() > 0)
+                        if(eff->muteCount > 0)
                         {
                             eff->muteCount--;
                         }
@@ -724,14 +718,14 @@ void MixChannel::process(int num_frames, float* out_buff)
             }
             else
             {
-                if(eff->getMuteCount() < DECLICK_COUNT)
+                if(eff->muteCount < DECLICK_COUNT)
                 {
                     long tc = 0;
                     float aa;
 
-                    while(tc < num_frames && eff->getMuteCount() < DECLICK_COUNT)
+                    while(tc < num_frames && eff->muteCount < DECLICK_COUNT)
                     {
-                        aa = float(DECLICK_COUNT - eff->getMuteCount())/DECLICK_COUNT;
+                        aa = float(DECLICK_COUNT - eff->muteCount)/DECLICK_COUNT;
 
                         inbuff[tc*2] = inbuff[tc*2]*(1.f - aa) + outbuff[tc*2]*aa;
                         inbuff[tc*2 + 1] = inbuff[tc*2 + 1]*(1.f - aa) + outbuff[tc*2 + 1]*aa;
@@ -765,7 +759,7 @@ void MixChannel::process(int num_frames, float* out_buff)
 
         bool fill;
 
-        if(off == false || mutecount < DECLICK_COUNT)
+        if(off == false || muteCount < DECLICK_COUNT)
         {
             fill = true;
         }
@@ -866,11 +860,11 @@ void MixChannel::process(int num_frames, float* out_buff)
                 {
                     // Fadeout case
 
-                    if(mutecount < DECLICK_COUNT)
+                    if(muteCount < DECLICK_COUNT)
                     {
-                        aa = float(DECLICK_COUNT - mutecount)/DECLICK_COUNT;
+                        aa = float(DECLICK_COUNT - muteCount)/DECLICK_COUNT;
 
-                        mutecount++;
+                        muteCount++;
                     }
                     else
                     {
@@ -881,13 +875,13 @@ void MixChannel::process(int num_frames, float* out_buff)
                 {
                     // Fadein case
 
-                    if(mutecount > 0)
+                    if(muteCount > 0)
                     {
-                        aa = float(DECLICK_COUNT - mutecount)/DECLICK_COUNT;
+                        aa = float(DECLICK_COUNT - muteCount)/DECLICK_COUNT;
 
-                        mutecount--;
+                        muteCount--;
                     }
-                    else if(mutecount == 0)
+                    else if(muteCount == 0)
                     {
                         aa = 1;
                     }
@@ -952,11 +946,6 @@ void MixChannel::process(int num_frames, float* out_buff)
 void MixChannel::removeEffect(Eff* eff)
 {
     effs.remove(eff);
-
-    if(effs.empty())
-    {
-        voffs = 0;
-    }
 
     eff->setMixChannel(NULL);
 

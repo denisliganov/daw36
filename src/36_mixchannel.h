@@ -28,27 +28,24 @@ public:
             ~MixChannel();
 
             std::string         chanTitle;
-            int                 contentheight; 
             Gobj*               dropObj;
             std::list<Eff*>     effs;
             Instrument*         instr;
-            float               inbuff[MAX_BUFF_SIZE*2];
-            bool                muteparam;
             MixChannel*         mchanout;
-            int                 mutecount;
             bool                master;
             Button36*           mutetoggle;
-            float               outbuff[MAX_BUFF_SIZE*2];
-            Slider36*           panslider;
             Knob*               panKnob;
             Parameter*          panParam;
             bool                soloparam;
             Button36*           solotoggle;
             ParamVol*           volParam;
             ChanVU*             vu;
-            Slider36*           volslider;
             Knob*               volKnob;
-            int                 voffs;
+
+            int                 muteCount;
+
+            float               inbuff[MAX_BUFF_SIZE*2];
+            float               outbuff[MAX_BUFF_SIZE*2];
 
             void                activateEffectMenuItem(Eff* eff, std::string mi);
             void                activateMenuItem(std::string mi);
@@ -62,8 +59,8 @@ public:
             void                handleMouseWheel(InputEvent& ev);
             void                handleMouseDown(InputEvent& ev);
             void                handleMouseUp(InputEvent& ev);
-            bool                handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my);
-            bool                handleObjDrop(Gobj * obj,int mx,int my,unsigned flags);
+            bool                handleObjDrag(DragAndDrop& drag, Gobj * obj, int mx, int my);
+            bool                handleObjDrop(Gobj * obj, int mx, int my, unsigned flags);
             void                init(Instrument* i);
             void                load(XmlElement* xmlChanNode);
             void                process(int num_frames, float* outbuff);

@@ -157,6 +157,7 @@ void Audio36::handleMetronome(long framesPerBuffer, bool pre)
 
     if(metroOn && GPlaying)
     {
+        /*
         if(pre)
         {
             long frame = MPattern->getFrame();
@@ -181,6 +182,7 @@ void Audio36::handleMetronome(long framesPerBuffer, bool pre)
             barSample->generateData(framesPerBuffer - baroffs, baroffs);
             beatSample->generateData(framesPerBuffer - beatoffs, beatoffs);
         }
+        */
     }
 }
 

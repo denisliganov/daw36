@@ -18,7 +18,7 @@
 #define NUM_CHANNELS                            36
 #define NUM_SENDS                               3
 
-#define BUFF_CHUNK_SIZE                         64
+#define BUFF_PROCESSING_CHUNK_SIZE              64
 #define WAVETABLE_SIZE                          32768
 #define DEFAULT_BUFFER_SIZE                     2048
 #define DEFAULT_SAMPLE_RATE                     44100
