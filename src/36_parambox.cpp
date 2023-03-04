@@ -37,9 +37,9 @@ void ParamBox::drawSelf(Graphics& g)
     Instrument* i = NULL; //dynamic_cast<Instrument*>(parent);
 
     if (i) 
-        i->setMyColor(g, .3f);
+        i->setMyColor(g, .2f);
     else
-        setc(g, 0.3f);
+        setc(g, 0.2f);
 
     fillx(g, 0, 0, width, height);
 

@@ -19,16 +19,14 @@ RenderWinObject::RenderWinObject()
 
     formatBox = new RadioBox(format);
     qualityBox = new RadioBox(quality);
-
     startRender = new Button36(false, "Render");
 
     // Position all controls
-
 }
 
 void RenderWinObject::drawSelf(Graphics& g)
 {
-    fill(g, 0.4f);
+    WinObject::fill(g, 0.4f);
 }
 
 void RenderWinObject::handleChildEvent(Gobj * obj,InputEvent & ev)

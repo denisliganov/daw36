@@ -6,6 +6,7 @@
 #include "36_browserlist.h"
 #include "36_globals.h"
 #include "36_instrpanel.h"
+#include "36_instr.h"
 #include "36_vstinstr.h"
 #include "36_sampleinstr.h"
 #include "36_scroller.h"
@@ -123,39 +124,46 @@ InstrPanel::InstrPanel(Mixer* mixer)
     addHighlight(instrHighlight = new InstrHighlight());
 }
 
-VstInstr* InstrPanel::addVst(const char* path, VstInstr* otherVst)
+Instrument* InstrPanel::addVst(const char* path, VstInstr* otherVst)
 {
     VstInstr* vst = loadVst(path, otherVst);
 
+    Instrument* i = NULL;
+
     if(vst != NULL)
     {
-        addInstrument(vst);
+        i = addInstrument(vst);
     }
     else
     {
        // show error box
     }
 
-    return vst;
+    return i;
 }
 
-Sample* InstrPanel::addSample(const char* path, bool temporaryForPreview)
+Instrument* InstrPanel::addSample(const char* path, bool temporaryForPreview)
 {
     Sample* smp = loadSample(path);
+    Instrument* i = NULL;
 
     if (smp != NULL)
     {
         smp->previewOnly = temporaryForPreview;
 
-        addInstrument(smp);
+        i = addInstrument(smp);
     }
 
-    return smp;
+    return i;
 }
 
-void InstrPanel::addInstrument(Instrument * i, Instrument * objAfter)
+Instrument* InstrPanel::addInstrument(Device36 * dev, Instrument * objAfter)
 {
     WaitForSingleObject(AudioMutex, INFINITE);
+
+    Instrument* i = new Instrument(dev);
+
+    i->createSelfPattern();
 
     instrs.push_back(i);
 
@@ -173,7 +181,7 @@ void InstrPanel::addInstrument(Instrument * i, Instrument * objAfter)
         updateInstrIndexes();
     }
 
-    if(i->previewOnly == false)
+    if(dev->previewOnly == false)
     {
         i->addMixChannel();
 
@@ -198,6 +206,8 @@ void InstrPanel::addInstrument(Instrument * i, Instrument * objAfter)
     colorizeInstruments();
 
     ReleaseMutex(AudioMutex);
+
+    return i;
 }
 
 void InstrPanel::cloneInstrument(Instrument* i)
@@ -316,7 +326,7 @@ void InstrPanel::deleteInstrument(Instrument* i)
 
     updateInstrIndexes();
 
-    if(i->previewOnly == false)
+    if(i->device->previewOnly == false)
     {
         deleteObject(i);
 
@@ -350,7 +360,7 @@ Instrument* InstrPanel::getInstrByIndex(int index)
 {
     for(Instrument* instr : instrs)
     {
-        if(instr->devIdx == index)
+        if(instr->device->devIdx == index)
         {
             return instr;
         }
@@ -394,7 +404,7 @@ int InstrPanel::getNumInstrs()
 
     for(Instrument* instr : instrs)
     {
-        if (instr->previewOnly == false)
+        if (instr->device->previewOnly == false)
             num++;
     }
 
@@ -416,7 +426,7 @@ Instrument* InstrPanel::getInstrFromLine(int trkLine)
 
     for(Instrument* instr : instrs)
     {
-        if (!instr->previewOnly && line == trkLine)
+        if (!instr->device->previewOnly && line == trkLine)
         {
             return instr;
         }
@@ -433,7 +443,7 @@ void InstrPanel::generateAll(long num_frames, long mixbuffframe)
     {
         MixChannel* mchan = instr->getMixChannel();
 
-        instr->generateData(NULL, mchan->inbuff, num_frames, mixbuffframe);
+        instr->device->generateData(NULL, mchan->inbuff, num_frames, mixbuffframe);
     }
 }
 
@@ -560,7 +570,7 @@ void InstrPanel::updateInstrIndexes()
 
 Instrument* InstrPanel::loadInstrFromNewBrowser(BrwListEntry* ble)
 {
-    if (getNumInstrs() >= 36)
+    if (getNumInstrs() >= 37)
     {
         MWindow->showAlertBox("Can't load more than 36 instruments");
 
@@ -571,13 +581,11 @@ Instrument* InstrPanel::loadInstrFromNewBrowser(BrwListEntry* ble)
 
     if (ble->getType() == Entry_Wave)
     {
-        ni = (Instrument*)addSample(ble->getPath().data());
+        ni = addSample(ble->getPath().data());
     }
     else if (ble->getType() == Entry_DLL)
     {
-        VstInstr* vstgen = addVst(ble->getPath().data(), NULL);
-
-        ni = (Instrument*)vstgen;
+        ni = addVst(ble->getPath().data(), NULL);
     }
 
     if(ni)
@@ -709,7 +717,7 @@ void InstrPanel::resetAll()
 {
     for(Instrument* instr : instrs)
     {
-        instr->reset();
+        instr->device->reset();
     }
 }
 
@@ -739,7 +747,7 @@ void InstrPanel::remap()
 
     for (Instrument* i : instrs)
     {
-        if(i->previewOnly == false)
+        if(i->device->previewOnly == false)
         {
             if((yoffs + i->getH()) >= 0 && yoffs <= instrListHeight)
             {

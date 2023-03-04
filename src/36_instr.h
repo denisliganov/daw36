@@ -2,25 +2,12 @@
 #pragma once
 
 
-#include "sndfile.h"
 
 #include "36_globals.h"
-#include "36_device.h"
 #include "36_config.h"
+#include "36_objects.h"
 
 
-
-//namespace M {
-
-
-typedef enum InstrType
-{
-    Instr_Sample,
-    Instr_Generator,
-    Instr_Synth,
-    Instr_SoundFont,
-    Instr_VstPlugin
-}InstrType;
 
 
 
@@ -33,29 +20,32 @@ class GuiButt;
 
 
 
-
-class Instrument : public Device36
+class Instrument : public Gobj
 {
 friend MixChannel;
 friend InstrPanel;
 friend Grid;
 
 public:
-            Instrument();
+            Instrument(Device36* dev);
             ~Instrument();
+
+            Device36*           device;
+
+            std::string         instrAlias;
+
+            MixChannel*         mixChannel;
 
             EnableButton*       muteButt;
             Button36*           guiButton;
-            InstrType           type;
             SoloButton*         soloButt;
-            std::string         instrAlias;
             Pattern*            selfPattern;
             Note*               selfNote;
             InstrVU*            ivu;
             Knob*               volKnob;
             ParamBox*           volBox;
             ParamBox*           panBox;
-            MixChannel*         mixChannel;
+            Button36*           previewButton;
 
 
             void                addMixChannel();
@@ -66,7 +56,6 @@ virtual Instrument*             clone();
             void                drawSelf(Graphics& g);
             void                drawOverChildren(Graphics & g);
             std::string         getAlias()                          {return instrAlias;};
-            float               getLastNoteLength()                 { return lastNoteLength; }
         std::list <Element*>    getNotesFromRange(float tick_offset, float lastVisibleTick);
             MixChannel*         getMixChannel() { return mixChannel; }
             void                handleMouseDown(InputEvent& ev);
@@ -86,5 +75,4 @@ virtual Instrument*             clone();
 
 };
 
-//}
 

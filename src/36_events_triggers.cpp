@@ -31,7 +31,7 @@ Trigger::Trigger(Element* elem, Pattern* pattSon, Trigger* tgStarter)
     ev = NULL;
     tgsparent = tgsactive = NULL;
     freq_incr_sgn = 1;
-    vol_val = pan_val =  0;
+    volValue = panValue =  0;
     framePhase = 0;
     freq_incr_base = freq_incr_active = 0;
     wt_pos = 0;

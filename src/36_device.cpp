@@ -3,7 +3,9 @@
 
 
 
+#include "36.h"
 #include "36_device.h"
+#include "36_devwin.h"
 #include "36_params.h"
 #include "36_paramvol.h"
 #include "36_parampan.h"
@@ -30,9 +32,9 @@ Device36::Device36()
     internal = true;
     previewOnly = false;
     muteparam = soloparam = false;
-
+    muteCount = 0;
+    bypass = false;
     uniqueId = -1;
-
     devIdx = -1;
     rampCounterV = 0;
     cfsV = 0;
@@ -51,6 +53,7 @@ Device36::Device36()
     currPreset = NULL;
     envelopes = NULL;
     guiWindow = NULL;
+    container = NULL;
 
     currPresetName = "Untitled";
 }
@@ -554,6 +557,11 @@ bool Device36::isWindowVisible()
 void Device36::handleWindowClosed()
 {
     redraw();
+
+    if (container)
+    {
+        container->redraw();
+    }
 }
 
 void Device36::activateTrigger(Trigger* tg)
@@ -623,7 +631,7 @@ void Device36::deactivateTrigger(Trigger* tg)
 //
 // [IN]     stuff
 //
-void Device36::deClick(Trigger* tg, long num_frames, long buff_frame, long mix_buff_frame, long buff_remaining)
+void Device36::deClick(Trigger* tg, long num_frames, long buff_frame)
 {
     long tc0;
 
@@ -778,7 +786,7 @@ void Device36::fadeBetweenTriggers(Trigger* tgfrom, Trigger* tgto)
     memset(tempBuff, 0, rampCount*sizeof(float)*2);
     memset(tgto->auxbuff, 0, rampCount*sizeof(float)*2);
 
-    long actual = workTrigger(tgfrom, rampCount, rampCount, 0, 0);
+    long actual = processTrigger(tgfrom, rampCount, rampCount, 0);
 
     for(int ic = 0; ic < actual; ic++)
     {
@@ -867,59 +875,6 @@ void Device36::processDSP(float* in_buff, float* out_buff, int num_frames)
     
 }
 
-void Device36::process(float* in_buff, float* out_buff, int num_frames)
-{
-    if(envelopes == NULL && (bypass == false || muteCount < DECLICK_COUNT))
-    {
-        processDSP(in_buff, out_buff, num_frames);
-    }
-    else if(envelopes != NULL)
-    {
-        long framesToProcess;
-        long buffFrame = 0;
-        long framesRemaining = num_frames;
-
-        while(framesRemaining > 0)
-        {
-            if(framesRemaining > BUFF_PROCESSING_CHUNK_SIZE)
-            {
-                framesToProcess = BUFF_PROCESSING_CHUNK_SIZE;
-            }
-            else
-            {
-                framesToProcess = framesRemaining;
-            }
-
-            /*
-            tgenv = envelopes;
-            while(tgenv != NULL)
-            {
-                env = (Envelope*)tgenv->el;
-                if(buffframe >= env->last_buffframe)
-                {
-                    param = env->param;
-                    param->SetValueFromEnvelope(env->buffoutval[buffframe], env);
-                }
-                tgenv = tgenv->group_prev;
-            }
-            */
-
-            if(bypass == false || muteCount < DECLICK_COUNT)
-            {
-                processDSP(&in_buff[buffFrame*2], &out_buff[buffFrame*2], framesToProcess);
-            }
-
-            framesRemaining -= framesToProcess;
-            buffFrame += framesToProcess;
-        }
-    }
-
-    if(bypass == true && muteCount >= DECLICK_COUNT)
-    {
-        memcpy(out_buff, in_buff, num_frames*2*sizeof(float));
-    }
-}
-
 void Device36::generateData(float* in_buff, float* out_buff, long num_frames, long mix_buff_frame)
 {
     long        framesRemaining;
@@ -989,7 +944,7 @@ void Device36::generateData(float* in_buff, float* out_buff, long num_frames, lo
 
                 itr++;
 
-                actual = workTrigger(tg, framesToProcess, framesRemaining, buffFrame, mbframe);
+                actual = processTrigger(tg, framesToProcess, framesRemaining, buffFrame);
             }
 
             if(bypass == false || muteCount < DECLICK_COUNT)
@@ -1009,63 +964,12 @@ void Device36::generateData(float* in_buff, float* out_buff, long num_frames, lo
     fillOutputBuffer(out_buff, num_frames, 0, mix_buff_frame);
 }
 
-long Device36::workTrigger(Trigger * tg, long num_frames, long remaining, long buff_frame, long mix_buff_frame)
-{
-    pan0 = pan1 = pan2 = pan3 = 0;
-
-    endFrame = 0;
-
-    /// Init volume base. Volume base consist of volumes, that don't change during the whole filling session.
-    /// it's then multiplied to dynamic tg->vol_val value in postProcessTrigger.
-
-    volbase = 1; // tg->tgPatt->vol->outval; // Pattern static paramSet
-
-    volbase *= DAW_INVERTED_VOL_RANGE;
-
-    // Init pans
-    pan1 = 0;
-    pan2 = 0; // tg->tgPatt->pan->outval;     // Pattern's local panning
-    pan3 = pan->getOutVal();     // Instrument's panning
-
-
-    long actual_num_frames = processTrigger(tg, num_frames, buff_frame);
-
-    if(actual_num_frames > 0)
-    {
-        postProcessTrigger(tg, actual_num_frames, buff_frame, mix_buff_frame, remaining - actual_num_frames);
-    }
-
-    if(tg->lcount > 0)
-    {
-        for(int ic = 0; ic < actual_num_frames; ic++)
-        {
-            outBuff[(buff_frame + ic)*2] += tg->auxbuff[int(rampCount - tg->lcount)*2];
-            outBuff[(buff_frame + ic)*2 + 1] += tg->auxbuff[int(rampCount - tg->lcount)*2 + 1];
-
-            tg->lcount--;
-
-            if(tg->lcount == 0)
-            {
-                break;
-            }
-        }
-    }
-
-    // If trigger was finished during processing, deactivate it here
-
-    if(tg->tgState == TS_Finished)
-    {
-        tg->stop();
-    }
-
-    return actual_num_frames;
-}
-
 void Device36::preProcessTrigger(Trigger* tg, bool* skip, bool* fill, long num_frames, long buffframe)
 {
+/*
     if(tg->broken)
     {
-        // Per break or mute we could leave filling for two or more times, if there're not enough num_frames
+        // On break or mute, we could leave filling for two or more times, if there're not enough num_frames
         // to cover ANTIALIASING_FRAMES number
 
         if(tg->aaFilledCount >= DECLICK_COUNT)
@@ -1080,9 +984,10 @@ void Device36::preProcessTrigger(Trigger* tg, bool* skip, bool* fill, long num_f
             tg->aaFilledCount += num_frames;
         }
     }
+*/
 
     // Check conditions for muting
-    if(muteparam || !(SoloInstr == NULL || SoloInstr == this))
+    if(muteparam /*|| !(SoloInstr == NULL || SoloInstr == this)*/)
     {
         // If note just begun then there's nothing to declick. Set aaFilledCount to full for immediate muting
 
@@ -1124,30 +1029,83 @@ void Device36::preProcessTrigger(Trigger* tg, bool* skip, bool* fill, long num_f
     }
 }
 
-// Post-process data, generated per trigger. 
-// Apply all high-level params, envelopes and fill corresponding mixcell.
-//
-// [IN]
-//    tg            - trigger being processed.
-//    num_frames    - number of frames to process.
-//    curr_frame    - global timing frame number.
-//    buffframe     - global buffering offset.
-//
-void Device36::postProcessTrigger(Trigger* tg, long num_frames, long buff_frame, long mix_buff_frame, long buff_remaining)
+long Device36::processTrigger(Trigger * tg, long num_frames, long remaining, long buff_frame)
 {
-    float       vol, pan;
-    float       volL, volR;
-    long        tc, tc0;
+    endFrame = 0;
+
+    long actual_num_frames = handleTrigger(tg, num_frames, buff_frame);
+
+    if(actual_num_frames > 0)
+    {
+        deClick(tg, actual_num_frames, buff_frame);
+
+        volBase = 1; // tg->tgPatt->vol->outval; // Pattern static paramSet
+        volBase *= DAW_INVERTED_VOL_RANGE;
+        volBase *= tg->volBase;
+
+        pan0 = tg->panBase;
+        pan1 = 0;
+        pan2 = 0;                    // tg->tgPatt->pan->outval;     // Pattern's local panning
+        pan3 = pan->getOutVal();     // Instrument's panning
+
+        // postProcessTrigger(tg, actual_num_frames, buff_frame, mix_buff_frame, remaining - actual_num_frames);
+
+        long tc0 = buff_frame*2;
+
+        float panSum = (((pan0*(1 - c_abs(pan1)) + pan1)*(1 - c_abs(pan2)) + pan2)*(1 - c_abs(pan3)) + pan3);
+
+        int ai = int((PI_F*(panSum + 1)/4)/wt_angletoindex);
+
+        float volL = wt_cosine[ai];
+        float volR = wt_sine[ai];
+
+        for(long cc = 0; cc < actual_num_frames; cc++)
+        {
+            outBuff[tc0] += tempBuff[tc0]*volBase*volL;
+            outBuff[tc0 + 1] += tempBuff[tc0 + 1]*volBase*volR;
+
+            tc0++;
+            tc0++;
+        }
+    }
 
 
-    deClick(tg, num_frames, buff_frame, mix_buff_frame, buff_remaining);
+    if(tg->lcount > 0)
+    {
+        for(int ic = 0; ic < actual_num_frames; ic++)
+        {
+            outBuff[(buff_frame + ic)*2] += tg->auxbuff[int(rampCount - tg->lcount)*2];
+            outBuff[(buff_frame + ic)*2 + 1] += tg->auxbuff[int(rampCount - tg->lcount)*2 + 1];
 
-    vol = tg->vol_val*volbase;
+            tg->lcount--;
 
-    pan0 = tg->pan_val;
+            if(tg->lcount == 0)
+            {
+                break;
+            }
+        }
+    }
 
-    tc = mix_buff_frame*2;
-    tc0 = buff_frame*2;
+    // If trigger was finished during processing, deactivate it here
+
+    if(tg->tgState == TS_Finished)
+    {
+        tg->stop();
+    }
+
+    return actual_num_frames;
+}
+
+//
+// Post-process data, generated per trigger. 
+// Apply all high-level params, envelopes.
+//
+//
+void Device36::postProcessTrigger(Trigger* tg, long num_frames, long buff_frame)
+{
+    deClick(tg, num_frames, buff_frame);
+
+    long tc0 = buff_frame*2;
 
     for(long cc = 0; cc < num_frames; cc++)
     {
@@ -1157,7 +1115,7 @@ void Device36::postProcessTrigger(Trigger* tg, long num_frames, long buff_frame,
         // pan2 is unchanged
         // then to instrument/env
 
-        pan = (((pan0*(1 - c_abs(pan1)) + pan1)*(1 - c_abs(pan2)) + pan2)*(1 - c_abs(pan3)) + pan3);
+        float pan = (((pan0*(1 - c_abs(pan1)) + pan1)*(1 - c_abs(pan2)) + pan2)*(1 - c_abs(pan3)) + pan3);
 
         //tg->lastpan = pan;
         ////PanLinearRule(pan, &volL, &volR);
@@ -1171,11 +1129,11 @@ void Device36::postProcessTrigger(Trigger* tg, long num_frames, long buff_frame,
 
         int ai = int((PI_F*(pan + 1)/4)/wt_angletoindex);
 
-        volL = wt_cosine[ai];
-        volR = wt_sine[ai];
+        float volL = wt_cosine[ai];
+        float volR = wt_sine[ai];
 
-        outBuff[tc0] += tempBuff[tc0]*vol*volL;
-        outBuff[tc0 + 1] += tempBuff[tc0 + 1]*vol*volR;
+        outBuff[tc0] += tempBuff[tc0]*volBase*volL;
+        outBuff[tc0 + 1] += tempBuff[tc0 + 1]*volBase*volR;
 
         tc0++;
         tc0++;
@@ -1202,7 +1160,16 @@ void Device36::setLastParams(float last_length,float last_vol,float last_pan, in
     lastNoteVal = last_val;
 }
 
+SubWindow* Device36::createWindow()
+{
+    SubWindow* win =  MObject->addWindow((WinObject*)new DevParamObject(this));
 
+    //int xb = window->getLastEvent().mouseX + 20;
+    //int yb = window->getLastEvent().mouseY - guiWindow->getHeight()/2;
 
+    win->setBounds(MObject->getLastEvent().mouseX + 40, win->getY(), win->getWidth(), win->getHeight());
+
+    return win;
+}
 
 

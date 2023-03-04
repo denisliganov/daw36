@@ -25,6 +25,7 @@
 #include "36_text.h"
 #include "36_vsteff.h"
 #include "36_knob.h"
+#include "36_vstinstr.h"
 
 
 
@@ -32,70 +33,70 @@
 
 Eff* CreateEffect(std::string effalias)
 {
-    Eff* eff = NULL;
+    Device36* dev = NULL;
 
     if(effalias == "eff.eq1")
     {
-        eff = new EQ1();
+        dev = new EQ1();
     }
     else if(effalias == "eff.eq3")
     {
-        eff = new EQ3();
+        dev = new EQ3();
     }
     else if(effalias == "eff.grapheq")
     {
-        eff = new GraphicEQ();
+        dev = new GraphicEQ();
     }
     else if(effalias == "eff.delay")
     {
-        eff = new XDelay();
+        dev = new XDelay();
     }
     else if(effalias == "eff.reverb")
     {
-        eff = new CReverb();
+        dev = new CReverb();
     }
     else if(effalias == "eff.tremolo")
     {
-        eff = new CTremolo();
+        dev = new CTremolo();
     }
     else if(effalias == "eff.comp")
     {
-        eff = new Compressor();
+        dev = new Compressor();
     }
     else if(effalias == "eff.chorus")
     {
-        eff = new CChorus();
+        dev = new CChorus();
     }
     else if(effalias == "eff.flanger")
     {
-        eff = new CFlanger();
+        dev = new CFlanger();
     }
     else if(effalias == "eff.phaser")
     {
-        eff = new CPhaser();
+        dev = new CPhaser();
     }
     else if(effalias == "eff.wah")
     {
-        eff = new CWahWah();
+        dev = new CWahWah();
     }
     else if(effalias == "eff.dist")
     {
-        eff = new CDistort();
+        dev = new CDistort();
     }
     else if(effalias == "eff.bitcrush")
     {
-        eff = new CBitCrusher();
+        dev = new CBitCrusher();
     }
     else if(effalias == "eff.stereo")
     {
-        eff = new CStereo();
+        dev = new CStereo();
     }
     else if(effalias == "eff.filter1")
     {
-        eff = new Filter1();
+        dev = new Filter1();
     }
 
-    return eff;
+    return new Eff(dev);
 }
 
 
@@ -263,7 +264,7 @@ void MixChannel::addEffect(Eff* eff)
 
     eff->setMixChannel(this);
 
-    addObject(eff);
+    addObject(eff, "eff");
 
     remapAndRedraw();
     
@@ -276,9 +277,10 @@ Eff* MixChannel::addEffectFromBrowser(BrwListEntry * de)
 
     if(de->getType() == Entry_DLL)
     {
-        VstEffect* vsteff = new VstEffect((char*)de->getPath().data());
+        //VstEffect* vsteff = new VstEffect((char*)de->getPath().data());
+        VstInstr*  vsteff = new VstInstr((char*)de->getPath().data(), NULL);
 
-        eff = vsteff;
+        eff = new Eff(vsteff);
     }
     else
     {
@@ -685,29 +687,29 @@ void MixChannel::process(int num_frames, float* out_buff)
     {
         for(Eff* eff : effs)
         {
-            eff->generateData(inbuff, outbuff, num_frames);
+            eff->device->generateData(inbuff, outbuff, num_frames);
 
-            if(eff->getBypass() == false)
+            if(eff->device->getBypass() == false)
             {
                 // Copy output back to input for the next effect to process
 
-                if(eff->muteCount > 0)
+                if(eff->device->muteCount > 0)
                 {
                     long tc = 0;
                     float aa;
 
                     while(tc < num_frames)
                     {
-                        aa = float(DECLICK_COUNT - eff->muteCount)/DECLICK_COUNT;
+                        aa = float(DECLICK_COUNT - eff->device->muteCount)/DECLICK_COUNT;
 
                         inbuff[tc*2] = inbuff[tc*2]*(1.f - aa) + outbuff[tc*2]*aa;
                         inbuff[tc*2 + 1] = inbuff[tc*2 + 1]*(1.f - aa) + outbuff[tc*2 + 1]*aa;
 
                         tc++;
 
-                        if(eff->muteCount > 0)
+                        if(eff->device->muteCount > 0)
                         {
-                            eff->muteCount--;
+                            eff->device->muteCount--;
                         }
                     }
                 }
@@ -718,21 +720,21 @@ void MixChannel::process(int num_frames, float* out_buff)
             }
             else
             {
-                if(eff->muteCount < DECLICK_COUNT)
+                if(eff->device->muteCount < DECLICK_COUNT)
                 {
                     long tc = 0;
                     float aa;
 
-                    while(tc < num_frames && eff->muteCount < DECLICK_COUNT)
+                    while(tc < num_frames && eff->device->muteCount < DECLICK_COUNT)
                     {
-                        aa = float(DECLICK_COUNT - eff->muteCount)/DECLICK_COUNT;
+                        aa = float(DECLICK_COUNT - eff->device->muteCount)/DECLICK_COUNT;
 
                         inbuff[tc*2] = inbuff[tc*2]*(1.f - aa) + outbuff[tc*2]*aa;
                         inbuff[tc*2 + 1] = inbuff[tc*2 + 1]*(1.f - aa) + outbuff[tc*2 + 1]*aa;
 
                         tc++;
 
-                        eff->muteCount++;
+                        eff->device->muteCount++;
                     }
                 }
             }
@@ -958,7 +960,7 @@ void MixChannel::setBufferSize(unsigned int bufferSize)
 {
     for(Eff* eff : effs)
     {
-        eff->setBufferSize(bufferSize);
+        eff->device->setBufferSize(bufferSize);
     }
 }
 
@@ -966,7 +968,7 @@ void MixChannel::setSampleRate(float sampleRate)
 {
     for(Eff* eff : effs)
     {
-        eff->setSampleRate(sampleRate);
+        eff->device->setSampleRate(sampleRate);
     }
 }
 
@@ -974,7 +976,7 @@ void MixChannel::reset()
 {
     for(Eff* eff : effs)
     {
-        eff->reset();
+        eff->device->reset();
     }
 }
 

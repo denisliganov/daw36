@@ -13,6 +13,19 @@
 
 
 
+
+
+typedef enum InstrType
+{
+    Instr_Sample,
+    Instr_Generator,
+    Instr_Synth,
+    Instr_SoundFont,
+    Instr_VstPlugin
+}InstrType;
+
+
+
 class Device36 : public ParamObject
 {
 friend InstrPanel;
@@ -21,14 +34,14 @@ public:
             Device36();
     virtual ~Device36();
 
-    virtual SubWindow*          createWindow() { return NULL;  }
+    virtual SubWindow*          createWindow();
     virtual void                forceStop();
             int                 getIndex() { return devIdx; }
         std::list<BrwEntry*>    getPresets() { return presets; }
             BrwEntry*           getCurrPreset() { return currPreset; }
             BrwEntry*           getPresetByName(std::string pr_name);
             BrwEntry*           getPresetByIndex(long devIdx);
-
+            float               getLastNoteLength() { return lastNoteLength; }
             int                 getMuteCount()  { return muteCount; }
             bool                getBypass()     { return bypass; }
 
@@ -41,7 +54,6 @@ public:
             bool                isWindowVisible();
             bool                isPreviewOnly() { return previewOnly; }
             bool                isInternal()    { return internal; }
-
 
     virtual void                reset() { }
             void                savePreset();
@@ -57,21 +69,19 @@ public:
     virtual bool                setPresetByName(BrwEntry* preset);
     virtual bool                setPresetByIndex(long index) { return true; };
     virtual bool                setPresetByName(std::string pname);
+            void                setContainer(Gobj* cnt) { container = cnt; }
 
     virtual void                activateTrigger(Trigger* tg);
     virtual void                deactivateTrigger(Trigger* tg);
             void                fadeBetweenTriggers(Trigger* tgfrom, Trigger* tgto);
-    virtual void                deClick(Trigger* tg, long num_frames, long buff_frame = 0, long mix_buff_frame = 0, long remaining = 0);
+    virtual void                deClick(Trigger* tg, long num_frames, long buff_frame = 0);
     virtual void                generateData(float* in_buff, float* out_buff, long num_frames, long mix_buff_frame = 0);
-    virtual void                preProcessTrigger(Trigger* tg, bool* skip, bool* fill, long num_frames, long buff_frame = 0);
-    virtual long                processTrigger(Trigger* tg, long num_frames = 0, long buff_frame = 0) {return 0;};
-    virtual void                postProcessTrigger(Trigger* tg, long num_frames = 0, long buff_frame = 0, long mix_buff_frame = 0, long remaining = 0);
-    virtual long                workTrigger(Trigger* tg, long num_frames, long remaining, long buff_frame, long mix_buff_frame);
-
-    virtual void                processDSP(float* in_buff, float* out_buff, int num_frames);
-    virtual void                process(float* in_buff, float* out_buff, int num_frames);
-
             void                fillOutputBuffer(float* out_buff, long num_frames, long buff_frame, long mix_buff_frame);
+    virtual void                preProcessTrigger(Trigger* tg, bool* skip, bool* fill, long num_frames, long buff_frame = 0);
+    virtual long                handleTrigger(Trigger* tg, long num_frames = 0, long buff_frame = 0) {return 0;};
+    virtual void                postProcessTrigger(Trigger* tg, long num_frames = 0, long buff_frame = 0);
+    virtual long                processTrigger(Trigger* tg, long num_frames, long remaining, long buff_frame);
+    virtual void                processDSP(float* in_buff, float* out_buff, int num_frames);
 
             void                addNote(Note* note);
             void                removeNote(Note* note);
@@ -84,7 +94,7 @@ public:
             long                endFrame;  // last frame to fill
             Envelope*           envVol;
 
-            float               volbase;
+            float               volBase;
             float               pan0, pan1, pan2, pan3;
             int                 rampCount;
             float               rampCounterV;
@@ -103,16 +113,20 @@ public:
 
             bool                muteparam;
             bool                soloparam;
+            int                 devIdx;
+            SubWindow*          guiWindow;
 
 protected:
+
+            InstrType           type;
+            Gobj*               container;
 
             bool                bypass;
 
             BrwEntry*           currPreset;
             std::string         currPresetName;
-            int                 devIdx;
             std::string         filePath;
-            SubWindow*          guiWindow;
+
             bool                internal;
             bool                isLoading;
             int                 lastParamIdx;
@@ -120,7 +134,6 @@ protected:
             std::string         presetPath;
     std::list<BrwEntry*>        presets;
     std::vector<std::string>    pres;
-            Button36*           previewButton;
             bool                previewOnly;
             long                uniqueId;
 

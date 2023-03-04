@@ -5,6 +5,8 @@
 #include "36_listbox.h"
 #include "36_params.h"
 #include "36_parambox.h"
+#include "36_paramvol.h"
+#include "36_parampan.h"
 #include "36_paramnum.h"
 #include "36_paramradio.h"
 #include "36_paramselector.h"
@@ -33,15 +35,10 @@ void DevParamObject::initAll()
     std::list<Param*>  showParams;
 
     VstInstr*  vsti = dynamic_cast<VstInstr*>(device);
-    VstEffect* vste = dynamic_cast<VstEffect*>(device);
 
     if (vsti)
     {
         showParams = vsti->getParams();
-    }
-    else if (vste)
-    {
-        showParams = vste->getParams();
     }
     else
     {
@@ -51,6 +48,8 @@ void DevParamObject::initAll()
     for(Param* param : showParams)
     {
         Parameter*      prm = dynamic_cast<Parameter*>(param);
+        ParamVol*       prmVol = dynamic_cast<ParamVol*>(param);
+        ParamPan*       prmPan = dynamic_cast<ParamPan*>(param);
         ParamRadio*     prmRad = dynamic_cast<ParamRadio*>(param);
         ParamSelector*  prmSel = dynamic_cast<ParamSelector*>(param);
         ParamToggle*    prmTg = dynamic_cast<ParamToggle*>(param);
@@ -66,6 +65,14 @@ void DevParamObject::initAll()
 
             obj = box;
         }
+        else if (prmVol)
+        {
+            prm = NULL;
+        }
+        else if (prmPan)
+        {
+            prm = NULL;
+        }
         else if (prmRad)
         {
             obj = new RadioBox(prmRad);
@@ -79,7 +86,7 @@ void DevParamObject::initAll()
             obj = new ToggleBox(prmTg);
         }
 
-        Gobj::addObject(obj);
+        WinObject::addObject(obj);
 
         if (obj)
         {
@@ -87,7 +94,7 @@ void DevParamObject::initAll()
         }
     }
 
-    Gobj::addObject(presetBox = new ListBoxx("Presets"));
+    WinObject::addObject(presetBox = new ListBoxx("Presets"));
 
     goTop();
 
@@ -103,25 +110,23 @@ void DevParamObject::initAll()
 
     finalizePuts();
 
-//    setWidthHeight(x + boxWidth + border + 5, y + border - 2);
+    setWidthHeight(wndW + border, wndH + border);
 
     WinObject::setName(String(device->getObjName().data()));
 }
 
 void DevParamObject::drawSelf(Graphics& g)
 {
-    Gobj::fill(g, 0.4f);
+    WinObject::fill(g, 0.3f);
 }
 
 void DevParamObject::handleChildEvent(Gobj * obj,InputEvent & ev)
 {
-    int a = 1;
-
     if (obj == presetBox && !ev.clickDown)
     {
         device->setPresetByName(presetBox->getCurrentName());
 
-        Gobj::redraw();
+        WinObject::redraw();
     }
 }
 

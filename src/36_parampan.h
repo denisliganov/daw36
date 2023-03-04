@@ -16,7 +16,6 @@ public:
 
 protected:
             std::string         calcValStr(float uv);
-            float               calcOutputValue(float val);
 };
 
 

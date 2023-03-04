@@ -51,8 +51,8 @@ public:
 };
 
 
-    Note*               AddNote(float tick, int line, Instrument* instr, int note_val, float length, float vol, float pan, Pattern* ptBase);
-    Note*               CreateNote(float tick, int line, Instrument* instr, int note_val, float length, float vol, float pan, Pattern* ptBase);
+    Note*               AddNote(float tick, int line, Device36* instr, int note_val, float length, float vol, float pan, Pattern* ptBase);
+    Note*               CreateNote(float tick, int line, Device36* instr, int note_val, float length, float vol, float pan, Pattern* ptBase);
     Pattern*            CreatePatternBase(float tk1, float tk2, int tr1, int tr2, char* name, Pattern* ptBase);
     Pattern*            CreatePatternInstance(Pattern* ptMom, float tk1, float tk2, int tr1, int tr2, Pattern* ptBase);
 

@@ -968,7 +968,7 @@ void Grid::changeBars(InputEvent& ev)
 
     Instrument* instr = MInstrPanel->getInstrFromLine(actionLine);
 
-    for(Note* note : instr->notes)
+    for(Note* note : instr->device->notes)
     {
         int noteX = note->getX1();
 
@@ -1438,7 +1438,7 @@ void Grid::handleMouseDown(InputEvent& ev)
 
                             actnote->preview(-1, true);
 
-                            MInstrPanel->setCurrInstr(actnote->getInstr());
+                            //MInstrPanel->setCurrInstr(actnote->getInstr());
 
                             if (dispmode == GridDisplayMode_Steps)
                             {
@@ -1779,8 +1779,8 @@ Note* Grid::putNote(float tick, int line, int noteVal)
     {
         MInstrPanel->setCurrInstr(instr);
 
-        Note* newNote = AddNote(tick, line, instr, noteVal > 0 ? noteVal : instr->lastNoteVal, 
-                                        instr->lastNoteLength, instr->lastNoteVol, instr->lastNotePan, getPattern());
+        Note* newNote = AddNote(tick, line, instr->device, noteVal > 0 ? noteVal : instr->device->lastNoteVal, 
+                                        instr->device->lastNoteLength, instr->device->lastNoteVol, instr->device->lastNotePan, getPattern());
 
         redraw(true);
 
@@ -1823,6 +1823,7 @@ void Grid::reassignElements()
 
         if (note)
         {
+            /*
             Instrument* instrNew = MInstrPanel->getInstrFromLine(note->getline());
             Instrument* instrOld = note->getInstr();
 
@@ -1841,6 +1842,7 @@ void Grid::reassignElements()
                     setActivElement(newNote);
                 }
             }
+            */
         }
     }
 

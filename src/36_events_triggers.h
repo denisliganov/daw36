@@ -41,8 +41,8 @@ public:
             Pattern*            tgPatt;
             EnvPoint*           ep1;
             float               lcount;
-            float               vol_val;
-            float               pan_val;
+            float               volValue;
+            float               panValue;
             float               volBase;
             float               panBase;
             float               freq;               // Constant part of the frequency

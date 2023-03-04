@@ -4,6 +4,7 @@
 #include "36_instr.h"
 #include "36_instrpanel.h"
 #include "36_vu.h"
+#include "36_devwin.h"
 #include "36_edit.h"
 #include "36_pattern.h"
 #include "36_utils.h"
@@ -18,6 +19,7 @@
 #include "36_text.h"
 #include "36_events_triggers.h"
 #include "36_knob.h"
+#include "36_keyboard.h"
 #include "36_parambox.h"
 #include "36_paramvol.h"
 #include "36_parampan.h"
@@ -108,7 +110,7 @@ protected:
             //instr->setMyColor(g, .8f);
             //rectx(g, 0, 0, width, height);
 
-            bool wVis = instr->isWindowVisible();
+            bool wVis = instr->device->isWindowVisible();
 
             if(wVis)
             {
@@ -162,15 +164,19 @@ public:
 };
 
 
-Instrument::Instrument()
+Instrument::Instrument(Device36* dev)
 {
+    device = dev;
+
+    setObjName(dev->getObjName());
+
     selfPattern = NULL;
     selfNote = NULL;
 
-    addObject(volBox = new ParamBox(vol));
+    addObject(volBox = new ParamBox(device->vol));
     volBox->setSliderOnly(true);
 
-    addObject(panBox = new ParamBox(pan));
+    addObject(panBox = new ParamBox(device->pan));
     panBox->setSliderOnly(true);
 
     mixChannel = MMixer->masterChannel;       // Default to master channel
@@ -201,7 +207,7 @@ Instrument::~Instrument()
         SoloInstr = NULL;
     }
 
-    removeElements();
+    device->removeElements();
 
     ReleaseMutex(MixerMutex);
 }
@@ -239,7 +245,7 @@ void Instrument::createSelfPattern()
 
     if(selfNote == NULL)
     {
-        selfNote = CreateNote(0, 0, this, BaseNote, 4, 1, 0, selfPattern);
+        selfNote = CreateNote(0, 0, device, BaseNote, 4, 1, 0, selfPattern);
 
         selfNote->propagateTriggers(selfPattern);
     }
@@ -265,7 +271,7 @@ ContextMenu* Instrument::createContextMenu()
 Instrument* Instrument::clone()
 {
     Instrument* instr = NULL;
-
+/*
     switch(type)
     {
         case Instr_Sample:
@@ -276,7 +282,7 @@ Instrument* Instrument::clone()
         case Instr_VstPlugin:
             instr = (Instrument*)MInstrPanel->addVst(NULL, (VstInstr*)this);
             break;
-    }
+    }*/
 
     return instr;
 }
@@ -294,12 +300,11 @@ void Instrument::drawSelf(Graphics& g)
 
     //setc(g, .0f);
     Gobj::setMyColor(g, .1f);
-    txtfit(g, FontSmall, objName, height+2, 9, width - (height+2));
+    txtfit(g, FontSmall, device->getObjName(), height+2, 9, width - (height+2));
 
     //setc(g, 1.f);
     Gobj::setMyColor(g, 1.f);
-    txtfit(g, FontSmall, objName, height+2, 8, width - (height+2));
-
+    txtfit(g, FontSmall, device->getObjName(), height+2, 8, width - (height+2));
 
 
     //Colour clr = Colour(100, 110, 110);
@@ -326,7 +331,7 @@ std::list <Element*> Instrument::getNotesFromRange(float offset, float lastVisib
 {
     std::list <Element*> noteList;
 
-    for(auto note : notes)
+    for(auto note : device->notes)
     {
         if(note->getendtick() < offset || note == selfNote)
         {
@@ -362,7 +367,7 @@ void Instrument::handleChildEvent(Gobj * obj, InputEvent& ev)
         {
             MInstrPanel->setCurrInstr(this);
 
-            showWindow(!isWindowVisible());
+            device->showWindow(!device->isWindowVisible());
         }
     }
 
@@ -375,9 +380,9 @@ void Instrument::handleMouseDown(InputEvent& ev)
     {
         MInstrPanel->setCurrInstr(this);
 
-        //if(ev.keyFlags & kbd_ctrl)
+        if(ev.keyFlags & kbd_ctrl)
         {
-          //  preview();
+            preview();
         }
         /*
         else
@@ -415,6 +420,7 @@ void Instrument::handleMouseWheel(InputEvent& ev)
 
 void Instrument::load(XmlElement * instrNode)
 {
+    /*
     devIdx = instrNode->getIntAttribute(T("InstrIndex"), -1);
 
     XmlElement* xmlParam = NULL;
@@ -441,6 +447,7 @@ void Instrument::load(XmlElement * instrNode)
     {
         SoloInstr = this;
     }
+    */
 }
 
 void Instrument::preview(int note)
@@ -452,12 +459,10 @@ void Instrument::preview(int note)
 
 void Instrument::remap()
 {
-    volBox->setCoords1(width - 90, height - 10, 50, 10);
-    panBox->setCoords1(width - 150, height - 10, 50, 10);
+    volBox->setCoords1(width - 100, height - 10, 50, 10);
+    panBox->setCoords1(width - 160, height - 10, 50, 10);
 
     previewButton->setCoords1(height + 2, height - 10, 20, 10);
-    volBox->setCoords1(width - 84, height - 10, 50, 10);
-    panBox->setCoords1(width - 149, height - 10, 50, 10);
 
     int bw = 11;
 
@@ -480,9 +485,9 @@ void Instrument::remap()
 
 void Instrument::setIndex(int idx)
 {
-    devIdx = idx;
+    device->devIdx = idx;
 
-    int num = devIdx;
+    int num = device->devIdx;
 
     //if(num == 10)
     //    num = 0;
@@ -511,6 +516,7 @@ void Instrument::setBufferSize(unsigned bufferSize)
 
 void Instrument::save(XmlElement * instrNode)
 {
+    /*
     instrNode->setAttribute(T("InstrIndex"), devIdx);
     instrNode->setAttribute(T("InstrType"), int(type));
     instrNode->setAttribute(T("InstrName"), String(objName.data()));
@@ -518,7 +524,7 @@ void Instrument::save(XmlElement * instrNode)
 
     instrNode->addChildElement(vol->save());
     instrNode->addChildElement(pan->save());
-
+    */
     /*
     instrNode->setAttribute(T("Mute"), int(muteparam->getOutVal()));
     instrNode->setAttribute(T("Solo"), int(soloparam->getOutVal()));

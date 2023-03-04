@@ -10,7 +10,6 @@
 #include "36_button.h"
 #include "36_config.h"
 #include "36_draw.h"
-#include "36_devwin.h"
 #include "36_effects.h"
 #include "36_history.h"
 #include "36_menu.h"
@@ -30,11 +29,15 @@
 
 
 
-Eff::Eff()
+
+
+
+Eff::Eff(Device36* dev)
 {
-    muteCount = 0;
-    bypass = false;
-    devIdx = -1;
+    device = dev;
+
+    setObjName(dev->getObjName());
+    //setObjId(dev->getObjId());
 
     //addObject(previewButton = new EffGuiButton(), MixChanWidth - 21, 0, 20, 15);
 
@@ -65,7 +68,7 @@ void Eff::drawSelf(Graphics& g)
     //setc(g, .2f);
     //lineH(g, height-1, 0, width-1);
 
-    if (guiWindow && guiWindow->isOpen())
+    if (device->guiWindow && device->guiWindow->isOpen())
     {
         uint32 color = 0xffFF9930;
         uint32 clrDecr = 0x80000000;
@@ -87,7 +90,7 @@ void Eff::drawSelf(Graphics& g)
     //txtfit(g, FontSmall, objName, 3, th - 2, width - 2);
 
     setc(g, 1.f);
-    txtfit(g, FontSmall, objName, 1, th - 4, width - 2);
+    txtfit(g, FontSmall, device->getObjName(), 1, th - 4, width - 2);
 }
 
 Eff* Eff::clone()
@@ -112,6 +115,7 @@ void Eff::setMixChannel(MixChannel* mc)
 
 void Eff::save(XmlElement * xmlEff)
 {
+    /*
     xmlEff->setAttribute(T("EffIndex"), devIdx);
     xmlEff->setAttribute(T("EffName"), String(objName.data()));
     xmlEff->setAttribute(T("EffPath"), String(filePath.data()));
@@ -120,10 +124,12 @@ void Eff::save(XmlElement * xmlEff)
     {
         saveStateData(*xmlEff, "Current", true);
     }
+    */
 }
 
 void Eff::load(XmlElement * xmlEff)
 {
+    /*
     devIdx = xmlEff->getIntAttribute(T("EffIndex"));
 
     //if(devType != EffType_VSTPlugin)
@@ -135,6 +141,7 @@ void Eff::load(XmlElement * xmlEff)
             restoreStateData(*stateNode, true);
         }
     }
+    */
 }
 
 void Eff::handleMouseDown(InputEvent& ev)
@@ -151,7 +158,7 @@ void Eff::handleMouseUp(InputEvent& ev)
 {
     if (ev.leftClick)
     {
-        showWindow(!isWindowVisible());
+        device->showWindow(!device->isWindowVisible());
     }
 }
 
@@ -166,18 +173,6 @@ void Eff::handleMouseDrag(InputEvent& ev)
 void Eff::handleChildEvent(Gobj * obj, InputEvent& ev)
 {
     
-}
-
-SubWindow* Eff::createWindow()
-{
-    SubWindow* win =  window->addWindow((WinObject*)new DevParamObject(this));
-
-    //int xb = window->getLastEvent().mouseX + 20;
-    //int yb = window->getLastEvent().mouseY - guiWindow->getHeight()/2;
-
-    win->setBounds(window->getLastEvent().mouseX + 40, win->getY(), win->getWidth(), win->getHeight());
-
-    return win;
 }
 
 

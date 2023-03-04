@@ -37,11 +37,11 @@ ConfigWinObject::ConfigWinObject()
 
     bufferSize->setUnitString("samples");
 
-    Gobj::addObject(knob1 = new Knob(hue));
-    Gobj::addObject(knob2 = new Knob(saturation));
-    Gobj::addObject(knob3 = new Knob(brightness));
+    WinObject::addObject(knob1 = new Knob(hue));
+    WinObject::addObject(knob2 = new Knob(saturation));
+    WinObject::addObject(knob3 = new Knob(brightness));
 
-    Gobj::addObject(buffSizeBox = new ParamBox(bufferSize));
+    WinObject::addObject(buffSizeBox = new ParamBox(bufferSize));
 
     interpolationSelect = new ParamRadio("Interpolation (sample playback)");
     interpolationSelect->addOption("Linear");
@@ -49,9 +49,9 @@ ConfigWinObject::ConfigWinObject()
     interpolationSelect->addOption("6-point Polinomial");
     interpolationSelect->addOption("Sinc depth 64");
 
-    Gobj::addObject(chooserBox = new RadioBox(interpolationSelect));
+    WinObject::addObject(chooserBox = new RadioBox(interpolationSelect));
 
-    Gobj::addObject(outputDevices = new ListBoxx("Output devices"));
+    WinObject::addObject(outputDevices = new ListBoxx("Output devices"));
 //                outputDevices->addEntry("Output Device 1");
 //                outputDevices->addEntry("Output Device 2");
 
@@ -59,16 +59,16 @@ ConfigWinObject::ConfigWinObject()
 
     showASIOPanel = new Button36(false, "Show ASIO panel");
 
-    Gobj::addObject(inputDevices = new ListBoxx("Input devices"));
+    WinObject::addObject(inputDevices = new ListBoxx("Input devices"));
                 inputDevices->addEntry("IN Device1");
                 inputDevices->addEntry("IN Device2");
 
-    Gobj::addObject(midiOutDevices = new ListBoxx("MIDI OUT devices"));
+    WinObject::addObject(midiOutDevices = new ListBoxx("MIDI OUT devices"));
                 midiOutDevices->addEntry("Entry1");
                 midiOutDevices->addEntry("Entry2");
                 midiOutDevices->addEntry("Entry3");
 
-    Gobj::addObject(midiInDevices = new ListBoxx("MIDI IN devices"));
+    WinObject::addObject(midiInDevices = new ListBoxx("MIDI IN devices"));
                 midiInDevices->addEntry("Entry4Entry4Entry4Entry4Entry4");
                 midiInDevices->addEntry("Entry5");
                 midiInDevices->addEntry("Entry6Entry4Entry4");

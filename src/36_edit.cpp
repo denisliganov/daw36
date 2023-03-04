@@ -24,7 +24,7 @@
 
 
 
-Note* AddNote(float tick, int line, Instrument* instr, int note_val, float length, float vol, float pan, Pattern* ptBase)
+Note* AddNote(float tick, int line, Device36* instr, int note_val, float length, float vol, float pan, Pattern* ptBase)
 {
     Note* note = CreateNote(tick, line, instr, note_val, length, vol, pan, ptBase);
 
@@ -36,7 +36,7 @@ Note* AddNote(float tick, int line, Instrument* instr, int note_val, float lengt
     return note;
 }
 
-Note* CreateNote(float tick, int line, Instrument* instr, int note_val, float length, float vol, float pan, Pattern* ptBase)
+Note* CreateNote(float tick, int line, Device36* instr, int note_val, float length, float vol, float pan, Pattern* ptBase)
 {
     Note* newNote = NULL;
     Sample* sample = dynamic_cast<Sample*>(instr);

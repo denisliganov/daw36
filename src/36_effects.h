@@ -4,18 +4,21 @@
 #include "rosic/rosic.h"
 
 #include "36_globals.h"
+#include "36_objects.h"
 #include "36_device.h"
 
 
-class Eff : public Device36
+
+
+
+class Eff : public Gobj
 {
 public:
-            Eff();
+            Eff(Device36* dev);
             virtual ~Eff();
 
             void                activateMenuItem(std::string item);
             ContextMenu*        createContextMenu();
-            SubWindow*          createWindow();
             virtual Eff*        clone();
             void                drawSelf(Graphics& g);
             MixChannel*         getMixChannel() { return mixChannel; }
@@ -28,12 +31,15 @@ public:
             virtual void        save(XmlElement* xmlEff);
             virtual void        setMixChannel(MixChannel* ncell);
 
+            Device36*           device;
+
 private:
 
             MixChannel*         mixChannel;
 };
 
-class Filter1 : public Eff
+
+class Filter1 : public Device36
 {
 public:
             Filter1();
@@ -54,7 +60,8 @@ protected:
             rosic::LadderFilter dspCoreCFilter3;
 };
 
-class CChorus : public Eff
+
+class CChorus : public Device36
 {
 public:
             CChorus();
@@ -70,7 +77,7 @@ protected:
             Parameter*          freq;
 };
 
-class CFlanger : public Eff
+class CFlanger : public Device36
 {
 public:
             CFlanger();
@@ -89,7 +96,7 @@ protected:
             Parameter*          modfreq;
 };
 
-class CPhaser : public Eff
+class CPhaser : public Device36
 {
 public:
             CPhaser();
@@ -109,7 +116,7 @@ protected:
             Parameter*          stereo;
 };
 
-class EQ1 : public Eff
+class EQ1 : public Device36
 {
 public:
             EQ1();
@@ -124,7 +131,7 @@ protected:
             Parameter           *gain;
 };
 
-class GraphicEQ : public Eff
+class GraphicEQ : public Device36
 {
 public:
             GraphicEQ();
@@ -139,7 +146,7 @@ protected:
             Parameter           *gain1, *gain2, *gain3, *gain4, *gain5, *gain6, *gain7, *gain8, *gain9;
 };
 
-class EQ3 : public Eff
+class EQ3 : public Device36
 {
 public:
             EQ3();
@@ -156,7 +163,7 @@ protected:
             Parameter           *gain1, *gain2, *gain3, *bandwidth;
 };
 
-class XDelay : public Eff
+class XDelay : public Device36
 {
 public:
             XDelay();
@@ -180,7 +187,7 @@ protected:
             rosic::PingPongEcho dspCorePingPongDelay;
 };
 
-class CTremolo : public Eff
+class CTremolo : public Device36
 {
 public:
             CTremolo();
@@ -196,7 +203,7 @@ protected:
             rosic::Tremolo      dspCoreCTremolo;
 };
 
-class Compressor : public Eff
+class Compressor : public Device36
 {
 public:
             Compressor();
@@ -217,7 +224,7 @@ protected:
 
 };
 
-class CWahWah : public Eff
+class CWahWah : public Device36
 {
 public:
             CWahWah();
@@ -233,7 +240,7 @@ protected:
             rosic::WahWah       dspCoreWah;
 };
 
-class CDistort : public Eff
+class CDistort : public Device36
 {
 public:
             CDistort();
@@ -250,7 +257,7 @@ protected:
             rosic::WaveShaper   dspCoreDist;
 };
 
-class CBitCrusher : public Eff
+class CBitCrusher : public Device36
 {
 public:
             CBitCrusher();
@@ -266,7 +273,7 @@ protected:
             rosic::BitCrusher   dspCoreBC;
 };
 
-class CStereo : public Eff
+class CStereo : public Device36
 {
 public:
             CStereo();
@@ -282,7 +289,7 @@ protected:
 };
 
 
-class CReverb : public Eff
+class CReverb : public Device36
 {
 public:
             CReverb();

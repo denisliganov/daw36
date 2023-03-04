@@ -34,7 +34,7 @@ Note::Note()
     pan = NULL;
 }
 
-Note::Note(Instrument* i, int note_val)
+Note::Note(Device36* i, int note_val)
 {
     type = El_GenNote;
 
@@ -66,7 +66,7 @@ Note::~Note()
     delete pan;
 }
 
-Note* Note::clone(Instrument* new_instr)
+Note* Note::clone(Device36* new_instr)
 {
     return AddNote(tick1, line, new_instr == NULL ? instr : new_instr, noteValue, ticklen, vol->getValue(), pan->getValue(), patt);
 }
@@ -273,7 +273,7 @@ void Note::handleMouseDown(InputEvent & ev)
         preview();
     }
 
-    MInstrPanel->setCurrInstr(instr);
+    //MInstrPanel->setCurrInstr(instr);
 }
 
 void Note::propagateTriggers(Pattern* sonPatt)
@@ -345,7 +345,7 @@ SampleNote::SampleNote(Sample* smp, int note_val) : Note(smp, note_val)
     reversed = false;
 }
 
-SampleNote* SampleNote::clone(Instrument* new_instr)
+SampleNote* SampleNote::clone(Device36* new_instr)
 {
     SampleNote* clone = (SampleNote*)Note::clone(new_instr);
 

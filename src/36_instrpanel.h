@@ -20,9 +20,9 @@ friend Audio36;
 
 public:
             InstrPanel(Mixer* mixer);
-            void                addInstrument(Instrument* i, Instrument* objAfter = NULL);
-            VstInstr*           addVst(const char* path, VstInstr* vst);
-            Sample*             addSample(const char* path, bool temporaryForPreview = false);
+            Instrument*         addInstrument(Device36* dev, Instrument* objAfter = NULL);
+            Instrument*         addVst(const char* path, VstInstr* vst);
+            Instrument*         addSample(const char* path, bool temporaryForPreview = false);
             void                cloneInstrument(Instrument* i);
             void                colorizeInstruments();
             void                deleteInstrument(Instrument* i);
@@ -33,7 +33,7 @@ public:
             void                generateAll(long num_frames, long mixbuffframe);
             Instrument*         getInstrFromLine(int trkLine);
             Instrument*         getCurrInstr();
-            std::list<Instrument*>& getInstrs() { return instrs; }
+        std::list<Instrument*>& getInstrs() { return instrs; }
             bool                handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my);
             bool                handleObjDrop(Gobj * obj,int mx,int my, unsigned int flags);
             void                handleChildEvent(Gobj* obj, InputEvent& ev);
@@ -55,6 +55,7 @@ public:
 
             Button36*           btShowFX;
             Button36*           btHideFX;
+            Button36*           allChannelsView;;
 
 protected:
             MixChannel*         currMixChannel;

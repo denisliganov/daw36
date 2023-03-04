@@ -349,7 +349,7 @@ bool Project36::loadProjectData(File chosenFile, LoadThread* thread)
                 }
 
                 Instrument* instr = NULL;
-
+/*
                 if(itype == Instr_Sample)
                 {
                     instr = MInstrPanel->addSample((const char*)ipath);
@@ -357,7 +357,7 @@ bool Project36::loadProjectData(File chosenFile, LoadThread* thread)
                 else if(itype == Instr_VstPlugin)
                 {
                     instr = MInstrPanel->addVst((const char*)ipath, NULL);
-                }
+                }*/
 
                 if(instr != NULL)
                 {

@@ -18,13 +18,65 @@
 
 
 
+
+
+
+/*
+VstEffect::VstEffect(char* path)
+{
+    internal = false;
+    isLoading = true;
+
+    objId = "eff.vst";
+
+    presetPath = ".\\Data\\Presets\\";
+
+    // While loading some VST plugins current working directory somehow gets changed
+    // Thus we need to remember it and restore in the end of initialization, hehehe
+    char workdir[MAX_PATH_LENGTH] = {0};
+    int drive = _getdrive();
+    _getdcwd(drive, workdir, MAX_PATH_LENGTH - 1 );
+
+    // Pass NULL if you want to see OpenFile dialog
+
+    vst2 = VstHost->loadModuleFromFile(path);
+
+    if (vst2 != NULL)
+    {
+        uniqueId = vst2->aeff->uniqueID;
+
+        if (path)
+        {
+            filePath = path;
+        }
+        else
+        {
+            filePath = vst2->vstpath;
+        }
+
+        objName = vst2->objName;
+
+        extractParams();
+        presetPath = "Effects\\VST\\";
+
+        updatePresets();
+    }
+
+    //  pPlug->pEffect->EffSuspend();
+    // Restore previously saved working directory
+    _chdir(workdir);
+
+    isLoading = false;
+}
+*/
+
+
 VstInstr::VstInstr(char* fullpath, VstInstr* vst)
 {
-    type = Instr_VstPlugin;
-
     internal = false;
     numEvents = 0;
-    muteCount = 0;
+
+    isLoading = true;
 
     if(fullpath != NULL)
     {
@@ -58,9 +110,9 @@ VstInstr::VstInstr(char* fullpath, VstInstr* vst)
 
         presets = vst2->presets;         // sync lists 
         pres = vst2->pres;
-
-        createSelfPattern();
     }
+
+    isLoading = false;
 }
 
 VstInstr::~VstInstr()
@@ -78,6 +130,41 @@ VstInstr::~VstInstr()
     }
 }
 
+VstInstr* VstInstr::clone()
+{
+    VstInstr* clone = new VstInstr(NULL, this);
+
+    MemoryBlock m;
+
+    vst2->getStateInformation(m);
+
+    clone->vst2->setStateInformation(m.getData(), m.getSize());
+
+/*
+    // Set the current preset equal to its parent one
+
+    if (this->CurrentPreset != NULL)
+    {
+        clone->SetPreset(this->CurrentPreset->name, this->CurrentPreset->native);
+    }
+
+    // Now go through the list of parameters and tune them up to the parent effect
+
+    Parameter* pParam = this->firstParam;
+    Parameter* pCloneParam = clone->firstParam;
+
+    while((pParam != NULL) && (pCloneParam != NULL))
+    {
+        clone->ParamUpdate(pParam);
+        pCloneParam->SetNormalValue(pParam->val);
+        pParam = pParam->next;
+        pCloneParam = pCloneParam->next;
+    }
+*/
+
+    return clone;
+}
+
 void VstInstr::checkBounds(Note * gnote, Trigger * tg, long num_frames)
 {
     if(tg->framePhase + num_frames >= gnote->getFrameLength() ||
@@ -89,7 +176,7 @@ void VstInstr::checkBounds(Note * gnote, Trigger * tg, long num_frames)
     }
 }
 
-long VstInstr::processTrigger(Trigger* tg, long num_frames, long buffframe)
+long VstInstr::handleTrigger(Trigger* tg, long num_frames, long buffframe)
 {
     long loc_num_frames = num_frames;
 
@@ -137,10 +224,8 @@ void VstInstr::postProcessTrigger(Trigger* tg, long num_frames, long buff_frame,
     int         ai;
 
     panVal = pan->getOutVal();
-
     // PanConstantRule(pan, &volL, &volR);
     // Calculate constant rule directly here to improve performance
-
     ai = int((PI_F*(panVal + 1)/4)/wt_angletoindex);
     volL = wt_cosine[ai];
     volR = wt_sine[ai];
@@ -181,10 +266,10 @@ void VstInstr::deactivateTrigger(Trigger* tg)
 
     postNoteOFF(tg->noteVal, 127);
 
-    Instrument::deactivateTrigger(tg);
+    Device36::deactivateTrigger(tg);
 }
 
-void VstInstr::vstProcess(long num_frames, long buff_frame)
+void VstInstr::vstProcess(float* in_buff, long num_frames, long buff_frame)
 {
     /*
     struct VstEvents            // a block of events for the current audio block
@@ -215,7 +300,7 @@ void VstInstr::vstProcess(long num_frames, long buff_frame)
         vst2->aeffProcessEvents(events);
     }
 
-    vst2->processDSP(NULL, &tempBuff[buff_frame*2], num_frames);
+    vst2->processDSP(in_buff, &tempBuff[buff_frame*2], num_frames);
 
     numEvents = 0;
 
@@ -229,6 +314,18 @@ void VstInstr::vstProcess(long num_frames, long buff_frame)
 
 }
 
+
+void VstInstr::processDSP(float * in_buff,float * out_buff,int num_frames)
+{
+    // pVSTCollector->AcquireSema();
+    // pPlug->pEffect->EffResume();
+
+    vst2->processDSP(in_buff, out_buff, num_frames);
+
+    // pPlug->pEffect->EffSuspend();
+    // pVSTCollector->ReleaseSema();
+}
+
 void VstInstr::generateData(float* in_buff, float* out_buff, long num_frames, long mix_buff_frame)
 {
     bool off = false;
@@ -237,7 +334,8 @@ void VstInstr::generateData(float* in_buff, float* out_buff, long num_frames, lo
     if((muteparam != NULL && muteparam->getOutVal()) || (SoloInstr != NULL && SoloInstr != this))
     {
         off = true;
-    }*/
+    }
+    */
 
     bool fill = true;
 
@@ -245,7 +343,8 @@ void VstInstr::generateData(float* in_buff, float* out_buff, long num_frames, lo
     {
         Trigger* tg = *itr;
         itr++;
-        processTrigger(tg, num_frames);
+
+        handleTrigger(tg, num_frames);
     }
 
     memset(outBuff, 0, num_frames*sizeof(float)*2);
@@ -253,7 +352,7 @@ void VstInstr::generateData(float* in_buff, float* out_buff, long num_frames, lo
 
     if(envelopes == NULL)
     {
-        vstProcess(num_frames, 0);
+        vstProcess(in_buff, num_frames, 0);
     }
     else
     {
@@ -286,7 +385,7 @@ void VstInstr::generateData(float* in_buff, float* out_buff, long num_frames, lo
             }
             */
 
-            vstProcess(frames_to_process, buffFrame);
+            vstProcess(in_buff, frames_to_process, buffFrame);
 
             frames_remaining -= frames_to_process;
 
@@ -347,7 +446,15 @@ void VstInstr::generateData(float* in_buff, float* out_buff, long num_frames, lo
 
     if(fill)
     {
-        postProcessTrigger(NULL, num_frames, 0, mix_buff_frame);
+        //postProcessTrigger(NULL, num_frames, 0, mix_buff_frame);
+
+        //memcpy(outBuff, tempBuff, num_frames*2);
+
+        for(long cc = 0; cc < num_frames; cc++)
+        {
+            outBuff[cc*2] = tempBuff[cc*2];
+            outBuff[cc*2] = tempBuff[cc*2];
+        }
 
         fillOutputBuffer(out_buff, num_frames, 0, mix_buff_frame);
     }
@@ -487,7 +594,7 @@ void VstInstr::stopAllNotes()
 
 void VstInstr::save(XmlElement * instrNode)
 {
-    Instrument::save(instrNode);
+   // Device36::save(instrNode);
 
     //XmlElement* effModule = new XmlElement(T("EffModule"));
     //eff->saveStateData(*instrNode, "Current");
@@ -510,7 +617,7 @@ void VstInstr::save(XmlElement * instrNode)
 
 void VstInstr::load(XmlElement * instrNode)
 {
-    Instrument::load(instrNode);
+    //Device36::load(instrNode);
 
     XmlElement* vstModule = instrNode->getChildByName (T("VstModule"));
 
@@ -555,18 +662,20 @@ void VSTGenerator::CopyDataToClonedInstrument(Instrument * instr)
 void VstInstr::reset()
 {
     stopAllNotes();
+
+    vst2->reset();
 }
 
 void VstInstr::setBufferSize(unsigned int bufferSize)
 {
-    Instrument::setBufferSize(bufferSize);
+    Device36::setBufferSize(bufferSize);
 
     vst2->setBufferSize(bufferSize);
 }
 
 void VstInstr::setSampleRate(float sampleRate)
 {
-    Instrument::setSampleRate(sampleRate);
+    Device36::setSampleRate(sampleRate);
 
     vst2->setSampleRate(sampleRate);
 }
@@ -612,13 +721,24 @@ SubWindow* VstInstr::createWindow()
 {
     if(vst2->hasGui())
     {
-        return window->addWindow(new VstComponent(vst2, this));
+        return MObject->addWindow(new VstComponent(vst2, this));
     }
     else
     {
-        DevParamObject* d = new DevParamObject(this);
-        return window->addWindow((WinObject*)d);
+        return MObject->addWindow((WinObject*)new DevParamObject(this));
     }
+}
+
+
+void VstInstr::handleParamUpdate(Param* param)
+{
+    vst2->handleParamUpdate(param);
+}
+
+
+void VstInstr::processEvents(VstEvents *pEvents)
+{
+    vst2->processEvents(pEvents);
 }
 
 

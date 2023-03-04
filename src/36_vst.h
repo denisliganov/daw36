@@ -46,7 +46,6 @@ extern Vst2Host*        VstHost;
 class Vst2Plugin : public Device36
 {
 friend  VstInstr;
-friend  VstEffect;
 
 public:
 

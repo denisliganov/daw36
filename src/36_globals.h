@@ -86,7 +86,6 @@ class Transport;
 class TimeScreen;
 class TextString;
 class TextCursor;
-class VstEffect;
 class Vst2Plugin;
 class Vst2Host;
 class VstInstr;

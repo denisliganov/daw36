@@ -5,10 +5,6 @@
 
 
 
-float ParamPan::calcOutputValue(float val)
-{
-    return GetVolOutput(val);
-}
 
 std::string ParamPan::calcValStr(float val)
 {

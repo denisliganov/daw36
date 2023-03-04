@@ -16,6 +16,7 @@
 #include "36_transport.h"
 #include "36_paramvol.h"
 #include "36_paramnum.h"
+#include "36.h"
 
 
 //Sample buffer for sinc interpolation
@@ -88,8 +89,6 @@ Sample::Sample(float* data, char* smp_path, SF_INFO sfinfo)
 
     envVol->addPoint(0.3f, 0.5f);
     envVol->addPoint(0.6f, 0.0f);
-
-    createSelfPattern();
 }
 
 Sample::~Sample()
@@ -239,7 +238,7 @@ bool Sample::checkBounds(SampleNote* samplent, Trigger* tg, long num_frames)
 
 SubWindow* Sample::createWindow()
 {
-    return window->addWindow((WinObject*)new SampleObject());
+    return MObject->addWindow((WinObject*)new SampleObject());
 }
 
 // Return pixel length for a number of frames, depending on sample rate and current tick width
@@ -641,6 +640,7 @@ inline float Sample::gaussInterpolation(float* Yi, float dX)
 
 void Sample::load(XmlElement * instrNode)
 {
+    /*
     Instrument::load(instrNode);
 
     bool norm = instrNode->getBoolAttribute(T("Normalized"));
@@ -659,114 +659,95 @@ void Sample::load(XmlElement * instrNode)
     if(envX != NULL)
     {
         envVol->load(envX);
-    }
+    }*/
 }
 
-long Sample::processTrigger(Trigger * tg, long num_frames, long buff_frame)
+long Sample::handleTrigger(Trigger * tg, long num_frames, long buff_frame)
 {
     SampleNote* samplent = (SampleNote*)tg->el;
-
-    bool fill = true;
-
-    bool skip = false;
 
     // Initial stuff
 
     tg->freq_incr_active = tg->freq_incr_base;
 
-    tg->vol_val = tg->volBase;
-    tg->pan_val = tg->panBase;
+    long cc, tc0 = buff_frame*2;
+    float sd1, sd2;
 
-    preProcessTrigger(tg, &skip, &fill, num_frames, buff_frame);
-
-    if(!skip)
+    for(cc = 0; cc < num_frames; cc++)
     {
-        long cc, tc0 = buff_frame*2;
-        float sd1, sd2;
-
-        for(cc = 0; cc < num_frames; cc++)
+        if(samplent->isOutOfBounds(&tg->wt_pos) == true)
         {
-            if(samplent->isOutOfBounds(&tg->wt_pos) == true)
-            {
-                break;
-            }
-
-            if(fill)
-            {
-                if(1 == sample_info.channels) // Mono sample
-                {
-                    getMonoData(tg->wt_pos, &sd1);
-
-                    tempBuff[tc0++] = sd1*tg->envVal1;
-                    tempBuff[tc0++] = sd1*tg->envVal1;
-                }
-                else if(2 == sample_info.channels) // Stereo sample
-                {
-                    getStereoData(tg->wt_pos, &sd1, &sd2);
-
-                    tempBuff[tc0++] = sd1*tg->envVal1;
-                    tempBuff[tc0++] = sd2*tg->envVal1;
-                }
-            }
-
-            tg->env_phase1 += MAudio->getInvertedSampleRate();
-
-            /*
-            while(tg->ep1->next != NULL && (tg->env_phase1 >= tg->ep1->next->tick || tg->ep1->next->tick == tg->ep1->tick))
-            {
-                tg->ep1 = tg->ep1->next;
-            }
-
-            if(tg->ep1->next != NULL && (tg->ep1->next->tick > tg->ep1->tick))
-            {
-                tg->envVal1 = Interpolate_Line(tg->ep1->tick, tg->ep1->y_norm, tg->ep1->next->tick, tg->ep1->next->y_norm, tg->env_phase1); //tg->ep1->cf*one_divided_per_sample_rate;
-                tg->envVal1 = GetVolOutput(tg->envVal1);
-            }*/
-
-            //ebuff1[buffframe + ic] = tg->envV1;
-
-            tg->envVal1 = 1;
-
-            tg->wt_pos += tg->freq_incr_sgn*tg->freq_incr_active;
-
-            if(tg->freq_incr_sgn == 1 && tg->wt_pos >= lp_end)
-            {
-                if(looptype == LoopType_ForwardLoop)
-                {
-                    tg->wt_pos = lp_start;
-                }
-                else if(looptype == LoopType_PingPongLoop)
-                {
-                    tg->freq_incr_sgn = -1;
-
-                    tg->wt_pos = lp_end;
-                }
-            }
-            else if(tg->freq_incr_sgn == -1 && tg->wt_pos <= lp_start)
-            {
-                if(looptype == LoopType_ForwardLoop)
-                {
-                    tg->wt_pos = lp_end;
-                }
-                else if(looptype == LoopType_PingPongLoop)
-                {
-                    tg->freq_incr_sgn = 1;
-
-                    tg->wt_pos = lp_start;
-                }
-            }
-
-            tg->framePhase++;
+            break;
         }
 
-        checkBounds(samplent, tg, cc);
+        if(1 == sample_info.channels) // Mono sample
+        {
+            getMonoData(tg->wt_pos, &sd1);
 
-        return cc;
+            tempBuff[tc0++] = sd1*tg->envVal1;
+            tempBuff[tc0++] = sd1*tg->envVal1;
+        }
+        else if(2 == sample_info.channels) // Stereo sample
+        {
+            getStereoData(tg->wt_pos, &sd1, &sd2);
+
+            tempBuff[tc0++] = sd1*tg->envVal1;
+            tempBuff[tc0++] = sd2*tg->envVal1;
+        }
+
+        /*
+        tg->env_phase1 += MAudio->getInvertedSampleRate();
+
+        while(tg->ep1->next != NULL && (tg->env_phase1 >= tg->ep1->next->tick || tg->ep1->next->tick == tg->ep1->tick))
+        {
+            tg->ep1 = tg->ep1->next;
+        }
+
+        if(tg->ep1->next != NULL && (tg->ep1->next->tick > tg->ep1->tick))
+        {
+            tg->envVal1 = Interpolate_Line(tg->ep1->tick, tg->ep1->y_norm, tg->ep1->next->tick, tg->ep1->next->y_norm, tg->env_phase1); //tg->ep1->cf*one_divided_per_sample_rate;
+            tg->envVal1 = GetVolOutput(tg->envVal1);
+        }*/
+
+        //ebuff1[buffframe + ic] = tg->envV1;
+
+        tg->envVal1 = 1;
+
+        tg->wt_pos += tg->freq_incr_sgn*tg->freq_incr_active;
+
+        if(tg->freq_incr_sgn == 1 && tg->wt_pos >= lp_end)
+        {
+            if(looptype == LoopType_ForwardLoop)
+            {
+                tg->wt_pos = lp_start;
+            }
+            else if(looptype == LoopType_PingPongLoop)
+            {
+                tg->freq_incr_sgn = -1;
+
+                tg->wt_pos = lp_end;
+            }
+        }
+        else if(tg->freq_incr_sgn == -1 && tg->wt_pos <= lp_start)
+        {
+            if(looptype == LoopType_ForwardLoop)
+            {
+                tg->wt_pos = lp_end;
+            }
+            else if(looptype == LoopType_PingPongLoop)
+            {
+                tg->freq_incr_sgn = 1;
+
+                tg->wt_pos = lp_start;
+            }
+        }
+
+        tg->framePhase++;
     }
-    else
-    {
-        return 0;
-    }
+
+    checkBounds(samplent, tg, cc);
+
+    return cc;
 }
 
 void Sample::setLoopStart(long start)
@@ -815,6 +796,7 @@ inline float Sample::sincInterpolate(float* Yi, double dX, unsigned int num)
 
 void Sample::save(XmlElement * instrNode)
 {
+    /*
     Instrument::save(instrNode);
 
     instrNode->setAttribute(T("Normalized"), normalized ? 1 : 0);
@@ -822,6 +804,7 @@ void Sample::save(XmlElement * instrNode)
     instrNode->setAttribute(T("LoopEnd"), String(lp_end));
     instrNode->setAttribute(T("LoopType"), int(looptype));
 
+    */
     // XmlElement * envX = envVol->save("SmpEnv");
     // instrNode->addChildElement(envX);
 }

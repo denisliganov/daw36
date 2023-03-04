@@ -16,16 +16,16 @@ friend  Pattern;
 public:
 
             Note();
-            Note(Instrument* i, int note_val);
+            Note(Device36* i, int note_val);
     virtual ~Note();
-    virtual Note*               clone(Instrument* newInstr = NULL);
+    virtual Note*               clone(Device36* newInstr = NULL);
             Element*            clone();
             void                calcForGrid(Grid* grid);
             void                drawOnGrid(Graphics& g, Grid* grid);
             int                 getNoteValue() { return noteValue; }
             ParamVol*           getVol() {return vol;}
             Parameter*          getPan() {return pan;}
-       Instrument*              getInstr() { return instr; }
+         Device36*              getInstr() { return instr; }
             float               getFreq() { return freq; }
        Parameter*               getParamByDisplayMode(GridDisplayMode mode);
             void                handleMouseUp(InputEvent& ev);
@@ -34,7 +34,7 @@ public:
             void                preview(int note = -1, bool update_instr = false);
             void                releasePreview();
             void                recalc();
-            void                setInstr(Instrument* i) { instr = i; }
+            void                setInstr(Device36* i) { instr = i; }
             void                setNote(int note_value);
             void                setPos(float tick,int line);
             void                propagateTriggers(Pattern* pt);
@@ -44,7 +44,7 @@ protected:
             int                 barStart;
             int                 barDraw;
             float               freq;
-            Instrument*         instr;
+            Device36*           instr;
             int                 noteValue;
             Parameter*          pan;
             ParamVol*           vol;
@@ -64,7 +64,7 @@ friend Sample;
 public:
 
             SampleNote(Sample* smp, int note_val);
-            SampleNote*         clone(Instrument* new_instr);
+            SampleNote*         clone(Device36* new_instr);
             void                calcFreq();
             void                drawOnGrid(Graphics& g, Grid* grid);
             bool                isOutOfBounds(double* cursor);
