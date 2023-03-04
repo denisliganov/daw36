@@ -168,7 +168,6 @@
     <ClCompile Include="src\36_effects.cpp" />
     <ClCompile Include="src\36_env.cpp" />
     <ClCompile Include="src\36_events_triggers.cpp" />
-    <ClCompile Include="src\36_geninstr.cpp" />
     <ClCompile Include="src\36_globals.cpp" />
     <ClCompile Include="src\36_glyphs.cpp" />
     <ClCompile Include="src\36_grid.cpp" />
@@ -217,7 +216,6 @@
     <ClCompile Include="src\36_utils.cpp" />
     <ClCompile Include="src\36_vst.cpp" />
     <ClCompile Include="src\36_vst3.cpp" />
-    <ClCompile Include="src\36_vsteff.cpp" />
     <ClCompile Include="src\36_vstinstr.cpp" />
     <ClCompile Include="src\36_vstwin.cpp" />
     <ClCompile Include="src\36_vu.cpp" />
@@ -360,7 +358,6 @@
     <ClInclude Include="src\36_effects.h" />
     <ClInclude Include="src\36_env.h" />
     <ClInclude Include="src\36_events_triggers.h" />
-    <ClInclude Include="src\36_geninstr.h" />
     <ClInclude Include="src\36_globals.h" />
     <ClInclude Include="src\36_glyphs.h" />
     <ClInclude Include="src\36_grid.h" />
@@ -411,7 +408,6 @@
     <ClInclude Include="src\36_utils.h" />
     <ClInclude Include="src\36_vst.h" />
     <ClInclude Include="src\36_vst3.h" />
-    <ClInclude Include="src\36_vsteff.h" />
     <ClInclude Include="src\36_vstinstr.h" />
     <ClInclude Include="src\36_vstwin.h" />
     <ClInclude Include="src\36_vu.h" />

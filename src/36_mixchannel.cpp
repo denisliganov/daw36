@@ -23,7 +23,6 @@
 #include "36_brwentry.h"
 #include "36_dragndrop.h"
 #include "36_text.h"
-#include "36_vsteff.h"
 #include "36_knob.h"
 #include "36_vstinstr.h"
 

@@ -12,7 +12,6 @@
 #include "36_paramselector.h"
 #include "36_paramtoggle.h"
 #include "36_vstinstr.h"
-#include "36_vsteff.h"
 
 
 
