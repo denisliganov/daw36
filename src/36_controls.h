@@ -14,6 +14,7 @@ public:
 
             Control();
     virtual void                addParam(Param* p);
+    virtual void                removeParam(Param* p);
     virtual void                updPosition() {};
     virtual void                updValue() {};
     virtual float               getMinStep() {return 0;};

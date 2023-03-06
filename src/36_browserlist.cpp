@@ -363,7 +363,7 @@ void BrowserList::previewSample(BrwListEntry* ble, bool down)
 
             if(ipreview != NULL)
             {
-                ipreview->selfNote->preview();
+                ipreview->getDevice()->selfNote->preview();
             }
         }
     }

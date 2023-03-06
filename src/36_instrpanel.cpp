@@ -108,6 +108,8 @@ InstrPanel::InstrPanel(Mixer* mixer)
     addObject(btShowFX = new Button36(false), "bt.showbrw");
     addObject(btHideFX = new Button36(false), "bt.hidebrw");
 
+    addObject(allChannelsView = new Button36(false), "bt.channels");
+
     addObject(mixr = mixer);
 
     //addParamWithControl(masterVolume, "sl.vol", masterVolBox = new ParamBox(masterVolume));
@@ -128,6 +130,8 @@ Instrument* InstrPanel::addVst(const char* path, VstInstr* otherVst)
 {
     VstInstr* vst = loadVst(path, otherVst);
 
+    vst->createSelfPattern();
+
     Instrument* i = NULL;
 
     if(vst != NULL)
@@ -145,6 +149,9 @@ Instrument* InstrPanel::addVst(const char* path, VstInstr* otherVst)
 Instrument* InstrPanel::addSample(const char* path, bool temporaryForPreview)
 {
     Sample* smp = loadSample(path);
+
+    smp->createSelfPattern();
+
     Instrument* i = NULL;
 
     if (smp != NULL)
@@ -163,8 +170,6 @@ Instrument* InstrPanel::addInstrument(Device36 * dev, Instrument * objAfter)
 
     Instrument* i = new Instrument(dev);
 
-    i->createSelfPattern();
-
     instrs.push_back(i);
 
     if(instrs.size() == 1)
@@ -181,7 +186,7 @@ Instrument* InstrPanel::addInstrument(Device36 * dev, Instrument * objAfter)
         updateInstrIndexes();
     }
 
-    if(dev->previewOnly == false)
+    if(!(dev && dev->previewOnly))
     {
         i->addMixChannel();
 
@@ -326,7 +331,7 @@ void InstrPanel::deleteInstrument(Instrument* i)
 
     updateInstrIndexes();
 
-    if(i->device->previewOnly == false)
+    if(i->device && i->device->previewOnly == false)
     {
         deleteObject(i);
 
@@ -404,8 +409,10 @@ int InstrPanel::getNumInstrs()
 
     for(Instrument* instr : instrs)
     {
-        if (instr->device->previewOnly == false)
-            num++;
+        if (instr->getDevice() && instr->getDevice()->previewOnly)
+            continue;
+
+        num++;
     }
 
     return num;
@@ -443,7 +450,10 @@ void InstrPanel::generateAll(long num_frames, long mixbuffframe)
     {
         MixChannel* mchan = instr->getMixChannel();
 
-        instr->device->generateData(NULL, mchan->inbuff, num_frames, mixbuffframe);
+        if (instr->getDevice())
+        {
+            instr->device->generateData(NULL, mchan->inbuff, num_frames, mixbuffframe);
+        }
     }
 }
 
@@ -454,9 +464,15 @@ bool InstrPanel::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
         Gobj* o1 = NULL;
         Gobj* o2 = NULL;
 
-        Gobj* o = CheckNeighborObjectsY(objs, "instr", my, (Gobj**)&o1, (Gobj**)&o2);
+        dropObj = CheckDropObjectY(objs, "instr", my);
 
-        dropObj = o;
+        if (dropObj)
+        {
+            drag.dropRect->setCoordsUn(dropObj->getX1(), dropObj->getY1(), dropObj->getX2(), dropObj->getY2());
+        }
+
+/*
+        dropObj = CheckNeighborObjectsY(objs, "instr", my, (Gobj**)&o1, (Gobj**)&o2);
 
         if(o2 != NULL)
         {
@@ -468,6 +484,7 @@ bool InstrPanel::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
             //drag.dropHighlightHorizontal->setCoords2(o1->getX1(), o1->getY2() + 2 - 4, o1->getX2() + 1, o1->getY2() + 2 + 4);
             drag.dropHighlightHorizontal->setCoordsUn(o1->getX1(), o1->getY2() + 2 - 4, o1->getX2() + 1, o1->getY2() + 2 + 4);
         }
+*/
 
         int tw = gGetTextWidth(FontSmall, obj->getObjName());
         int th = gGetTextHeight(FontSmall);
@@ -484,10 +501,36 @@ bool InstrPanel::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
 
 bool InstrPanel::handleObjDrop(Gobj * obj, int mx, int my, unsigned int flags)
 {
-    BrwListEntry* ble = dynamic_cast<BrwListEntry*>(obj);
+    if (dropObj)
+    {
+        BrwListEntry* ble = dynamic_cast<BrwListEntry*>(obj);
 
-    Instrument* i = NULL;
+        if (ble)
+        {
+            // load from browser
 
+            Instrument* i = dynamic_cast<Instrument*>(dropObj);
+        }
+        else
+        {
+            // move from other instr
+
+            Instrument* iTo = (Instrument*)dropObj;
+            Instrument* iFrom = (Instrument*)obj;
+
+            iTo->setDevice(iFrom->getDevice());
+            iFrom->setDevice(NULL);
+
+            iTo->redraw();
+            iFrom->redraw();
+        }
+    }
+    else
+    {
+        
+    }
+
+/*
     if (ble)
     {
         i = loadInstrFromNewBrowser(ble);
@@ -514,7 +557,7 @@ bool InstrPanel::handleObjDrop(Gobj * obj, int mx, int my, unsigned int flags)
         updateInstrIndexes();
 
         return true;
-    }
+    }*/
 
     return false;
 }
@@ -747,19 +790,19 @@ void InstrPanel::remap()
 
     for (Instrument* i : instrs)
     {
-        if(i->device->previewOnly == false)
-        {
-            if((yoffs + i->getH()) >= 0 && yoffs <= instrListHeight)
-            {
-                i->setCoords1(width - InstrControlWidth + 1, instrListY + yoffs, InstrControlWidth - 11, InstrHeight);
-            }
-            else
-            {
-                i->setVis(false);
-            }
+        if (i->getDevice() && i->getDevice()->previewOnly)
+            continue;
 
-            yoffs += InstrHeight + 1;
+        if((yoffs + i->getH()) >= 0 && yoffs <= instrListHeight)
+        {
+            i->setCoords1(width - InstrControlWidth + 1, instrListY + yoffs, InstrControlWidth - 11, InstrHeight);
         }
+        else
+        {
+            i->setVis(false);
+        }
+
+        yoffs += InstrHeight + 1;
     }
 
     confine();
@@ -770,6 +813,8 @@ void InstrPanel::remap()
     {
         btHideFX->setCoords1(width - btW - 1, 0, btW, btW);
 
+        allChannelsView->setCoords1(10, 0, btW, btW);
+
         confine(10, instrListY, FxPanelMaxWidth, height);
 
         mixr->setCoords1(10, instrListY, FxPanelMaxWidth - 10, instrListHeight);
@@ -779,6 +824,8 @@ void InstrPanel::remap()
         btShowFX->setCoords1(width - btW - 1, 0, btW, btW);
 
         mixr->setVis(false);
+
+        allChannelsView->setVis(false);
     }
 
     confine(0, instrListY-1, width, instrListY + instrListHeight - 1);

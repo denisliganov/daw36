@@ -39,8 +39,6 @@ public:
             EnableButton*       muteButt;
             Button36*           guiButton;
             SoloButton*         soloButt;
-            Pattern*            selfPattern;
-            Note*               selfNote;
             InstrVU*            ivu;
             Knob*               volKnob;
             ParamBox*           volBox;
@@ -50,12 +48,12 @@ public:
 
             void                addMixChannel();
             void                activateMenuItem(std::string item);
-    virtual void                createSelfPattern();
             ContextMenu*        createContextMenu();
 virtual Instrument*             clone();
             void                drawSelf(Graphics& g);
             void                drawOverChildren(Graphics & g);
-            std::string         getAlias()                          {return instrAlias;};
+            std::string         getAlias()      {return instrAlias;};
+            Device36*           getDevice()     { return device; };
         std::list <Element*>    getNotesFromRange(float tick_offset, float lastVisibleTick);
             MixChannel*         getMixChannel() { return mixChannel; }
             void                handleMouseDown(InputEvent& ev);
@@ -66,6 +64,7 @@ virtual Instrument*             clone();
     virtual void                load(XmlElement* instrNode);
             void                preview(int note = BaseNote);
 
+            void                setDevice(Device36* dev);
             void                setBufferSize(unsigned bufferSize);
             void                setSampleRate(float sampleRate);
 

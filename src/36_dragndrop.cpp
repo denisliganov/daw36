@@ -42,12 +42,25 @@ void DropHighlight::drawSelf(Graphics & g)
     }
 }
 
+void DropHighlightRect::drawSelf(Graphics & g)
+{
+    uint32 color = 0xafFF9930;
+
+    setc(g, color);
+
+ //   g.setColour(Colour(color));
+ //   g.drawHorizontalLine(y1 + 1, (float)x1, (float)x2);
+
+    rectx(g, 0, 0, width, height);
+}
+
 DragAndDrop::DragAndDrop()
 {
     setTouchable(false);
 
     addHighlight(dropHighlightHorizontal = new DropHighlight(false));
     addHighlight(dropHighlightVertical = new DropHighlight(true));
+    addHighlight(dropRect = new DropHighlightRect());
 
     reset();
 
@@ -64,6 +77,7 @@ void DragAndDrop::reset()
 
     dropHighlightHorizontal->setVis(false);
     dropHighlightVertical->setVis(false);
+    dropRect->setVis(false);
 };
 
 bool DragAndDrop::canDrag()
@@ -93,12 +107,14 @@ void DragAndDrop::start(Gobj * drag_obj,int mx,int my)
 
     dropHighlightHorizontal->setCoords2(-1,-1, 1, 1);
     dropHighlightVertical->setCoords2(-1,-1, 1, 1);
+    dropRect->setCoords2(-1,-1, 1, 1);
 }
 
 void DragAndDrop::drag(Gobj* target_object, int mx, int my)
 {
     dropHighlightHorizontal->setCoords1(-1,-1, 1, 1);   // disable by default
     dropHighlightVertical->setCoords1(-1,-1, 1, 1);   // disable by default
+    dropRect->setCoords1(-1,-1, 1, 1);
 
     bool result = target_object->handleObjDrag(*this, dragObj, mx, my);
 

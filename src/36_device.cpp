@@ -9,6 +9,8 @@
 #include "36_params.h"
 #include "36_paramvol.h"
 #include "36_parampan.h"
+#include "36_paramtoggle.h"
+#include "36_project.h"
 #include "36_slider.h"
 #include "36_button.h"
 #include "36_config.h"
@@ -40,7 +42,14 @@ Device36::Device36()
     cfsV = 0;
     rampCount = 512;
 
+    container = NULL;
+    currPreset = NULL;
     envVol = NULL;
+    envelopes = NULL;
+    guiWindow = NULL;
+
+    selfPattern = NULL;
+    selfNote = NULL;
 
     lastNoteLength = 4;
     lastNoteVol = 1;
@@ -49,11 +58,7 @@ Device36::Device36()
 
     addParam(vol = new ParamVol("VOL"));
     addParam(pan = new ParamPan("PAN"));
-
-    currPreset = NULL;
-    envelopes = NULL;
-    guiWindow = NULL;
-    container = NULL;
+    addParam(enabled = new ParamToggle("ENABLED", false));
 
     currPresetName = "Untitled";
 }
@@ -97,6 +102,29 @@ restart:
             goto restart;
         }
     }
+}
+
+// Create self-pattern + note, for previewing
+//
+void Device36::createSelfPattern()
+{
+    if(selfPattern == NULL)
+    {
+        selfPattern = new Pattern("self", 0.0f, 16.0f, 0, 0, true);
+        selfPattern->setPattern(selfPattern);
+        selfPattern->addInstance(selfPattern);
+
+        MProject.patternList.push_front(selfPattern);
+    }
+
+    if(selfNote == NULL)
+    {
+        selfNote = CreateNote(0, 0, this, BaseNote, 4, 1, 0, selfPattern);
+
+        selfNote->propagateTriggers(selfPattern);
+    }
+
+    selfPattern->recalc();
 }
 
 void Device36::deletePresets()

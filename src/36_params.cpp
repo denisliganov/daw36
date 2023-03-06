@@ -17,7 +17,7 @@ void Param::addControl(Control* ct)
 {
     controls.push_back(ct);
 
-    ct->addParam(this);
+    //ct->addParam(this);
 }
 
 void Param::removeControl(Control* ctrl)

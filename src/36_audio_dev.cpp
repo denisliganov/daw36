@@ -522,7 +522,7 @@ start_cleanup:
 
     for(Instrument* i : MInstrPanel->instrs)
     {
-        if(i->device->isPreviewOnly())
+        if(i->getDevice() && i->getDevice()->isPreviewOnly())
         {
             MInstrPanel->deleteInstrument(i);
 

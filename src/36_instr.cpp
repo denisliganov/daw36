@@ -23,12 +23,12 @@
 #include "36_parambox.h"
 #include "36_paramvol.h"
 #include "36_parampan.h"
+#include "36_paramtoggle.h"
 
 
 
 
-
-class EnableButton : public Button36
+class EnableButton : public ToggleBox
 {
 protected:
 
@@ -39,7 +39,7 @@ protected:
             instr->setMyColor(g, .4f);
             fillx(g, 0, 0, width, height);
 
-            if(pressed)
+            if(prmToggle->getValue())
             {
                 instr->setMyColor(g, 1.f);
             }
@@ -48,7 +48,7 @@ protected:
                 instr->setMyColor(g, .6f);
             }
 
-            txt(g, FontVis, "M", width/2 - 2, height/2 + gGetTextHeight(FontVis)/2 - 1);
+            txt(g, FontVis, "#", width/2 - 2, height/2 + gGetTextHeight(FontVis)/2 - 1);
         }
 
         void handleMouseDrag(InputEvent & ev)   { parent->handleMouseDrag(ev); }
@@ -56,7 +56,7 @@ protected:
 
 public:
 
-        EnableButton() : Button36(true) {}
+        EnableButton(ParamToggle* ptg) : ToggleBox(ptg) {}
 };
 
 class SoloButton : public Button36
@@ -110,7 +110,7 @@ protected:
             //instr->setMyColor(g, .8f);
             //rectx(g, 0, 0, width, height);
 
-            bool wVis = instr->device->isWindowVisible();
+            bool wVis = (instr->getDevice() && instr->getDevice()->isWindowVisible());
 
             if(wVis)
             {
@@ -140,23 +140,27 @@ protected:
         void drawSelf(Graphics& g)
         {
             Instrument* instr = (Instrument*)parent;
+            instr->setMyColor(g, .9f);
 
+            gTriangle(g, x1, y1, x2, y1 + height/2, x1, y2);
+
+            /*
+            Instrument* instr = (Instrument*)parent;
             instr->setMyColor(g, .3f);
-
             int yc = 0;
-
             while (yc < height)
             {
                 rectx(g, 0, yc, width, 1);
                 yc += 2;
-            }
+            }*/
         }
 
+/*
         void handleMouseEnter(InputEvent & ev)  { redraw(); }
         void handleMouseLeave(InputEvent & ev)  { redraw(); }
         void handleMouseDrag(InputEvent & ev)   { parent->handleMouseDrag(ev); }
         void handleMouseWheel(InputEvent & ev)   { parent->handleMouseWheel(ev); }
-        //void handleMouseUp(InputEvent & ev)     { redraw();  parent->redraw();  }
+        //void handleMouseUp(InputEvent & ev)     { redraw();  parent->redraw();  }*/
 
 public:
 
@@ -168,10 +172,12 @@ Instrument::Instrument(Device36* dev)
 {
     device = dev;
 
-    setObjName(dev->getObjName());
+    volBox = NULL;
+    panBox = NULL;
 
-    selfPattern = NULL;
-    selfNote = NULL;
+    addObject(guiButton = new GuiButt());
+    
+    mixChannel = MMixer->masterChannel;       // Default to master channel
 
     addObject(volBox = new ParamBox(device->vol));
     volBox->setSliderOnly(true);
@@ -179,16 +185,17 @@ Instrument::Instrument(Device36* dev)
     addObject(panBox = new ParamBox(device->pan));
     panBox->setSliderOnly(true);
 
-    mixChannel = MMixer->masterChannel;       // Default to master channel
+    addObject(muteButt = new EnableButton(device->enabled));
+    
+    //addObject(soloButt = new SoloButton());
 
     addObject(previewButton = new PreviewButt());
-    addObject(guiButton = new GuiButt());
-    addObject(muteButt = new EnableButton());
-    addObject(soloButt = new SoloButton());
 
     addObject(ivu = new InstrVU(), ObjGroup_VU);
 
     ivu->setEnable(false);
+
+    setDevice(dev);
 }
 
 Instrument::~Instrument()
@@ -212,6 +219,33 @@ Instrument::~Instrument()
     ReleaseMutex(MixerMutex);
 }
 
+void Instrument::setDevice(Device36* dev)
+{
+    if (device)
+    {
+        volBox->removeParam(device->vol);
+        panBox->removeParam(device->pan);
+        muteButt->removeParam(device->enabled);
+
+        device->setContainer(NULL);
+
+        setObjName("");
+    }
+
+    device = dev;
+
+    if (device)
+    {
+        device->setContainer(this);
+
+        volBox->addParam(device->vol);
+        panBox->addParam(device->pan);
+        muteButt->addParam(device->enabled);
+
+        setObjName(dev->getObjName());
+    }
+}
+
 void Instrument::activateMenuItem(std::string item)
 {
     if(item == "Clone")
@@ -227,30 +261,6 @@ void Instrument::activateMenuItem(std::string item)
 void Instrument::addMixChannel()
 {
     mixChannel = MMixer->addMixChannel(this);
-}
-
-// Create self-pattern + note, for previewing
-//
-void Instrument::createSelfPattern()
-{
-    if(selfPattern == NULL)
-    {
-        selfPattern = new Pattern("self", 0.0f, 16.0f, 0, 0, true);
-//        selfPattern->setBasePattern(selfPattern);
-        selfPattern->setPattern(selfPattern);
-        selfPattern->addInstance(selfPattern);
-
-        MProject.patternList.push_front(selfPattern);
-    }
-
-    if(selfNote == NULL)
-    {
-        selfNote = CreateNote(0, 0, device, BaseNote, 4, 1, 0, selfPattern);
-
-        selfNote->propagateTriggers(selfPattern);
-    }
-
-    selfPattern->recalc();
 }
 
 ContextMenu* Instrument::createContextMenu()
@@ -291,20 +301,30 @@ void Instrument::drawSelf(Graphics& g)
 {
     //Gobj::fill(g, .35f);
 
-    Gobj::setMyColor(g, .7f);
-    fillx(g, 0, 0, width, height);
+    if(device != NULL)
+    {
+        Gobj::setMyColor(g, .7f);
 
-   // setc(g, .31f);
-    Gobj::setMyColor(g, .6f);
-    fillx(g, 0, 0, width, height/2);
+        fillx(g, 0, 0, width, height);
+
+       // setc(g, .31f);
+        Gobj::setMyColor(g, .6f);
+        fillx(g, 0, 0, width, height/2);
+    }
+    else
+    {
+        Gobj::setMyColor(g, .4f);
+
+        fillx(g, 0, 0, width, height);
+    }
 
     //setc(g, .0f);
     Gobj::setMyColor(g, .1f);
-    txtfit(g, FontSmall, device->getObjName(), height+2, 9, width - (height+2));
+    txtfit(g, FontSmall, getObjName(), height + 4, 9, width - (height+4));
 
     //setc(g, 1.f);
     Gobj::setMyColor(g, 1.f);
-    txtfit(g, FontSmall, device->getObjName(), height+2, 8, width - (height+2));
+    txtfit(g, FontSmall, getObjName(), height + 4, 8, width - (height+4));
 
 
     //Colour clr = Colour(100, 110, 110);
@@ -326,14 +346,13 @@ void Instrument::drawOverChildren(Graphics & g)
     //gTextFit(g, FontSmall, instrAlias, x1 + 6, y2 - 3, width - (width/2));
 }
 
-
 std::list <Element*> Instrument::getNotesFromRange(float offset, float lastVisibleTick)
 {
     std::list <Element*> noteList;
 
     for(auto note : device->notes)
     {
-        if(note->getendtick() < offset || note == selfNote)
+        if(note->getendtick() < offset || note == device->selfNote)
         {
             continue;
         }
@@ -367,7 +386,10 @@ void Instrument::handleChildEvent(Gobj * obj, InputEvent& ev)
         {
             MInstrPanel->setCurrInstr(this);
 
-            device->showWindow(!device->isWindowVisible());
+            if (device)
+            {
+                device->showWindow(!device->isWindowVisible());
+            }
         }
     }
 
@@ -452,27 +474,51 @@ void Instrument::load(XmlElement * instrNode)
 
 void Instrument::preview(int note)
 {
-    selfNote->setNote(note);
+    if (device)
+    {
+        device->selfNote->setNote(note);
 
-    selfNote->preview(note);
+        device->selfNote->preview(note);
+    }
 }
 
 void Instrument::remap()
 {
-    volBox->setCoords1(width - 100, height - 10, 50, 10);
-    panBox->setCoords1(width - 160, height - 10, 50, 10);
+    guiButton->setCoords1(1, 1, height-6, height-6);
 
-    previewButton->setCoords1(height + 2, height - 10, 20, 10);
+    if (device)
+    {
+        if (volBox)
+            volBox->setCoords1(width - 100, height - 6, 50, 6);
 
-    int bw = 11;
+        if (panBox)
+            panBox->setCoords1(width - 160, height - 6, 50, 6);
 
-    soloButt->setCoords1(width - bw*2 - 8, height - bw, bw, bw);
-    muteButt->setCoords1(width - bw - 8, height - bw, bw, bw);
+        int bw = 11;
 
-    guiButton->setCoords1(0, 0, height, height-1);
+        //soloButt->setCoords1(width - bw*2 - 8, height - bw, bw, bw);
+
+        muteButt->setCoords1(width - bw - 8, height - bw, bw, bw);
+
+        previewButton->setCoords1(height, height/2, height/2, height/2);
+    }
+    else
+    {
+        if (volBox)
+            volBox->setVis(false);
+
+        if (panBox)
+            panBox->setVis(false);
+
+        //soloButt->setVis(false);
+
+        muteButt->setVis(false);
+
+        previewButton->setVis(false);
+    }
 
     ivu->setCoords1(width - 8, 0, 8, height);
-
+    
     if(gGetTextWidth(FontSmall, objName) > width - 38 - 50 - 10)
     {
         setHint(objName);
@@ -485,9 +531,10 @@ void Instrument::remap()
 
 void Instrument::setIndex(int idx)
 {
-    device->devIdx = idx;
+    if (device)
+        device->devIdx = idx;
 
-    int num = device->devIdx;
+    int num = idx;
 
     //if(num == 10)
     //    num = 0;

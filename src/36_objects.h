@@ -212,7 +212,8 @@ protected:
 
 // Util function used for drag'n'dropping objects
 
-Gobj* CheckNeighborObjectsY(std::list<Gobj*> &lst, std::string oname, int my, Gobj** upper, Gobj** lower);
-Gobj* CheckNeighborObjectsX(std::list<Gobj*> &lst, std::string oname, int mx, Gobj** lefter, Gobj** righter);
+    Gobj*           CheckNeighborObjectsY(std::list<Gobj*> &lst, std::string oname, int my, Gobj** upper, Gobj** lower);
+    Gobj*           CheckNeighborObjectsX(std::list<Gobj*> &lst, std::string oname, int mx, Gobj** lefter, Gobj** righter);
+    Gobj*           CheckDropObjectY(std::list<Gobj*> &lst, std::string oname, int my);
 
 //}

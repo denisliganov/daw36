@@ -16,16 +16,26 @@ Control::Control()
 
 void Control::addParam(Param* p)
 {
-    if (param == NULL)
+    if (p != NULL)
     {
         param = p;
 
         param->addControl(this);
     }
 
-    dev = NULL;
+    remap();
+}
 
-    updPosition();
+void Control::removeParam(Param* p)
+{
+    if (param == p)
+    {
+        param->removeControl(this);
+
+        param = NULL;
+    }
+
+    remap();
 }
 
 void Control::setFontId(FontId fId)
@@ -36,3 +46,4 @@ void Control::setFontId(FontId fId)
 
     headerHeight = textHeight + 3;
 }
+

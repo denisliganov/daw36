@@ -19,25 +19,35 @@ public:
         void    drawSelf(Graphics& g);
 };
 
+class DropHighlightRect  : public Gobj
+{
+public:
+
+        DropHighlightRect() {}
+
+        void    drawSelf(Graphics& g);
+};
+
 class DragAndDrop  : public Gobj
 {
 public:
 
         DragAndDrop();
 
-        Gobj*           targetObj;
-        Gobj*           dragObj;
-        DropHighlight*  dropHighlightHorizontal;
-        DropHighlight*  dropHighlightVertical;
-        int             count;
+        Gobj*               targetObj;
+        Gobj*               dragObj;
+        DropHighlight*      dropHighlightHorizontal;
+        DropHighlight*      dropHighlightVertical;
+        DropHighlightRect*  dropRect;
+        int                 count;
 
-        void            start(Gobj * drag_obj, int mx, int my);
-        void            reset();
-        void            drawSelf(Graphics & g);
         bool            canDrag();
-        bool            isActive();
+        void            drawSelf(Graphics & g);
         void            drag(Gobj* targetObj, int mx, int my);
         void            drop(int mx, int my, unsigned int flags);
+        bool            isActive();
+        void            reset();
+        void            start(Gobj * drag_obj, int mx, int my);
 };
 
 

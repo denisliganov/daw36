@@ -113,19 +113,21 @@ void Mixer::remap()
 
     for(Instrument* instr : MInstrPanel->getInstrs())
     {
-        if(!instr->device->isPreviewOnly())
+        if (instr->device && instr->device->isPreviewOnly())
         {
-            if((yCh + InstrHeight > 0) && yCh < getH())
-            {
-                instr->mixChannel->setCoords1(0, yCh, width, instr->getH());
-            }
-            else if(instr->mixChannel->isShown())
-            {
-                instr->mixChannel->setVis(false);
-            }
-
-            yCh += InstrHeight + 1;
+            continue;
         }
+
+        if((yCh + InstrHeight > 0) && yCh < getH())
+        {
+            instr->mixChannel->setCoords1(0, yCh, width, instr->getH());
+        }
+        else if(instr->mixChannel->isShown())
+        {
+            instr->mixChannel->setVis(false);
+        }
+
+        yCh += InstrHeight + 1;
     }
 
 /*

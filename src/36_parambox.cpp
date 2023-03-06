@@ -15,9 +15,9 @@
 
 ParamBox::ParamBox(Parameter* param)
 {
-    addParam(param);
-
     prm = param;
+
+    addParam(param);
 
     setFontId(FontSmall);
 
@@ -34,12 +34,12 @@ ParamBox::ParamBox(Parameter* param)
 
 void ParamBox::drawSelf(Graphics& g)
 {
-    Instrument* i = NULL; //dynamic_cast<Instrument*>(parent);
+    Instrument* i = dynamic_cast<Instrument*>(parent);
 
     if (i) 
-        i->setMyColor(g, .2f);
+        i->setMyColor(g, .4f);
     else
-        setc(g, 0.2f);
+        setc(g, 0.25f);
 
     fillx(g, 0, 0, width, height);
 
@@ -75,16 +75,18 @@ void ParamBox::drawSelf(Graphics& g)
     //fillx(g, defPos, height - sh, 1, sh);
 
     //setc(g, 0xffB0B000);
+
     if (i) 
-        i->setMyColor(g, .6f);
+        i->setMyColor(g, .4f);
     else
-        setc(g, 0.6f);
+        setc(g, 0.4f);
+
     fillx(g, xstart, height - sh, w, sh);
 
     if (i) 
-        i->setMyColor(g, .5f);
+        i->setMyColor(g, .8f);
     else
-        setc(g, 0.5f);
+        setc(g, 0.6f);
 
     //setc(g, 0xffA0A060);
     fillx(g, xstart, height - sh+1, w, sh-2);
@@ -92,19 +94,20 @@ void ParamBox::drawSelf(Graphics& g)
     //drawGlassRect(g, x1 + (float)xstart, y1 + (float)(height - sh+1), w, sh-1, Colour(180, 120, 120), 0, 0, true, true, true, true);
 
     if (i) 
-        i->setMyColor(g, .3f);
+        i->setMyColor(g, .2f);
     else
-        setc(g, 0.3f);
+        setc(g, 0.2f);
 
     //setc(g, 0xff505030);
     fillx(g, xoffs, height - sh, 1, sh);
 
     if (i) 
-        i->setMyColor(g, .99f);
+        i->setMyColor(g, 1.f);
     else
-        setc(g, 0.99f);
+        setc(g, 1.f);
+
     //setc(g, 0xffFFFFA0);
-    fillx(g, xval, height - sh, 1, sh);
+    fillx(g, xval, height - sh + 1, 1, sh - 2);
 
     if (sliderOnly == false)
     {

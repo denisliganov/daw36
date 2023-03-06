@@ -1112,9 +1112,9 @@ bool Grid::drawDraggedObject(Graphics & g,Gobj * obj)
 {
     Instrument* i = dynamic_cast<Instrument*> (obj);
 
-    if(i != NULL)
+    if(i != NULL && i->getDevice())
     {
-        i->selfNote->drawOnGrid(g, this);
+        i->getDevice()->selfNote->drawOnGrid(g, this);
 
         return true;
     }
@@ -1695,7 +1695,7 @@ bool Grid::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
 {
     Instrument* i = dynamic_cast<Instrument*>(obj);
 
-    if(i != NULL)
+    if(i != NULL && i->getDevice() != NULL)
     {
         float tick;
         int line;
@@ -1710,7 +1710,7 @@ bool Grid::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
             setTickOffset(tickOffset + offs, false);
         }*/
 
-        Note* n = i->selfNote;
+        Note* n = i->getDevice()->selfNote;
 
         n->setPos(tick, line);
 

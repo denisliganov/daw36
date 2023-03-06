@@ -265,15 +265,8 @@ void GetStartupDir()
 
 
 
-// Add some samples
-//
 void LoadDefaultInstruments()
 {
-    //MBrowser->addSearchDir("C:\\Program Files\\");
-    //MBrowser->addSearchDir("C:\\Samples\\");
-    //MBrowser->addSearchDir("C:\\Plugins\\");
-
-
     MInstrPanel->addVst("Plugins\\mda Piano.dll", NULL);
     MInstrPanel->addVst("Plugins\\mda DX10.dll", NULL);
     MInstrPanel->addSample("Samples\\Kicked.wav");
@@ -295,6 +288,27 @@ void LoadDefaultInstruments()
     MInstrPanel->addSample("Samples\\SBA4.wav");
     MInstrPanel->addSample("Samples\\test.wav");
 
+    // todo: dummy instrument
+
+    MInstrPanel->addInstrument(NULL, NULL);
+    MInstrPanel->addInstrument(NULL, NULL);
+    MInstrPanel->addInstrument(NULL, NULL);
+    MInstrPanel->addInstrument(NULL, NULL);
+    MInstrPanel->addInstrument(NULL, NULL);
+    MInstrPanel->addInstrument(NULL, NULL);
+    MInstrPanel->addInstrument(NULL, NULL);
+    MInstrPanel->addInstrument(NULL, NULL);
+    MInstrPanel->addInstrument(NULL, NULL);
+    MInstrPanel->addInstrument(NULL, NULL);
+    MInstrPanel->addInstrument(NULL, NULL);
+    MInstrPanel->addInstrument(NULL, NULL);
+    MInstrPanel->addInstrument(NULL, NULL);
+    MInstrPanel->addInstrument(NULL, NULL);
+    MInstrPanel->addInstrument(NULL, NULL);
+    MInstrPanel->addInstrument(NULL, NULL);
+
+
+/*
     MInstrPanel->addSample("Samples\\Clap.wav");
     MInstrPanel->addSample("Samples\\Rasta.wav");
     MInstrPanel->addSample("Samples\\Pipa_66.wav");
@@ -310,10 +324,10 @@ void LoadDefaultInstruments()
     MInstrPanel->addSample("Samples\\Horn Hit.wav");
     MInstrPanel->addSample("Samples\\Timbale 2.wav");
     MInstrPanel->addSample("Samples\\Closed Hat.wav");
-
+*/
     //MInstrPanel->addSample("Samples\\Dark Hat.wav");
 
-    MInstrPanel->addSample("Samples\\Cymatics - Light Free Sample Pack\\Bonus Samples\\Drum Loops\\Cymatics - San Holo Free Full Drum Loop 2 - 120 BPM.wav");
+    //MInstrPanel->addSample("Samples\\Cymatics - Light Free Sample Pack\\Bonus Samples\\Drum Loops\\Cymatics - San Holo Free Full Drum Loop 2 - 120 BPM.wav");
 
 /*
     MInstrPanel->addSample("Samples\\Jazzy Hat.wav");

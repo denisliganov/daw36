@@ -29,12 +29,14 @@ typedef enum InstrType
 class Device36 : public ParamObject
 {
 friend InstrPanel;
+friend Instrument;
 
 public:
             Device36();
     virtual ~Device36();
 
     virtual SubWindow*          createWindow();
+    virtual void                createSelfPattern();
     virtual void                forceStop();
             int                 getIndex() { return devIdx; }
         std::list<BrwEntry*>    getPresets() { return presets; }
@@ -44,6 +46,7 @@ public:
             float               getLastNoteLength() { return lastNoteLength; }
             int                 getMuteCount()  { return muteCount; }
             bool                getBypass()     { return bypass; }
+            Gobj*               getContainer() { return container; }
 
             long                getNumPresets();
             void                getPresetName(long devIdx, char *name);
@@ -104,6 +107,8 @@ public:
 
             ParamVol*           vol;
             ParamPan*           pan;
+            ParamToggle*        enabled;
+
             float               lastNoteLength;
             float               lastNoteVol;
             float               lastNotePan;
@@ -115,6 +120,9 @@ public:
             bool                soloparam;
             int                 devIdx;
             SubWindow*          guiWindow;
+
+            Pattern*            selfPattern;
+            Note*               selfNote;
 
 protected:
 

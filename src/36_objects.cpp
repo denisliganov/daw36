@@ -662,6 +662,21 @@ void Gobj::setMyColor(Graphics & g, float brightness, float saturation, float al
     }
 }
 
+Gobj* CheckDropObjectY(std::list<Gobj*> &lst, std::string oname, int my)
+{
+    for(Gobj* o : lst)
+    {
+        if(o->isShown() && o->getObjId().substr(0, oname.size()) == oname)
+        {
+            if(my >= o->getY1() && my < o->getY2())
+            {
+                return o;
+            }
+        }
+    }
+
+    return NULL;
+}
 
 // Checks if mouse y coordinate is located between two objects going vertical
 // Used in drag'n'drop for instruments and effects

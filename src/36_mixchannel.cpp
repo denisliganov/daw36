@@ -281,7 +281,7 @@ Eff* MixChannel::addEffectFromBrowser(BrwListEntry * de)
 
         eff = new Eff(vsteff);
     }
-    else
+    else if(de->getType() == Entry_Native)
     {
         eff = CreateEffect(de->getPath());
     }
