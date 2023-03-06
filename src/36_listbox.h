@@ -14,6 +14,7 @@ public:
             ListBoxx(std::string name);
 
             void                addEntry(std::string entry)                     { entries.push_back(entry); remap(); }
+            void                addEntry1(String entry)                         { entries1.push_back(entry); remap(); }
             void                setList(std::vector<std::string>&  entries_list)  { entries = entries_list;  remap(); }
             void                setCurrent(int curr)                            { currentEntry = curr; }
             int                 getCurrent()                                    { return currentEntry; }
@@ -35,7 +36,9 @@ protected:
             int                 scrWidth;
             int                 entryHeight;
 
-            std::vector<std::string>  entries;
+            std::vector<std::string>    entries;
+
+            std::vector<String>         entries1;
 };
 
 

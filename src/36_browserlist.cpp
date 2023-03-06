@@ -336,9 +336,17 @@ void BrowserList::handleChildEvent(Gobj * obj,InputEvent & ev)
 
     if (ble)
     {
-        if (ble->getType() == Entry_Wave)
+        if (ev.doubleClick)
         {
-            previewSample(ble, ev.clickDown);
+            // activa
+            MInstrPanel->loadInstrFromNewBrowser(ble);
+        }
+        else
+        {
+            if (ble->getType() == Entry_Wave)
+            {
+                previewSample(ble, ev.clickDown);
+            }
         }
     }
 }
@@ -376,7 +384,7 @@ void BrowserList::remap()
 {
     if (brwEntries.size() * entryHeight > height)
     {
-        vscr->setCoords1(width - 12, headerHeight, 12, height - (headerHeight));
+        vscr->setCoords1(width - 12, headerHeight + 1, 12, height - (headerHeight + 1));
 
         vscr->updBounds(brwEntries.size() * entryHeight + 3*entryHeight, height, vscr->getOffset());
     }
