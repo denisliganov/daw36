@@ -94,6 +94,8 @@ protected:
         Instrument*     instr;
 };
 
+Device36* devDummy;
+
 
 InstrPanel::InstrPanel(Mixer* mixer)
 {
@@ -103,7 +105,7 @@ InstrPanel::InstrPanel(Mixer* mixer)
 
     currMixChannel = NULL;
 
-    int buttw = 25;
+    devDummy = new Device36();
 
     addObject(btShowFX = new Button36(false), "bt.showbrw");
     addObject(btHideFX = new Button36(false), "bt.hidebrw");
@@ -168,7 +170,9 @@ Instrument* InstrPanel::addInstrument(Device36 * dev, Instrument * objAfter)
 {
     WaitForSingleObject(AudioMutex, INFINITE);
 
-    Instrument* i = new Instrument(dev);
+    Device36* device = dev != NULL ? dev : devDummy;
+
+    Instrument* i = new Instrument(device);
 
     instrs.push_back(i);
 
@@ -186,7 +190,7 @@ Instrument* InstrPanel::addInstrument(Device36 * dev, Instrument * objAfter)
         updateInstrIndexes();
     }
 
-    if(!(dev && dev->previewOnly))
+    if(!(device && device->previewOnly))
     {
         i->addMixChannel();
 
@@ -510,6 +514,26 @@ bool InstrPanel::handleObjDrop(Gobj * obj, int mx, int my, unsigned int flags)
             // load from browser
 
             Instrument* i = dynamic_cast<Instrument*>(dropObj);
+
+            Device36* dev = NULL;
+
+            if (ble->getType() == Entry_Wave)
+            {
+                dev = loadSample(ble->getPath().data());
+            }
+            else if (ble->getType() == Entry_DLL)
+            {
+                dev = loadVst(ble->getPath().data(), NULL);
+            }
+
+            if (dev)
+            {
+                i->setDevice(dev);
+
+                dev->createSelfPattern();
+
+                remapAndRedraw();
+            }
         }
         else
         {
@@ -518,11 +542,18 @@ bool InstrPanel::handleObjDrop(Gobj * obj, int mx, int my, unsigned int flags)
             Instrument* iTo = (Instrument*)dropObj;
             Instrument* iFrom = (Instrument*)obj;
 
-            iTo->setDevice(iFrom->getDevice());
-            iFrom->setDevice(NULL);
+            Device36* devTo = iTo->getDevice();
+            Device36* devFrom = iFrom->getDevice();
 
-            iTo->redraw();
-            iFrom->redraw();
+            iTo->setDevice(devFrom);
+            iFrom->setDevice(devTo);
+
+            setCurrInstr(iTo);
+
+            //iTo->redraw();
+            //iFrom->redraw();
+
+            remapAndRedraw();
         }
     }
     else

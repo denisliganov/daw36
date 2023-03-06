@@ -26,6 +26,7 @@
 #include "36_paramtoggle.h"
 
 
+extern Device36* devDummy;
 
 
 class EnableButton : public ToggleBox
@@ -140,7 +141,7 @@ protected:
         void drawSelf(Graphics& g)
         {
             Instrument* instr = (Instrument*)parent;
-            instr->setMyColor(g, .9f);
+            instr->setMyColor(g, .8f);
 
             gTriangle(g, x1, y1, x2, y1 + height/2, x1, y2);
 
@@ -227,7 +228,10 @@ void Instrument::setDevice(Device36* dev)
         panBox->removeParam(device->pan);
         muteButt->removeParam(device->enabled);
 
-        device->setContainer(NULL);
+        if (device != devDummy)
+        {
+        //    device->setContainer(NULL);
+        }
 
         setObjName("");
     }
@@ -301,14 +305,14 @@ void Instrument::drawSelf(Graphics& g)
 {
     //Gobj::fill(g, .35f);
 
-    if(device != NULL)
+    if(device != devDummy)
     {
         Gobj::setMyColor(g, .7f);
 
         fillx(g, 0, 0, width, height);
 
        // setc(g, .31f);
-        Gobj::setMyColor(g, .6f);
+        Gobj::setMyColor(g, .5f);
         fillx(g, 0, 0, width, height/2);
     }
     else
@@ -474,7 +478,7 @@ void Instrument::load(XmlElement * instrNode)
 
 void Instrument::preview(int note)
 {
-    if (device)
+    if (device && device->selfNote)
     {
         device->selfNote->setNote(note);
 
@@ -484,15 +488,19 @@ void Instrument::preview(int note)
 
 void Instrument::remap()
 {
-    guiButton->setCoords1(1, 1, height-6, height-6);
+    guiButton->setCoords1(0, 3, height-6, height-6);
 
-    if (device)
+    if (device != devDummy)
     {
-        if (volBox)
-            volBox->setCoords1(width - 100, height - 6, 50, 6);
+        guiButton->setTouchable(true);
+
+        int slH = 6;
 
         if (panBox)
-            panBox->setCoords1(width - 160, height - 6, 50, 6);
+            panBox->setCoords1(width - 170, height - slH, 60, slH);
+
+        if (volBox)
+            volBox->setCoords1(width - 100, height - slH, 70, slH);
 
         int bw = 11;
 
@@ -500,10 +508,12 @@ void Instrument::remap()
 
         muteButt->setCoords1(width - bw - 8, height - bw, bw, bw);
 
-        previewButton->setCoords1(height, height/2, height/2, height/2);
+        //previewButton->setCoords1(height, height/2, height/2, height/2);
     }
     else
     {
+        guiButton->setTouchable(false);
+
         if (volBox)
             volBox->setVis(false);
 
