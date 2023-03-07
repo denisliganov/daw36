@@ -9,7 +9,7 @@
 #include "36_vstinstr.h"
 #include "36_instrpanel.h"
 #include "36_renderer.h"
-#include "36_paramvol.h"
+#include "36_params.h"
 #include "36_mixer.h"
 #include "36_mixchannel.h"
 #include "36_vu.h"

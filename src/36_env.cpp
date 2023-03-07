@@ -12,7 +12,7 @@
 #include "36_button.h"
 #include "36_draw.h"
 #include "36_text.h"
-#include "36_paramnum.h"
+#include "36_params.h"
 
 
 

@@ -21,9 +21,7 @@
 #include "36_knob.h"
 #include "36_keyboard.h"
 #include "36_parambox.h"
-#include "36_paramvol.h"
-#include "36_parampan.h"
-#include "36_paramtoggle.h"
+#include "36_params.h"
 
 
 extern Device36* devDummy;
@@ -334,11 +332,11 @@ void Instrument::drawSelf(Graphics& g)
     }
 
     //setc(g, .0f);
-    Gobj::setMyColor(g, .1f);
+    Gobj::setMyColor(g, .9f);
     txtfit(g, FontSmall, getObjName(), guiButton->getW() + 4, 9, width - (height+4));
 
     //setc(g, 1.f);
-    Gobj::setMyColor(g, .2f);
+    Gobj::setMyColor(g, 1.f);
     txtfit(g, FontSmall, getObjName(), guiButton->getW() + 4, 8, width - (height+4));
 
 

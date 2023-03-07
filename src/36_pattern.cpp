@@ -2,9 +2,7 @@
 
 
 #include "36_pattern.h"
-#include "36_paramnum.h"
-#include "36_paramvol.h"
-#include "36_parampan.h"
+#include "36_params.h"
 #include "36_textinput.h"
 #include "36_instrpanel.h"
 #include "36_keyboard.h"

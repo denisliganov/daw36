@@ -14,7 +14,7 @@
 #include "36_audio_dev.h"
 #include "36_transport.h"
 #include "36_brwentry.h"
-#include "36_paramnum.h"
+#include "36_params.h"
 #include "36.h"
 #include "36_vstwin.h"
 #include "36_window.h"

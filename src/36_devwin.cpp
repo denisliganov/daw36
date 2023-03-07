@@ -5,12 +5,6 @@
 #include "36_listbox.h"
 #include "36_params.h"
 #include "36_parambox.h"
-#include "36_paramvol.h"
-#include "36_parampan.h"
-#include "36_paramnum.h"
-#include "36_paramradio.h"
-#include "36_paramselector.h"
-#include "36_paramtoggle.h"
 #include "36_vstinstr.h"
 
 

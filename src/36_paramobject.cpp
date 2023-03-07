@@ -1,6 +1,6 @@
 
 #include "36_paramobject.h"
-#include "36_paramnum.h"
+#include "36_params.h"
 #include "36_controls.h"
 #include "36_events_triggers.h"
 

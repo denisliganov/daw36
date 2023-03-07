@@ -1,7 +1,7 @@
 
 
 #include "36_slider.h"
-#include "36_paramnum.h"
+#include "36_params.h"
 #include "36_utils.h"
 #include "36.h"
 #include "36_draw.h"

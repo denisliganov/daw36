@@ -8,7 +8,7 @@
 #include "36_effects.h"
 #include "36_vstinstr.h"
 #include "36_sampleinstr.h"
-#include "36_paramnum.h"
+#include "36_params.h"
 #include "36_instr.h"
 #include "36_instrpanel.h"
 #include "36_note.h"

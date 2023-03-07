@@ -1,6 +1,6 @@
 
 #include "36_renderwin.h"
-#include "36_paramradio.h"
+#include "36_params.h"
 #include "36_draw.h"
 #include "36.h"
 #include "36_button.h"

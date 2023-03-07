@@ -9,9 +9,7 @@
 #include "36_grid.h"
 #include "36_listbox.h"
 #include "36_parambox.h"
-#include "36_paramnum.h"
-#include "36_paramradio.h"
-
+#include "36_params.h"
 
 
 ConfigWinObject::ConfigWinObject()

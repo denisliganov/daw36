@@ -7,11 +7,5 @@
 
 
 
-void ParamToggle::toggle()
-{
-    value = !value; 
-
-    module->handleParamUpdate(this);
-}
 
 

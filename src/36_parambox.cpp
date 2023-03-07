@@ -4,10 +4,7 @@
 #include "36_parambox.h"
 #include "36_draw.h"
 #include "36_text.h"
-#include "36_paramnum.h"
-#include "36_paramtoggle.h"
-#include "36_paramradio.h"
-#include "36_paramselector.h"
+#include "36_params.h"
 #include "36_utils.h"
 #include "36_instr.h"
 

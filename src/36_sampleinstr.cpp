@@ -14,8 +14,7 @@
 #include "36_draw.h"
 #include "36_renderer.h"
 #include "36_transport.h"
-#include "36_paramvol.h"
-#include "36_paramnum.h"
+#include "36_params.h"
 #include "36.h"
 
 

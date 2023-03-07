@@ -25,9 +25,7 @@
 #include "36_dragndrop.h"
 #include "36_macros.h"
 #include "36_events_triggers.h"
-#include "36_paramnum.h"
-#include "36_paramvol.h"
-
+#include "36_params.h"
 
 
 class Selection : public Gobj

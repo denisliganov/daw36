@@ -14,8 +14,7 @@
 #include "36_edit.h"
 #include "36_numbox.h"
 #include "36_vst.h"
-#include "36_paramnum.h"
-#include "36_paramtoggle.h"
+#include "36_params.h"
 
 
 

@@ -3,8 +3,7 @@
 
 #include "36_mixer.h"
 #include "36_mixchannel.h"
-#include "36_paramvol.h"
-#include "36_parampan.h"
+#include "36_params.h"
 #include "36_vu.h"
 #include "36_browser.h"
 #include "36_utils.h"

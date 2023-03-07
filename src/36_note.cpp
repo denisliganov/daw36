@@ -4,9 +4,7 @@
 
 
 #include "36_note.h"
-#include "36_paramnum.h"
-#include "36_paramvol.h"
-#include "36_parampan.h"
+#include "36_params.h"
 #include "36_keyboard.h"
 #include "36_textinput.h"
 #include "36_events_triggers.h"
@@ -220,7 +218,7 @@ void Note::drawOnGrid(Graphics& g, Grid* grid)
         {
             //fill(g, 1.f, .2f);
             instr->setMyColor(g, 1.f);
-            rectx(g, x1, y1, x2, y2);
+            rectx(g, 0, 0, width, height);
         }
     }
     else if (grid->getDisplayMode() == GridDisplayMode_Volumes || grid->getDisplayMode() == GridDisplayMode_Pans)
