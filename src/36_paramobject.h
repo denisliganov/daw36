@@ -34,7 +34,7 @@ public:
     virtual void                removeParam(Param* param);
     virtual void                setParamLock(bool lock) { paramLocked = lock; };
             void                setInvokeButton(Button36* bt) { invokeButton = bt; }
-            void                spaceRight();
+            void                spaceRight(int num=1);
             void                spaceBelow();
             void                setBorder(int brd)      { border = brd; }
             void                setObjSpacing(int os) { objSpacing = os; }

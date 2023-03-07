@@ -177,9 +177,8 @@ ControlPanel::ControlPanel()
     spaceRight();
     putRight(btConfig, buttonWidth, buttonHeight);
     putRight(btRender, buttonWidth, buttonHeight);
-    spaceRight();
-    spaceRight();
-    spaceRight();
+    spaceRight(10);
+
     putRight(btPlay, 52, buttonHeight);
     putRight(btStop, 34, buttonHeight);
     putRight(btRec, buttonWidth, buttonHeight);
@@ -191,9 +190,7 @@ ControlPanel::ControlPanel()
     putRight(bpmBox, 70, buttonHeight + 2);
     putRight(snapMenu, 64, buttonHeight + 2);
     putRight(octaveBox, 30, buttonHeight + 2);
-    spaceRight();
-    spaceRight();
-    spaceRight();
+    spaceRight(8);
     putRight(btBrowser, buttonWidth*2, buttonHeight);
     putRight(btBarMode, buttonWidth, buttonHeight);
     putRight(btVols, buttonWidth, buttonHeight);

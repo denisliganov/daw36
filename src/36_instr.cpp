@@ -96,9 +96,14 @@ class GuiButt : public Button36
 {
 public:
 
-        GuiButt() : Button36(false) {}
+        GuiButt() : Button36(false) 
+        {
+            fontId = FontInst;
+        }
 
 protected:
+
+        FontId      fontId;
 
         void drawSelf(Graphics& g)
         {
@@ -108,8 +113,9 @@ protected:
 
             fillx(g, 0, 0, width, height);
 
-            //instr->setMyColor(g, .8f);
-            //rectx(g, 0, 0, width, height);
+            instr->setMyColor(g, .65f);
+            
+            rectx(g, 0, 0, width, height);
 
             bool wVis = (instr->getDevice() && instr->getDevice()->isWindowVisible());
 
@@ -118,8 +124,8 @@ protected:
                 gGradRect(g, 0xffFF9930, x1, y1, x2, y2);
             }
 
-            int tw = gGetTextWidth(FontBold, instr->getAlias());
-            int th = gGetTextHeight(FontBold);
+            int tw = gGetTextWidth(fontId, instr->getAlias());
+            int th = gGetTextHeight(fontId);
 
             if (wVis)
                 //setc(g, (uint32)0xffFF9930);
@@ -127,7 +133,7 @@ protected:
             else
                 instr->setMyColor(g, 1.f);
 
-            txt(g, FontBold, instr->getAlias(), width/2 - tw/2, height/2 + th/2 - 1);
+            txt(g, fontId, instr->getAlias(), width/2 - tw/2, height/2 + th/2 - 1);
         }
 
         void handleMouseDrag(InputEvent & ev)   { parent->handleMouseDrag(ev); }
@@ -222,7 +228,7 @@ Instrument::~Instrument()
 
 void Instrument::setDevice(Device36* dev)
 {
-    if (device)
+    //if (device != devDummy)
     {
         volBox->removeParam(device->vol);
         panBox->removeParam(device->pan);
@@ -242,11 +248,16 @@ void Instrument::setDevice(Device36* dev)
     {
         device->setContainer(this);
 
-        volBox->addParam(device->vol);
-        panBox->addParam(device->pan);
-        muteButt->addParam(device->enabled);
+        //if (device != devDummy)
+        {
+            device->setVU(ivu);
 
-        setObjName(dev->getObjName());
+            volBox->addParam(device->vol);
+            panBox->addParam(device->pan);
+            muteButt->addParam(device->enabled);
+
+            setObjName(dev->getObjName());
+        }
     }
 }
 
@@ -324,11 +335,11 @@ void Instrument::drawSelf(Graphics& g)
 
     //setc(g, .0f);
     Gobj::setMyColor(g, .1f);
-    txtfit(g, FontSmall, getObjName(), height + 4, 9, width - (height+4));
+    txtfit(g, FontSmall, getObjName(), guiButton->getW() + 4, 9, width - (height+4));
 
     //setc(g, 1.f);
-    Gobj::setMyColor(g, 1.f);
-    txtfit(g, FontSmall, getObjName(), height + 4, 8, width - (height+4));
+    Gobj::setMyColor(g, .2f);
+    txtfit(g, FontSmall, getObjName(), guiButton->getW() + 4, 8, width - (height+4));
 
 
     //Colour clr = Colour(100, 110, 110);
@@ -375,7 +386,7 @@ std::list <Element*> Instrument::getNotesFromRange(float offset, float lastVisib
 
 void Instrument::handleChildEvent(Gobj * obj, InputEvent& ev)
 {
-    if(obj == previewButton)
+    if(obj == previewButton || obj == ivu)
     {
         if (ev.clickDown)
         {
@@ -488,25 +499,25 @@ void Instrument::preview(int note)
 
 void Instrument::remap()
 {
-    guiButton->setCoords1(0, 3, height-6, height-6);
+    guiButton->setCoords1(0, 0, height/1.5f, height);
+
+    int bw = 12;
 
     if (device != devDummy)
     {
         guiButton->setTouchable(true);
 
-        int slH = 6;
+        int slH = 4;
 
         if (panBox)
-            panBox->setCoords1(width - 170, height - slH, 60, slH);
+            panBox->setCoords1(width - 190, height - slH, 70, slH);
 
         if (volBox)
-            volBox->setCoords1(width - 100, height - slH, 70, slH);
-
-        int bw = 11;
+            volBox->setCoords1(width - 110, height - slH, 80, slH);
 
         //soloButt->setCoords1(width - bw*2 - 8, height - bw, bw, bw);
 
-        muteButt->setCoords1(width - bw - 8, height - bw, bw, bw);
+        muteButt->setCoords1(width - bw - bw, 0, bw, height);
 
         //previewButton->setCoords1(height, height/2, height/2, height/2);
     }
@@ -527,7 +538,7 @@ void Instrument::remap()
         previewButton->setVis(false);
     }
 
-    ivu->setCoords1(width - 8, 0, 8, height);
+    ivu->setCoords1(width - bw, 0, bw, height);
     
     if(gGetTextWidth(FontSmall, objName) > width - 38 - 50 - 10)
     {
@@ -537,6 +548,11 @@ void Instrument::remap()
     {
         setHint("");
     }
+}
+
+bool Instrument::isDummy()
+{
+    return (device == devDummy);
 }
 
 void Instrument::setIndex(int idx)

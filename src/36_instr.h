@@ -61,6 +61,7 @@ virtual Instrument*             clone();
             void                handleMouseWheel(InputEvent& ev);
             void                handleMouseDrag(InputEvent& ev);
             void                handleChildEvent(Gobj * obj, InputEvent& ev);
+            bool                isDummy();
     virtual void                load(XmlElement* instrNode);
             void                preview(int note = BaseNote);
 

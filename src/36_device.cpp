@@ -47,9 +47,9 @@ Device36::Device36()
     envVol = NULL;
     envelopes = NULL;
     guiWindow = NULL;
-
     selfPattern = NULL;
     selfNote = NULL;
+    vu = NULL;
 
     lastNoteLength = 4;
     lastNoteVol = 1;
@@ -895,7 +895,10 @@ void Device36::fillOutputBuffer(float* out_buff, long num_frames, long buff_fram
 
     // Update VU
 
-    //ivu->setValues(lMax, rMax);
+    if (vu)
+    {
+        vu->setValues(lMax, rMax);
+    }
 }
 
 void Device36::processDSP(float* in_buff, float* out_buff, int num_frames)

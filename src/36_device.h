@@ -9,7 +9,7 @@
 #include "36_objects.h"
 #include "36_paramobject.h"
 #include "36_config.h"
-
+#include "36_vu.h"
 
 
 
@@ -90,6 +90,7 @@ public:
             void                removeNote(Note* note);
             void                reinsertNote(Note* note);
             void                setLastParams(float last_length,float last_vol,float last_pan, int last_val);
+            void                setVU(ChanVU* v) { vu = v; }
 
             std::list<Trigger*> activeTriggers;
             std::list<Note*>    notes;
@@ -128,6 +129,7 @@ protected:
 
             InstrType           type;
             Gobj*               container;
+            ChanVU*             vu;
 
             bool                bypass;
 

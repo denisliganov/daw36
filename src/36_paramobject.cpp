@@ -159,14 +159,18 @@ void ParamObject::putBelow(Gobj* obj, int ow, int oh)
     }
 }
 
-void ParamObject::spaceRight()
+void ParamObject::spaceRight(int num)
 {
-    xstart1 += groupSpacing;
-    xstart2 += groupSpacing;
-
-    if (xstart1 > wndW)
+    while (num > 0)
     {
-        wndW = xstart1;
+        xstart1 += groupSpacing;
+        xstart2 += groupSpacing;
+
+        if (xstart1 > wndW)
+        {
+            wndW = xstart1;
+        }
+        num--;
     }
 }
 

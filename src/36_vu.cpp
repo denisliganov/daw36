@@ -24,7 +24,7 @@ void Vu_ShowCoolFalldown()
 
 ChanVU::ChanVU(bool vert)
 {
-    setTouchable(false);
+    //setTouchable(false);
 
     vertical = vert;
 
@@ -175,6 +175,14 @@ void ChanVU::drawSelf(Graphics & g)
     }
 }
 
+void ChanVU::handleMouseDown(InputEvent& ev)
+{
+    if (parent)
+    {
+        parent->handleChildEvent(this, ev);
+    }
+}
+
 InstrVU::InstrVU() : ChanVU(true)
 {
     
@@ -224,4 +232,11 @@ void InstrVU::drawSelf(Graphics & g)
 
 }
 
+void InstrVU::handleMouseDown(InputEvent& ev)
+{
+    if (parent)
+    {
+        parent->handleChildEvent(this, ev);
+    }
+}
 

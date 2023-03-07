@@ -106,6 +106,7 @@ InstrPanel::InstrPanel(Mixer* mixer)
     currMixChannel = NULL;
 
     devDummy = new Device36();
+    devDummy->setTouchable(false);
 
     addObject(btShowFX = new Button36(false), "bt.showbrw");
     addObject(btHideFX = new Button36(false), "bt.hidebrw");
