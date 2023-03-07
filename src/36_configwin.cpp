@@ -41,7 +41,7 @@ ConfigWinObject::ConfigWinObject()
 
     WinObject::addObject(buffSizeBox = new ParamBox(bufferSize));
 
-    interpolationSelect = new ParamRadio("Interpolation (sample playback)");
+    interpolationSelect = new Parameter("Interpolation (sample playback)", Param_Radio);
     interpolationSelect->addOption("Linear");
     interpolationSelect->addOption("3-point Hermire");
     interpolationSelect->addOption("6-point Polinomial");
@@ -114,7 +114,7 @@ void ConfigWinObject::handleChildEvent(Gobj * obj,InputEvent & ev)
     int a = 1;
 }
 
-void ConfigWinObject::handleParamUpdate(Param * param)
+void ConfigWinObject::handleParamUpdate(Parameter * param)
 {
 /*
     if(param == hue)

@@ -38,7 +38,7 @@ protected:
             instr->setMyColor(g, .4f);
             fillx(g, 0, 0, width, height);
 
-            if(prmToggle->getValue())
+            if(param->getBoolValue())
             {
                 instr->setMyColor(g, 1.f);
             }
@@ -55,7 +55,7 @@ protected:
 
 public:
 
-        EnableButton(ParamToggle* ptg) : ToggleBox(ptg) {}
+        EnableButton(Parameter* ptg) : ToggleBox(ptg) {}
 };
 
 class SoloButton : public Button36
@@ -107,13 +107,20 @@ protected:
         {
             Instrument* instr = (Instrument*)parent;
 
-            instr->setMyColor(g, .5f);
-
-            fillx(g, 0, 0, width, height);
-
-            instr->setMyColor(g, .65f);
-            
-            rectx(g, 0, 0, width, height);
+            if (instr->getDevice() != devDummy)
+            {
+                instr->setMyColor(g, .5f);
+                fillx(g, 0, 0, width, height);
+                instr->setMyColor(g, .65f);
+                rectx(g, 0, 0, width, height);
+            }
+            else
+            {
+                instr->setMyColor(g, .3f);
+                fillx(g, 0, 0, width, height);
+                //instr->setMyColor(g, .45f);
+                //rectx(g, 0, 0, width, height);
+            }
 
             bool wVis = (instr->getDevice() && instr->getDevice()->isWindowVisible());
 
@@ -125,13 +132,16 @@ protected:
             int tw = gGetTextWidth(fontId, instr->getAlias());
             int th = gGetTextHeight(fontId);
 
-            if (wVis)
-                //setc(g, (uint32)0xffFF9930);
-                setc(g, 1.f);
-            else
+            if (instr->getDevice() != devDummy)
+            {
                 instr->setMyColor(g, 1.f);
+            }
+            else
+            {
+                instr->setMyColor(g, .6f);
+            }
 
-            txt(g, fontId, instr->getAlias(), width/2 - tw/2, height/2 + th/2 - 1);
+            txt(g, fontId, instr->getAlias(), width/2 - tw/2 + 1, height/2 + th/2 - 1);
         }
 
         void handleMouseDrag(InputEvent & ev)   { parent->handleMouseDrag(ev); }
@@ -332,12 +342,12 @@ void Instrument::drawSelf(Graphics& g)
     }
 
     //setc(g, .0f);
-    Gobj::setMyColor(g, .9f);
-    txtfit(g, FontSmall, getObjName(), guiButton->getW() + 4, 9, width - (height+4));
+    Gobj::setMyColor(g, .5f);
+    txtfit(g, FontSmall, getObjName(), guiButton->getW() + 4, 10, width - (height+4));
 
     //setc(g, 1.f);
     Gobj::setMyColor(g, 1.f);
-    txtfit(g, FontSmall, getObjName(), guiButton->getW() + 4, 8, width - (height+4));
+    txtfit(g, FontSmall, getObjName(), guiButton->getW() + 4, 9, width - (height+4));
 
 
     //Colour clr = Colour(100, 110, 110);
@@ -357,6 +367,14 @@ void Instrument::drawOverChildren(Graphics & g)
 {
     //setMonoColor(.9f);
     //gTextFit(g, FontSmall, instrAlias, x1 + 6, y2 - 3, width - (width/2));
+}
+
+void Instrument::deleteDevice()
+{
+    if (device != NULL && device != devDummy)
+    {
+        delete device;
+    }
 }
 
 std::list <Element*> Instrument::getNotesFromRange(float offset, float lastVisibleTick)
@@ -505,7 +523,7 @@ void Instrument::remap()
     {
         guiButton->setTouchable(true);
 
-        int slH = 4;
+        int slH = 8;
 
         if (panBox)
             panBox->setCoords1(width - 190, height - slH, 70, slH);

@@ -284,7 +284,7 @@ ParamComponent::ParamComponent(Device36* dev)
 
         char paramname[MAX_NAME_LENGTH];
 
-        for(Param* p : mdev->getParams())
+        for(Parameter* p : mdev->getParams())
         {
             Parameter* param = dynamic_cast<Parameter*>(p);
 
@@ -419,7 +419,7 @@ ParamComponent::ParamComponent(Device36* dev)
 
 void ParamComponent::buttonClicked(Button * button)
 {
-    for(Param* p : mdev->getParams())
+    for(Parameter* p : mdev->getParams())
     {
         Parameter* param = dynamic_cast<Parameter*>(p);
 
@@ -444,7 +444,7 @@ void ParamComponent::sliderValueChanged(ASlider* slider)
 {
     int idx = slider->getParamIndex();
 
-    for(Param* p : mdev->getParams())
+    for(Parameter* p : mdev->getParams())
     {
         Parameter* param = dynamic_cast<Parameter*>(p);
 
@@ -497,7 +497,7 @@ VSTParamComponent::VSTParamComponent(Vst2Plugin* vst)
 
         char paramname[MAX_NAME_LENGTH];
 
-        for(Param* p : dev->getParams())
+        for(Parameter* p : dev->getParams())
         {
             Parameter* param = dynamic_cast<Parameter*>(p);
 
@@ -565,7 +565,7 @@ void VSTParamComponent::sliderValueChanged(ASlider* slider)
 {
     int idx = slider->getParamIndex();
 
-    for(Param* p : dev->getParams())
+    for(Parameter* p : dev->getParams())
     {
         Parameter* param = dynamic_cast<Parameter*>(p);
 

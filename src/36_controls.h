@@ -13,8 +13,8 @@ class Control : public Gobj
 public:
 
             Control();
-    virtual void                addParam(Param* p);
-    virtual void                removeParam(Param* p);
+    virtual void                addParam(Parameter* p);
+    virtual void                removeParam(Parameter* p);
     virtual void                updPosition() {};
     virtual void                updValue() {};
     virtual float               getMinStep() {return 0;};
@@ -28,7 +28,7 @@ protected:
             Device36*           dev;
             FontId              fontId;
             Image*              parentImage;
-            Param*              param;
+            Parameter*              param;
             int                 textHeight;
 };
 

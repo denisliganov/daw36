@@ -54,6 +54,7 @@ virtual Instrument*             clone();
             void                drawOverChildren(Graphics & g);
             std::string         getAlias()      {return instrAlias;};
             Device36*           getDevice()     { return device; };
+            void                deleteDevice();
         std::list <Element*>    getNotesFromRange(float tick_offset, float lastVisibleTick);
             MixChannel*         getMixChannel() { return mixChannel; }
             void                handleMouseDown(InputEvent& ev);

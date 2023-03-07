@@ -80,7 +80,7 @@ Audio36::Audio36(float smpRate)
         JAudManager->setAudioDeviceSetup(setup, false);
     }
 
-    MasterVol = new ParamVol("Master volume");
+    MasterVol = new Parameter("Master volume", Param_Vol);
     MasterVol->setEnvDirect(false);
 
     globalMute = mixMute = false;

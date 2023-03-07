@@ -10,17 +10,17 @@
 
 
 
-ParamBox::ParamBox(Parameter* param)
+ParamBox::ParamBox(Parameter* par)
 {
-    prm = param;
+    param = par;
 
     addParam(param);
 
     setFontId(FontSmall);
 
-    tw1 = gGetTextWidth(fontId, prm->getName());
-    tw2 = gGetTextWidth(fontId, prm->getMaxValString());
-    tw3 = gGetTextWidth(fontId, prm->getUnitString());
+    tw1 = gGetTextWidth(fontId, param->getName());
+    tw2 = gGetTextWidth(fontId, param->getMaxValString());
+    tw3 = gGetTextWidth(fontId, param->getUnitString());
 
     sliderOnly = false;
 
@@ -47,9 +47,9 @@ void ParamBox::drawSelf(Graphics& g)
         txy = textHeight + 1;
     }
 
-    float offs = prm->getOffset();
-    float range = prm->getRange();
-    float val = prm->getValue();
+    float offs = param->getOffset();
+    float range = param->getRange();
+    float val = param->getValue();
     float baseVal = (offs <= 0 ? 0 : offs);
 
     int xoffs = int(float(width-1)*((baseVal - offs)/range));
@@ -115,11 +115,11 @@ void ParamBox::drawSelf(Graphics& g)
         //setc(g, 0.8f);
         setc(g, 1.f);
 
-        txtfit(g, fontId, prm->getName(), 3, txty, width/2);
+        txtfit(g, fontId, param->getName(), 3, txty, width/2);
 
         setc(g, 1.f);
 
-        std::string valstr = prm->getValString();
+        std::string valstr = param->getValString();
 
         int sub = 0;
 
@@ -128,15 +128,15 @@ void ParamBox::drawSelf(Graphics& g)
            valstr.data()[0] == '<')
         {
             int poffs = gGetTextWidth(fontId, valstr.substr(0, 1));
-            txt(g, fontId, prm->getValString().substr(0, 1), width/2 - poffs, txty);
+            txt(g, fontId, param->getValString().substr(0, 1), width/2 - poffs, txty);
             sub = 1;
         }
 
         setc(g, 1.f);
 
-        txt(g, fontId, prm->getValString().substr(sub), width/2, txty);
+        txt(g, fontId, param->getValString().substr(sub), width/2, txty);
 
-        txt(g, fontId, prm->getUnitString(), width - tw3 - 2, txty);
+        txt(g, fontId, param->getUnitString(), width - tw3 - 2, txty);
     }
 }
 
@@ -149,7 +149,7 @@ std::string ParamBox::getClickHint()
 {
     if (sliderOnly)
     {
-        return prm->getName() + ":  " + prm->getValString() + " " + prm->getUnitString();
+        return param->getName() + ":  " + param->getValString() + " " + param->getUnitString();
     }
     else
     {
@@ -159,7 +159,7 @@ std::string ParamBox::getClickHint()
 
 void ParamBox::handleNumDrag(int dragCount)
 {
-    prm->adjustFromControl(this, -(float)dragCount);
+    param->adjustFromControl(this, -(float)dragCount);
 
     redraw();
 }
@@ -168,11 +168,11 @@ void ParamBox::handleMouseDown(InputEvent & ev)
 {
     if (abs(defPos - (ev.mouseX - x1)) < 2)
     {
-        prm->setValue(prm->getDefaultValue());
+        param->setValue(param->getDefaultValue());
     }
     else
     {
-        prm->adjustFromControl(this, 0, float(ev.mouseX - x1)/width);
+        param->adjustFromControl(this, 0, float(ev.mouseX - x1)/width);
     }
 
     redraw();
@@ -182,11 +182,11 @@ void ParamBox::handleMouseDrag(InputEvent & ev)
 {
     if (abs(defPos - (ev.mouseX - x1)) < 2)
     {
-        prm->setValue(prm->getDefaultValue());
+        param->setValue(param->getDefaultValue());
     }
     else
     {
-        prm->adjustFromControl(this, 0, float(ev.mouseX - x1)/width);
+        param->adjustFromControl(this, 0, float(ev.mouseX - x1)/width);
     }
 
     redraw();
@@ -199,14 +199,14 @@ void ParamBox::handleMouseUp(InputEvent & ev)
 
 void ParamBox::handleMouseWheel(InputEvent & ev)
 {
-    prm->adjustFromControl(this, (float)ev.wheelDelta);
+    param->adjustFromControl(this, (float)ev.wheelDelta);
 
     redraw();
 }
 
 void ParamBox::remap()
 {
-    defPos = int(float(width-1)*prm->getDefaultValueNormalized());
+    defPos = int(float(width-1)*param->getDefaultValueNormalized());
 }
 
 void ParamBox::redraw()
@@ -214,9 +214,9 @@ void ParamBox::redraw()
     Gobj::redraw();
 }
 
-ToggleBox::ToggleBox(ParamToggle* param_tg)
+ToggleBox::ToggleBox(Parameter* param_tg)
 {
-    prmToggle = param_tg;
+    param = param_tg;
 
     setFontId(FontSmall);
 
@@ -227,7 +227,7 @@ void ToggleBox::drawSelf(Graphics& g)
 {
     fill(g, 0.3f);
 
-    if (prmToggle->getValue())
+    if (param->getBoolValue())
     {
         setc(g, 0.8f);
         fillx(g, 0, 0, height, height);
@@ -242,12 +242,12 @@ void ToggleBox::drawSelf(Graphics& g)
 //    rectx(g, width - width/4, 0, height, height);
 
     setc(g, .9f);
-    txtfit(g, FontBold, prmToggle->getName(), height + 6 /*(width - width/4)/2 - gGetTextWidth(fontId, prmToggle->getName())/2*/, height/2 + 4, width - height);
+    txtfit(g, FontBold, param->getName(), height + 6 /*(width - width/4)/2 - gGetTextWidth(fontId, prmToggle->getName())/2*/, height/2 + 4, width - height);
 }
 
 void ToggleBox::handleMouseDown(InputEvent & ev)
 {
-    prmToggle->toggle();
+    param->toggleValue();
 
     redraw();
 }
@@ -256,13 +256,13 @@ void ToggleBox::handleMouseUp(InputEvent & ev)
 {
 }
 
-RadioBox::RadioBox(ParamRadio* param_radio)
+RadioBox::RadioBox(Parameter* param_radio)
 {
-    prmRad = param_radio;
+    param = param_radio;
 
     setFontId(FontSmall);
 
-    height = headerHeight + (textHeight + 4)*prmRad->getNumOptions();
+    height = headerHeight + (textHeight + 4)*param->getNumOptions();
 }
 
 void RadioBox::drawSelf(Graphics& g)
@@ -276,15 +276,15 @@ void RadioBox::drawSelf(Graphics& g)
     fillx(g, 0, 0, width, headerHeight - 1);
 
     setc(g, 0.9f);
-    txtfit(g, FontBold, prmRad->getName(), 3, headerHeight - 4, width - 3);
+    txtfit(g, FontBold, param->getName(), 3, headerHeight - 4, width - 3);
 
 
     int y = headerHeight;
     int opt = 0;
 
-    for (std::string str : prmRad->getOptions())
+    for (std::string str : param->getAllOptions())
     {
-        if (prmRad->getCurrent() == opt)
+        if (param->getCurrentOption() == opt)
         {
             setc(g, 0.8f);
             fillx(g, 2, y + 2, textHeight, textHeight);
@@ -307,19 +307,19 @@ void RadioBox::handleMouseDown(InputEvent & ev)
 {
     if ((ev.mouseY - y1) > headerHeight)
     {
-        prmRad->setCurrent((ev.mouseY - y1 - headerHeight) / (textHeight + 4));
+        param->setCurrentOption((ev.mouseY - y1 - headerHeight) / (textHeight + 4));
     }
 
     redraw();
 }
 
-SelectorBox::SelectorBox(ParamSelector* param_sel)
+SelectorBox::SelectorBox(Parameter* param_sel)
 {
-    prmSelector = param_sel;
+    param = param_sel;
 
     setFontId(FontSmall);
 
-    height = (textHeight + 4)*prmSelector->getNumOptions();
+    height = (textHeight + 4)*param->getNumOptions();
 }
 
 void SelectorBox::drawSelf(Graphics& g)
@@ -330,9 +330,9 @@ void SelectorBox::drawSelf(Graphics& g)
     int y = 0;
     int opt = 0;
 
-    for (std::string str : prmSelector->getOptions())
+    for (std::string str : param->getAllOptions())
     {
-        if (prmSelector->getValue(opt))
+        if (param->getOptionVal(opt))
         {
             setc(g, 0.8f);
             fillx(g, 2, y + 2, textHeight, textHeight);
@@ -353,7 +353,7 @@ void SelectorBox::drawSelf(Graphics& g)
 
 void SelectorBox::handleMouseDown(InputEvent & ev)
 {
-    prmSelector->toggleValue((ev.mouseY - y1) / (textHeight + 4));
+    param->toggleOption((ev.mouseY - y1) / (textHeight + 4));
 
     redraw();
 }

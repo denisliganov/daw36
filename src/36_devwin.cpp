@@ -25,7 +25,7 @@ void DevParamObject::initAll()
     //int x = 10;
     //int y = border;
 
-    std::list<Param*>  showParams;
+    std::list<Parameter*>  showParams;
 
     VstInstr*  vsti = dynamic_cast<VstInstr*>(device);
 
@@ -38,14 +38,14 @@ void DevParamObject::initAll()
         showParams = device->getParams();
     }
 
-    for(Param* param : showParams)
+    for(Parameter* param : showParams)
     {
         Parameter*      prm = dynamic_cast<Parameter*>(param);
-        ParamVol*       prmVol = dynamic_cast<ParamVol*>(param);
-        ParamPan*       prmPan = dynamic_cast<ParamPan*>(param);
-        ParamRadio*     prmRad = dynamic_cast<ParamRadio*>(param);
-        ParamSelector*  prmSel = dynamic_cast<ParamSelector*>(param);
-        ParamToggle*    prmTg = dynamic_cast<ParamToggle*>(param);
+        Parameter*      prmVol = dynamic_cast<Parameter*>(param);
+        Parameter*      prmPan = dynamic_cast<Parameter*>(param);
+        Parameter*      prmRad = dynamic_cast<Parameter*>(param);
+        Parameter*      prmSel = dynamic_cast<Parameter*>(param);
+        Parameter*      prmTg = dynamic_cast<Parameter*>(param);
 
         Gobj* obj = NULL;
 

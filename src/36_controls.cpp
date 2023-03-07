@@ -14,7 +14,7 @@ Control::Control()
     setHint("");
 }
 
-void Control::addParam(Param* p)
+void Control::addParam(Parameter* p)
 {
     if (p != NULL)
     {
@@ -23,10 +23,10 @@ void Control::addParam(Param* p)
         param->addControl(this);
     }
 
-    remap();
+    //remap();
 }
 
-void Control::removeParam(Param* p)
+void Control::removeParam(Parameter* p)
 {
     if (param == p)
     {
@@ -35,7 +35,7 @@ void Control::removeParam(Param* p)
         param = NULL;
     }
 
-    remap();
+    //remap();
 }
 
 void Control::setFontId(FontId fId)

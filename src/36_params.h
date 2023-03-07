@@ -6,15 +6,20 @@
 
 #include <list>
 #include <vector>
-
+#include <string>
 
 
 
 typedef enum ParamType
 {
+    Param_Default,
+    Param_Vol,
+    Param_Pan,
     Param_Freq,
     Param_Log,
-    Param_Default
+    Param_Toggle,
+    Param_Selector,
+    Param_Radio
 }ParamType;
 
 
@@ -42,50 +47,34 @@ typedef enum UnitsType
 
 
 
-class Param
+
+
+
+class Parameter
 {
 public:
-            Param();
+            Parameter();
+            Parameter(std::string param_name, ParamType param_type);
+            Parameter(std::string param_name, bool def_val);            // For Param_Toggle
+            Parameter(float min_val, float max_val, float default_val);
+            Parameter(float min_val, float max_val, float default_val, ParamType ptype);
+            Parameter(std::string param_name, ParamType ptype, float min_val, float max_val, float default_val, UnitsType vt = Units_Default);
+            Parameter(std::string param_name, float min_val, float max_val, float default_val, UnitsType vt = Units_Default);
+
+            virtual ~Parameter();
+
+
             void                addControl(Control* ct);
             std::string         getName()           { return prmName; };
             int                 getIndex()          { return index; }
             bool                getEnvDirect();
             ParamType           getType()       { return type; }
             void                removeControl(Control* ct);
-    virtual void                reset() {}
             void                setIndex(int idx)   { index = idx; }
             void                setName(std::string name)   { prmName = name; };
             void                setEnvDirect(bool envdir);
             void                setModule(ParamObject* md) { module = md; };
 
-protected:
-
-            Control*            ctrlUpdatingFrom;
-            bool                envdirect;
-            int                 globalindex;
-            int                 index;
-            ParamObject*        module;
-            std::string         prmName;
-            ParamType           type;
-            std::string         unitStr;
-
-            std::list<Control*> controls;
-};
-
-
-
-
-class Parameter : public Param
-{
-public:
-            Parameter();
-            Parameter(float min_val, float max_val, float default_val);
-            Parameter(float min_val, float max_val, float default_val, ParamType ptype);
-            Parameter(std::string param_name, ParamType ptype, float min_val, float max_val, float default_val, UnitsType vt = Units_Default);
-            Parameter(std::string param_name, float min_val, float max_val, float default_val, UnitsType vt = Units_Default);
-            Parameter(int p_value);
-            Parameter(float def_val);
-            virtual ~Parameter();
 
             void                adjustFromControl(Control* ctrl, int step, float nval = -1, float min_step = 0.1f);
     virtual float               adjustForEditor(float val);
@@ -121,12 +110,25 @@ public:
             void                setReversed(bool rev) { reversed = rev; }
             void                setLastVal(float lval);
             void                setUnitString(std::string unit_str) { unitStr = unit_str; }
-            XmlElement* save();
-            XmlElement* save4Preset();
-            virtual void                updateLinks();
+            XmlElement*         save();
+            XmlElement*         save4Preset();
+            virtual void        updateLinks();
             void                unblockEnvAffect() { envaffect = true; }
 
-            float               lastValue;  // used for ramping
+
+            Control*            ctrlUpdatingFrom;
+            bool                envdirect;
+            int                 globalindex;
+            int                 index;
+            ParamObject*        module;
+            std::string         prmName;
+            ParamType           type;
+            std::string         unitStr;
+
+            std::list<Control*> controls;
+
+
+            float               lastValue;          // used for ramping
             float               declickCount;
             float               declickCoeff;
             Trigger*            envelopes;
@@ -137,6 +139,24 @@ public:
             long                lastsetframe;
             EnvPoint*           lastrecpoint;
             bool                grouped;
+
+
+// Toggle
+            bool                        getBoolValue() { return currentOption > 0 ? true : false; }
+            void                        toggleValue();
+
+// Radio/Selector
+            void                        addOption(std::string opt, bool val)    { options.push_back(opt); optValues.push_back(val); }
+            void                        addOption(std::string opt)              { options.push_back(opt); }
+            std::vector<std::string>&   getAllOptions()                         { return options; }
+            int                         getNumOptions()                         { return options.size(); }
+            int                         getCurrentOption()                      { return currentOption; }
+            void                        setCurrentOption(int curr)               { currentOption = curr; }
+
+// Selector
+            void                        setOptionVal(int optnum, bool new_val)  { optValues[optnum] = new_val; }
+            bool                        getOptionVal(int optnum)                { return optValues[optnum]; }
+            void                        toggleOption(int optnum)                 { optValues[optnum] = !optValues[optnum]; }
 
 protected:
 
@@ -156,83 +176,12 @@ protected:
             int                 sign;
             UnitsType           unitsType;
             float               value;
-
             std::string         prmValString;
+
+
+            std::vector<std::string>    options;
+            std::vector<bool>           optValues;
+            int                         currentOption;
 };
 
 
-
-class ParamToggle : public Param
-{
-public:
-
-            ParamToggle(std::string name, bool def_val) { prmName = name; value = def_val; }
-
-            bool                getValue() { return value; }
-            void                toggle();
-
-protected:
-
-            bool                value;
-};
-
-class ParamSelector : public Param
-{
-public:
-
-            ParamSelector(std::string name) { prmName = name; }
-            void                addOption(std::string opt, bool val) { options.push_back(opt); optVals.push_back(val); }
-            std::vector<std::string>& getOptions() { return options; }
-            void                setValue(int optnum, bool new_val) { optVals[optnum] = new_val; lastChangedNum = optnum; }
-            void                toggleValue(int optnum) { optVals[optnum] = !optVals[optnum]; lastChangedNum = optnum; }
-            bool                getValue(int optnum) { return optVals[optnum]; }
-            int                 getLastChanged() { return lastChangedNum; }
-            int                 getNumOptions() { return options.size(); }
-
-protected:
-
-            int                 lastChangedNum;
-
-            std::vector<std::string>  options;
-            std::vector<bool>         optVals;
-};
-
-class ParamRadio : public Param
-{
-public:
-
-            ParamRadio(std::string name) { prmName = name; currentOption = 0; }
-
-            void                addOption(std::string opt) { options.push_back(opt); }
-            int                 getNumOptions() { return options.size(); }
-            std::list<std::string>& getOptions() { return options; }
-            int                 getCurrent() { return currentOption; }
-            void                setCurrent(int curr) { currentOption = curr; }
-
-protected:
-
-            int                 currentOption;
-
-            std::list<std::string>  options;
-};
-
-class ParamVol : public Parameter
-{
-public:
-            ParamVol(std::string param_name) : Parameter(param_name, 0.f, DAW_VOL_RANGE, 1.f, Units_dB) {}
-
-protected:
-            std::string         calcValStr(float uv);
-            float               calcOutputValue(float val);
-};
-
-class ParamPan : public Parameter
-{
-public:
-            ParamPan(std::string param_name) : Parameter(param_name, -1.f, 1.f, 0.f, Units_Percent) {}
-            float               adjustForEditor(float val);
-            float               getEditorValue();
-
-protected:
-            std::string         calcValStr(float uv);
-};

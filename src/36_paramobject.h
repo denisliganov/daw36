@@ -16,22 +16,22 @@ public:
 
             ParamObject();
 
-    virtual void                addParam(Param* param);
+    virtual void                addParam(Parameter* param);
             void                dequeueParamEnvelope(Trigger* tgenv);
             void                enqueueParamEnvelope(Trigger* tgenv);
             void                finalizePuts();
-    virtual Param*              getParamByName(char *param_name);
-    virtual Param*              getParamByIndex(int devIdx);
-    virtual bool                getParamLock() { return paramLocked; };
-    virtual std::list<Param*>   getParams() { return params; }
+    virtual Parameter*              getParamByName(char *param_name);
+    virtual Parameter*              getParamByIndex(int devIdx);
+    virtual bool                    getParamLock() { return paramLocked; };
+    virtual std::list<Parameter*>   getParams() { return params; }
             void                goLeft();
             void                goTop();
-    virtual void                handleParamUpdate(Param* param = NULL) {};
+    virtual void                handleParamUpdate(Parameter* param = NULL) {};
     virtual void                handleClose();
             void                putStart(int x,int y);
             void                putRight(Gobj* obj, int ow=-1, int oh=-1);
             void                putBelow(Gobj* obj, int ow=-1, int oh=-1);
-    virtual void                removeParam(Param* param);
+    virtual void                removeParam(Parameter* param);
     virtual void                setParamLock(bool lock) { paramLocked = lock; };
             void                setInvokeButton(Button36* bt) { invokeButton = bt; }
             void                spaceRight(int num=1);
@@ -44,7 +44,7 @@ protected:
 
             Trigger*            envelopes;
             Button36*           invokeButton;
-            std::list<Param*>   params;
+            std::list<Parameter*>   params;
 
             int                 border;
             int                 xstart1;

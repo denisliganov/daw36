@@ -40,8 +40,8 @@ Note::Note(Device36* i, int note_val)
 
     dev = (Device36*)instr;
 
-    vol = new ParamVol("Volume");
-    pan = new ParamPan("Panning");
+    vol = new Parameter("Volume", Param_Vol);
+    pan = new Parameter("Panning", Param_Pan);
 
     setNote(note_val);
 

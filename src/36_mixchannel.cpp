@@ -127,8 +127,8 @@ void MixChannel::init(Instrument* ins)
 
         int slLen = MixChanWidth - 10;
 
-        addParam(volParam = new ParamVol("Volume"));
-        addParam(panParam = new ParamPan("Panning"));
+        addParam(volParam = new Parameter("Volume", Param_Vol));
+        addParam(panParam = new Parameter("Panning", Param_Pan));
 
         addObject(volKnob = new Knob(volParam));
         addObject(panKnob = new Knob(panParam));
@@ -147,8 +147,8 @@ void MixChannel::init(Instrument* ins)
         volKnob = NULL;
         volKnob = NULL;
 
-        addParam(volParam = new ParamVol("Volume"));
-        addParam(panParam = new ParamPan("Panning"));
+        addParam(volParam = new Parameter("Volume", Param_Vol));
+        addParam(panParam = new Parameter("Panning", Param_Pan));
     }
 
     addObject(vu = new ChanVU(true), ObjGroup_VU);

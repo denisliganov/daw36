@@ -814,7 +814,7 @@ void Vst2Plugin::extractParams()
     }
 }
 
-void Vst2Plugin::handleParamUpdate(Param* param)
+void Vst2Plugin::handleParamUpdate(Parameter* param)
 {
     Parameter* prm = dynamic_cast<Parameter*>(param);
 
@@ -853,7 +853,7 @@ void Vst2Plugin::handleParamUpdate(Param* param)
 
 bool Vst2Plugin::onSetParameterAutomated(long index,float value)
 {
-    for(Param* p : params)
+    for(Parameter* p : params)
     {
         Parameter* param = dynamic_cast<Parameter*>(p);
 
@@ -874,7 +874,7 @@ void Vst2Plugin::updParamsFromPlugin()
 {
     setParamLock(true);
 
-    for(Param* p : params)
+    for(Parameter* p : params)
     {
         Parameter* param = dynamic_cast<Parameter*>(p);
 
@@ -1025,7 +1025,7 @@ bool Vst2Plugin::restoreProgramSettings (const fxProgram* const prog)
         {
             setParam(i, prog->params[i]);
 
-            Param* p = getParamByIndex(i);
+            Parameter* p = getParamByIndex(i);
             Parameter* param = dynamic_cast<Parameter*>(p);
 
             if (param)
@@ -1105,7 +1105,7 @@ bool Vst2Plugin::loadFromFXBFile (const void* const data, const int dataSize)
         {
             setParam(i, prog->params[i]);
 
-            Param* extparam =  getParamByIndex(i);
+            Parameter* extparam =  getParamByIndex(i);
 
             Parameter* param = dynamic_cast<Parameter*>(extparam);
 

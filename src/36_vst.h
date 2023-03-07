@@ -109,8 +109,8 @@ public:
             void                    setPresetName(char* name);
             void                    updatePresets();
             void                    extractParams();
-            void                    updateVString(Param* param);
-            void                    handleParamUpdate(Param* param);
+            void                    updateVString(Parameter* param);
+            void                    handleParamUpdate(Parameter* param);
             bool                    onSetParameterAutomated(long index,float value);
             void                    updParamsFromPlugin();
             bool                    setPresetByName(std::string pname);

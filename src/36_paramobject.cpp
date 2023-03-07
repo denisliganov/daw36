@@ -23,7 +23,7 @@ ParamObject::ParamObject()
     invokeButton = NULL;
 }
 
-void ParamObject::addParam(Param* param)
+void ParamObject::addParam(Parameter* param)
 {
     param->setModule(this);
     param->setEnvDirect(false);
@@ -33,9 +33,9 @@ void ParamObject::addParam(Param* param)
     handleParamUpdate(param);
 }
 
-Param* ParamObject::getParamByName(char *param_name)
+Parameter* ParamObject::getParamByName(char *param_name)
 {
-    for(Param* param : params)
+    for(Parameter* param : params)
     {
         if(_stricmp(param->getName().data(), param_name) == 0)
         {
@@ -46,9 +46,9 @@ Param* ParamObject::getParamByName(char *param_name)
     return NULL;
 }
 
-Param* ParamObject::getParamByIndex(int index)
+Parameter* ParamObject::getParamByIndex(int index)
 {
-    for(Param* param : params)
+    for(Parameter* param : params)
     {
         if(param->getIndex() == index)
         {
@@ -59,7 +59,7 @@ Param* ParamObject::getParamByIndex(int index)
     return NULL;
 }
 
-void ParamObject::removeParam(Param* param)
+void ParamObject::removeParam(Parameter* param)
 {
     params.remove(param);
 

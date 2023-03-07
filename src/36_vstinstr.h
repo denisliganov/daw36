@@ -21,7 +21,7 @@ public:
             VstInstr*           clone();
             void                deactivateTrigger(Trigger* tg);
             void                fadeBetweenTriggers(Trigger* tgfrom, Trigger* tgto) {}; // stub to avoid any action here
-            std::list<Param*>   getParams() { return vst2->getParams(); }
+            std::list<Parameter*>   getParams() { return vst2->getParams(); }
             void                generateData(float* in_buff, float* out_buff, long num_frames = 0, long mix_buff_frame = 0);
             void                processDSP(float* in_buff, float* out_buff, int num_frames);
             bool                isLoaded() { return vst2 != NULL; }
@@ -29,7 +29,7 @@ public:
             bool                onUpdateDisplay();
             void                postProcessTrigger(Trigger* tg = NULL, long num_frames = 0, long buff_frame = 0, long mix_buff_frame = 0, long remaining = 0);
             long                handleTrigger(Trigger* tg, long num_frames = 0, long buff_frame = 0);
-            void                handleParamUpdate(Param* param = NULL);
+            void                handleParamUpdate(Parameter* param = NULL);
             void                postNoteON(int note, float vol);
             void                postNoteOFF(int note, int velocity);
             void                reset();

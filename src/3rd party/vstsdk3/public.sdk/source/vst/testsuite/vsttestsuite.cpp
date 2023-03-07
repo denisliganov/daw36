@@ -389,7 +389,7 @@ bool PLUGIN_API VstScanParametersTest::run (ITestResult* testResult)
 		tresult result = controller->getParameterInfo (i, paramInfo);
 		if (result != kResultOk)
 		{
-			sprintf (text, "Param %03d: is missing!!!", i);
+			sprintf (text, "Parameter %03d: is missing!!!", i);
 			testResult->addErrorMessage (text);
 			return false;
 		}
@@ -398,7 +398,7 @@ bool PLUGIN_API VstScanParametersTest::run (ITestResult* testResult)
 		paramIds[i] = paramId;
 		if (paramId < 0)
 		{
-			sprintf (text, "Param %03d: Invalid Id!!!", i);
+			sprintf (text, "Parameter %03d: Invalid Id!!!", i);
 			testResult->addErrorMessage (text);
 			return false;			
 		}
@@ -408,7 +408,7 @@ bool PLUGIN_API VstScanParametersTest::run (ITestResult* testResult)
 		{
 			if (paramIds[idIndex] == paramIds[i])
 			{
-				sprintf (text, "Param %03d: ID already used (by %03d)!!!", i, idIndex);
+				sprintf (text, "Parameter %03d: ID already used (by %03d)!!!", i, idIndex);
 				testResult->addErrorMessage (text);
 				return false;
 			}
@@ -417,7 +417,7 @@ bool PLUGIN_API VstScanParametersTest::run (ITestResult* testResult)
 		const char* paramType = "";
 		if (paramInfo.stepCount < 0)
 		{
-			sprintf (text, "Param %03d: invalid stepcount!!!", i);
+			sprintf (text, "Parameter %03d: invalid stepcount!!!", i);
 			testResult->addErrorMessage (text);
 			return false;
 		}
@@ -435,14 +435,14 @@ bool PLUGIN_API VstScanParametersTest::run (ITestResult* testResult)
 
 		if (paramTitle[0] == 0)
 		{
-			sprintf (text, "Param %03d: has no title!!!", i);
+			sprintf (text, "Parameter %03d: has no title!!!", i);
 			testResult->addErrorMessage (text);
 			return false;
 		}
 
 		if (paramInfo.defaultNormalizedValue != -1.f && (paramInfo.defaultNormalizedValue < 0. || paramInfo.defaultNormalizedValue > 1.))
 		{
-			sprintf (text, "Param %03d: defaultValue is not normalized!!!", i);
+			sprintf (text, "Parameter %03d: defaultValue is not normalized!!!", i);
 			testResult->addErrorMessage (text);
 			return false;
 		}
@@ -450,7 +450,7 @@ bool PLUGIN_API VstScanParametersTest::run (ITestResult* testResult)
 		int32 unitId = paramInfo.unitId;
 		if (unitId < -1)
 		{
-			sprintf (text, "Param %03d: No appropriate unit ID!!!", i);
+			sprintf (text, "Parameter %03d: No appropriate unit ID!!!", i);
 			testResult->addErrorMessage (text);
 			return false;			
 		}
@@ -502,7 +502,7 @@ bool PLUGIN_API VstScanParametersTest::run (ITestResult* testResult)
 			}
 		}
 
-		sprintf (text, "Param %03d(ID = %d): \"%s\" [%s] (type = %s, default = %lf, unit = %d)", 
+		sprintf (text, "Parameter %03d(ID = %d): \"%s\" [%s] (type = %s, default = %lf, unit = %d)", 
 				 i, paramId, paramTitle, paramUnits, paramType, paramInfo.defaultNormalizedValue, unitId);
 
 		testResult->addMessage (text);

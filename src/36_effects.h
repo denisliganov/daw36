@@ -44,13 +44,13 @@ class Filter1 : public Device36
 public:
             Filter1();
 
-            void                handleParamUpdate(Param* param = NULL);
+            void                handleParamUpdate(Parameter* param = NULL);
             void                processDSP(float* in_buff, float* out_buff, int num_frames);
             void                reset();
 
 protected:
-            ParamRadio*         filterType;
-            ParamToggle*        x2toggle;
+            Parameter*         filterType;
+            Parameter*        x2toggle;
             Parameter*          cutoff;
             Parameter*          resonance;
             Parameter*          bandwidth;
@@ -65,7 +65,7 @@ class CChorus : public Device36
 {
 public:
             CChorus();
-            void                handleParamUpdate(Param* param = NULL);
+            void                handleParamUpdate(Parameter* param = NULL);
             void                processDSP(float* in_buff, float* out_buff, int num_frames);
             void                reset();
 
@@ -81,7 +81,7 @@ class CFlanger : public Device36
 {
 public:
             CFlanger();
-            void                handleParamUpdate(Param* param = NULL);
+            void                handleParamUpdate(Parameter* param = NULL);
             void                processDSP(float* in_buff, float* out_buff, int num_frames);
             void                reset();
 
@@ -100,7 +100,7 @@ class CPhaser : public Device36
 {
 public:
             CPhaser();
-            void                handleParamUpdate(Param* param = NULL);
+            void                handleParamUpdate(Parameter* param = NULL);
             void                processDSP(float* in_buff, float* out_buff, int num_frames);
             void                reset();
 
@@ -120,7 +120,7 @@ class EQ1 : public Device36
 {
 public:
             EQ1();
-            void                handleParamUpdate(Param* param = NULL);
+            void                handleParamUpdate(Parameter* param = NULL);
             void                processDSP(float* in_buff, float* out_buff, int num_frames);
             void                reset();
 
@@ -136,7 +136,7 @@ class GraphicEQ : public Device36
 public:
             GraphicEQ();
 
-            void                handleParamUpdate(Param* param = NULL);
+            void                handleParamUpdate(Parameter* param = NULL);
             void                processDSP(float* in_buff, float* out_buff, int num_frames);
             void                reset();
 
@@ -151,7 +151,7 @@ class EQ3 : public Device36
 public:
             EQ3();
 
-            void                handleParamUpdate(Param* param = NULL);
+            void                handleParamUpdate(Parameter* param = NULL);
             void                processDSP(float* in_buff, float* out_buff, int num_frames);
             void                reset();
 
@@ -168,7 +168,7 @@ class XDelay : public Device36
 public:
             XDelay();
 
-            void                handleParamUpdate(Param* param = NULL);
+            void                handleParamUpdate(Parameter* param = NULL);
             void                processDSP(float* in_buff, float* out_buff, int num_frames);
             void                reset();
 
@@ -180,9 +180,9 @@ protected:
             Parameter*          pan;
             Parameter*          lowcut;
             Parameter*          drywet;
-            ParamToggle*        delayMode;
+            Parameter*        delayMode;
 
-            ParamSelector*      selectTypes;
+            Parameter*      selectTypes;
 
             rosic::PingPongEcho dspCorePingPongDelay;
 };
@@ -192,7 +192,7 @@ class CTremolo : public Device36
 public:
             CTremolo();
 
-            void                handleParamUpdate(Param* param = NULL);
+            void                handleParamUpdate(Parameter* param = NULL);
             void                processDSP(float* in_buff, float* out_buff, int num_frames);
             void                reset();
 
@@ -208,7 +208,7 @@ class Compressor : public Device36
 public:
             Compressor();
 
-            void                handleParamUpdate(Param* param = NULL);
+            void                handleParamUpdate(Parameter* param = NULL);
             void                processDSP(float* in_buff, float* out_buff, int num_frames);
             void                reset();
 
@@ -231,7 +231,7 @@ public:
 
             void                processDSP(float* in_buff, float* out_buff, int num_frames);
             void                reset();
-            void                handleParamUpdate(Param* param = NULL);
+            void                handleParamUpdate(Parameter* param = NULL);
 
 protected:
             Parameter*          modfreq;
@@ -245,7 +245,7 @@ class CDistort : public Device36
 public:
             CDistort();
 
-            void                handleParamUpdate(Param* param = NULL);
+            void                handleParamUpdate(Parameter* param = NULL);
             void                processDSP(float* in_buff, float* out_buff, int num_frames);
             void                reset();
 
@@ -262,7 +262,7 @@ class CBitCrusher : public Device36
 public:
             CBitCrusher();
 
-            void                handleParamUpdate(Param* param = NULL);
+            void                handleParamUpdate(Parameter* param = NULL);
             void                processDSP(float* in_buff, float* out_buff, int num_frames);
             void                reset();
 
@@ -278,7 +278,7 @@ class CStereo : public Device36
 public:
             CStereo();
 
-            void                handleParamUpdate(Param* param = NULL);
+            void                handleParamUpdate(Parameter* param = NULL);
             void                processDSP(float* in_buff, float* out_buff, int num_frames);
             void                reset();
 
@@ -294,7 +294,7 @@ class CReverb : public Device36
 public:
             CReverb();
 
-            void                handleParamUpdate(Param* param = NULL);
+            void                handleParamUpdate(Parameter* param = NULL);
             void                processDSP(float* in_buff, float* out_buff, int num_frames);
             void                reset();
 

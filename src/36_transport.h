@@ -54,7 +54,7 @@ public:
 
 protected:
 
-            ParamToggle*        playing;
+            Parameter*        playing;
 
             int                 currMin;
             int                 currSec;

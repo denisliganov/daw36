@@ -15,9 +15,9 @@ public:
 
 protected:
 
-        ParamRadio*         format;
-        ParamRadio*         quality;
-        ParamRadio*         interpolation;
+        Parameter*         format;
+        Parameter*         quality;
+        Parameter*         interpolation;
 
         RadioBox*           formatBox;
         RadioBox*           qualityBox;
@@ -28,7 +28,7 @@ protected:
 
         void                drawSelf(Graphics& g);
         void                handleChildEvent(Gobj * obj,InputEvent & ev);
-        void                handleParamUpdate(Param * param = NULL);
+        void                handleParamUpdate(Parameter * param = NULL);
 };
 
 

@@ -10,12 +10,12 @@
 
 RenderWinObject::RenderWinObject()
 {
-    format = new ParamRadio("Format");
+    format = new Parameter("Format", Param_Radio);
     format->addOption("OGG");
     format->addOption("WAV");
     format->addOption("FLAC");
 
-    quality = new ParamRadio("Quality");
+    quality = new Parameter("Quality", Param_Radio);
 
     formatBox = new RadioBox(format);
     qualityBox = new RadioBox(quality);
@@ -34,7 +34,7 @@ void RenderWinObject::handleChildEvent(Gobj * obj,InputEvent & ev)
     int a = 1;
 }
 
-void RenderWinObject::handleParamUpdate(Param * param)
+void RenderWinObject::handleParamUpdate(Parameter * param)
 {
     
 }

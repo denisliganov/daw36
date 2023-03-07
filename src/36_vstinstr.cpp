@@ -728,7 +728,7 @@ SubWindow* VstInstr::createWindow()
 }
 
 
-void VstInstr::handleParamUpdate(Param* param)
+void VstInstr::handleParamUpdate(Parameter* param)
 {
     vst2->handleParamUpdate(param);
 }

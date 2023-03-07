@@ -339,7 +339,8 @@ void BrowserList::handleChildEvent(Gobj * obj,InputEvent & ev)
         if (ev.doubleClick)
         {
             // activa
-            MInstrPanel->loadInstrFromNewBrowser(ble);
+            //MInstrPanel->loadInstrFromNewBrowser(ble);
+            MInstrPanel->setInstrFromNewBrowser(ble, MInstrPanel->getCurrInstr());
         }
         else
         {

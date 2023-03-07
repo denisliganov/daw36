@@ -18,32 +18,24 @@
 
 
 
-Param::Param()
-{
-    index = 0;
-    envdirect = true;
-    module = NULL;
-    ctrlUpdatingFrom = NULL;
-}
-
-void Param::addControl(Control* ct)
+void Parameter::addControl(Control* ct)
 {
     controls.push_back(ct);
 
     //ct->addParam(this);
 }
 
-void Param::removeControl(Control* ctrl)
+void Parameter::removeControl(Control* ctrl)
 {
     controls.remove(ctrl);
 }
 
-bool Param::getEnvDirect()
+bool Parameter::getEnvDirect()
 {
     return envdirect;
 }
 
-void Param::setEnvDirect(bool envdir)
+void Parameter::setEnvDirect(bool envdir)
 {
     envdirect = envdir;
 }
@@ -51,16 +43,9 @@ void Param::setEnvDirect(bool envdir)
 
 
 
-
-
 Parameter::Parameter()
 {
     paramInit("", Param_Default, 0, 0, 1, Units_Default);
-}
-
-Parameter::Parameter(float def_val)
-{
-    paramInit("", Param_Default, 0, 1, def_val, Units_Default);
 }
 
 Parameter::Parameter(float min_val, float max_val, float default_val)
@@ -76,6 +61,31 @@ Parameter::Parameter(std::string name, float min_val, float max_val, float defau
 Parameter::Parameter(std::string name, ParamType ptype, float min_val, float max_val, float default_val, UnitsType vt)
 {
     paramInit(name, ptype, min_val, max_val, default_val, vt);
+}
+
+Parameter::Parameter(std::string name, ParamType param_type)
+{
+    type = param_type;
+    prmName = name;
+
+    if (type == Param_Selector || type == Param_Toggle)
+    {
+        currentOption = 0;
+    }
+    else if (type == Param_Vol)
+    {
+        paramInit(name, Param_Vol, 0.f, DAW_VOL_RANGE, 1.f, Units_dB);
+    }
+    else if (type == Param_Pan)
+    {
+        paramInit(name, Param_Pan, -1.f, 1.f, 0.f, Units_Percent);
+    }
+}
+
+Parameter::Parameter(std::string param_name, bool def_val)
+{
+    type = Param_Toggle;
+    currentOption = def_val ? 1 : 0;
 }
 
 void Parameter::paramInit(std::string name, ParamType pt, float min_val, float max_val, float default_val, UnitsType vt)
@@ -198,10 +208,46 @@ std::string Parameter::getSignStr()
 
 std::string Parameter::calcValStr(float val)
 {
-    sign = val > 0 ? 1 : val < 0 ? -1 : 0;
-
-    if (unitsType != Units_String)
+    if (type == Param_Pan)
     {
+        char str[100] = {};
+        float absVal = (val);
+        int pval = abs(int(absVal * 100));
+        std::string valStr = String(pval);
+
+        if (value < 0)
+        {
+            valStr = "<" + valStr;
+        }
+        else if (value > 0)
+        {
+            valStr = valStr + ">";
+        }
+
+        return valStr;
+    }
+    else if (type == Param_Vol)
+    {
+        std::string valStr;
+
+        if (outVal == 0)
+        {
+            valStr = "INF";
+        }
+        else
+        {
+            char str[100] = {};
+            double pval = (amp2dB(val));
+            sprintf(str, "%.2f", pval);
+            valStr = str;
+        }
+
+        return valStr;
+    }
+    else
+    {
+        sign = val > 0 ? 1 : val < 0 ? -1 : 0;
+
         char str[100] = {};
         std::string stdstr;
 
@@ -209,67 +255,67 @@ std::string Parameter::calcValStr(float val)
 
         switch (unitsType)
         {
-        case Units_Hz:
-            sprintf(str, "%.0f", absVal);
-            break;
-        case Units_Hz1:
-            sprintf(str, "%.1f", absVal);
-            break;
-        case Units_Hz2:
-            sprintf(str, "%.2f", absVal);
-            break;
-        case Units_kHz:
-            sprintf(str, "%.2f", absVal);
-            break;
-        case Units_Integer:
-            sprintf(str, "%.0f", absVal);
-            break;
-        case Units_Percent:
-        {
-            sprintf(str, ("%.0f"), absVal);
-        } break;
-        case Units_dB:
-        {
-            sprintf(str, ("%.1f"), absVal);
-        }break;
-        case Units_dBGain:
-        {
-            if (val <= 0)
-            {
+            case Units_Hz:
+                sprintf(str, "%.0f", absVal);
+                break;
+            case Units_Hz1:
                 sprintf(str, "%.1f", absVal);
-            }
-            else
+                break;
+            case Units_Hz2:
+                sprintf(str, "%.2f", absVal);
+                break;
+            case Units_kHz:
+                sprintf(str, "%.2f", absVal);
+                break;
+            case Units_Integer:
+                sprintf(str, "%.0f", absVal);
+                break;
+            case Units_Percent:
             {
-                sprintf(str, "+%.1f", absVal);
-            }
-        }break;
-        case Units_ms:
-            sprintf(str, "%.f", absVal);
-            break;
-        case Units_ms2:
-            sprintf(str, "%.2f", absVal);
-            break;
-        case Units_Seconds:
-            sprintf(str, "%.1f", absVal);
-            break;
-        case Units_Octave:
-            sprintf(str, "%.2f", absVal);
-            break;
-        case Units_Semitones:
-            sprintf(str, "%.2f", absVal);
-            break;
-        case Units_Beats:
-            sprintf(str, "%.1f", absVal);
-            break;
-        case Units_DryWet:
-            sprintf(str, "%.0f/%.0f", (1 - absVal) * 100, absVal * 100);
-            break;
-        case Units_Default:
-            sprintf(str, "%.2f", absVal);
-            break;
-        case Units_Ticks:
-            sprintf(str, "%.2f", absVal);
-            break;
+                sprintf(str, ("%.0f"), absVal);
+            } break;
+            case Units_dB:
+            {
+                sprintf(str, ("%.1f"), absVal);
+            }break;
+            case Units_dBGain:
+            {
+                if (val <= 0)
+                {
+                    sprintf(str, "%.1f", absVal);
+                }
+                else
+                {
+                    sprintf(str, "+%.1f", absVal);
+                }
+            }break;
+            case Units_ms:
+                sprintf(str, "%.f", absVal);
+                break;
+            case Units_ms2:
+                sprintf(str, "%.2f", absVal);
+                break;
+            case Units_Seconds:
+                sprintf(str, "%.1f", absVal);
+                break;
+            case Units_Octave:
+                sprintf(str, "%.2f", absVal);
+                break;
+            case Units_Semitones:
+                sprintf(str, "%.2f", absVal);
+                break;
+            case Units_Beats:
+                sprintf(str, "%.1f", absVal);
+                break;
+            case Units_DryWet:
+                sprintf(str, "%.0f/%.0f", (1 - absVal) * 100, absVal * 100);
+                break;
+            case Units_Default:
+                sprintf(str, "%.2f", absVal);
+                break;
+            case Units_Ticks:
+                sprintf(str, "%.2f", absVal);
+                break;
         }
 
         if (stdstr.size() == 0)
@@ -279,8 +325,6 @@ std::string Parameter::calcValStr(float val)
 
         return stdstr;
     }
-
-    return "";
 }
 
 void  Parameter::setValString(std::string str)
@@ -386,7 +430,8 @@ void Parameter::enqueueEnvelopeTrigger(Trigger* tg)
 
     // New envelopes unblock the param ability to be changed by envelope
 
-    unblockEnvAffect();*/
+    unblockEnvAffect();
+    */
 }
 
 void Parameter::dequeueEnvelopeTrigger(Trigger* tg)
@@ -510,12 +555,26 @@ float Parameter::getDefaultValueNormalized()
 
 float Parameter::getEditorValue()
 {
-    return getValueNormalized();
+    if (type == Param_Pan)
+    {
+        return 1.f - getValueNormalized();
+    }
+    else
+    {
+        return getValueNormalized();
+    }
 }
 
 float Parameter::adjustForEditor(float val)
 {
-    return val;
+    if (type == Param_Pan)
+    {
+        return range - (val - offset) + offset;
+    }
+    else
+    {
+        return val;
+    }
 }
 
 float Parameter::calcOutputValue(float val)
@@ -541,6 +600,10 @@ float Parameter::calcOutputValue(float val)
         {
             return (float)((double)logoffset * pow((double)logRange, (double)(1 - val)));
         }
+    }
+    else if (type == Param_Vol)
+    {
+        return GetVolOutput(val);
     }
     else
     {
@@ -620,78 +683,16 @@ void Parameter::setValueFromEnvelope(float envval, Envelope* env)
     }
 }
 
-
-
-
-
-
-std::string ParamVol::calcValStr(float val)
+void Parameter::toggleValue()
 {
-    std::string valStr;
-
-    if (outVal == 0)
-    {
-        valStr = "INF";
-    }
-    else
-    {
-        char str[100] = {};
-
-        double pval = (amp2dB(val));
-
-        sprintf(str, "%.2f", pval);
-
-        valStr = str;
-    }
-
-    return valStr;
-}
-
-
-float ParamVol::calcOutputValue(float val)
-{
-    return GetVolOutput(val);
-}
-
-
-
-std::string ParamPan::calcValStr(float val)
-{
-    char str[100] = {};
-
-    float absVal = (val);
-
-    int pval = abs(int(absVal * 100));
-
-    std::string valStr = String(pval);
-
-    if (value < 0)
-    {
-        valStr = "<" + valStr;
-    }
-    else if (value > 0)
-    {
-        valStr = valStr + ">";
-    }
-
-    return valStr;
-}
-
-float ParamPan::adjustForEditor(float val)
-{
-    return range - (val - offset) + offset;
-}
-
-float ParamPan::getEditorValue()
-{
-    return 1.f - getValueNormalized();
-}
-
-
-
-void ParamToggle::toggle()
-{
-    value = !value;
+    if (currentOption) 
+        currentOption = 0; 
+    else 
+        currentOption = 1;
 
     module->handleParamUpdate(this);
 }
+
+
+
+

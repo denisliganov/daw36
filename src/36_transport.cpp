@@ -30,7 +30,7 @@ Transport::Transport(float bpm,int tpb,int bpb)
     ticksPerBeat = tpb;
     beatsPerBar = bpb;
 
-    playing = new ParamToggle("PLAYBACK", false);
+    playing = new Parameter("PLAYBACK", false);
 
     init = true;
     propagateChanges();
@@ -144,7 +144,7 @@ float Transport::getTickFromFrame(long frame)
 
 bool Transport::isPlaying()
 { 
-    return playing->getValue(); 
+    return playing->getBoolValue(); 
 }
 
 void Transport::propagateChanges()

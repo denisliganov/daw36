@@ -38,7 +38,7 @@ public:
             Parameter*          panParam;
             bool                soloparam;
             Button36*           solotoggle;
-            ParamVol*           volParam;
+            Parameter*           volParam;
             ChanVU*             vu;
             Knob*               volKnob;
 

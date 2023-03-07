@@ -12,9 +12,9 @@ SampleObject::SampleObject()
     Gobj::addObject(slider2 = new Slider36(false), 10, 225, 60, 10);
     Gobj::addObject(slider3 = new Slider36(false), 10, 240, 60, 10);
 
-    slider1->addParam(new Parameter());
-    slider2->addParam(new Parameter());
-    slider3->addParam(new Parameter());
+//    slider1->addParam(new Parameter());
+//    slider2->addParam(new Parameter());
+//    slider3->addParam(new Parameter());
 
     setWidthHeight(300, 300);
 }

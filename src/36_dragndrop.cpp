@@ -44,7 +44,7 @@ void DropHighlight::drawSelf(Graphics & g)
 
 void DropHighlightRect::drawSelf(Graphics & g)
 {
-    uint32 color = 0xafFF9930;
+    uint32 color = 0xffFF9930;
 
     setc(g, color);
 

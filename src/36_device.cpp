@@ -53,9 +53,9 @@ Device36::Device36()
     lastNotePan = 0;
     lastNoteVal = BaseNote;
 
-    addParam(vol = new ParamVol("VOL"));
-    addParam(pan = new ParamPan("PAN"));
-    addParam(enabled = new ParamToggle("ENABLED", false));
+    addParam(vol = new Parameter("VOL", Param_Vol));
+    addParam(pan = new Parameter("PAN", Param_Pan));
+    addParam(enabled = new Parameter("ENABLED", false));
 
     currPresetName = "Untitled";
 }
@@ -64,7 +64,7 @@ Device36::~Device36()
 {
     while(params.size() > 0)
     {
-        Param* param = params.front();
+        Parameter* param = params.front();
 
         params.remove(param);
 
@@ -236,7 +236,7 @@ void Device36::saveStateData(XmlElement & xmlParentNode, char* preset_name, bool
         xmlStateNode->setAttribute(T("PresetEntry"), "default");
     }
 
-    for(Param* param : params)
+    for(Parameter* param : params)
     {
         //XmlElement * xmlParam = (global == true ? param->save() : param->save4Preset());
         //xmlStateNode->addChildElement(xmlParam);
@@ -259,7 +259,7 @@ void Device36::saveStateData(XmlElement & xmlParentNode, char* preset_name, bool
 void Device36::restoreStateData(XmlElement & xmlStateNode, bool global)
 {
     Device36*   pChildEffect = NULL;
-    Param*      param;
+    Parameter*      param;
 
     char         szName[MAX_NAME_LENGTH];
     XmlElement*  xmlChildNode = xmlStateNode.getFirstChildElement();

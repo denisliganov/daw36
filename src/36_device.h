@@ -106,9 +106,9 @@ public:
             float               tempBuff[MAX_BUFF_SIZE*2];     // Data for single trigger
             float               outBuff[MAX_BUFF_SIZE*2];      // Date for whole session
 
-            ParamVol*           vol;
-            ParamPan*           pan;
-            ParamToggle*        enabled;
+            Parameter*           vol;
+            Parameter*           pan;
+            Parameter*        enabled;
 
             float               lastNoteLength;
             float               lastNoteVol;

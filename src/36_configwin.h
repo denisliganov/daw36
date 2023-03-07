@@ -16,7 +16,7 @@ protected:
 
         void                drawSelf(Graphics& g);
         void                handleChildEvent(Gobj * obj,InputEvent & ev);
-        void                handleParamUpdate(Param * param = NULL);
+        void                handleParamUpdate(Parameter * param = NULL);
 
 private:
 
@@ -24,7 +24,7 @@ private:
         Parameter*          hue;
         Parameter*          saturation;
         Parameter*          bufferSize;
-        ParamRadio*         interpolationSelect;
+        Parameter*         interpolationSelect;
 
         ListBoxx*           interpolation;
         ListBoxx*           midiOutDevices;

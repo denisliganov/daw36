@@ -117,7 +117,7 @@ InstrPanel::InstrPanel(Mixer* mixer)
 
     //addParamWithControl(masterVolume, "sl.vol", masterVolBox = new ParamBox(masterVolume));
 
-    masterVolume = new ParamVol("Master");
+    masterVolume = new Parameter("Master", Param_Vol);
 
     addObject(masterVolBox = new ParamBox(masterVolume));
 
@@ -516,25 +516,7 @@ bool InstrPanel::handleObjDrop(Gobj * obj, int mx, int my, unsigned int flags)
 
             Instrument* i = dynamic_cast<Instrument*>(dropObj);
 
-            Device36* dev = NULL;
-
-            if (ble->getType() == Entry_Wave)
-            {
-                dev = loadSample(ble->getPath().data());
-            }
-            else if (ble->getType() == Entry_DLL)
-            {
-                dev = loadVst(ble->getPath().data(), NULL);
-            }
-
-            if (dev)
-            {
-                i->setDevice(dev);
-
-                dev->createSelfPattern();
-
-                remapAndRedraw();
-            }
+            setInstrFromNewBrowser(ble, i);
         }
         else
         {
@@ -669,6 +651,31 @@ Instrument* InstrPanel::loadInstrFromNewBrowser(BrwListEntry* ble)
     }
 
     return ni;
+}
+
+void InstrPanel::setInstrFromNewBrowser(BrwListEntry* ble, Instrument* instr)
+{
+    Device36* dev = NULL;
+
+    if (ble->getType() == Entry_Wave)
+    {
+        dev = loadSample(ble->getPath().data());
+    }
+    else if (ble->getType() == Entry_DLL)
+    {
+        dev = loadVst(ble->getPath().data(), NULL);
+    }
+
+    if (dev)
+    {
+        instr->deleteDevice();
+
+        instr->setDevice(dev);
+
+        dev->createSelfPattern();
+
+        remapAndRedraw();
+    }
 }
 
 VstInstr* InstrPanel::loadVst(const char* path, VstInstr* otherVst)

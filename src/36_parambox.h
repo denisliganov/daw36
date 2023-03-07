@@ -13,7 +13,7 @@
 class ParamBox : public Control
 {
 public:
-            ParamBox(Parameter* param);
+            ParamBox(Parameter* par);
             std::string         getClickHint();
             float               getMinStep();
             void                setSliderOnly(bool so) { sliderOnly = so; }
@@ -24,7 +24,6 @@ protected:
             int                 tw2;
             int                 tw3;
             bool                sliderOnly;
-            Parameter*          prm;
 
             void                drawSelf(Graphics& g);
             void                handleMouseWheel(InputEvent& ev);
@@ -40,11 +39,9 @@ protected:
 class ToggleBox : public Control
 {
 public:
-            ToggleBox(ParamToggle* param_tg);
+            ToggleBox(Parameter* param_tg);
 
 protected:
-
-            ParamToggle*        prmToggle;
 
             void                drawSelf(Graphics& g);
             void                handleMouseDown(InputEvent & ev);
@@ -54,11 +51,9 @@ protected:
 class RadioBox : public Control
 {
 public:
-            RadioBox(ParamRadio* param_radio);
+            RadioBox(Parameter* param_radio);
 
 protected:
-
-            ParamRadio*         prmRad;
 
             void                drawSelf(Graphics& g);
             void                handleMouseDown(InputEvent & ev);
@@ -68,11 +63,9 @@ protected:
 class SelectorBox : public Control
 {
 public:
-            SelectorBox(ParamSelector* param_sel);
+            SelectorBox(Parameter* param_sel);
 
 protected:
-
-            ParamSelector*      prmSelector;
 
             void                drawSelf(Graphics& g);
             void                handleMouseDown(InputEvent & ev);

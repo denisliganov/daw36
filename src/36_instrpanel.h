@@ -50,6 +50,7 @@ public:
             void                setBufferSize(unsigned bufferSize);
             void                setCurrInstr(Instrument* instr);
             void                showFX();
+            void                setInstrFromNewBrowser(BrwListEntry* ble, Instrument* instr);
             void                updateWaves();
             void                updateInstrIndexes();
 

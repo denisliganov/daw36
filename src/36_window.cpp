@@ -349,7 +349,7 @@ std::string MainWindow::showAlertBox(std::string message, std::string bt1, std::
 {
     AlertBox* ab = new AlertBox(message, bt1, bt2, bt3);
 
-    //jassert(MsgBox == NULL);
+    jassert(MsgBox == NULL);
 
     MsgBox = new SubWindow(ab, false);
 

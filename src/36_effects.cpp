@@ -192,14 +192,14 @@ Filter1::Filter1()
     //Q->AddValueString(Units_Default);
     //AddParamWithParamcell(Q);
 
-    addParam(filterType = new ParamRadio("Type"));
+    addParam(filterType = new Parameter("Type", Param_Radio));
 
     filterType->addOption("LowPass");
     filterType->addOption("HighPass");
     filterType->addOption("BandPass");
-    filterType->setCurrent(0);
+    filterType->setCurrentOption(0);
 
-    addParam(x2toggle = new ParamToggle("X2", false));
+    addParam(x2toggle = new Parameter("X2", false));
 
 /*
     // Create radiobuttons set
@@ -217,7 +217,7 @@ Filter1::Filter1()
     */
 }
 
-void Filter1::handleParamUpdate(Param* param)
+void Filter1::handleParamUpdate(Parameter* param)
 {
     /*
     if(param == f1)
@@ -334,7 +334,7 @@ EQ1::EQ1()
     reset();
 }
 
-void EQ1::handleParamUpdate(Param* param)
+void EQ1::handleParamUpdate(Parameter* param)
 {
     if( param == frequency )
     {
@@ -401,7 +401,7 @@ GraphicEQ::GraphicEQ()
     reset();
 }
 
-void GraphicEQ::handleParamUpdate(Param* param)
+void GraphicEQ::handleParamUpdate(Parameter* param)
 {
     if(param == gain5)
     {
@@ -487,7 +487,7 @@ EQ3::EQ3()
     reset();
 }
 
-void EQ3::handleParamUpdate(Param* param)
+void EQ3::handleParamUpdate(Parameter* param)
 {
     if(param == gain1)
     {
@@ -552,7 +552,7 @@ CTremolo::CTremolo()
     reset();
 }
 
-void CTremolo::handleParamUpdate(Param* param)
+void CTremolo::handleParamUpdate(Parameter* param)
 {
     if(param == speed)
     {
@@ -608,7 +608,7 @@ Compressor::Compressor()
 */
 }
 
-void Compressor::handleParamUpdate(Param* param)
+void Compressor::handleParamUpdate(Parameter* param)
 {
 /*
     if(param == mode)
@@ -693,7 +693,7 @@ CWahWah::CWahWah()
     reset();
 }
 
-void CWahWah::handleParamUpdate(Param* param)
+void CWahWah::handleParamUpdate(Parameter* param)
 {
     /*
     if(param == drywet)
@@ -754,7 +754,7 @@ CDistort::CDistort()
     reset();
 }
 
-void CDistort::handleParamUpdate(Param* param)
+void CDistort::handleParamUpdate(Parameter* param)
 {
     if(param == drive)
     {
@@ -807,7 +807,7 @@ CBitCrusher::CBitCrusher()
     handleParamUpdate(quantization);
 }
 
-void CBitCrusher::handleParamUpdate(Param* param)
+void CBitCrusher::handleParamUpdate(Parameter* param)
 {
     if(param == decimation)
     {
@@ -850,7 +850,7 @@ CStereo::CStereo()
     handleParamUpdate(offset);
 }
 
-void CStereo::handleParamUpdate(Param* param)
+void CStereo::handleParamUpdate(Parameter* param)
 {
     if(param == offset)
     {
@@ -890,7 +890,7 @@ XDelay::XDelay() : dspCorePingPongDelay()
     dspCorePingPongDelay.setPingPongMode(true);
     dspCorePingPongDelay.setStereoSwap(true);
 
-    addParam(delayMode = new ParamToggle("PING-PONG MODE", true));
+    addParam(delayMode = new Parameter("PING-PONG MODE", true));
 
     addParam(delay = new Parameter("DELAY", 0.5f, 20.f, 3, Units_Ticks));
     delay->setInterval(0.25f);
@@ -906,7 +906,7 @@ XDelay::XDelay() : dspCorePingPongDelay()
     addParam(lowcut = new Parameter("LOWCUT", Param_Freq, 0.f, 1.f, 0.9f, Units_Hz));
     addParam(drywet = new Parameter("DRY/WET", 0.0f, 1.f, .4f, Units_DryWet));
 
-    addParam(selectTypes = new ParamSelector("Define:"));
+    addParam(selectTypes = new Parameter("Define:", Param_Selector));
     selectTypes->addOption("1 tick", false);
     selectTypes->addOption("2 tick", false);
     selectTypes->addOption("3 tick", true);
@@ -917,13 +917,13 @@ XDelay::XDelay() : dspCorePingPongDelay()
     reset();
 }
 
-void XDelay::handleParamUpdate(Param* param)
+void XDelay::handleParamUpdate(Parameter* param)
 {
     if(param == delayMode)
     {
-        dspCorePingPongDelay.setPingPongMode(delayMode->getValue());
-        dspCorePingPongDelay.setStereoSwap(delayMode->getValue());
-        dspCorePingPongDelay.setPan((delayMode->getValue() ? -1 : 1)*delayMode->getValue());
+        dspCorePingPongDelay.setPingPongMode(delayMode->getBoolValue());
+        dspCorePingPongDelay.setStereoSwap(delayMode->getBoolValue());
+        dspCorePingPongDelay.setPan((delayMode->getBoolValue() ? -1 : 1)*delayMode->getBoolValue());
     }
     else if(param == amount)
     {
@@ -951,7 +951,7 @@ void XDelay::handleParamUpdate(Param* param)
     }
     else if( param == pan )
     {
-        dspCorePingPongDelay.setPan((delayMode->getValue() == true ? -1 : 1)*pan->getOutVal());
+        dspCorePingPongDelay.setPan((delayMode->getBoolValue() == true ? -1 : 1)*pan->getOutVal());
     }
     else if( param == lowcut )
     {
@@ -1001,7 +1001,7 @@ CReverb::CReverb() : dspCoreReverb()
     reset();
 }
 
-void CReverb::handleParamUpdate(Param* param)
+void CReverb::handleParamUpdate(Parameter* param)
 {
     if(param == roomsize)
     {
@@ -1074,7 +1074,7 @@ CChorus::CChorus()
     addParam(drywet = new Parameter("DRY/WET", 0.0f, 1.f, 0.5f, Units_DryWet));
 }
 
-void CChorus::handleParamUpdate(Param* param)
+void CChorus::handleParamUpdate(Parameter* param)
 {
     if(param == drywet)
     {
@@ -1144,7 +1144,7 @@ CFlanger::CFlanger()
     addParam(drywet = new Parameter("DRY/WET", 0.0f, 0.5f, 0.5f, Units_DryWet));
 }
 
-void CFlanger::handleParamUpdate(Param* param)
+void CFlanger::handleParamUpdate(Parameter* param)
 {
     if(param == drywet)
     {
@@ -1224,7 +1224,7 @@ CPhaser::CPhaser()
     dspCorePhaser.setFilterMode(rosic::AllpassChain::FIRST_ORDER_ALLPASS);
 }
 
-void CPhaser::handleParamUpdate(Param* param)
+void CPhaser::handleParamUpdate(Parameter* param)
 {
     if(param == drywet)
     {
