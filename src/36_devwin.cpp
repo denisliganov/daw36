@@ -2,6 +2,7 @@
 
 #include "36_devwin.h"
 #include "36_draw.h"
+#include "36_knob.h"
 #include "36_listbox.h"
 #include "36_params.h"
 #include "36_parambox.h"
@@ -25,6 +26,9 @@ void DevParamObject::initAll()
     //int x = 10;
     //int y = border;
 
+    setObjSpacing(2);
+    setBorder(4);
+
     std::list<Parameter*>  showParams;
 
     VstInstr*  vsti = dynamic_cast<VstInstr*>(device);
@@ -41,48 +45,52 @@ void DevParamObject::initAll()
     for(Parameter* param : showParams)
     {
         Parameter*      prm = dynamic_cast<Parameter*>(param);
-        Parameter*      prmVol = dynamic_cast<Parameter*>(param);
-        Parameter*      prmPan = dynamic_cast<Parameter*>(param);
-        Parameter*      prmRad = dynamic_cast<Parameter*>(param);
-        Parameter*      prmSel = dynamic_cast<Parameter*>(param);
-        Parameter*      prmTg = dynamic_cast<Parameter*>(param);
-
         Gobj* obj = NULL;
 
         if (prm)
         {
-            ParamBox* box = new ParamBox(prm);
+            if (prm->getType() == Param_Default)
+            {
+/*
+                ParamBox* box = new ParamBox(prm);
 
-            box->setCoords1(0, 0, boxWidth, boxHeight);
-            box->setSliderOnly(false);
+                box->setCoords1(0, 0, boxWidth, boxHeight);
+                box->setSliderOnly(false);
 
-            obj = box;
+                obj = box;
+*/
+                obj = new Knob(prm);
+                obj->setWH(100, 30);
+            }
+            /*
+            else if (prm->getType() == Param_Vol)
+            {
+                obj = new Knob(prm);
+                obj->setWH(15, 15);
+            }
+            else if (prm->getType() == Param_Pan)
+            {
+                obj = new Knob(prm);
+                obj->setWH(15, 15);
+            }*/
+            else if (prm->getType() == Param_Radio)
+            {
+                obj = new RadioBox(prm);
+            }
+            else if (prm->getType() == Param_Selector)
+            {
+                obj = new SelectorBox(prm);
+            }
+            else if (prm->getType() == Param_Toggle)
+            {
+                obj = new ToggleBox(prm);
+            }
         }
-        else if (prmVol)
-        {
-            prm = NULL;
-        }
-        else if (prmPan)
-        {
-            prm = NULL;
-        }
-        else if (prmRad)
-        {
-            obj = new RadioBox(prmRad);
-        }
-        else if (prmSel)
-        {
-            obj = new SelectorBox(prmSel);
-        }
-        else if (prmTg)
-        {
-            obj = new ToggleBox(prmTg);
-        }
-
-        WinObject::addObject(obj);
 
         if (obj)
         {
+            WinObject::addObject(obj);
+
             putBelow(obj, obj->getW(), obj->getH());
         }
     }

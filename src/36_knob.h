@@ -20,9 +20,9 @@ public:
             void                updPosition();
 
 protected:
+
             float               angleRange;       // in radians too
             float               angleOffset;      // in radians too
-            Parameter*          prm;
             float               positionAngle;    // in radians
             int                 ys;
 };

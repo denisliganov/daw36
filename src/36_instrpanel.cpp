@@ -107,6 +107,7 @@ InstrPanel::InstrPanel(Mixer* mixer)
 
     devDummy = new Device36();
     devDummy->setTouchable(false);
+    devDummy->addBasicParamSet();
 
     addObject(btShowFX = new Button36(false), "bt.showbrw");
     addObject(btHideFX = new Button36(false), "bt.hidebrw");
@@ -133,6 +134,7 @@ Instrument* InstrPanel::addVst(const char* path, VstInstr* otherVst)
 {
     VstInstr* vst = loadVst(path, otherVst);
 
+    vst->addBasicParamSet();
     vst->createSelfPattern();
 
     Instrument* i = NULL;
@@ -153,6 +155,7 @@ Instrument* InstrPanel::addSample(const char* path, bool temporaryForPreview)
 {
     Sample* smp = loadSample(path);
 
+    smp->addBasicParamSet();
     smp->createSelfPattern();
 
     Instrument* i = NULL;
@@ -668,11 +671,13 @@ void InstrPanel::setInstrFromNewBrowser(BrwListEntry* ble, Instrument* instr)
 
     if (dev)
     {
+        dev->addBasicParamSet();
+
+        dev->createSelfPattern();
+
         instr->deleteDevice();
 
         instr->setDevice(dev);
-
-        dev->createSelfPattern();
 
         remapAndRedraw();
     }

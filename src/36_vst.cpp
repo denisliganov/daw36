@@ -722,8 +722,6 @@ void Vst2Plugin::extractParams()
     int                     index      = 0;
     int                     NumParam   = getNumParams();
     char                   *paramName  = NULL;
-    char                   *dispVal    = NULL;
-    char                   *paramLabel = NULL;
     Parameter              *param      = NULL;
     float                   fVal       = 0;
     VstParameterProperties *paramProp  = NULL;
@@ -737,8 +735,6 @@ void Vst2Plugin::extractParams()
         }
 
         getParamName(index, &paramName);
-        getDisplayValue(index, &dispVal);
-        getParamLabel(index, &paramLabel);
 
         if(strlen(paramName) <= MAX_NAME_LENGTH)
         {
@@ -781,38 +777,47 @@ void Vst2Plugin::extractParams()
 
             //copy only MAX_PARAM_NAME number of chars to prevent corruption
             //strncpy(param->paramName, paramName, MAX_NAME_LENGTH);
+
             param->setName(paramName);
-
-            char label[MAX_NAME_LENGTH] = {};
-            strncpy(label, dispVal, min(MAX_NAME_LENGTH - strlen(paramLabel), strlen(dispVal)));
-            strcat(label, paramLabel);
-
-            param->setValString(label);
-
             param->setIndex(index);      // for VST purpose
 
+            updParamValString(param);
+
             addParam(param);
-
-            if (NULL != paramName)
-            {
-                free(paramName);
-                paramName = NULL;
-            }
-
-            if (NULL != dispVal)
-            {
-                free(dispVal);
-                dispVal = NULL;
-            }
-
-            if (NULL != paramLabel)
-            {
-                free(paramLabel);
-                paramLabel = NULL;
-            }
         }
     }
+
+    int a = 1;
 }
+
+void Vst2Plugin::updParamValString(Parameter* param)
+{
+    char      *dispVal    = NULL;
+    char      *paramLabel = NULL;
+
+    getDisplayValue(param->getIndex(),&dispVal);
+    getParamLabel(param->getIndex(), &paramLabel);
+
+    char label[MAX_NAME_LENGTH] = {};
+
+    strncpy(label, dispVal, min(MAX_NAME_LENGTH - strlen(paramLabel),strlen(dispVal)));
+    strcat(label, paramLabel);
+
+    param->setValString(label);
+
+    if (NULL != dispVal)
+    {
+        free(dispVal);
+        dispVal = NULL;
+    }
+
+    if (NULL != paramLabel)
+    {
+        free(paramLabel);
+        paramLabel = NULL;
+    }
+}
+
 
 void Vst2Plugin::handleParamUpdate(Parameter* param)
 {
@@ -823,40 +828,15 @@ void Vst2Plugin::handleParamUpdate(Parameter* param)
         setParam(prm->getIndex(), prm->getValue());
 
         // Update units string for the parameter
-        {
-            char      *dispVal    = NULL;
-            char      *paramLabel = NULL;
 
-            getDisplayValue(prm->getIndex(),&dispVal);
-            getParamLabel(prm->getIndex(), &paramLabel);
-
-            char label[MAX_NAME_LENGTH] = {};
-            strncpy(label, dispVal, min(MAX_NAME_LENGTH-strlen(paramLabel),strlen(dispVal)));
-            strcat(label, paramLabel);
-
-            prm->setValString(label);
-
-            if (NULL != dispVal)
-            {
-                free(dispVal);
-                dispVal = NULL;
-            }
-
-            if (NULL != paramLabel)
-            {
-                free(paramLabel);
-                paramLabel = NULL;
-            }
-        }
+        updParamValString(prm);
     }
 }
 
 bool Vst2Plugin::onSetParameterAutomated(long index,float value)
 {
-    for(Parameter* p : params)
+    for(Parameter* param : params)
     {
-        Parameter* param = dynamic_cast<Parameter*>(p);
-
         if (param->getIndex() == index)
         {
             setParamLock(true);
@@ -874,11 +854,11 @@ void Vst2Plugin::updParamsFromPlugin()
 {
     setParamLock(true);
 
-    for(Parameter* p : params)
+    for(Parameter* param : params)
     {
-        Parameter* param = dynamic_cast<Parameter*>(p);
+        long idx = param->getIndex();
 
-        float fVal = getParam(param->getIndex());
+        float fVal = getParam(idx);
 
         if(fVal < 0)
         {
@@ -890,6 +870,9 @@ void Vst2Plugin::updParamsFromPlugin()
         }
 
         param->setValue(fVal);
+
+        updParamValString(param);
+
         //param->setInitialValue(fVal);
     }
 
@@ -928,6 +911,7 @@ bool Vst2Plugin::setPresetByIndex(long index)
             if(pe->prindex == index)
             {
                 currPreset = pe;
+
                 updParamsFromPlugin();
 
                 return true;

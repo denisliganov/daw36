@@ -35,6 +35,7 @@ public:
             Device36();
     virtual ~Device36();
 
+            void                addBasicParamSet();
     virtual SubWindow*          createWindow();
     virtual void                createSelfPattern();
     virtual void                forceStop();

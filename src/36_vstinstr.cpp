@@ -730,7 +730,8 @@ SubWindow* VstInstr::createWindow()
 
 void VstInstr::handleParamUpdate(Parameter* param)
 {
-    vst2->handleParamUpdate(param);
+    if (param != vol && param != pan && param != enabled)
+        vst2->handleParamUpdate(param);
 }
 
 

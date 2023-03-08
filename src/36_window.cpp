@@ -628,7 +628,7 @@ void SubWindow::paint(Graphics& g)
     gSetMonoColor(g, 0.25f);
     g.fillRect(0, 0, getWidth(), getHeight());
 
-    gSetMonoColor(g, 0.5f);
+    gSetMonoColor(g, 0.4f);
     g.drawRect(0, 0, getWidth(), getHeight());
 
     //drawGlassRect(g, (float)0, (float)0, getWidth(), 23, Colour(100, 100, 100), 0, 0, true, true, false, false);

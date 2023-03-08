@@ -14,8 +14,9 @@
 Knob::Knob(Parameter* par)
 {
     setFontId(FontSmall);
-    param = par;
-    prm = par;
+
+    addParam(par);
+
     angleRange = PI * 1.9f;
     angleOffset = float(2*PI - angleRange)*.5f;
 
@@ -24,9 +25,9 @@ Knob::Knob(Parameter* par)
 
 void Knob::updValue()
 {
-    if (prm != NULL)
+    if (param != NULL)
     {
-        prm->adjustFromControl(this, 0, (1 - positionAngle/angleRange));
+        param->adjustFromControl(this, 0, (1 - positionAngle/angleRange));
     }
 
     redraw();
@@ -34,9 +35,9 @@ void Knob::updValue()
 
 void Knob::updPosition()
 {
-    if (prm != NULL)
+    if (param != NULL)
     {
-        positionAngle = float((1 - prm->getValueNormalized()) * angleRange);
+        positionAngle = float((1 - param->getValueNormalized()) * angleRange);
     }
     else
     {
@@ -93,19 +94,21 @@ void Knob::handleMouseUp(InputEvent & ev)
 
 void Knob::remap()
 {
-    delete parentImage;
+//    delete parentImage;
 
-    parentImage = NULL;
+ //   parentImage = NULL;
 }
 
 void Knob::drawSelf(Graphics& g)
 {
     Instrument* instr = dynamic_cast<Instrument*>(parent);
 
-    fill(g, .3f);
+    fill(g, .28f);
 
     setc(g, .8f);
-    txt(g, fontId, prm->getName(), 2, 10);
+
+    txt(g, fontId, param->getName(), height + 8, 10);
+    txt(g, fontId, param->getValString(), height + 8, height - 4);
 
     //txt(g, FontSmall, prm->getValString(), 0, height - 2);
     //txt(g, FontSmall, prm->getUnitString(), width - gGetTextWidth(FontSmall, prm->getUnitString()), height - 2);
@@ -118,22 +121,21 @@ void Knob::drawSelf(Graphics& g)
 
     gSetMonoColor(g, .3f);
 
-    int w = width;
-    int h = height - headerHeight;
+    int w = height - 4;
+    int h = height - 4;
 
-    w = MAX(w, h) - 8;
-    h = w;
+    //w = MAX(w, h)/2;
+    //h = w;
 
-    int x = x1 + 4;
-    int y = y1 + headerHeight + 4;
+    int x = x1 + 2;
+    int y = y1 + 2;
 
     gSetMonoColor(g, .4f);
-
     gEllipseFill(g, x, y, w, h);
 
-    if(prm->getOffset() < 0)
+    if(0 && param->getOffset() < 0)
     {
-        float o = prm->getOffset() / prm->getRange();
+        float o = param->getOffset() / param->getRange();
         float oa = abs(o*angleRange);
 
         float rad = float(w-2)/2;
@@ -141,7 +143,7 @@ void Knob::drawSelf(Graphics& g)
         float ratio = 1.f/(2*PI*rad);
         float singlePixelAngle = ratio*2*PI;
 
-        gSetMonoColor(g, .2f);
+        gSetMonoColor(g, .6f);
 
         gPie(g, x1+1, y1+1, width-2, height-2, PI + angleOffset + oa, PI + angleOffset + oa);
     }
@@ -154,8 +156,10 @@ void Knob::drawSelf(Graphics& g)
     //gEllipseFill(g, x1, y1, width, height);
 
     float xadv0, xadv1, yadv0, yadv1;
-    int rrad0 = w/2 - 3;
-    int rrad1 = rrad0/2.f;
+
+    int rrad0 = w/2 - 1;
+    int rrad1 = rrad0/4.f;
+
     float ang = positionAngle - (PI/2.f - angleOffset);
 
     if (positionAngle >= PI / 2)
@@ -172,10 +176,12 @@ void Knob::drawSelf(Graphics& g)
     yadv1 = rrad1 * sin(ang);
     yadv0 = rrad0 * sin(ang);
 
-    if(instr)
-        instr->setMyColor(g,.9);
-    else
-        parent->setMyColor(g, .9f);
+    //if(instr)
+    //    instr->setMyColor(g,.9);
+    //else
+    //    parent->setMyColor(g, .9f);
+
+    setc(g, 0.9f);
 
     int kx1 = (float)RoundFloat(x + w/2 + xadv1);
     int ky1 = (float)RoundFloat(y + h/2 - yadv1);
@@ -189,10 +195,10 @@ void Knob::drawSelf(Graphics& g)
     //txt(g, fontId, val, width/2 - gGetTextWidth(fontId, prm->getValString())/2, height/2 + headerHeight);
 
     setc(g, 0.35f);
-    fillx(g, 0, 0, width, headerHeight);
+    //fillx(g, 0, 0, width, headerHeight);
 
     setc(g, 0.8f);
-    txtfit(g, fontId, prm->getName(), 3, 12, w - 2);
+    //txtfit(g, fontId, param->getName(), 3, 12, w - 2);
 
     //setc(g, 0.5f);
     //rectx(g, 0, headerHeight, width, height - headerHeight);

@@ -15,7 +15,7 @@ MakeUpObject::MakeUpObject()
 
 void MakeUpObject::drawSelf(Graphics& g)
 {
-    Gobj::fill(g, 0.2f);
+    WinObject::fill(g, 0.2f);
 
     Colour clr;
 
@@ -71,9 +71,9 @@ void MakeUpObject::drawSelf(Graphics& g)
     drawGlassRect(g, (float)250, (float)200, 220, 80, clr, 1, 20, false, false, false, false);
 
 
-    drawGlassRound(g,  50, 200, 60, Colour(125, 125, 100), 1);
-    drawGlassRound(g,  150, 200, 50, Colour(100, 100, 100), 1);
-    drawGlassRound(g,  50, 280, 80, Colour(55, 55, 55), 1);
+    drawGlassRound(g,  50, 200, 60, Colour(125, 100, 10), 1);
+    drawGlassRound(g,  150, 200, 44, Colour(90, 80, 10), 1);
+    drawGlassRound(g,  50, 280, 80, Colour(55, 45, 5), 1);
 
     //drawGlassRound(g,  250, 280, 120, Colour(80, 90, 90), 1);
 

@@ -39,6 +39,9 @@ Device36::Device36()
     cfsV = 0;
     rampCount = 512;
 
+    vol = NULL;
+    pan = NULL;
+    enabled = NULL;
     container = NULL;
     currPreset = NULL;
     envVol = NULL;
@@ -52,10 +55,6 @@ Device36::Device36()
     lastNoteVol = 1;
     lastNotePan = 0;
     lastNoteVal = BaseNote;
-
-    addParam(vol = new Parameter("VOL", Param_Vol));
-    addParam(pan = new Parameter("PAN", Param_Pan));
-    addParam(enabled = new Parameter("ENABLED", false));
 
     currPresetName = "Untitled";
 }
@@ -83,6 +82,12 @@ Device36::~Device36()
     removeElements();
 }
 
+void Device36::addBasicParamSet()
+{
+    addParam(vol = new Parameter("VOL", Param_Vol));
+    addParam(pan = new Parameter("PAN", Param_Pan));
+    addParam(enabled = new Parameter("ENABLED", false));
+}
 
 void Device36::removeElements()
 {
@@ -826,31 +831,35 @@ void Device36::fadeBetweenTriggers(Trigger* tgfrom, Trigger* tgto)
 
 void Device36::fillOutputBuffer(float* out_buff, long num_frames, long buff_frame, long mix_buff_frame)
 {
-    float volVal = vol->getOutVal();
+    float volVal = vol != NULL ? vol->getOutVal() : 1;
+    float lastVal = vol != NULL ? vol->lastValue : 1;
 
-    if(vol->lastValue == -1)
+    if (vol != NULL)
     {
-        vol->setLastVal(vol->getOutVal());
-    }
-    else if(vol->lastValue != vol->getOutVal())
-    {
-        if(rampCounterV == 0)
+        if ( vol->lastValue == -1)
         {
-            cfsV = float(vol->getOutVal() - vol->lastValue)/DECLICK_COUNT;
-
-            volVal = vol->lastValue;
-
-            rampCounterV = DECLICK_COUNT;
+            vol->setLastVal(vol->getOutVal());
         }
-        else
+        else if(vol->lastValue != vol->getOutVal())
         {
-            volVal = vol->lastValue + (DECLICK_COUNT - rampCounterV)*cfsV;
+            if(rampCounterV == 0)
+            {
+                cfsV = float(vol->getOutVal() - vol->lastValue)/DECLICK_COUNT;
+
+                volVal = vol->lastValue;
+
+                rampCounterV = DECLICK_COUNT;
+            }
+            else
+            {
+                volVal = vol->lastValue + (DECLICK_COUNT - rampCounterV)*cfsV;
+            }
         }
-    }
-    else if(rampCounterV > 0) // (paramSet->vol->lastval == paramSet->vol->outval)
-    {
-        rampCounterV = 0;
-        cfsV = 0;
+        else if(rampCounterV > 0) // (paramSet->vol->lastval == paramSet->vol->outval)
+        {
+            rampCounterV = 0;
+            cfsV = 0;
+        }
     }
 
     float lMax, rMax, outL, outR;
@@ -867,7 +876,7 @@ void Device36::fillOutputBuffer(float* out_buff, long num_frames, long buff_fram
 
             rampCounterV--;
 
-            if(rampCounterV == 0)
+            if(vol != NULL && rampCounterV == 0)
             {
                 vol->setLastVal(vol->getOutVal());
             }

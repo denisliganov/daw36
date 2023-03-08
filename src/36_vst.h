@@ -113,6 +113,7 @@ public:
             void                    handleParamUpdate(Parameter* param);
             bool                    onSetParameterAutomated(long index,float value);
             void                    updParamsFromPlugin();
+            void                    updParamValString(Parameter* param);
             bool                    setPresetByName(std::string pname);
             bool                    setPresetByIndex(long index);
             long                    getCurrentPreset();

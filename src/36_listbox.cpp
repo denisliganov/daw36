@@ -38,7 +38,7 @@ void ListBoxx::drawSelf(Graphics& g)
     int scrWidth = 10;
     int entryNum = 0;
 
-    for (auto e : entries1)
+    for (auto e : entries)
     {
         if (yoffs + headerHeight >= 0)
         {
@@ -65,9 +65,9 @@ void ListBoxx::drawSelf(Graphics& g)
 
             setc(g, 1.f);
             
-            //txtfit(g, fontId, e, 4, yoffs + y + entryHeight - 4, w - 2);
+            txtfit(g, fontId, e, 4, yoffs + y + entryHeight - 4, w - 2);
 
-            gTextFitS(g, fontId, e, 4, yoffs + y + entryHeight - 4, w - 2);
+            //gTextFitS(g, fontId, e, 4, yoffs + y + entryHeight - 4, w - 2);
         }
         else if (yoffs > (vscr->getOffset() + vscr->getVisiblePart()))
         {
