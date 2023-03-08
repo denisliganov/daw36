@@ -20,6 +20,9 @@
 
 
 
+bool            MixViewSingle = false;
+
+
 Mixer::Mixer()
 {
     init();
@@ -108,25 +111,32 @@ void Mixer::handleChildEvent(Gobj * obj, InputEvent& ev)
 
 void Mixer::remap()
 {
-    int yCh = 0;
-
-    for(Instrument* instr : MInstrPanel->getInstrs())
+    if (MixViewSingle == false)
     {
-        if (instr->device && instr->device->isPreviewOnly())
-        {
-            continue;
-        }
+        int yCh = 0;
 
-        if((yCh + InstrHeight > 0) && yCh < getH())
+        for(Instrument* instr : MInstrPanel->getInstrs())
         {
-            instr->mixChannel->setCoords1(0, yCh, width, instr->getH());
-        }
-        else if(instr->mixChannel->isShown())
-        {
-            instr->mixChannel->setVis(false);
-        }
+            if (instr->device && instr->device->isPreviewOnly())
+            {
+                continue;
+            }
 
-        yCh += InstrHeight + 1;
+            if((yCh + InstrHeight > 0) && yCh < getH())
+            {
+                instr->mixChannel->setCoords1(0, yCh, width, instr->getH());
+            }
+            else if(instr->mixChannel->isShown())
+            {
+                instr->mixChannel->setVis(false);
+            }
+
+            yCh += InstrHeight + 1;
+        }
+    }
+    else
+    {
+        MInstrPanel->getCurrInstr()->getMixChannel()->setCoords1(0, 0, width, height);
     }
 
 /*

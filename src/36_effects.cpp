@@ -42,7 +42,10 @@ Eff::Eff(Device36* dev)
 
 Eff::~Eff()
 {
-    ///
+    if (device)
+    {
+        delete device;
+    }
 }
 
 void Eff::remap()
@@ -50,6 +53,8 @@ void Eff::remap()
     //previewButton->setCoords1(width - 13, 0, 12, 12);
 
     //sliderAmount->setCoords2(4, height - 12, 30, height - 4);
+
+    //setWH(90, 40);
 }
 
 void Eff::drawSelf(Graphics& g)
@@ -92,6 +97,11 @@ void Eff::drawSelf(Graphics& g)
 Eff* Eff::clone()
 { 
     return CreateEffect(objId);
+}
+
+void Eff::mapControls()
+{
+    device->placeControls1();
 }
 
 ContextMenu* Eff::createContextMenu()

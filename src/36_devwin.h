@@ -19,7 +19,7 @@ protected:
             void                drawSelf(Graphics& g);
             void                handleChildEvent(Gobj * obj,InputEvent & ev);
             void                handleClose();
-    virtual void                initAll();
+    virtual void                placeControls();
 };
 
 

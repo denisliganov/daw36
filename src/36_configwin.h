@@ -24,7 +24,7 @@ private:
         Parameter*          hue;
         Parameter*          saturation;
         Parameter*          bufferSize;
-        Parameter*         interpolationSelect;
+        Parameter*          interpolationSelect;
 
         ListBoxx*           interpolation;
         ListBoxx*           midiOutDevices;

@@ -46,7 +46,6 @@
 int                 Octave;
 int                 BaseNote;
 
-bool                metroOn;
 bool                GPlaying;
 bool                GRecOn;
 

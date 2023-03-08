@@ -46,6 +46,7 @@ ConfigWinObject::ConfigWinObject()
     interpolationSelect->addOption("3-point Hermire");
     interpolationSelect->addOption("6-point Polinomial");
     interpolationSelect->addOption("Sinc depth 64");
+    interpolationSelect->setCurrentOption(0);
 
     WinObject::addObject(chooserBox = new RadioBox(interpolationSelect));
 
@@ -84,7 +85,7 @@ ConfigWinObject::ConfigWinObject()
     spaceBelow();
     putBelow(midiOutDevices, 280, 120);
     putBelow(midiInDevices, 280, 120);
-    goTop();
+    returnUp();
     spaceRight();
     putRight(buffSizeBox, 200, 30);
     putBelow(showASIOPanel, 200, 20);

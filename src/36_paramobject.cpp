@@ -3,6 +3,8 @@
 #include "36_params.h"
 #include "36_controls.h"
 #include "36_events_triggers.h"
+#include "36_knob.h"
+#include "36_parambox.h"
 
 
 
@@ -103,6 +105,73 @@ void ParamObject::handleClose()
     }
 }
 
+void ParamObject::placeControls1(int maxW, int maxH)
+{
+    int boxWidth = 130;
+    int boxHeight = 22;
+
+    int maxWidth = maxW;
+
+    setObjSpacing(2);
+    setBorder(4);
+
+    putStart(border, border);
+
+    for(Parameter* prm : params)
+    {
+        Gobj* obj = NULL;
+
+        if (prm)
+        {
+            if (prm->getType() == Param_Default)
+            {
+/*
+                ParamBox* box = new ParamBox(prm);
+
+                box->setCoords1(0, 0, boxWidth, boxHeight);
+                box->setSliderOnly(false);
+
+                obj = box;
+*/
+                obj = new Knob(prm);
+                obj->setWH(100, 30);
+            }
+            else if (prm->getType() == Param_Radio)
+            {
+                obj = new RadioBox(prm);
+            }
+            else if (prm->getType() == Param_Selector)
+            {
+                obj = new SelectorBox(prm);
+            }
+            else if (prm->getType() == Param_Toggle)
+            {
+                obj = new ToggleBox(prm);
+            }
+        }
+
+        if (obj)
+        {
+            addObject(obj);
+
+            if (maxWidth > 0 && obj->getW() + objSpacing > maxWidth)
+            {
+                putRight(obj, obj->getW(), obj->getH());
+            }
+            else
+            {
+                returnLeft();
+            }
+
+        }
+    }
+
+    finalizePuts();
+
+    setWH(wndW + border, wndH + border);
+}
+
+
 void ParamObject::putStart(int x, int y)
 {
     xstart1 = xstart2 = x;
@@ -185,7 +254,7 @@ void ParamObject::spaceBelow()
     }
 }
 
-void ParamObject::goLeft()
+void ParamObject::returnLeft()
 {
     xstart1 = border;
     ystart1 = wndH;
@@ -193,7 +262,7 @@ void ParamObject::goLeft()
     ystart2 = wndH;
 }
 
-void ParamObject::goTop()
+void ParamObject::returnUp()
 {
     xstart1 = wndW;
     ystart1 = border;

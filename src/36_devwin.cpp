@@ -14,10 +14,10 @@ DevParamObject::DevParamObject(Device36* dev)
 {
     device = dev;
 
-    initAll();
+    placeControls();
 }
 
-void DevParamObject::initAll()
+void DevParamObject::placeControls()
 {
     //int border = 12;
     int boxWidth = 130;
@@ -28,6 +28,8 @@ void DevParamObject::initAll()
 
     setObjSpacing(2);
     setBorder(4);
+
+    putStart(border, border);
 
     std::list<Parameter*>  showParams;
 
@@ -42,9 +44,8 @@ void DevParamObject::initAll()
         showParams = device->getParams();
     }
 
-    for(Parameter* param : showParams)
+    for(Parameter* prm : showParams)
     {
-        Parameter*      prm = dynamic_cast<Parameter*>(param);
         Gobj* obj = NULL;
 
         if (prm)
@@ -60,6 +61,7 @@ void DevParamObject::initAll()
                 obj = box;
 */
                 obj = new Knob(prm);
+
                 obj->setWH(100, 30);
             }
             /*
@@ -97,7 +99,7 @@ void DevParamObject::initAll()
 
     WinObject::addObject(presetBox = new ListBoxx("Presets"));
 
-    goTop();
+    returnUp();
 
     spaceRight();
     spaceRight();

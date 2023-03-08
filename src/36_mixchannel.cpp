@@ -158,32 +158,35 @@ void MixChannel::init(Instrument* ins)
 
 void MixChannel::remap()
 {
-    //if(volslider)
-    //    volslider->setCoords1(width - 30, 1, 10, height - 2);
-
-    confine();
-
-    //if(volKnob)
-    //    volKnob->setCoords1(width - 30, 0, 22, 22);
-    //if(panKnob)
-    //    panKnob->setCoords1(width - 30, 22, 22, 22);
-
-    //if(panslider)
-    //    panslider->setCoords1(width - 18, 1, 10, height - 2);
-
-
-    //if(vu)
-    //    vu->setCoords1(1, 1, 10, height - 2);
-
-    confine(0, 0, width - 1, height);
-
-    int xeff = 0;
-
-    for(Eff* eff : effs)
+    if (MixViewSingle)
     {
-        eff->setCoords1(xeff, 1, 32, height - 2);
+        confine(0, 0, width, height - 50);
 
-        xeff += eff->getW() + 1;
+        //if(volslider)
+        //    volslider->setCoords1(width - 30, 1, 10, height - 2);
+
+        //if(volKnob)
+        //    volKnob->setCoords1(width - 30, 0, 22, 22);
+        //if(panKnob)
+        //    panKnob->setCoords1(width - 30, 22, 22, 22);
+        //if(panslider)
+        //    panslider->setCoords1(width - 18, 1, 10, height - 2);
+
+        //if(vu)
+        //    vu->setCoords1(1, 1, 10, height - 2);
+    }
+    else
+    {
+        confine(0, 0, width - 1, height);
+
+        int xeff = 0;
+
+        for(Eff* eff : effs)
+        {
+            eff->setCoords1(xeff, 1, 32, height - 2);
+
+            xeff += eff->getW() + 1;
+        }
     }
 
 /*
@@ -685,29 +688,29 @@ void MixChannel::process(int num_frames, float* out_buff)
     {
         for(Eff* eff : effs)
         {
-            eff->device->generateData(inbuff, outbuff, num_frames);
+            eff->getDevice()->generateData(inbuff, outbuff, num_frames);
 
-            if(eff->device->getBypass() == false)
+            if(eff->getDevice()->getBypass() == false)
             {
                 // Copy output back to input for the next effect to process
 
-                if(eff->device->muteCount > 0)
+                if(eff->getDevice()->muteCount > 0)
                 {
                     long tc = 0;
                     float aa;
 
                     while(tc < num_frames)
                     {
-                        aa = float(DECLICK_COUNT - eff->device->muteCount)/DECLICK_COUNT;
+                        aa = float(DECLICK_COUNT - eff->getDevice()->muteCount)/DECLICK_COUNT;
 
                         inbuff[tc*2] = inbuff[tc*2]*(1.f - aa) + outbuff[tc*2]*aa;
                         inbuff[tc*2 + 1] = inbuff[tc*2 + 1]*(1.f - aa) + outbuff[tc*2 + 1]*aa;
 
                         tc++;
 
-                        if(eff->device->muteCount > 0)
+                        if(eff->getDevice()->muteCount > 0)
                         {
-                            eff->device->muteCount--;
+                            eff->getDevice()->muteCount--;
                         }
                     }
                 }
@@ -718,21 +721,21 @@ void MixChannel::process(int num_frames, float* out_buff)
             }
             else
             {
-                if(eff->device->muteCount < DECLICK_COUNT)
+                if(eff->getDevice()->muteCount < DECLICK_COUNT)
                 {
                     long tc = 0;
                     float aa;
 
-                    while(tc < num_frames && eff->device->muteCount < DECLICK_COUNT)
+                    while(tc < num_frames && eff->getDevice()->muteCount < DECLICK_COUNT)
                     {
-                        aa = float(DECLICK_COUNT - eff->device->muteCount)/DECLICK_COUNT;
+                        aa = float(DECLICK_COUNT - eff->getDevice()->muteCount)/DECLICK_COUNT;
 
                         inbuff[tc*2] = inbuff[tc*2]*(1.f - aa) + outbuff[tc*2]*aa;
                         inbuff[tc*2 + 1] = inbuff[tc*2 + 1]*(1.f - aa) + outbuff[tc*2 + 1]*aa;
 
                         tc++;
 
-                        eff->device->muteCount++;
+                        eff->getDevice()->muteCount++;
                     }
                 }
             }
@@ -958,7 +961,7 @@ void MixChannel::setBufferSize(unsigned int bufferSize)
 {
     for(Eff* eff : effs)
     {
-        eff->device->setBufferSize(bufferSize);
+        eff->getDevice()->setBufferSize(bufferSize);
     }
 }
 
@@ -966,7 +969,7 @@ void MixChannel::setSampleRate(float sampleRate)
 {
     for(Eff* eff : effs)
     {
-        eff->device->setSampleRate(sampleRate);
+        eff->getDevice()->setSampleRate(sampleRate);
     }
 }
 
@@ -974,7 +977,7 @@ void MixChannel::reset()
 {
     for(Eff* eff : effs)
     {
-        eff->device->reset();
+        eff->getDevice()->reset();
     }
 }
 

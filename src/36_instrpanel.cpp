@@ -111,8 +111,7 @@ InstrPanel::InstrPanel(Mixer* mixer)
 
     addObject(btShowFX = new Button36(false), "bt.showbrw");
     addObject(btHideFX = new Button36(false), "bt.hidebrw");
-
-    addObject(allChannelsView = new Button36(false), "bt.channels");
+    addObject(allChannelsView = new Button36(true), "bt.channels");
 
     addObject(mixr = mixer);
 
@@ -600,6 +599,13 @@ void InstrPanel::handleChildEvent(Gobj* obj, InputEvent& ev)
                 btShowFX->setEnable(true);
                 hideFX();
             }
+        }
+        else if(obj == allChannelsView)
+        {
+            MixViewSingle = !allChannelsView->isPressed();
+
+            remap();
+            redraw();
         }
     }
 }

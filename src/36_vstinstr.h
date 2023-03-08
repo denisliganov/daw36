@@ -21,7 +21,7 @@ public:
             VstInstr*           clone();
             void                deactivateTrigger(Trigger* tg);
             void                fadeBetweenTriggers(Trigger* tgfrom, Trigger* tgto) {}; // stub to avoid any action here
-            std::list<Parameter*>   getParams() { return vst2->getParams(); }
+        std::list<Parameter*>   getParams() { return vst2->getParams(); }
             void                generateData(float* in_buff, float* out_buff, long num_frames = 0, long mix_buff_frame = 0);
             void                processDSP(float* in_buff, float* out_buff, int num_frames);
             bool                isLoaded() { return vst2 != NULL; }
@@ -32,6 +32,7 @@ public:
             void                handleParamUpdate(Parameter* param = NULL);
             void                postNoteON(int note, float vol);
             void                postNoteOFF(int note, int velocity);
+            void                processEvents(VstEvents *pEvents);
             void                reset();
             void                save(XmlElement* instrNode);
             void                stopAllNotes();
@@ -40,7 +41,6 @@ public:
             bool                setPresetByName(std::string pname);
             bool                setPresetByIndex(long index);
             void                vstProcess(float* in_buff, long num_frames, long buff_frame);
-            void                processEvents(VstEvents *pEvents);
 
 private:
 

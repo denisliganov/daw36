@@ -24,10 +24,11 @@ public:
     virtual Parameter*              getParamByIndex(int devIdx);
     virtual bool                    getParamLock() { return paramLocked; };
     virtual std::list<Parameter*>   getParams() { return params; }
-            void                goLeft();
-            void                goTop();
+            void                returnLeft();
+            void                returnUp();
     virtual void                handleParamUpdate(Parameter* param = NULL) {};
     virtual void                handleClose();
+            void                placeControls1(int maxW = -1, int maxH=-1);
             void                putStart(int x,int y);
             void                putRight(Gobj* obj, int ow=-1, int oh=-1);
             void                putBelow(Gobj* obj, int ow=-1, int oh=-1);
@@ -47,9 +48,12 @@ protected:
             std::list<Parameter*>   params;
 
             int                 border;
+
+            // for horizontal placement
             int                 xstart1;
             int                 ystart1;
 
+            // for vertical placement
             int                 xstart2;
             int                 ystart2;
 

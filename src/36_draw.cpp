@@ -662,6 +662,7 @@ void drawGlassRound (Graphics& g,
     Path p;
     p.addEllipse (x, y, diameter, diameter);
 
+    if (1)
     {
         ColourGradient cg (Colours::white.overlaidWith (colour.withMultipliedAlpha (0.3f)), 0, y,
                            Colours::white.overlaidWith (colour.withMultipliedAlpha (0.3f)), 0, y + diameter, false);
@@ -677,6 +678,7 @@ void drawGlassRound (Graphics& g,
         g.fillPath (p);
     }
 
+    if (0)
     {
 
 #ifdef USE_OLD_JUCE

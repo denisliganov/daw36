@@ -406,7 +406,7 @@ SubWindow* MainWindow::createChildWindowFromWinObject(WinObject* wobj, int x, in
         sw->setBounds(x, y, wobj->getWidth(), wobj->getHeight());
     }
 
-    sw->setAlwaysOnTop(true);
+    //sw->setAlwaysOnTop(true);
 
     return sw;
 }

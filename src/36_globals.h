@@ -162,7 +162,7 @@ extern MixChannel*      SoloMixChannel;
 extern Instrument*      SoloInstr;
 extern bool             GPlaying;
 extern bool             GRecOn;
-
+extern bool             MixViewSingle;
 
 extern int              BaseNote;
 extern int              Octave;

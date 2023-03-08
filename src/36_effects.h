@@ -19,21 +19,23 @@ public:
 
             void                activateMenuItem(std::string item);
             ContextMenu*        createContextMenu();
-            virtual Eff*        clone();
+    virtual Eff*                clone();
             void                drawSelf(Graphics& g);
-            MixChannel*         getMixChannel() { return mixChannel; }
+            MixChannel*         getMixChannel()     { return mixChannel; }
+            Device36*           getDevice()         { return device; }
             void                handleMouseUp(InputEvent& ev);
             void                handleMouseDown(InputEvent& ev);
             void                handleMouseDrag(InputEvent& ev);
             void                handleChildEvent(Gobj * obj, InputEvent& ev);
-            virtual void        load(XmlElement* xmlEff);
+    virtual void                load(XmlElement* xmlEff);
+            void                mapControls();
             void                remap();
-            virtual void        save(XmlElement* xmlEff);
-            virtual void        setMixChannel(MixChannel* ncell);
-
-            Device36*           device;
+    virtual void                save(XmlElement* xmlEff);
+    virtual void                setMixChannel(MixChannel* ncell);
 
 private:
+
+            Device36*           device;
 
             MixChannel*         mixChannel;
 };
@@ -49,8 +51,8 @@ public:
             void                reset();
 
 protected:
-            Parameter*         filterType;
-            Parameter*        x2toggle;
+            Parameter*          filterType;
+            Parameter*          x2toggle;
             Parameter*          cutoff;
             Parameter*          resonance;
             Parameter*          bandwidth;

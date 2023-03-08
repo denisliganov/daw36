@@ -107,8 +107,11 @@ void Knob::drawSelf(Graphics& g)
 
     setc(g, .8f);
 
-    txt(g, fontId, param->getName(), height + 8, 10);
-    txt(g, fontId, param->getValString(), height + 8, height - 4);
+    txt(g, fontId, param->getName(), height + 2, 10);
+    txt(g, fontId, param->getValString(), height + 2, height - 4);
+
+    setc(g, 1.f);
+    fillx(g, height + 2, height/2, param->getValueNormalized()*(width - height - 2), 1);
 
     //txt(g, FontSmall, prm->getValString(), 0, height - 2);
     //txt(g, FontSmall, prm->getUnitString(), width - gGetTextWidth(FontSmall, prm->getUnitString()), height - 2);
@@ -121,8 +124,8 @@ void Knob::drawSelf(Graphics& g)
 
     gSetMonoColor(g, .3f);
 
-    int w = height - 4;
-    int h = height - 4;
+    int w = height*0.75f;
+    int h = height*0.75f;
 
     //w = MAX(w, h)/2;
     //h = w;
@@ -132,6 +135,9 @@ void Knob::drawSelf(Graphics& g)
 
     gSetMonoColor(g, .4f);
     gEllipseFill(g, x, y, w, h);
+
+    //(55, 45, 35)
+    //drawGlassRound(g,  x, y, w, Colour(90, 80, 10), 1);
 
     if(0 && param->getOffset() < 0)
     {

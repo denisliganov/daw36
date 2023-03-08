@@ -18,28 +18,6 @@
 
 
 
-void Parameter::addControl(Control* ct)
-{
-    controls.push_back(ct);
-
-    //ct->addParam(this);
-}
-
-void Parameter::removeControl(Control* ctrl)
-{
-    controls.remove(ctrl);
-}
-
-bool Parameter::getEnvDirect()
-{
-    return envdirect;
-}
-
-void Parameter::setEnvDirect(bool envdir)
-{
-    envdirect = envdir;
-}
-
 
 
 
@@ -68,7 +46,7 @@ Parameter::Parameter(std::string name, ParamType param_type)
     type = param_type;
     prmName = name;
 
-    if (type == Param_Selector || type == Param_Toggle)
+    if (type == Param_Selector || type == Param_Toggle || type == Param_Radio)
     {
         currentOption = 0;
     }
@@ -138,6 +116,18 @@ void Parameter::paramInit(std::string name, ParamType pt, float min_val, float m
 Parameter::~Parameter()
 {
     globalParams.remove(this);
+}
+
+void Parameter::addControl(Control* ct)
+{
+    controls.push_back(ct);
+
+    //ct->addParam(this);
+}
+
+bool Parameter::getEnvDirect()
+{
+    return envdirect;
 }
 
 std::string Parameter::getUnitString()
@@ -609,6 +599,16 @@ float Parameter::calcOutputValue(float val)
     {
         return val;
     }
+}
+
+void Parameter::removeControl(Control* ctrl)
+{
+    controls.remove(ctrl);
+}
+
+void Parameter::setEnvDirect(bool envdir)
+{
+    envdirect = envdir;
 }
 
 void Parameter::setValue(float val)
