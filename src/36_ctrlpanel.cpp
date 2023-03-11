@@ -169,8 +169,8 @@ ControlPanel::ControlPanel()
     int buttonHeight = 30;
 
     setBorder(4);
-
     putStart(4, 4);
+
     putRight(fileMenu);
     putRight(editMenu);
     putRight(helpMenu);

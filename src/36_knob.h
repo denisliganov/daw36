@@ -16,6 +16,7 @@ public:
             void                handleMouseDown(InputEvent & ev);
             void                handleMouseUp(InputEvent & ev);
             void                remap();
+            void                setVis(bool vis);
             void                updValue();
             void                updPosition();
 

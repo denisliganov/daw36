@@ -50,7 +50,36 @@ void DevParamObject::placeControls()
 
         if (prm)
         {
-            if (prm->getType() == Param_Default)
+            /*
+            else if (prm->getType() == Param_Vol)
+            {
+                obj = new Knob(prm);
+                obj->setWH(15, 15);
+            }
+            else if (prm->getType() == Param_Pan)
+            {
+                obj = new Knob(prm);
+                obj->setWH(15, 15);
+            }*/
+            if (prm->getType() == Param_Radio)
+            {
+                obj = new RadioBox(prm);
+
+                obj->setWH(100, obj->getH());
+            }
+            else if (prm->getType() == Param_Selector)
+            {
+                obj = new SelectorBox(prm);
+
+                obj->setWH(100, obj->getH());
+            }
+            else if (prm->getType() == Param_Toggle)
+            {
+                obj = new ToggleBox(prm);
+
+                obj->setWH(100, obj->getH());
+            }
+            else
             {
 /*
                 ParamBox* box = new ParamBox(prm);
@@ -64,29 +93,7 @@ void DevParamObject::placeControls()
 
                 obj->setWH(100, 30);
             }
-            /*
-            else if (prm->getType() == Param_Vol)
-            {
-                obj = new Knob(prm);
-                obj->setWH(15, 15);
-            }
-            else if (prm->getType() == Param_Pan)
-            {
-                obj = new Knob(prm);
-                obj->setWH(15, 15);
-            }*/
-            else if (prm->getType() == Param_Radio)
-            {
-                obj = new RadioBox(prm);
-            }
-            else if (prm->getType() == Param_Selector)
-            {
-                obj = new SelectorBox(prm);
-            }
-            else if (prm->getType() == Param_Toggle)
-            {
-                obj = new ToggleBox(prm);
-            }
+
         }
 
         if (obj)

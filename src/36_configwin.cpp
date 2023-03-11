@@ -80,17 +80,22 @@ ConfigWinObject::ConfigWinObject()
 
     // Position all controls
 
-    putRight(outputDevices, 280, 120);
-    putBelow(inputDevices, 280, 120);
+    putBelow(outputDevices, 280, 120);
     spaceBelow();
-    putBelow(midiOutDevices, 280, 120);
-    putBelow(midiInDevices, 280, 120);
+    putBelow(inputDevices, 280, 120);
     returnUp();
     spaceRight();
-    putRight(buffSizeBox, 200, 30);
-    putBelow(showASIOPanel, 200, 20);
     spaceBelow();
-    putBelow(chooserBox, 200, chooserBox->getH());
+    putRight(buffSizeBox, 120, 30);
+    putBelow(showASIOPanel, 120, 20);
+    spaceBelow();
+    putBelow(chooserBox, 120, chooserBox->getH());
+    spaceRight();
+    returnUp();
+    putBelow(midiOutDevices, 280, 120);
+    spaceBelow();
+    putBelow(midiInDevices, 280, 120);
+    spaceBelow(4);
 
 
 /*

@@ -41,6 +41,7 @@ public:
             bool                setPresetByName(std::string pname);
             bool                setPresetByIndex(long index);
             void                vstProcess(float* in_buff, long num_frames, long buff_frame);
+            Vst2Plugin*         getVst2() { return vst2; }
 
 private:
 

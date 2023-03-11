@@ -92,6 +92,16 @@ void Knob::handleMouseUp(InputEvent & ev)
 {
 }
 
+void Knob::setVis(bool vis)
+{
+    if (vis == false)
+    {
+        int a = 1;
+    }
+
+    Gobj::setVis(vis);
+}
+
 void Knob::remap()
 {
 //    delete parentImage;
@@ -107,8 +117,12 @@ void Knob::drawSelf(Graphics& g)
 
     setc(g, .8f);
 
-    txt(g, fontId, param->getName(), height + 2, 10);
-    txt(g, fontId, param->getValString(), height + 2, height - 4);
+    txt(g, fontId, param->getName(), height - 4, 10);
+    txt(g, fontId, param->getValString(), height - 4, height - 3);
+
+    int unitstrLen = gGetTextWidth(fontId, param->getUnitString());
+
+    txt(g, fontId, param->getUnitString(), width - unitstrLen - 2, height - 3);
 
     setc(g, 1.f);
     fillx(g, height + 2, height/2, param->getValueNormalized()*(width - height - 2), 1);
@@ -124,8 +138,8 @@ void Knob::drawSelf(Graphics& g)
 
     gSetMonoColor(g, .3f);
 
-    int w = height*0.75f;
-    int h = height*0.75f;
+    int w = height*0.8f;
+    int h = height*0.8f;
 
     //w = MAX(w, h)/2;
     //h = w;

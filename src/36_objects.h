@@ -123,7 +123,7 @@ public:
 
             void                setParent(Gobj* parent);
             void                setWindow(WinObject* w);
-            void                setVis(bool vis);
+    virtual void                setVis(bool vis);
             void                setTouchable(bool tch);
             void                setObjName(std::string title)      { objName = title; }
     virtual void                setEnable(bool en);

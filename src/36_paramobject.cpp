@@ -112,8 +112,8 @@ void ParamObject::placeControls1(int maxW, int maxH)
 
     int maxWidth = maxW;
 
-    setObjSpacing(2);
-    setBorder(4);
+    setObjSpacing(3);
+    setBorder(5);
 
     putStart(border, border);
 
@@ -121,48 +121,51 @@ void ParamObject::placeControls1(int maxW, int maxH)
     {
         Gobj* obj = NULL;
 
+        int defaultWidth = 100;
+
         if (prm)
         {
-            if (prm->getType() == Param_Default)
-            {
-/*
-                ParamBox* box = new ParamBox(prm);
-
-                box->setCoords1(0, 0, boxWidth, boxHeight);
-                box->setSliderOnly(false);
-
-                obj = box;
-*/
-                obj = new Knob(prm);
-                obj->setWH(100, 30);
-            }
-            else if (prm->getType() == Param_Radio)
+            if (prm->getType() == Param_Radio)
             {
                 obj = new RadioBox(prm);
+                obj->setWH(defaultWidth, obj->getH());
             }
             else if (prm->getType() == Param_Selector)
             {
                 obj = new SelectorBox(prm);
+                obj->setWH(defaultWidth, obj->getH());
             }
             else if (prm->getType() == Param_Toggle)
             {
                 obj = new ToggleBox(prm);
+                obj->setWH(defaultWidth, obj->getH());
             }
+            else 
+            {
+                /*
+                                ParamBox* box = new ParamBox(prm);
+
+                                box->setCoords1(0, 0, boxWidth, boxHeight);
+                                box->setSliderOnly(false);
+
+                                obj = box;
+                */
+                obj = new Knob(prm);
+                obj->setWH(defaultWidth, 30);
+            }
+
         }
 
         if (obj)
         {
             addObject(obj);
 
-            if (maxWidth > 0 && obj->getW() + objSpacing > maxWidth)
-            {
-                putRight(obj, obj->getW(), obj->getH());
-            }
-            else
+            if (xstart1 + obj->getW() + objSpacing > maxWidth)
             {
                 returnLeft();
             }
 
+            putRight(obj, obj->getW(), obj->getH());
         }
     }
 
@@ -194,12 +197,12 @@ void ParamObject::putRight(Gobj* obj, int ow, int oh)
 
     if (xstart1 > wndW)
     {
-        wndW = xstart1;
+        wndW = xstart1 - objSpacing;
     }
 
     if (ystart1 + h + objSpacing > wndH)
     {
-        wndH = ystart1 + h + objSpacing;
+        wndH = ystart1 + h;
     }
 }
 
@@ -217,14 +220,14 @@ void ParamObject::putBelow(Gobj* obj, int ow, int oh)
 
     ystart2 += h + objSpacing;
 
-    if (ystart2 > wndH)
+    if ((ystart2 - objSpacing) > wndH)
     {
-        wndH = ystart2;
+        wndH = ystart2 - objSpacing;
     }
 
-    if (xstart2 + w + objSpacing > wndW)
+    if (xstart2 + w > wndW)
     {
-        wndW = xstart2 + w + objSpacing;
+        wndW = xstart2 + w;
     }
 }
 
@@ -239,34 +242,40 @@ void ParamObject::spaceRight(int num)
         {
             wndW = xstart1;
         }
+
         num--;
     }
 }
 
-void ParamObject::spaceBelow()
+void ParamObject::spaceBelow(int num)
 {
-    ystart1 += groupSpacing;
-    ystart2 += groupSpacing;
-
-    if (ystart1 > wndH)
+    while (num > 0)
     {
-        wndH = ystart1;
+        ystart1 += groupSpacing;
+        ystart2 += groupSpacing;
+
+        if (ystart1 > wndH)
+        {
+            wndH = ystart1;
+        }
+
+        num--;
     }
 }
 
 void ParamObject::returnLeft()
 {
     xstart1 = border;
-    ystart1 = wndH;
     xstart2 = border;
-    ystart2 = wndH;
+    ystart1 = wndH + objSpacing;
+    ystart2 = wndH + objSpacing;
 }
 
 void ParamObject::returnUp()
 {
-    xstart1 = wndW;
+    xstart1 = wndW + objSpacing;
+    xstart2 = wndW + objSpacing;
     ystart1 = border;
-    xstart2 = wndW;
     ystart2 = border;
 }
 
@@ -275,6 +284,6 @@ void ParamObject::finalizePuts()
 {
     //WinObject::setWidthHeight(wndW + border, wndH + border);
 
-    setWH(wndW + border, wndH + border);
+    setWH(wndW + border - objSpacing, wndH + border - objSpacing);
 }
 

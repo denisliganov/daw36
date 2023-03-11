@@ -63,7 +63,10 @@ Parameter::Parameter(std::string name, ParamType param_type)
 Parameter::Parameter(std::string param_name, bool def_val)
 {
     type = Param_Toggle;
+
     currentOption = def_val ? 1 : 0;
+
+    setName(param_name);
 }
 
 void Parameter::paramInit(std::string name, ParamType pt, float min_val, float max_val, float default_val, UnitsType vt)

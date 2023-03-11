@@ -371,7 +371,7 @@ void Gobj::updCoords()
 
         for(Gobj* obj : objs)
         {
-            if(obj->autoMapped)
+            if(obj->getObjGroup() != ObjGroup_Highlight)
             {
                 obj->updCoords();
             }

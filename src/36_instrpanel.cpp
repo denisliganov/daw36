@@ -58,7 +58,7 @@ public:
 
             if (instr && instr->isShown())
             {
-                setCoordsAbs(0, instr->getY1() - 1, instr->getX2() + 5, instr->getY2() + 1);
+                setCoordsAbs(instr->getX1()-2, instr->getY1() - 1, instr->getX2() + 2, instr->getY2() + 1);
                 //setCoords2(0, instr->getY1() - 1, instr->getX2() + 5, instr->getY2() + 1);
             }
             else
@@ -602,10 +602,13 @@ void InstrPanel::handleChildEvent(Gobj* obj, InputEvent& ev)
         }
         else if(obj == allChannelsView)
         {
-            MixViewSingle = !allChannelsView->isPressed();
+            if (!ev.clickDown)
+            {
+                MixViewSingle = !allChannelsView->isPressed();
 
-            remap();
-            redraw();
+                remap();
+                redraw();
+            }
         }
     }
 }
@@ -920,25 +923,23 @@ void InstrPanel::setCurrInstr(Instrument* instr)
         }
     }
 
-    /*
-    if(oldInstr != NULL && oldInstr->isWindowVisible())
-    {
-        oldInstr->showWindow(false);
-        oldInstr->previewButton->release();
-    }*/
-
     instr = *currInstr;
 
     redraw();
 
     instrHighlight->updPos();
+
+    if (fxShowing)
+    {
+        MMixer->remapAndRedraw();
+    }
 }
 
 void InstrPanel::showFX()
 {
-    MObject->setMainX1(FxPanelMaxWidth + InstrControlWidth);
-
     fxShowing = true;
+
+    MObject->setMainX1(FxPanelMaxWidth + InstrControlWidth);
 
     remapAndRedraw();
 }

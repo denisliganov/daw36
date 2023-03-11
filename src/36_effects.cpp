@@ -22,6 +22,7 @@
 #include "36_text.h"
 #include "36_utils.h"
 #include "36_vst.h"
+#include "36_vstinstr.h"
 
 
 
@@ -32,7 +33,23 @@ Eff::Eff(Device36* dev)
 {
     device = dev;
 
+    VstInstr* vstDevice = dynamic_cast<VstInstr*>(device);
+
+    if (vstDevice)
+    {
+        device = vstDevice->getVst2();
+    }
+ 
+    addObject(device);
+
+    {
+        device->placeControls1(FxPanelMaxWidth - 10);
+    }
+
+    device->setEnable(false);
+
     setObjName(dev->getObjName());
+
     //setObjId(dev->getObjId());
 
     //addObject(previewButton = new EffGuiButton(), MixChanWidth - 21, 0, 20, 15);
@@ -44,7 +61,7 @@ Eff::~Eff()
 {
     if (device)
     {
-        delete device;
+        //delete device;
     }
 }
 
@@ -55,14 +72,19 @@ void Eff::remap()
     //sliderAmount->setCoords2(4, height - 12, 30, height - 4);
 
     //setWH(90, 40);
+
+    if (MixViewSingle && device->isON())
+    {
+        device->setCoords1(0, 14, device->getW(), device->getH());
+    }
 }
 
 void Eff::drawSelf(Graphics& g)
 {
-    fill(g, .5f);
+    fill(g, .32f);
 
-    //setc(g, .45f);
-    //fillx(g, 0, 0, width, height/2);
+    setc(g, .45f);
+    fillx(g, 2, 2, width - 4, 14);
 
     //rect(g, .3f);
 
@@ -91,17 +113,12 @@ void Eff::drawSelf(Graphics& g)
     //txtfit(g, FontSmall, objName, 3, th - 2, width - 2);
 
     setc(g, 1.f);
-    txtfit(g, FontSmall, device->getObjName(), 1, th - 4, width - 2);
+    txtfit(g, FontSmall, device->getObjName(), 4, th - 1, width - 2);
 }
 
 Eff* Eff::clone()
 { 
     return CreateEffect(objId);
-}
-
-void Eff::mapControls()
-{
-    device->placeControls1();
 }
 
 ContextMenu* Eff::createContextMenu()
@@ -164,7 +181,7 @@ void Eff::handleMouseUp(InputEvent& ev)
 {
     if (ev.leftClick)
     {
-        device->showWindow(!device->isWindowVisible());
+        //device->showWindow(!device->isWindowVisible());
     }
 }
 
@@ -904,6 +921,7 @@ XDelay::XDelay() : dspCorePingPongDelay()
 
     addParam(delay = new Parameter("DELAY", 0.5f, 20.f, 3, Units_Ticks));
     delay->setInterval(0.25f);
+    
     addParam(amount = new Parameter("AMOUNT", 0.f, 1.f, 1.f, Units_Percent));
     addParam(feedback = new Parameter("FEEDBACK", 0.0f, 100.f, 55.f, Units_Percent));
     addParam(pan = new Parameter("PAN", -1.0f, 1.f, 0.0f));
@@ -916,6 +934,7 @@ XDelay::XDelay() : dspCorePingPongDelay()
     addParam(lowcut = new Parameter("LOWCUT", Param_Freq, 0.f, 1.f, 0.9f, Units_Hz));
     addParam(drywet = new Parameter("DRY/WET", 0.0f, 1.f, .4f, Units_DryWet));
 
+/*
     addParam(selectTypes = new Parameter("Define:", Param_Selector));
     selectTypes->addOption("1 tick", false);
     selectTypes->addOption("2 tick", false);
@@ -923,6 +942,7 @@ XDelay::XDelay() : dspCorePingPongDelay()
     selectTypes->addOption("4 tick", false);
     selectTypes->addOption("5 tick", false);
     selectTypes->addOption("6 tick", true);
+*/
 
     reset();
 }

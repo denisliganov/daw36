@@ -192,7 +192,7 @@ Instrument::Instrument(Device36* dev)
 
     addObject(guiButton = new GuiButt());
     
-    mixChannel = MMixer->masterChannel;       // Default to master channel
+    mixChannel = MMixer->getMasterChannel();       // Default to master channel
 
     addObject(volBox = new ParamBox(device->vol));
     volBox->setSliderOnly(true);
@@ -219,7 +219,7 @@ Instrument::~Instrument()
 
     setEnable(false);
 
-    if(mixChannel != MMixer->masterChannel)
+    if(mixChannel != MMixer->getMasterChannel())
     {
         MMixer->deleteObject(mixChannel);
     }

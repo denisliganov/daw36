@@ -20,7 +20,7 @@
 
 
 
-bool            MixViewSingle = false;
+bool            MixViewSingle = true;
 
 
 Mixer::Mixer()
@@ -43,6 +43,8 @@ void Mixer::init()
 
     masterChannel->master = true;
     masterChannel->chanTitle = "MASTER";
+
+    //mixViewUpdate();
 }
 
 
@@ -136,7 +138,18 @@ void Mixer::remap()
     }
     else
     {
-        MInstrPanel->getCurrInstr()->getMixChannel()->setCoords1(0, 0, width, height);
+        for (Instrument* instr : MInstrPanel->getInstrs())
+        {
+            if (instr != MInstrPanel->getCurrInstr())
+            {
+                instr->getMixChannel()->setVis(false);
+            }
+            else
+            {
+                instr->getMixChannel()->setCoords1(0, 0, width, height);
+            }
+        }
+
     }
 
 /*
@@ -208,7 +221,7 @@ void Mixer::updateChannelIndexes()
 
     for(Instrument* instr : MInstrPanel->getInstrs())
     {
-        instr->mixChannel->setIndex(idx++);
+        instr->getMixChannel()->setIndex(idx++);
     }
 
     masterChannel->setIndex(idx++);

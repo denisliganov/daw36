@@ -130,8 +130,8 @@ void MixChannel::init(Instrument* ins)
         addParam(volParam = new Parameter("Volume", Param_Vol));
         addParam(panParam = new Parameter("Panning", Param_Pan));
 
-        addObject(volKnob = new Knob(volParam));
-        addObject(panKnob = new Knob(panParam));
+        //addObject(volKnob = new Knob(volParam));
+        //addObject(panKnob = new Knob(panParam));
 
         muteparam = NULL; // instr->muteparam;
         soloparam = NULL; // instr->soloparam;
@@ -152,15 +152,26 @@ void MixChannel::init(Instrument* ins)
     }
 
     addObject(vu = new ChanVU(true), ObjGroup_VU);
-
-    defineMonoColor(.08f);
 }
 
 void MixChannel::remap()
 {
     if (MixViewSingle)
     {
+        //mixViewUpdate();
+
         confine(0, 0, width, height - 50);
+
+        int yeff = 0;
+
+        for (Eff* eff : effs)
+        {
+            eff->getDevice()->setEnable(true);
+            eff->getDevice()->setVis(true);
+            eff->setCoords1(0, yeff, eff->getDevice()->getW(), eff->getDevice()->getH() + 14);
+
+            yeff += eff->getH() + 1;
+        }
 
         //if(volslider)
         //    volslider->setCoords1(width - 30, 1, 10, height - 2);
@@ -183,6 +194,9 @@ void MixChannel::remap()
 
         for(Eff* eff : effs)
         {
+            eff->getDevice()->setEnable(false);
+            eff->getDevice()->setVis(false);
+
             eff->setCoords1(xeff, 1, 32, height - 2);
 
             xeff += eff->getW() + 1;
@@ -407,15 +421,16 @@ ContextMenu* MixChannel::createContextMenu()
     menu->addMenuItem("1-band Equalizer");
     menu->addMenuItem("3-band Equalizer");
     menu->addMenuItem("Graphic Equalizer");
-    menu->addMenuItem("Delay");
-    menu->addMenuItem("Reverb");
-    menu->addMenuItem("Flanger");
-    menu->addMenuItem("Phaser");
-    menu->addMenuItem("Filter");
-    menu->addMenuItem("WahWah");
-    menu->addMenuItem("Distortion");
+    menu->addMenuItem("BitCrusher");
     menu->addMenuItem("Compressor");
+    menu->addMenuItem("Delay");
+    menu->addMenuItem("Distortion");
+    menu->addMenuItem("Flanger");
+    menu->addMenuItem("Filter");
+    menu->addMenuItem("Phaser");
+    menu->addMenuItem("Reverb");
     menu->addMenuItem("Stereo Expander");
+    menu->addMenuItem("WahWah");
 
     return menu;
 }
@@ -454,6 +469,10 @@ void MixChannel::activateMenuItem(std::string mi)
     else if(mi == "Graphic Equalizer")
     {
         eff = CreateEffect("eff.grapheq");
+    }
+    else if(mi == "BitCrusher")
+    {
+        eff = CreateEffect("eff.bitcrush");
     }
     else if(mi == "Delay")
     {

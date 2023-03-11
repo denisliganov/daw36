@@ -28,7 +28,6 @@ public:
             void                handleMouseDrag(InputEvent& ev);
             void                handleChildEvent(Gobj * obj, InputEvent& ev);
     virtual void                load(XmlElement* xmlEff);
-            void                mapControls();
             void                remap();
     virtual void                save(XmlElement* xmlEff);
     virtual void                setMixChannel(MixChannel* ncell);

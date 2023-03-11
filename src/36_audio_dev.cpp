@@ -254,8 +254,8 @@ void Audio36::mixMaster(const void* inputBuffer, void* outputBuffer, long totalF
                 if(MasterVol->declickCount == 0)  MasterVol->setLastVal(MasterVol->getOutVal());
             }
 
-            outL = MMixer->masterChannel->inbuff[bc++]*vol;
-            outR = MMixer->masterChannel->inbuff[bc++]*vol;
+            outL = MMixer->getMasterChannel()->inbuff[bc++]*vol;
+            outR = MMixer->getMasterChannel()->inbuff[bc++]*vol;
 
             if(outL > lMax)  lMax = outL;
             if(outR > rMax)  rMax = outR;
