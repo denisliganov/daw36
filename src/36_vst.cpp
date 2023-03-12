@@ -698,7 +698,7 @@ void Vst2Plugin::updatePresets()
         if(bzName[0] != '\0')
         {
             std::string nm = bzName;
-            pres.push_back(nm);
+            presets.push_back(nm);
         }
     }
 }
@@ -873,7 +873,7 @@ bool Vst2Plugin::setPreset(std::string name)
     {
         int idx = 0;
 
-        for(std::string pname : pres)
+        for(std::string pname : presets)
         {
             if(pname == name)
             {
@@ -893,7 +893,7 @@ bool Vst2Plugin::setPreset(std::string name)
 
 bool Vst2Plugin::setPreset(long index)
 {
-    if (index >=0 && index <= (long)pres.size())
+    if (index >=0 && index <= (long)presets.size())
     {
         setProgram(index);
 

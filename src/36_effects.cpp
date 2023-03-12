@@ -28,11 +28,13 @@
 
 
 
-class FoldButton : public Button36
+
+
+class EffFoldButton : public Button36
 {
 public:
 
-        FoldButton() : Button36(false) 
+        EffFoldButton() : Button36(false) 
         {
             ///
         }
@@ -61,12 +63,11 @@ protected:
 };
 
 
-
-class EnableButton : public ToggleBox
+class EffEnableButton : public ToggleBox
 {
 public:
 
-        EnableButton(Parameter* ptg) : ToggleBox(ptg)
+        EffEnableButton(Parameter* ptg) : ToggleBox(ptg)
         {
             ///
         }
@@ -97,11 +98,11 @@ protected:
 };
 
 
-class GuiButt : public Button36
+class EffGuiButton : public Button36
 {
 public:
 
-        GuiButt() : Button36(false) 
+        EffGuiButton() : Button36(false) 
         {
             fontId = FontInst;
         }
@@ -156,11 +157,13 @@ Eff::Eff(Device36* dev)
  
     addObject(device);
 
-    {
-        device->placeControls1(FxPanelMaxWidth - 10);
-    }
+    device->placeControls1(FxPanelMaxWidth - 10);
 
     device->setEnable(false);
+
+    addObject(guiButt = new EffGuiButton());
+    addObject(foldButt = new EffFoldButton());
+    addObject(enableButt = new EffEnableButton(device->enabled));
 
     setObjName(dev->getObjName());
 
@@ -181,14 +184,12 @@ void Eff::remap()
 {
     //previewButton->setCoords1(width - 13, 0, 12, 12);
 
-    //sliderAmount->setCoords2(4, height - 12, 30, height - 4);
-
-    //setWH(90, 40);
-
     if (MixViewSingle && device->isON())
     {
         device->setCoords1(0, 14, device->getW(), device->getH());
     }
+
+    
 }
 
 void Eff::drawSelf(Graphics& g)
@@ -531,13 +532,13 @@ GraphicEQ::GraphicEQ()
     f4 = dspCoreEqualizer.addBand(rosic::TwoPoleFilter::PEAK, 150, 0, 1);
     f9 = dspCoreEqualizer.addBand(rosic::TwoPoleFilter::LOW_SHELF, 70, 0, 1);
 
-    addParam(gain1 = new Parameter("8 KHz", -24.0f, 48.0f, 0.f, Units_dBGain));
-    addParam(gain6 = new Parameter("6.5 KHz", -24.0f, 48.0f, 0.f, Units_dBGain));
-    addParam(gain5 = new Parameter("3 KHz", -24.0f, 48.0f, 0.f, Units_dBGain));
-    addParam(gain2 = new Parameter("900 Hz", -24.0f, 48.0f, 0.f, Units_dBGain));
-    addParam(gain3 = new Parameter("500 Hz", -24.0f, 48.0f, 0.f, Units_dBGain));
-    addParam(gain4 = new Parameter("150 Hz", -24.0f, 48.0f, 0.f, Units_dBGain));
-    addParam(gain9 = new Parameter("70 Hz", -24.0f, 48.0f, 0.f, Units_dBGain));
+    addParam(gain1 = new Parameter("8 KHz", -24.0f, 24.0f, 0.f, Units_dBGain));
+    addParam(gain6 = new Parameter("6.5 KHz", -24.0f, 24.0f, 0.f, Units_dBGain));
+    addParam(gain5 = new Parameter("3 KHz", -24.0f, 24.0f, 0.f, Units_dBGain));
+    addParam(gain2 = new Parameter("900 Hz", -24.0f, 24.0f, 0.f, Units_dBGain));
+    addParam(gain3 = new Parameter("500 Hz", -24.0f, 24.0f, 0.f, Units_dBGain));
+    addParam(gain4 = new Parameter("150 Hz", -24.0f, 24.0f, 0.f, Units_dBGain));
+    addParam(gain9 = new Parameter("70 Hz", -24.0f, 24.0f, 0.f, Units_dBGain));
 
     reset();
 }

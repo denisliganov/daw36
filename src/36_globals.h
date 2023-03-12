@@ -16,7 +16,6 @@ class AlertBox;
 class Browser;
 class BpmBox;
 class BrowserList;
-class BrwEntry;
 class BrwListEntry;
 class Button36;
 class ChanVU;
@@ -165,6 +164,8 @@ extern Instrument*      SoloInstr;
 extern bool             GPlaying;
 extern bool             GRecOn;
 extern bool             MixViewSingle;
+
+extern bool             InitComplete;
 
 extern int              BaseNote;
 extern int              Octave;

@@ -8,13 +8,10 @@
 #include "36_devwin.h"
 #include "36_params.h"
 #include "36_project.h"
-#include "36_slider.h"
 #include "36_button.h"
 #include "36_config.h"
 #include "36_browser.h"
-#include "36_instr.h"
 #include "36_mixchannel.h"
-#include "36_ctrlpanel.h"
 #include "36_instrpanel.h"
 #include "36_edit.h"
 #include "36_events_triggers.h"
@@ -27,11 +24,8 @@
 
 Device36::Device36()
 {
-    internal = true;
     previewOnly = false;
-    muteparam = soloparam = false;
     muteCount = 0;
-    bypass = false;
     uniqueId = -1;
     devIdx = -1;
     rampCounterV = 0;
@@ -53,6 +47,9 @@ Device36::Device36()
     lastNoteVol = 1;
     lastNotePan = 0;
     lastNoteVal = BaseNote;
+
+    addParam(enabled = new Parameter("ENABLED", true));
+    enabled->setAutoPlaced(false);
 }
 
 Device36::~Device36()
@@ -82,7 +79,8 @@ void Device36::addBasicParamSet()
 {
     addParam(vol = new Parameter("VOL", Param_Vol));
     addParam(pan = new Parameter("PAN", Param_Pan));
-    addParam(enabled = new Parameter("ENABLED", false));
+    vol->setAutoPlaced(false);
+    pan->setAutoPlaced(false);
 }
 
 void Device36::removeElements()
@@ -127,7 +125,7 @@ void Device36::createSelfPattern()
 
 void Device36::deletePresets()
 {
-    pres.clear();
+    presets.clear();
 }
 
 // BRIEF:
@@ -140,7 +138,7 @@ void Device36::deletePresets()
 //[out]
 //    State of the effect (this) is added into parent xml node
 
-void Device36::savePresetState(XmlElement & xmlParentNode, char* preset_name, bool global)
+void Device36::saveState(XmlElement & xmlParentNode, char* preset_name, bool global)
 {
     XmlElement  *xmlStateNode = new XmlElement(T("Module"));
 
@@ -166,7 +164,7 @@ void Device36::savePresetState(XmlElement & xmlParentNode, char* preset_name, bo
 
     //Now let the child-class a chance to save anything it wants as a custom tag
 
-    saveCustomStateData(*xmlStateNode);
+    saveCustomState(*xmlStateNode);
 
     xmlParentNode.addChildElement(xmlStateNode);
 }
@@ -178,7 +176,7 @@ void Device36::savePresetState(XmlElement & xmlParentNode, char* preset_name, bo
 //     xmlStateNode - Reference to a state node (where to get parameter values)
 // [out]
 //    none
-void Device36::restoreStateData(XmlElement & xmlStateNode, bool global)
+void Device36::restoreState(XmlElement & xmlStateNode, bool global)
 {
     Device36*   pChildEffect = NULL;
     Parameter*      param;
@@ -217,7 +215,7 @@ void Device36::restoreStateData(XmlElement & xmlStateNode, bool global)
         }
         else    //if sub-node has custom tag, we need to give a child-class a chance to process it
         {
-            restoreCustomStateData(*xmlChildNode);
+            restoreCustomState(*xmlChildNode);
         }
 
         xmlChildNode = xmlChildNode->getNextElement();
@@ -265,7 +263,7 @@ void Device36::savePreset()
         _getdcwd(drive, working_dir, MAX_PATH_LENGTH - 1);
         
         //save the preset path into path variable
-        sprintf_s(path, MAX_PATH_LENGTH - 1, "%s", presetPath.data());
+        sprintf_s(path, MAX_PATH_LENGTH - 1, "%s", PATH_PRESETS);
         
         //let's save the length of the working directory, we gonna use it later
         length = strlen(working_dir);
@@ -301,20 +299,20 @@ void Device36::savePreset()
             }
         }
         
-        sprintf_s(path, MAX_PATH_LENGTH - 1, "%s%s%s", presetPath.data(), preset_name, ".cxml\0");
+        sprintf_s(path, MAX_PATH_LENGTH - 1, "%s%s%s", PATH_PRESETS, preset_name, ".cxml\0");
         
         XmlElement  xmlPresetMain(T("MPreset"));
         
         //xmlPresetMain.setAttribute(T("FormatVersion"), MAIN_PROJECT_VERSION);
         
-        savePresetState(xmlPresetMain, preset_name);
+        saveState(xmlPresetMain, preset_name);
         
         String  sFilePath(path);
         File    myFile(sFilePath);
         
         xmlPresetMain.writeToFile(myFile, String::empty);
         
-        pres.push_back(preset_name);
+        presets.push_back(preset_name);
     }
 }
 
@@ -358,7 +356,7 @@ bool Device36::setPreset(std::string pname)
                 {
                     //Start recursive traversing of XML tree and loading of the preset
 
-                    restoreStateData(*xmlMasterHeader);
+                    restoreState(*xmlMasterHeader);
 
                     return true;
                 }
@@ -379,14 +377,14 @@ bool Device36::setPreset(std::string pname)
 
 long Device36::getNumPresets()
 {
-    return pres.size();
+    return presets.size();
 }
 
 void Device36::getPresetName(long index, char *name)
 {
-    if (index < pres.size() && name != NULL)
+    if (index < presets.size() && name != NULL)
     {
-        strcpy(name, pres[index].data());
+        strcpy(name, presets[index].data());
     }
 }
 
@@ -629,6 +627,8 @@ void Device36::deClick(Trigger* tg, long num_frames, long buff_frame)
     }
 }
 
+// Stops all active triggers
+
 void Device36::forceStop()
 {
 restart:
@@ -818,7 +818,7 @@ void Device36::generateData(float* in_buff, float* out_buff, long num_frames, lo
                 actual = processTrigger(tg, framesToProcess, framesRemaining, buffFrame);
             }
 
-            if(bypass == false || muteCount < DECLICK_COUNT)
+            if(enabled->getBoolValue() == false || muteCount < DECLICK_COUNT)
             {
                 if (in_buff != NULL)
                 {
@@ -859,7 +859,7 @@ void Device36::preProcessTrigger(Trigger* tg, bool* skip, bool* fill, long num_f
 
     // Check off conditions
 
-    if(muteparam /*|| !(SoloInstr == NULL || SoloInstr == this)*/)
+    if(!isEnabled() /*|| !(SoloInstr == NULL || SoloInstr == this)*/)
     {
         // If note just begun then there's nothing to declick. Set aaFilledCount to full for immediate muting
 

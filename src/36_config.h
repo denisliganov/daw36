@@ -3,6 +3,26 @@
 
 #include "36_globals.h"
 
+//#define _WIN32_WINNT 0x0500
+
+//Find out wich platform we build for
+
+//#if (defined(_WIN32) || defined(_WIN64) || defined(_WIN32_WINNT))
+
+#define       USE_WIN32 1
+
+
+typedef short   int16; 
+typedef long    Tframe; 
+typedef float   Tdata;
+
+
+#define RELEASEBUILD FALSE
+
+
+
+
+
 
 
 #define BUFF_PROCESSING_CHUNK_SIZE              64
@@ -36,8 +56,9 @@
 #define NUM_PIANOROLL_LINES                     120
 #define PI_F                                    3.14159265f
 #define PLUGIN_LIST_FILENAME                    "vst_fxlist.lst"
-#define PROJECTS_PATH                           "Projects\\"
-#define SAMPLES_PATH                            "Samples\\"
+#define PATH_PROJECTS                           "Projects\\"
+#define PATH_SAMPLES                            "Samples\\"
+#define PATH_PRESETS                            "Presets\\"
 #define USE_OLD_JUCE
 #define VST_EXT_PATH_1                          "C:\\Program Files\\Steinberg\\VstPlugins\\"
 #define VST_EXT_PATH_2                          "C:\\Program Files\\VstPlugins\\"
@@ -53,11 +74,12 @@
 
 class ConfigData
 {
-protected:
-
 public:
 
         ConfigData();
+
+protected:
+
 };
 
 

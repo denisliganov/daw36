@@ -1,29 +1,8 @@
 
 #pragma once
 
-//#define _WIN32_WINNT 0x0500
-
-//Find out wich platform we build for
-
-//#if (defined(_WIN32) || defined(_WIN64) || defined(_WIN32_WINNT))
-
-#define       USE_WIN32 1
-
-
 #include "36_objects.h"
 #include "36_window.h"
-
-
-
-typedef short   int16; 
-typedef long    Tframe; 
-typedef float   Tdata;
-
-
-#define RELEASEBUILD FALSE
-
-
-extern bool             InitComplete;
 
 
 

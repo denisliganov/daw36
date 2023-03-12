@@ -123,7 +123,7 @@ void ParamObject::placeControls1(int maxW, int maxH)
 
         int defaultWidth = 100;
 
-        if (prm)
+        if (prm && prm->getAutoPlaced())
         {
             if (prm->getType() == Param_Radio)
             {

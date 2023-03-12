@@ -191,24 +191,19 @@ Instrument::Instrument(Device36* dev)
     panBox = NULL;
 
     addObject(guiButton = new GuiButt());
-    
+
     mixChannel = MMixer->getMasterChannel();       // Default to master channel
 
     addObject(volBox = new ParamBox(device->vol));
     volBox->setSliderOnly(true);
-
     addObject(panBox = new ParamBox(device->pan));
     panBox->setSliderOnly(true);
 
     addObject(muteButt = new EnableButton(device->enabled));
-    
+    addObject(previewButton = new PreviewButt());
     //addObject(soloButt = new SoloButton());
 
-    addObject(previewButton = new PreviewButt());
-
     addObject(ivu = new InstrVU(), ObjGroup_VU);
-
-    ivu->setEnable(false);
 
     setDevice(dev);
 }

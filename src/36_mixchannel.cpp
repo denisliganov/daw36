@@ -709,7 +709,7 @@ void MixChannel::process(int num_frames, float* out_buff)
         {
             eff->getDevice()->generateData(inbuff, outbuff, num_frames);
 
-            if(eff->getDevice()->getBypass() == false)
+            if(eff->getDevice()->isEnabled())
             {
                 // Copy output back to input for the next effect to process
 

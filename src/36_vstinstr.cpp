@@ -71,7 +71,6 @@ VstEffect::VstEffect(char* path)
 
 Vst2Module::Vst2Module(char* fullpath, Vst2Module* vst)
 {
-    internal = false;
     numEvents = 0;
 
     isLoading = true;
@@ -102,11 +101,9 @@ Vst2Module::Vst2Module(char* fullpath, Vst2Module* vst)
 
         vst2->extractParams();
 
-        presetPath = "Generators\\VST\\";
-
         vst2->updatePresets();
 
-        pres = vst2->pres;
+        presets = vst2->presets;
     }
 
     isLoading = false;

@@ -95,12 +95,14 @@ public:
             float               getValueNormalized();
             float               getDefaultValueNormalized();
     virtual float               getEditorValue();
+            bool                getAutoPlaced() { return autoPlaced; }
             bool                getReversed() { return reversed; }
             float               getInterval() { return interval; }
             void                handleRecordingFromControl(float ctrlval);
             bool                isRecording() { return recording; }
             void                load(XmlElement* xmlParamNode);
     virtual void                reset();
+            void                setAutoPlaced(bool auto_placed) { autoPlaced = auto_placed; }
     virtual void                setValue(float val);
     virtual void                setNormalizedValue(float nval);
     virtual void                setValueFromEnvelope(float envval, Envelope* env);
@@ -138,7 +140,7 @@ public:
             bool                envtweaked;
             long                lastsetframe;
             EnvPoint*           lastrecpoint;
-            bool                grouped;
+            bool                autoPlaced;
 
 
 // Toggle
@@ -160,23 +162,23 @@ public:
 
 protected:
 
-            virtual float       calcOutputValue(float val);
-            void                paramInit(std::string name, ParamType ptype, float def_val, float offs, float rng, UnitsType vt);
+            virtual float               calcOutputValue(float val);
+            void                        paramInit(std::string name, ParamType ptype, float def_val, float offs, float rng, UnitsType vt);
 
-            float               defaultValue;
-            float               interval;
-            float               logoffset;
-            float               logRange;
-            float               outVal;
-            float               offset;
-            bool                presetable;
-            float               range;
-            bool                reversed;
-            bool                recording;
-            int                 sign;
-            UnitsType           unitsType;
-            float               value;
-            std::string         prmValString;
+            float                       defaultValue;
+            float                       interval;
+            float                       logoffset;
+            float                       logRange;
+            float                       outVal;
+            float                       offset;
+            bool                        presetable;
+            float                       range;
+            bool                        reversed;
+            bool                        recording;
+            int                         sign;
+            UnitsType                   unitsType;
+            float                       value;
+            std::string                 prmValString;
 
 
             std::vector<std::string>    options;

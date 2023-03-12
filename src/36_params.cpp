@@ -45,6 +45,8 @@ Parameter::Parameter(std::string name, ParamType param_type)
 {
     type = param_type;
     prmName = name;
+    index = -1;
+    autoPlaced = true;
 
     if (type == Param_Selector || type == Param_Toggle || type == Param_Radio)
     {
@@ -63,6 +65,8 @@ Parameter::Parameter(std::string name, ParamType param_type)
 Parameter::Parameter(std::string param_name, bool def_val)
 {
     type = Param_Toggle;
+    index = -1;
+    autoPlaced = true;
 
     currentOption = def_val ? 1 : 0;
 
@@ -77,7 +81,7 @@ void Parameter::paramInit(std::string name, ParamType pt, float min_val, float m
     prmName = name;
 
     index = 0;
-    grouped = false;
+    autoPlaced = true;
     recording = false;
     envaffect = true;
     envdirect = true;

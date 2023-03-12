@@ -11,6 +11,12 @@
 
 
 
+class EffEnableButton;
+class EffFoldButton;
+class EffGuiButton;
+
+
+
 class Eff : public Gobj
 {
 public:
@@ -20,12 +26,8 @@ public:
             void                activateMenuItem(std::string item);
             ContextMenu*        createContextMenu();
     virtual Eff*                clone();
-            void                drawSelf(Graphics& g);
             MixChannel*         getMixChannel()     { return mixChannel; }
             Device36*           getDevice()         { return device; }
-            void                handleMouseUp(InputEvent& ev);
-            void                handleMouseDown(InputEvent& ev);
-            void                handleMouseDrag(InputEvent& ev);
             void                handleChildEvent(Gobj * obj, InputEvent& ev);
     virtual void                load(XmlElement* xmlEff);
             void                remap();
@@ -33,9 +35,16 @@ public:
     virtual void                setMixChannel(MixChannel* ncell);
 
 private:
+            void                drawSelf(Graphics& g);
+            void                handleMouseUp(InputEvent& ev);
+            void                handleMouseDown(InputEvent& ev);
+            void                handleMouseDrag(InputEvent& ev);
+
+            EffFoldButton*      foldButt;
+            EffGuiButton*       guiButt;
+            EffEnableButton*    enableButt;
 
             Device36*           device;
-
             MixChannel*         mixChannel;
 };
 

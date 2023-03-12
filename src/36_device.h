@@ -7,6 +7,7 @@
 
 #include "36_globals.h"
 #include "36_objects.h"
+#include "36_params.h"
 #include "36_paramobject.h"
 #include "36_config.h"
 #include "36_vu.h"
@@ -30,6 +31,7 @@ class Device36 : public ParamObject
 {
 friend InstrPanel;
 friend Instrument;
+friend Eff;
 
 public:
             Device36();
@@ -42,23 +44,20 @@ public:
             int                 getIndex() { return devIdx; }
             float               getLastNoteLength() { return lastNoteLength; }
             int                 getMuteCount()  { return muteCount; }
-            bool                getBypass()     { return bypass; }
+            bool                isEnabled()     { return enabled->getBoolValue(); }
             Gobj*               getContainer() { return container; }
             void                removeElements();
             void                handleWindowClosed();
             bool                isWindowVisible();
             bool                isPreviewOnly() { return previewOnly; }
-            bool                isInternal()    { return internal; }
 
             long                getNumPresets();
             void                getPresetName(long devIdx, char *name);
-    std::vector<std::string>&   getPresetList()  { return pres; }
+    std::vector<std::string>&   getPresetList()  { return presets; }
 
     virtual bool                setPreset(long index) { return true; };
     virtual bool                setPreset(std::string pname);
             void                savePreset();
-            void                savePresetState(XmlElement& xmlParentNode, char* preset_name = NULL, bool global = false);
-    virtual void                saveCustomStateData(XmlElement& xmlParentNode) {};
 
             void                setIndex(int idx) { devIdx = idx; }
     virtual void                setBPM(float bpm) {};
@@ -87,64 +86,47 @@ public:
             void                setLastParams(float last_length,float last_vol,float last_pan, int last_val);
             void                setVU(ChanVU* v) { vu = v; }
 
-            std::string         presetPath;
-
-    std::vector<std::string>    pres;
-
-            bool                previewOnly;
-            long                uniqueId;
-
 
             std::list<Trigger*> activeTriggers;
-            std::list<Note*>    notes;
             float               cfsV;
+            int                 devIdx;
             long                endFrame;  // last frame to fill
             Envelope*           envVol;
-
-            float               volBase;
-            float               pan0, pan1, pan2, pan3;
-            int                 rampCount;
-            float               rampCounterV;
-
-            float               tempBuff[MAX_BUFF_SIZE*2];     // Data for single trigger
-            float               outBuff[MAX_BUFF_SIZE*2];      // Date for whole session
-
-            Parameter*          vol;
-            Parameter*          pan;
-            Parameter*          enabled;
-
+            SubWindow*          guiWindow;
             float               lastNoteLength;
             float               lastNoteVol;
             float               lastNotePan;
             int                 lastNoteVal;
-
             int                 muteCount;
-
-            bool                muteparam;
-            bool                soloparam;
-
-            int                 devIdx;
-            SubWindow*          guiWindow;
-
+            std::list<Note*>    notes;
+            float               outBuff[MAX_BUFF_SIZE*2];      // Date for whole session
+            float               pan0, pan1, pan2, pan3;
+            int                 rampCount;
+            float               rampCounterV;
             Pattern*            selfPattern;
             Note*               selfNote;
+            float               tempBuff[MAX_BUFF_SIZE*2];     // Data for single trigger
+            float               volBase;
+            Parameter*          vol;
+            Parameter*          pan;
+    std::vector<std::string>    presets;
+            bool                previewOnly;
+            long                uniqueId;
 
 protected:
 
-            InstrType           type;
             Gobj*               container;
-            ChanVU*             vu;
-
-            bool                bypass;
-
+            Parameter*          enabled;
             std::string         filePath;
-
-            bool                internal;
             bool                isLoading;
             int                 lastParamIdx;
+            InstrType           type;
+            ChanVU*             vu;
 
             void                deletePresets();
-            void                restoreStateData(XmlElement & xmlStateNode, bool global = false);
-            void                restoreCustomStateData(XmlElement & xmlStateNode) {};
+            void                restoreState(XmlElement & xmlStateNode, bool global = false);
+            void                restoreCustomState(XmlElement & xmlStateNode) {};
+            void                saveState(XmlElement& xmlParentNode, char* preset_name = NULL, bool global = false);
+    virtual void                saveCustomState(XmlElement& xmlParentNode) {};
 };
 
