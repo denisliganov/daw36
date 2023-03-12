@@ -46,16 +46,18 @@ protected:
             Eff* eff = (Eff*)parent;
             eff->setMyColor(g, .4f);
 
-            fillx(g, 0, 0, width, height);
-
-            if(param->getBoolValue())
+            if(isPressed())
             {
                 //instr->setMyColor(g, 1.f);
+                setc(g, 0.8f);
             }
             else
             {
                 //instr->setMyColor(g, .6f);
+                setc(g, 0.4f);
             }
+
+            fillx(g, 0, 0, width, height);
         }
 
         void handleMouseDrag(InputEvent & ev)   { parent->handleMouseDrag(ev); }
@@ -79,16 +81,18 @@ protected:
             //Instrument* instr = (Instrument*)parent;
             //instr->setMyColor(g, .4f);
 
-            fillx(g, 0, 0, width, height);
-
             if(param->getBoolValue())
             {
                 //instr->setMyColor(g, 1.f);
+                setc(g, 0.8f);
             }
             else
             {
                 //instr->setMyColor(g, .6f);
+                setc(g, 0.4f);
             }
+
+            fillx(g, 0, 0, width, height);
 
             txt(g, FontVis, "#", width/2 - 2, height/2 + gGetTextHeight(FontVis)/2 - 1);
         }
@@ -115,12 +119,18 @@ protected:
         {
             Eff* eff = (Eff*)parent;
 
+            if(isPressed())
             {
-                eff->setMyColor(g, .3f);
-                fillx(g, 0, 0, width, height);
-                //instr->setMyColor(g, .45f);
-                //rectx(g, 0, 0, width, height);
+                //eff->setMyColor(g, 1.f);
+                setc(g, 0.8f);
             }
+            else
+            {
+                //eff->setMyColor(g, .6f);
+                setc(g, 0.4f);
+            }
+
+            fillx(g, 0, 0, width, height);
 
             bool wVis = (eff->getDevice() && eff->getDevice()->isWindowVisible());
 
@@ -157,13 +167,13 @@ Eff::Eff(Device36* dev)
  
     addObject(device);
 
-    device->placeControls1(FxPanelMaxWidth - 10);
+    device->placeControls1(FxPanelMaxWidth - FxPanelScrollerWidth);
 
     device->setEnable(false);
 
     addObject(guiButt = new EffGuiButton());
-    addObject(foldButt = new EffFoldButton());
     addObject(enableButt = new EffEnableButton(device->enabled));
+    addObject(foldButt = new EffFoldButton());
 
     setObjName(dev->getObjName());
 
@@ -186,10 +196,12 @@ void Eff::remap()
 
     if (MixViewSingle && device->isON())
     {
-        device->setCoords1(0, 14, device->getW(), device->getH());
+        device->setCoords1(0, 16, device->getW(), device->getH());
     }
 
-    
+    guiButt->setCoords1(width - 60, 0, 15, 15);
+    enableButt->setCoords1(width - 40, 0, 15, 15);
+    foldButt->setCoords1(width - 20, 0, 15, 15);
 }
 
 void Eff::drawSelf(Graphics& g)
@@ -199,7 +211,7 @@ void Eff::drawSelf(Graphics& g)
     //device->setMyColor
 
     setc(g, .45f);
-    fillx(g, 2, 2, width - 4, 14);
+    fillx(g, 2, 0, width - 4, 16);
 
     //rect(g, .3f);
 
@@ -228,7 +240,7 @@ void Eff::drawSelf(Graphics& g)
     //txtfit(g, FontSmall, objName, 3, th - 2, width - 2);
 
     setc(g, 1.f);
-    txtfit(g, FontSmall, device->getObjName(), 4, th - 1, width - 4);
+    txtfit(g, FontInst, device->getObjName(), 4, th - 1, width - 4);
 }
 
 Eff* Eff::clone()
