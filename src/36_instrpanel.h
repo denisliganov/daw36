@@ -21,7 +21,7 @@ friend Audio36;
 public:
             InstrPanel(Mixer* mixer);
             Instrument*         addInstrument(Device36* dev, Instrument* objAfter = NULL);
-            Instrument*         addVst(const char* path, VstInstr* vst);
+            Instrument*         addVst(const char* path, Vst2Module* vst);
             Instrument*         addSample(const char* path, bool temporaryForPreview = false);
             void                cloneInstrument(Instrument* i);
             void                colorizeInstruments();
@@ -40,8 +40,8 @@ public:
             void                handleMouseWheel(InputEvent& ev);
             void                hideFX();
             bool                isFxShowing()   { return fxShowing; }
-            Instrument*         loadInstrFromNewBrowser(BrwListEntry* ble);
-            VstInstr*           loadVst(const char* path, VstInstr* otherVst);
+            Instrument*         addInstrFromNewBrowser(BrwListEntry* ble);
+            Vst2Module*           loadVst(const char* path, Vst2Module* otherVst);
             Sample*             loadSample(const char* path);
             void                placeBefore(Instrument* instr, Instrument* before);
             void                resetAll();

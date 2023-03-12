@@ -18,7 +18,6 @@
 #include "36_utils.h"
 #include "36_draw.h"
 #include "36_button.h"
-#include "36_brwentry.h"
 #include "36_audio_dev.h"
 #include "36_dragndrop.h"
 #include "36.h"
@@ -115,23 +114,20 @@ InstrPanel::InstrPanel(Mixer* mixer)
 
     addObject(mixr = mixer);
 
-    //addParamWithControl(masterVolume, "sl.vol", masterVolBox = new ParamBox(masterVolume));
-
     masterVolume = new Parameter("Master", Param_Vol);
 
-    addObject(masterVolBox = new ParamBox(masterVolume));
+    //addObject(masterVolBox = new ParamBox(masterVolume));
+    //masterVolBox->setSliderOnly(true);
 
-    masterVolBox->setSliderOnly(true);
-
-    //addObject(masterVolKnob = new Knob(masterVolume));
-    //masterVolume->addControl(masterVolKnob);
+    addObject(masterVolKnob = new Knob(masterVolume));
+    masterVolume->addControl(masterVolKnob);
 
     addHighlight(instrHighlight = new InstrHighlight());
 }
 
-Instrument* InstrPanel::addVst(const char* path, VstInstr* otherVst)
+Instrument* InstrPanel::addVst(const char* path, Vst2Module* otherVst)
 {
-    VstInstr* vst = loadVst(path, otherVst);
+    Vst2Module* vst = loadVst(path, otherVst);
 
     vst->addBasicParamSet();
     vst->createSelfPattern();
@@ -637,7 +633,7 @@ void InstrPanel::updateInstrIndexes()
     }
 }
 
-Instrument* InstrPanel::loadInstrFromNewBrowser(BrwListEntry* ble)
+Instrument* InstrPanel::addInstrFromNewBrowser(BrwListEntry* ble)
 {
     if (getNumInstrs() >= 37)
     {
@@ -692,17 +688,17 @@ void InstrPanel::setInstrFromNewBrowser(BrwListEntry* ble, Instrument* instr)
     }
 }
 
-VstInstr* InstrPanel::loadVst(const char* path, VstInstr* otherVst)
+Vst2Module* InstrPanel::loadVst(const char* path, Vst2Module* otherVst)
 {
-    VstInstr* vst = NULL;
+    Vst2Module* vst = NULL;
 
     if(path != NULL)
     {
-        vst = new VstInstr((char*)path, NULL);
+        vst = new Vst2Module((char*)path, NULL);
     }
     else
     {
-        vst = new VstInstr(NULL, otherVst);
+        vst = new Vst2Module(NULL, otherVst);
     }
 
     if (!vst->isLoaded())
@@ -821,7 +817,9 @@ void InstrPanel::remap()
 {
     confine();
 
-    masterVolBox->setCoords1(width - 120, 6, -1, 16);
+    //masterVolBox->setCoords1(width - 120, 6, -1, 16);
+
+    masterVolKnob->setCoords1(width - 120, 1, 100, MainLineHeight - 2);
 
     int instrListY = MainLineHeight + 1;
     int instrListHeight = height - (instrListY + BottomPadHeight);
@@ -843,8 +841,10 @@ void InstrPanel::remap()
 
     for (Instrument* i : instrs)
     {
-        if (i->getDevice() && i->getDevice()->previewOnly)
+        if (i->getDevice()->previewOnly)
+        {
             continue;
+        }
 
         if((yoffs + i->getH()) >= 0 && yoffs <= instrListHeight)
         {

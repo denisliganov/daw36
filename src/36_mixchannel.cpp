@@ -19,7 +19,6 @@
 #include "36_draw.h"
 #include "36_keyboard.h"
 #include "36_audio_dev.h"
-#include "36_brwentry.h"
 #include "36_dragndrop.h"
 #include "36_text.h"
 #include "36_knob.h"
@@ -294,7 +293,7 @@ Eff* MixChannel::addEffectFromBrowser(BrwListEntry * de)
     if(de->getType() == Entry_DLL)
     {
         //VstEffect* vsteff = new VstEffect((char*)de->getPath().data());
-        VstInstr*  vsteff = new VstInstr((char*)de->getPath().data(), NULL);
+        Vst2Module*  vsteff = new Vst2Module((char*)de->getPath().data(), NULL);
 
         eff = new Eff(vsteff);
     }

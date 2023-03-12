@@ -69,7 +69,7 @@ VstEffect::VstEffect(char* path)
 */
 
 
-VstInstr::VstInstr(char* fullpath, VstInstr* vst)
+Vst2Module::Vst2Module(char* fullpath, Vst2Module* vst)
 {
     internal = false;
     numEvents = 0;
@@ -106,14 +106,13 @@ VstInstr::VstInstr(char* fullpath, VstInstr* vst)
 
         vst2->updatePresets();
 
-        presets = vst2->presets;         // sync lists 
         pres = vst2->pres;
     }
 
     isLoading = false;
 }
 
-VstInstr::~VstInstr()
+Vst2Module::~Vst2Module()
 {
     if (guiWindow)
     {
@@ -128,9 +127,9 @@ VstInstr::~VstInstr()
     }
 }
 
-VstInstr* VstInstr::clone()
+Vst2Module* Vst2Module::clone()
 {
-    VstInstr* clone = new VstInstr(NULL, this);
+    Vst2Module* clone = new Vst2Module(NULL, this);
 
     MemoryBlock m;
 
@@ -163,7 +162,7 @@ VstInstr* VstInstr::clone()
     return clone;
 }
 
-void VstInstr::checkBounds(Note * gnote, Trigger * tg, long num_frames)
+void Vst2Module::checkBounds(Note * gnote, Trigger * tg, long num_frames)
 {
     if(tg->framePhase + num_frames >= gnote->getFrameLength() ||
                             tg->tgState == TS_Release || tg->tgState == TS_Finished ||tg->tgState == TS_SoftFinish)
@@ -174,7 +173,7 @@ void VstInstr::checkBounds(Note * gnote, Trigger * tg, long num_frames)
     }
 }
 
-long VstInstr::handleTrigger(Trigger* tg, long num_frames, long buffframe)
+long Vst2Module::handleTrigger(Trigger* tg, long num_frames, long buffframe)
 {
     long loc_num_frames = num_frames;
 
@@ -214,7 +213,7 @@ long VstInstr::handleTrigger(Trigger* tg, long num_frames, long buffframe)
     return num_frames;
 }
 
-void VstInstr::postProcessTrigger(Trigger* tg, long num_frames, long buff_frame, long mix_buff_frame, long remaining)
+void Vst2Module::postProcessTrigger(Trigger* tg, long num_frames, long buff_frame, long mix_buff_frame, long remaining)
 {
     float       panVal;
     float       volL, volR;
@@ -258,7 +257,7 @@ void VstInstr::postProcessTrigger(Trigger* tg, long num_frames, long buff_frame,
     }
 }
 
-void VstInstr::deactivateTrigger(Trigger* tg)
+void Vst2Module::deactivateTrigger(Trigger* tg)
 {
     Note* gnote = (Note*)tg->el;
 
@@ -267,7 +266,7 @@ void VstInstr::deactivateTrigger(Trigger* tg)
     Device36::deactivateTrigger(tg);
 }
 
-void VstInstr::vstProcess(float* in_buff, long num_frames, long buff_frame)
+void Vst2Module::vstProcess(float* in_buff, long num_frames, long buff_frame)
 {
     /*
     struct VstEvents            // a block of events for the current audio block
@@ -313,7 +312,7 @@ void VstInstr::vstProcess(float* in_buff, long num_frames, long buff_frame)
 }
 
 
-void VstInstr::processDSP(float * in_buff,float * out_buff,int num_frames)
+void Vst2Module::processDSP(float * in_buff,float * out_buff,int num_frames)
 {
     // pVSTCollector->AcquireSema();
     // pPlug->pEffect->EffResume();
@@ -324,7 +323,7 @@ void VstInstr::processDSP(float * in_buff,float * out_buff,int num_frames)
     // pVSTCollector->ReleaseSema();
 }
 
-void VstInstr::generateData(float* in_buff, float* out_buff, long num_frames, long mix_buff_frame)
+void Vst2Module::generateData(float* in_buff, float* out_buff, long num_frames, long mix_buff_frame)
 {
     bool off = false;
 
@@ -458,7 +457,7 @@ void VstInstr::generateData(float* in_buff, float* out_buff, long num_frames, lo
     }
 }
 
-void VstInstr::addNoteEvent(int note, long num_frames, long frame_phase, long total_frames, float volume)
+void Vst2Module::addNoteEvent(int note, long num_frames, long frame_phase, long total_frames, float volume)
 {
     VstMidiEvent* pEv = &(MidiEvents[numEvents]);
 
@@ -523,7 +522,7 @@ struct VstMidiEvent		// to be casted from a VstEvent
     }
 }
 
-void VstInstr::postNoteON(int note, float vol)
+void Vst2Module::postNoteON(int note, float vol)
 {
     VstMidiEvent* pEv = &(MidiEvents[numEvents]);
 
@@ -548,7 +547,7 @@ void VstInstr::postNoteON(int note, float vol)
     numEvents++;
 }
 
-void VstInstr::postNoteOFF(int note, int velocity)
+void Vst2Module::postNoteOFF(int note, int velocity)
 {
     VstMidiEvent* pEv = &(MidiEvents[numEvents]);
 
@@ -570,7 +569,7 @@ void VstInstr::postNoteOFF(int note, int velocity)
     numEvents++;
 }
 
-void VstInstr::stopAllNotes()
+void Vst2Module::stopAllNotes()
 {
     VstMidiEvent* pEv = &(MidiEvents[numEvents]);
 
@@ -590,7 +589,7 @@ void VstInstr::stopAllNotes()
     numEvents++;
 }
 
-void VstInstr::save(XmlElement * instrNode)
+void Vst2Module::save(XmlElement * instrNode)
 {
    // Device36::save(instrNode);
 
@@ -613,7 +612,7 @@ void VstInstr::save(XmlElement * instrNode)
     */
 }
 
-void VstInstr::load(XmlElement * instrNode)
+void Vst2Module::load(XmlElement * instrNode)
 {
     //Device36::load(instrNode);
 
@@ -657,65 +656,45 @@ void VSTGenerator::CopyDataToClonedInstrument(Instrument * instr)
 */
  
 
-void VstInstr::reset()
+void Vst2Module::reset()
 {
     stopAllNotes();
 
     vst2->reset();
 }
 
-void VstInstr::setBufferSize(unsigned int bufferSize)
+void Vst2Module::setBufferSize(unsigned int bufferSize)
 {
     Device36::setBufferSize(bufferSize);
 
     vst2->setBufferSize(bufferSize);
 }
 
-void VstInstr::setSampleRate(float sampleRate)
+void Vst2Module::setSampleRate(float sampleRate)
 {
     Device36::setSampleRate(sampleRate);
 
     vst2->setSampleRate(sampleRate);
 }
 
-bool VstInstr::setPresetByName(std::string pname)
+bool Vst2Module::setPreset(std::string pname)
 {
-    return vst2->setPresetByName(pname.data());
+    return vst2->setPreset(pname.data());
 }
 
-bool VstInstr::setPresetByIndex(long index)
+bool Vst2Module::setPreset(long index)
 {
-    return vst2->setPresetByIndex(index);
+    return vst2->setPreset(index);
 }
 
-bool VstInstr::onUpdateDisplay()
+bool Vst2Module::onUpdateDisplay()
 {
-    if (isLoading == true || !MProject.isLoading())
-    {
-        //This effect or current project is loading
-
-        return false;
-    }
-
-    vst2->updatePresets();
-
-    presets = vst2->presets;         // sync lists 
-
-    // Update pointer to current active preset
-
-    BrwEntry* updpreset = getPresetByIndex(vst2->getProgram());
-
-    if (currPreset != updpreset)
-    {
-        currPreset = updpreset;
-    }
-
-    window->redraw();
+    // here was redundant code for highlighting current preset
 
     return true;
 }
 
-SubWindow* VstInstr::createWindow()
+SubWindow* Vst2Module::createWindow()
 {
     if(vst2->hasGui())
     {
@@ -728,14 +707,16 @@ SubWindow* VstInstr::createWindow()
 }
 
 
-void VstInstr::handleParamUpdate(Parameter* param)
+void Vst2Module::handleParamUpdate(Parameter* param)
 {
     if (param != vol && param != pan && param != enabled)
+    {
         vst2->handleParamUpdate(param);
+    }
 }
 
 
-void VstInstr::processEvents(VstEvents *pEvents)
+void Vst2Module::processEvents(VstEvents *pEvents)
 {
     vst2->processEvents(pEvents);
 }

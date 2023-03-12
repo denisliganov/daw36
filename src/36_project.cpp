@@ -15,7 +15,6 @@
 #include "36_pattern.h"
 #include "36_button.h"
 #include "36_browser.h"
-#include "36_brwentry.h"
 #include "36_history.h"
 #include "36_utils.h"
 #include "36_grid.h"
@@ -556,7 +555,7 @@ void Project36::saveProjectData(File chosenFile)
         }
     }
 
-    xmlProjectMain.writeToFile(chosenFile.withFileExtension(ProjExt), String::empty);
+    xmlProjectMain.writeToFile(chosenFile.withFileExtension("d36"), String::empty);
 
     setName(chosenFile.getFileNameWithoutExtension());
 

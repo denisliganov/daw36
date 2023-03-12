@@ -16,7 +16,6 @@
 #include "36_mixchannel.h"
 #include "36_ctrlpanel.h"
 #include "36_instrpanel.h"
-#include "36_brwentry.h"
 #include "36_edit.h"
 #include "36_events_triggers.h"
 #include "36_utils.h"
@@ -43,7 +42,6 @@ Device36::Device36()
     pan = NULL;
     enabled = NULL;
     container = NULL;
-    currPreset = NULL;
     envVol = NULL;
     envelopes = NULL;
     guiWindow = NULL;
@@ -55,8 +53,6 @@ Device36::Device36()
     lastNoteVol = 1;
     lastNotePan = 0;
     lastNoteVal = BaseNote;
-
-    currPresetName = "Untitled";
 }
 
 Device36::~Device36()
@@ -131,82 +127,7 @@ void Device36::createSelfPattern()
 
 void Device36::deletePresets()
 {
-    while(presets.size() > 0)
-    {
-        BrwEntry* pe = presets.front();
-
-        presets.remove(pe);
-
-        delete pe;
-    }
-}
-
-
-void Device36::scanForPresets()
-{
-    WIN32_FIND_DATA founddata                  = {0};
-    HANDLE          shandle                    = INVALID_HANDLE_VALUE;
-    char            temppath[MAX_PATH_LENGTH] = {0};
-    char            filename[MAX_PATH_LENGTH]  = {0};
-
-    deletePresets();
-
-    if (presetPath[0] == 0)
-    {
-        return;
-    }
-
-    /* File with user-saved preset is named in this way: <FX name>'_'<preset name>'.cpf' */
-    /* cpf - Chaotic Preset File */
-
-    sprintf(temppath,"%s%s",this->presetPath.data(), "*.cxml\0");
-    shandle = FindFirstFile(temppath, &founddata);
-
-    if (shandle != INVALID_HANDLE_VALUE)
-    {
-        do
-        {
-            sprintf(filename, "%s%s",this->presetPath.data(), founddata.cFileName);
-
-            String  sFilePath(filename);
-            File myFile(sFilePath);
-            XmlDocument myPreset(myFile);
-            XmlElement* xmlMainNode = myPreset.getDocumentElement();
-
-            if(xmlMainNode != NULL)
-            {
-                /* Sanity check */
-
-                if(xmlMainNode->hasTagName(T("ChaoticPreset"))/* && xmlMainNode->hasAttribute(T("FormatVersion"))*/)
-                {
-                    BrwEntry *preset = new BrwEntry((Device36*)this);
-
-                    preset->prindex = presets.size();
-
-                    XmlElement* xmlHeader = xmlMainNode->getChildByName(T("Module"));
-
-                    if (xmlHeader != NULL)
-                    {
-                        String Str1 = xmlHeader->getStringAttribute(T("PresetEntry"));
-
-                        preset->setObjName((const char*)Str1);
-                        //Str1.copyToBuffer((const char*)preset->name.data(), min(Str1.length(), 255));
-
-                        preset->path = filename;
-
-                        if(preset->getObjName() == currPresetName)
-                        {
-                            currPreset = preset;
-                        }
-
-                        presets.push_back(preset);
-                    }
-                }
-            }
-        }while(FindNextFile(shandle, &founddata));
-
-        FindClose(shandle);
-    }
+    pres.clear();
 }
 
 // BRIEF:
@@ -219,7 +140,7 @@ void Device36::scanForPresets()
 //[out]
 //    State of the effect (this) is added into parent xml node
 
-void Device36::saveStateData(XmlElement & xmlParentNode, char* preset_name, bool global)
+void Device36::savePresetState(XmlElement & xmlParentNode, char* preset_name, bool global)
 {
     XmlElement  *xmlStateNode = new XmlElement(T("Module"));
 
@@ -232,13 +153,9 @@ void Device36::saveStateData(XmlElement & xmlParentNode, char* preset_name, bool
     {
         xmlStateNode->setAttribute(T("PresetEntry"), preset_name);
     }
-    else if (currPreset != NULL)
-    {
-        xmlStateNode->setAttribute(T("PresetEntry"), currPreset->getObjName().data());
-    }
     else
     {
-        xmlStateNode->setAttribute(T("PresetEntry"), "default");
+        xmlStateNode->setAttribute(T("PresetEntry"), "preset.name");
     }
 
     for(Parameter* param : params)
@@ -307,131 +224,115 @@ void Device36::restoreStateData(XmlElement & xmlStateNode, bool global)
     }
 }
 
-//    Saves state of the effect in XML document (preset file) and adds the preset into the list of
+//    Saves state of the module in XML document (preset file) and adds the preset into the list of
 //    available resets, which the effect holds.
 //
 // IN:  preset_name  - Name which should be used for the preset being created
 //
 // OUT: A new preset-file is created in file system and corresponding preset item is added into effect's preset list
 //
-void Device36::savePresetAs(char * preset_name)
+void Device36::savePreset()
 {
-    BrwEntry          *preset                   = NULL;
-    char              path[MAX_PATH_LENGTH]     = {0};
-    char              cur_path[MAX_PATH_LENGTH] = {0};
-    char              working_dir[MAX_PATH_LENGTH] = {};
-    int               preset_index              = 0;
-    char*             currpos = NULL;
-    int               result = 0;
-    int               length;
-    int               drive = _getdrive();
+    AlertWindow w (T("Save preset"), T("Enter new preset devName:"), AlertWindow::QuestionIcon);
 
-    //Get current working directory
-    _getdcwd(drive, working_dir, MAX_PATH_LENGTH - 1);
+    w.setSize(132, 55);
+    char name[MAX_NAME_LENGTH];
 
-    //save the preset path into path variable
-    sprintf_s(path, MAX_PATH_LENGTH - 1, "%s", presetPath.data());
+    strcpy(name, "preset1");
 
-    //let's save the length of the working directory, we gonna use it later
-    length = strlen(working_dir);
+    w.addTextEditor (T("PresetName"), name, T(""));
+    w.addButton (T("OK"), 1, KeyPress (KeyPress::returnKey, 0, 0));
+    w.addButton (T("Cancel"), 0, KeyPress (KeyPress::escapeKey, 0, 0));
 
-    //concatenate working dir and preset path, now we have an absolute path to preset location 
-    //we ignore leading '.' in the path variable, hence copying from an address of the second symbol
-    strcat_s(working_dir, MAX_PATH_LENGTH - 1, &(path[1]));
-
-    //sanity check, if we can't create a dir with this name, then it does already exist 
-    //or requires additional parent dirs to be created first
-    //result = _mkdir(working_dir);
-    result = GetFileAttributes((LPCSTR)working_dir);
-
-    if (result == INVALID_FILE_ATTRIBUTES)
+    if(w.runModalLoop() != 0) // is they picked 'OK'
     {
-        //set initial position in the absolute path to the end of working directory
-        //we gonna go through the rest of the path and check whether the path exists
-        currpos = &(working_dir[length + 1]);
+        String nmstr = w.getTextEditorContents(T("PresetName"));
 
-        //find next/next durectory to examine
-        while ((currpos = strstr(currpos, "\\")) != NULL)
+        char preset_name[25];
+
+        nmstr.copyToBuffer(preset_name, 25);
+
+        char              path[MAX_PATH_LENGTH]     = {0};
+        char              cur_path[MAX_PATH_LENGTH] = {0};
+        char              working_dir[MAX_PATH_LENGTH] = {};
+        int               preset_index              = 0;
+        char*             currpos = NULL;
+        int               result = 0;
+        int               length;
+        int               drive = _getdrive();
+        
+        //Get current working directory
+        _getdcwd(drive, working_dir, MAX_PATH_LENGTH - 1);
+        
+        //save the preset path into path variable
+        sprintf_s(path, MAX_PATH_LENGTH - 1, "%s", presetPath.data());
+        
+        //let's save the length of the working directory, we gonna use it later
+        length = strlen(working_dir);
+        
+        //concatenate working dir and preset path, now we have an absolute path to preset location 
+        //we ignore leading '.' in the path variable, hence copying from an address of the second symbol
+        strcat_s(working_dir, MAX_PATH_LENGTH - 1, &(path[1]));
+        
+        //sanity check, if we can't create a dir with this name, then it does already exist 
+        //or requires additional parent dirs to be created first
+        //result = _mkdir(working_dir);
+        result = GetFileAttributes((LPCSTR)working_dir);
+        
+        if (result == INVALID_FILE_ATTRIBUTES)
         {
-            //length of current processing directory
-            length = currpos - working_dir;
-            strncpy_s(cur_path, MAX_PATH_LENGTH -1, working_dir, length);
-
-            //try to create the dir
-
-            _mkdir(cur_path);
-            memset(cur_path, 0, length);
-
-            ++currpos;
+            //set initial position in the absolute path to the end of working directory
+            //we gonna go through the rest of the path and check whether the path exists
+            currpos = &(working_dir[length + 1]);
+        
+            //find next/next durectory to examine
+            while ((currpos = strstr(currpos, "\\")) != NULL)
+            {
+                //length of current processing directory
+                length = currpos - working_dir;
+                strncpy_s(cur_path, MAX_PATH_LENGTH -1, working_dir, length);
+        
+                //try to create the dir
+        
+                _mkdir(cur_path);
+                memset(cur_path, 0, length);
+        
+                ++currpos;
+            }
         }
+        
+        sprintf_s(path, MAX_PATH_LENGTH - 1, "%s%s%s", presetPath.data(), preset_name, ".cxml\0");
+        
+        XmlElement  xmlPresetMain(T("MPreset"));
+        
+        //xmlPresetMain.setAttribute(T("FormatVersion"), MAIN_PROJECT_VERSION);
+        
+        savePresetState(xmlPresetMain, preset_name);
+        
+        String  sFilePath(path);
+        File    myFile(sFilePath);
+        
+        xmlPresetMain.writeToFile(myFile, String::empty);
+        
+        pres.push_back(preset_name);
     }
-
-    sprintf_s(path, MAX_PATH_LENGTH - 1, "%s%s%s", presetPath.data(), preset_name, ".cxml\0");
-
-    XmlElement  xmlPresetMain(T("MPreset"));
-
-    //xmlPresetMain.setAttribute(T("FormatVersion"), MAIN_PROJECT_VERSION);
-
-    saveStateData(xmlPresetMain, preset_name);
-
-    String  sFilePath(path);
-    File    myFile(sFilePath);
-
-    xmlPresetMain.writeToFile(myFile, String::empty);
-
-    preset = new BrwEntry((Device36*)this);
-
-    // Num is 0-based so its value is equal to the devIdx of the next preset
-
-    preset->prindex = presets.size();
-    preset->path = path;
-    preset->setObjName(preset_name);
-
-    presets.push_back(preset);
-
-    currPreset = preset;
-
-    currPresetName = preset->getObjName();
 }
 
-long Device36::getPresetIndex(char* name)
-{
-    for(BrwEntry* pe : presets)
-    {
-        if(pe->getObjName() == name)
-        {
-            return pe->prindex;
-        }
-    }
-
-    return -1;
-}
-
-bool Device36::setPresetByName(std::string pname)
-{
-    for(BrwEntry* pe : presets)
-    {
-        if(pe->getObjName() == pname)
-        {
-            return setPresetByName(pe);
-        }
-    }
-
-    return false;
-}
-
-bool Device36::setPresetByName(BrwEntry* preset)
+bool Device36::setPreset(std::string pname)
 {
     forceStop();
 
-    String  sFilePath(preset->path.data());
+    String  sFilePath("stub: construct correct path here");
+
     File myFile(sFilePath);
+
     XmlDocument myPreset(myFile);
+
     XmlElement* xmlMainNode = myPreset.getDocumentElement();
 
     if(xmlMainNode == NULL)
     {
-        MWindow->showAlertBox("Can't open preset file " + preset->getObjName());
+        MWindow->showAlertBox("Can't open preset file " + pname);
     }
     else
     {
@@ -456,9 +357,8 @@ bool Device36::setPresetByName(BrwEntry* preset)
                 else
                 {
                     //Start recursive traversing of XML tree and loading of the preset
-                    restoreStateData(*xmlMasterHeader);
 
-                    currPresetName = preset->getObjName();
+                    restoreStateData(*xmlMasterHeader);
 
                     return true;
                 }
@@ -477,83 +377,17 @@ bool Device36::setPresetByName(BrwEntry* preset)
     return false;
 }
 
-void Device36::savePreset()
-{
-    AlertWindow w (T("Save preset"), T("Enter new preset devName:"), AlertWindow::QuestionIcon);
-
-    w.setSize(132, 55);
-    char name[MAX_NAME_LENGTH];
-
-    if(currPresetName.size() == 0)
-    {
-        strcpy(name, "preset1");
-    }
-    else
-    {
-        strcpy(name, currPresetName.data());
-    }
-
-    w.addTextEditor (T("PresetName"), name, T(""));
-    w.addButton (T("OK"), 1, KeyPress (KeyPress::returnKey, 0, 0));
-    w.addButton (T("Cancel"), 0, KeyPress (KeyPress::escapeKey, 0, 0));
-
-    if(w.runModalLoop() != 0) // is they picked 'OK'
-    {
-        String nmstr = w.getTextEditorContents(T("PresetName"));
-        char name[25];
-
-        nmstr.copyToBuffer(name, 25);
-        savePresetAs(name);
-    }
-}
-
 long Device36::getNumPresets()
 {
-    return presets.size();
+    return pres.size();
 }
 
 void Device36::getPresetName(long index, char *name)
 {
-    if (((index >=0) && (index <= (long)presets.size())) && (name != NULL))
+    if (index < pres.size() && name != NULL)
     {
-        BrwEntry* preset;
-
-        // If index in DLL's preset range then get it straight from plugin 
-
-        if (index <= (long)presets.size())  preset = presets.front();
-
-        for (BrwEntry* pe : presets)
-        {
-            if (pe->prindex == index)
-            {
-                strcpy(name, pe->getObjName().data());
-                break;
-            }
-        }
+        strcpy(name, pres[index].data());
     }
-}
-
-BrwEntry* Device36::getPresetByIndex(long index)
-{
-    for(BrwEntry* pe : presets)
-    {
-        if(pe->prindex == index) return pe;
-    }
-
-    return NULL;
-}
-
-BrwEntry* Device36::getPresetByName(std::string preset_name)
-{
-    for(BrwEntry* pe : presets)
-    {
-        if (pe->getObjName() == preset_name)
-        {
-            return pe;
-        }
-    }
-
-    return NULL;
 }
 
 void Device36::showWindow(bool show)
@@ -1023,7 +857,8 @@ void Device36::preProcessTrigger(Trigger* tg, bool* skip, bool* fill, long num_f
     }
 */
 
-    // Check conditions for muting
+    // Check off conditions
+
     if(muteparam /*|| !(SoloInstr == NULL || SoloInstr == this)*/)
     {
         // If note just begun then there's nothing to declick. Set aaFilledCount to full for immediate muting

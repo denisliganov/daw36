@@ -13,7 +13,6 @@
 #include "36_effects.h"
 #include "36_audio_dev.h"
 #include "36_transport.h"
-#include "36_brwentry.h"
 #include "36_params.h"
 #include "36.h"
 #include "36_vstwin.h"
@@ -684,7 +683,6 @@ void Vst2Plugin::reset()
 void Vst2Plugin::updatePresets()
 {
     long            currentProgram          = getProgram();
-    BrwEntry*       preset                 = NULL;
     long            num_presets             = getNumPresets();
     char            bzName[MAX_NAME_LENGTH] = {0};
 
@@ -699,18 +697,8 @@ void Vst2Plugin::updatePresets()
 
         if(bzName[0] != '\0')
         {
-            preset = new BrwEntry((Device36*)this);
-            preset->prindex = idx;
-            preset->setObjName(bzName);
-
-            if(idx == currentProgram)
-            {
-                currPreset = preset;
-            }
-
-            presets.push_back(preset);
-
-            pres.push_back(preset->getObjName());
+            std::string nm = bzName;
+            pres.push_back(nm);
         }
     }
 }
@@ -850,7 +838,7 @@ bool Vst2Plugin::onSetParameterAutomated(long index,float value)
     return false;
 }
 
-void Vst2Plugin::updParamsFromPlugin()
+void Vst2Plugin::syncParamValues()
 {
     setParamLock(true);
 
@@ -879,44 +867,39 @@ void Vst2Plugin::updParamsFromPlugin()
     setParamLock(false);
 }
 
-bool Vst2Plugin::setPresetByName(std::string name)
+bool Vst2Plugin::setPreset(std::string name)
 {
     if (name != "")
     {
-        for(BrwEntry* pe : presets)
-        {
-            if(pe->getObjName() == name)
-            {
-                setProgram(pe->prindex);
-                currPreset = pe;
+        int idx = 0;
 
-                updParamsFromPlugin();
+        for(std::string pname : pres)
+        {
+            if(pname == name)
+            {
+                setProgram(idx);
+
+                syncParamValues();
 
                 return true;
             }
+
+            idx++;
         }
     }
 
     return false;
 }
 
-bool Vst2Plugin::setPresetByIndex(long index)
+bool Vst2Plugin::setPreset(long index)
 {
-    if (index >=0 && index <= (long)presets.size())
+    if (index >=0 && index <= (long)pres.size())
     {
         setProgram(index);
 
-        for(BrwEntry* pe : presets)
-        {
-            if(pe->prindex == index)
-            {
-                currPreset = pe;
+        syncParamValues();
 
-                updParamsFromPlugin();
-
-                return true;
-            }
-        }
+        return true;
     }
 
     return false;
@@ -1057,7 +1040,7 @@ bool Vst2Plugin::loadFromFXBFile (const void* const data, const int dataSize)
 
                     if((set->numPrograms) > 0)
                     {
-                        setPresetByIndex(i);
+                        setPreset(i);
                     }
 
                     if(! restoreProgramSettings (prog))
@@ -1067,7 +1050,7 @@ bool Vst2Plugin::loadFromFXBFile (const void* const data, const int dataSize)
                 }
             }
 
-            if(set->numPrograms > 0)  setPresetByIndex(oldProg);
+            if(set->numPrograms > 0)  setPreset(oldProg);
 
             const fxProgram* const prog = (const fxProgram*) (((const char*) (set->programs)) + oldProg * progLen);
 
@@ -1254,12 +1237,12 @@ bool Vst2Plugin::saveToFXBFile(MemoryBlock& dest, bool isFXB, int maxSizeMB)
             {
                 if (i != oldProgram)
                 {
-                    setPresetByIndex(i);
+                    setPreset(i);
                     setParamsInProgramBlock ((fxProgram*) (((char*) (set->programs)) + i * progLen));
                 }
             }
 
-            setPresetByIndex(oldProgram);
+            setPreset(oldProgram);
 
             restoreFromTempParameterStore (oldSettings);
         }
@@ -1306,7 +1289,6 @@ void * Vst2Plugin::onGetDirectory()
 
 bool Vst2Plugin::onUpdateDisplay() 
 { 
-
     return false; 
 }
 

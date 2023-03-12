@@ -42,7 +42,6 @@ BrowserList::BrowserList(std::string name, std::string path, BrwListType t) : Li
         currDir += "\\";
     }
 
-
     composeList();
 }
 
@@ -78,19 +77,19 @@ void BrowserList::composeList()
     {
         addEntry(new BrwListEntry("1-band Equalizer",  "eff.eq1",       Entry_Native));
         addEntry(new BrwListEntry("3-band Equalizer",  "eff.eq3",       Entry_Native));
-        addEntry(new BrwListEntry("Graphic Equalizer", "eff.grapheq",   Entry_Native));
-        addEntry(new BrwListEntry("Delay",             "eff.delay",     Entry_Native));
-        addEntry(new BrwListEntry("Compressor",        "eff.comp",      Entry_Native));
-        addEntry(new BrwListEntry("Reverb",            "eff.reverb",    Entry_Native));
-        addEntry(new BrwListEntry("Chorus",            "eff.chorus",    Entry_Native));
-        addEntry(new BrwListEntry("Flanger",           "eff.flanger",   Entry_Native));
-        addEntry(new BrwListEntry("Phaser",            "eff.phaser",    Entry_Native));
-        addEntry(new BrwListEntry("WahWah",            "eff.wah",       Entry_Native));
-        addEntry(new BrwListEntry("Distortion",        "eff.dist",      Entry_Native));
         addEntry(new BrwListEntry("BitCrusher",        "eff.bitcrush",  Entry_Native));
-        addEntry(new BrwListEntry("Stereoizer",        "eff.stereo",    Entry_Native));
+        addEntry(new BrwListEntry("Chorus",            "eff.chorus",    Entry_Native));
+        addEntry(new BrwListEntry("Compressor",        "eff.comp",      Entry_Native));
+        addEntry(new BrwListEntry("Delay",             "eff.delay",     Entry_Native));
+        addEntry(new BrwListEntry("Distortion",        "eff.dist",      Entry_Native));
         addEntry(new BrwListEntry("Filter1",           "eff.filter1",   Entry_Native));
+        addEntry(new BrwListEntry("Flanger",           "eff.flanger",   Entry_Native));
+        addEntry(new BrwListEntry("Graphic Equalizer", "eff.grapheq",   Entry_Native));
+        addEntry(new BrwListEntry("Phaser",            "eff.phaser",    Entry_Native));
+        addEntry(new BrwListEntry("Reverb",            "eff.reverb",    Entry_Native));
+        addEntry(new BrwListEntry("Stereoizer",        "eff.stereo",    Entry_Native));
         addEntry(new BrwListEntry("Tremolo",           "eff.tremolo",   Entry_Native));
+        addEntry(new BrwListEntry("WahWah",            "eff.wah",       Entry_Native));
     }
     else if (type == BrwList_WavSamples)
     {
@@ -342,8 +341,6 @@ void BrowserList::handleChildEvent(Gobj * obj,InputEvent & ev)
     {
         if (ev.doubleClick)
         {
-            // activa
-            //MInstrPanel->loadInstrFromNewBrowser(ble);
             MInstrPanel->setInstrFromNewBrowser(ble, MInstrPanel->getCurrInstr());
         }
         else

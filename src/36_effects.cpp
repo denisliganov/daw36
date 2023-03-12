@@ -147,7 +147,7 @@ Eff::Eff(Device36* dev)
 {
     device = dev;
 
-    VstInstr* vstDevice = dynamic_cast<VstInstr*>(device);
+    Vst2Module* vstDevice = dynamic_cast<Vst2Module*>(device);
 
     if (vstDevice)
     {

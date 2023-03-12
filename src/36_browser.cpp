@@ -19,7 +19,6 @@
 #include "36_draw.h"
 #include "36.h"
 #include "36_button.h"
-#include "36_brwentry.h"
 #include "36_config.h"
 #include "36_textinput.h"
 #include "36_listbox.h"

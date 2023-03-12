@@ -3,7 +3,6 @@
 
 #include <string>
 
-#include "36_brwentry.h"
 #include "36_browser.h"
 #include "36_config.h"
 #include "36_draw.h"
@@ -43,8 +42,9 @@ BrwEntry::BrwEntry(DevClass dclass, std::string nm, std::string pth, std::string
     objName = nm; 
 }
 
-BrwEntry::BrwEntry(Device36* preset_dev) : dev(preset_dev) 
+BrwEntry::BrwEntry(Device36* preset_dev)
 {
+    dev = preset_dev;
 }
 
 void BrwEntry::activateMenuItem(std::string item)

@@ -157,7 +157,6 @@
     <ClCompile Include="src\36_element.cpp" />
     <ClCompile Include="src\36_helper.cpp" />
     <ClCompile Include="src\36_browser.cpp" />
-    <ClCompile Include="src\36_brwentry.cpp" />
     <ClCompile Include="src\36_button.cpp" />
     <ClCompile Include="src\36_configwin.cpp" />
     <ClCompile Include="src\36_controls.cpp" />
@@ -340,7 +339,6 @@
     <ClInclude Include="src\36_element.h" />
     <ClInclude Include="src\36_helper.h" />
     <ClInclude Include="src\36_browser.h" />
-    <ClInclude Include="src\36_brwentry.h" />
     <ClInclude Include="src\36_button.h" />
     <ClInclude Include="src\36_config.h" />
     <ClInclude Include="src\36_configwin.h" />

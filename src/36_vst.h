@@ -45,7 +45,7 @@ extern Vst2Host*        VstHost;
 
 class Vst2Plugin : public Device36
 {
-friend  VstInstr;
+friend  Vst2Module;
 
 public:
 
@@ -112,10 +112,10 @@ public:
             void                    updateVString(Parameter* param);
             void                    handleParamUpdate(Parameter* param);
             bool                    onSetParameterAutomated(long index,float value);
-            void                    updParamsFromPlugin();
+            void                    syncParamValues();
             void                    updParamValString(Parameter* param);
-            bool                    setPresetByName(std::string pname);
-            bool                    setPresetByIndex(long index);
+            bool                    setPreset(std::string pname);
+            bool                    setPreset(long index);
             long                    getCurrentPreset();
             void                    save(XmlElement* xmlEff);
             void                    load(XmlElement* xmlEff);

@@ -33,7 +33,7 @@ void DevParamObject::placeControls()
 
     std::list<Parameter*>  showParams;
 
-    VstInstr*  vsti = dynamic_cast<VstInstr*>(device);
+    Vst2Module*  vsti = dynamic_cast<Vst2Module*>(device);
 
     if (vsti)
     {
@@ -134,7 +134,7 @@ void DevParamObject::handleChildEvent(Gobj * obj,InputEvent & ev)
 {
     if (obj == presetBox && !ev.clickDown)
     {
-        device->setPresetByName(presetBox->getCurrentName());
+        device->setPreset(presetBox->getCurrentName());
 
         WinObject::redraw();
     }

@@ -12,7 +12,6 @@
 #include "36_project.h"
 #include "36_draw.h"
 #include "36_audio_dev.h"
-#include "36_brwentry.h"
 #include "36_dragndrop.h"
 #include "36_text.h"
 #include "36_instrpanel.h"

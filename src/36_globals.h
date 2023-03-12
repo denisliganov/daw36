@@ -84,7 +84,7 @@ class TextString;
 class TextCursor;
 class Vst2Plugin;
 class Vst2Host;
-class VstInstr;
+class Vst2Module;
 class WinObject;
 class WinObject;
 
