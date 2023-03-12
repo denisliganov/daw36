@@ -276,6 +276,8 @@ void BrowserList::handleMouseUp(InputEvent& ev)
 
             composeList();
 
+            vscr->setOffset(0);
+
             remapAndRedraw();
         }
         else if (brwEntries[currentEntry]->getType() == Entry_DiskSelector)
@@ -302,6 +304,8 @@ void BrowserList::handleMouseUp(InputEvent& ev)
                 check *= 2;
                 num++;
             }
+
+            vscr->setOffset(0);
 
             remapAndRedraw();
         }

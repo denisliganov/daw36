@@ -117,26 +117,28 @@ typedef long tframe;
 
 extern HWND             WinHWND;                //-windep
 
+extern int              AuxCtrlWidth;
+extern int              AuxHeight;
+extern int              BottomPadHeight;
 extern int              CtrlPanelHeight;
-extern int              LeftGap;
-extern int              MainLineHeight;
+extern int              FxPanelMaxWidth;
+extern int              FxPanelScrollerWidth;
+extern int              FxPanelBottomHeight;
 extern int              GridScrollWidth;
+extern int              InstrHeight;
+extern int              InstrWidth;
+extern int              InstrScrollerWidth;
+extern int              InstrControlWidth;
+extern int              LeftGap;
+extern int              LineNumWidth;
+extern int              MenuButtonsSpacing;
+extern int              MenuGroupsSpacing;
+extern int              MainLineHeight;
 extern int              MixerHeight;
 extern int              MixerTopHeight;
 extern int              MixChanWidth;
 extern int              MixChannelPadHeight;
-extern int              AuxHeight;
-extern int              InstrHeight;
-extern int              InstrWidth;
-extern int              AuxCtrlWidth;
-extern int              InstrScrollerWidth;
-extern int              InstrControlWidth;
 extern int              PanelGap;
-extern int              FxPanelMaxWidth;
-extern int              BottomPadHeight;
-extern int              LineNumWidth;
-extern int              MenuButtonsSpacing;
-extern int              MenuGroupsSpacing;
 
 extern Transport*       MTransp;
 extern EditHistory*     MHistory;

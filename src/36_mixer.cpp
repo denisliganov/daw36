@@ -221,10 +221,10 @@ void Mixer::updateChannelIndexes()
 
     for(Instrument* instr : MInstrPanel->getInstrs())
     {
-        instr->getMixChannel()->setIndex(idx++);
+        //instr->getMixChannel()->setIndex(idx++);
     }
 
-    masterChannel->setIndex(idx++);
+    //masterChannel->setIndex(idx++);
 }
 
 MixChannel* Mixer::addMixChannel(Instrument * instr)

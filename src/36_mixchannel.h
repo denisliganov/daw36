@@ -6,7 +6,7 @@
 #include "36_globals.h"
 #include "36_device.h"
 #include "36_config.h"
-
+#include "36_scroller.h"
 
 #include <list>
 #include <string>
@@ -16,7 +16,7 @@
 Eff* CreateEffect(std::string effname);
 
 
-class MixChannel : public Device36
+class MixChannel : public Scrolled
 {
 friend  Mixer;
 friend  ChanVU;

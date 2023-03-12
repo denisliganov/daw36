@@ -23,8 +23,122 @@
 #include "36_utils.h"
 #include "36_vst.h"
 #include "36_vstinstr.h"
+#include "36_parambox.h"
 
 
+
+
+class FoldButton : public Button36
+{
+public:
+
+        FoldButton() : Button36(false) 
+        {
+            ///
+        }
+
+protected:
+
+        void drawSelf(Graphics& g)
+        {
+            Eff* eff = (Eff*)parent;
+            eff->setMyColor(g, .4f);
+
+            fillx(g, 0, 0, width, height);
+
+            if(param->getBoolValue())
+            {
+                //instr->setMyColor(g, 1.f);
+            }
+            else
+            {
+                //instr->setMyColor(g, .6f);
+            }
+        }
+
+        void handleMouseDrag(InputEvent & ev)   { parent->handleMouseDrag(ev); }
+        void handleMouseWheel(InputEvent & ev)   { parent->handleMouseWheel(ev); }
+};
+
+
+
+class EnableButton : public ToggleBox
+{
+public:
+
+        EnableButton(Parameter* ptg) : ToggleBox(ptg)
+        {
+            ///
+        }
+
+protected:
+
+        void drawSelf(Graphics& g)
+        {
+            //Instrument* instr = (Instrument*)parent;
+            //instr->setMyColor(g, .4f);
+
+            fillx(g, 0, 0, width, height);
+
+            if(param->getBoolValue())
+            {
+                //instr->setMyColor(g, 1.f);
+            }
+            else
+            {
+                //instr->setMyColor(g, .6f);
+            }
+
+            txt(g, FontVis, "#", width/2 - 2, height/2 + gGetTextHeight(FontVis)/2 - 1);
+        }
+
+        void handleMouseDrag(InputEvent & ev)   { parent->handleMouseDrag(ev); }
+        void handleMouseWheel(InputEvent & ev)   { parent->handleMouseWheel(ev); }
+};
+
+
+class GuiButt : public Button36
+{
+public:
+
+        GuiButt() : Button36(false) 
+        {
+            fontId = FontInst;
+        }
+
+protected:
+
+        FontId      fontId;
+
+        void drawSelf(Graphics& g)
+        {
+            Eff* eff = (Eff*)parent;
+
+            {
+                eff->setMyColor(g, .3f);
+                fillx(g, 0, 0, width, height);
+                //instr->setMyColor(g, .45f);
+                //rectx(g, 0, 0, width, height);
+            }
+
+            bool wVis = (eff->getDevice() && eff->getDevice()->isWindowVisible());
+
+            if(wVis)
+            {
+                gGradRect(g, 0xffFF9930, x1, y1, x2, y2);
+            }
+
+
+            {
+                eff->setMyColor(g, .6f);
+            }
+
+            //txt(g, fontId, eff->getAlias(), width/2 - tw/2 + 1, height/2 + th/2 - 1);
+        }
+
+        void handleMouseDrag(InputEvent & ev)   { parent->handleMouseDrag(ev); }
+        void handleMouseWheel(InputEvent & ev)   { parent->handleMouseWheel(ev); }
+};
 
 
 
@@ -51,9 +165,7 @@ Eff::Eff(Device36* dev)
     setObjName(dev->getObjName());
 
     //setObjId(dev->getObjId());
-
     //addObject(previewButton = new EffGuiButton(), MixChanWidth - 21, 0, 20, 15);
-
     //addParam(new Parameter(1, 0, 1), "", sliderAmount = new Slider36(false));
 }
 
@@ -82,6 +194,8 @@ void Eff::remap()
 void Eff::drawSelf(Graphics& g)
 {
     fill(g, .32f);
+
+    //device->setMyColor
 
     setc(g, .45f);
     fillx(g, 2, 2, width - 4, 14);
@@ -113,7 +227,7 @@ void Eff::drawSelf(Graphics& g)
     //txtfit(g, FontSmall, objName, 3, th - 2, width - 2);
 
     setc(g, 1.f);
-    txtfit(g, FontSmall, device->getObjName(), 4, th - 1, width - 2);
+    txtfit(g, FontSmall, device->getObjName(), 4, th - 1, width - 4);
 }
 
 Eff* Eff::clone()
@@ -202,7 +316,7 @@ void Eff::handleChildEvent(Gobj * obj, InputEvent& ev)
 Filter1::Filter1()
 {
     objId = "eff.filter1";
-    objName = "FLT1";
+    objName = "Filter";
     uniqueId = MAKE_FOURCC('C','F','L','T');
 
     //dspCoreCFilter3.useTwoStages(false);
@@ -350,7 +464,7 @@ void Filter1::processDSP(float* in_buff, float* out_buff, int num_frames)
 EQ1::EQ1()
 {
     objId = "eff.eq1";
-    objName = "EQ1";
+    objName = "1-Band Equalizer";
     uniqueId = MAKE_FOURCC('E','Q','0','1');
 
     //frequency = new Parameter(1000.0f, 20.0f, 19980.0f, Param_Default);
@@ -406,7 +520,7 @@ void EQ1::processDSP(float* in_buff, float* out_buff, int num_frames)
 GraphicEQ::GraphicEQ()
 {
     objId = "eff.grapheq";
-    objName = "GQ1";
+    objName = "Graphic Equalizer";
     uniqueId = MAKE_FOURCC('G','R','E','Q');
 
     f1 = dspCoreEqualizer.addBand(rosic::TwoPoleFilter::HIGH_SHELF, 8000, 0, 1);
@@ -489,7 +603,7 @@ void GraphicEQ::processDSP(float* in_buff, float* out_buff, int num_frames)
 EQ3::EQ3()
 {
     objId = "eff.eq3";
-    objName = "EQ3";
+    objName = "3-Band Equalizer";
     uniqueId = MAKE_FOURCC('E','Q','0','3');
 
     f1 = dspCoreEqualizer.addBand(rosic::TwoPoleFilter::HIGH_SHELF, 4000, 0);
@@ -570,7 +684,7 @@ void EQ3::processDSP(float* in_buff, float* out_buff, int num_frames)
 CTremolo::CTremolo()
 {
     objId = "eff.tremolo";
-    objName = "TR1";
+    objName = "Amp. Tremolo";
     uniqueId = MAKE_FOURCC('T','R','E','M');
 
     addParam(speed = new Parameter("SPEED", 0.1f, 2.35f, 1.f));
@@ -616,7 +730,7 @@ void CTremolo::processDSP(float* in_buff, float* out_buff, int num_frames)
 Compressor::Compressor()
 {
     objId = "eff.comp";
-    objName = "CMP";
+    objName = "Compressor";
     uniqueId = MAKE_FOURCC('C','O','M','P');
 
     //addParam(mode = new BoolParam(false, "MODE", "LIMITER MODE"));
@@ -708,7 +822,7 @@ void Compressor::processDSP(float* in_buff, float* out_buff, int num_frames)
 CWahWah::CWahWah()
 {
     objId = "eff.wah";
-    objName = "WAH";
+    objName = "WahWahWah";
     uniqueId = MAKE_FOURCC('W','A','H','W');
 
     addParam(modfreq = new Parameter("MODFREQ", 0.1f, 5.f, 1.25f, Units_Hz1));
@@ -767,7 +881,7 @@ void CWahWah::processDSP(float* in_buff, float* out_buff, int num_frames)
 CDistort::CDistort()
 {
     objId = "eff.dist";
-    objName = "DIS";
+    objName = "Distortion";
     uniqueId = MAKE_FOURCC('D','I','S','T');
 
     addParam(drive = new Parameter("DRIVE", 0.0f, 48.f, 32.0f, Units_dB));
@@ -822,7 +936,7 @@ void CDistort::processDSP(float* in_buff, float* out_buff, int num_frames)
 CBitCrusher::CBitCrusher()
 {
     objId = "eff.bitcrush";
-    objName = "BC";
+    objName = "BitCrusher";
     uniqueId = MAKE_FOURCC('B','I','T','C');
 
     addParam(decimation = new Parameter("DECIMATION", 1.0f, 128.f, 1.0f, Units_Integer));
@@ -869,7 +983,7 @@ void CBitCrusher::processDSP(float* in_buff, float* out_buff, int num_frames)
 CStereo::CStereo()
 {
     objId = "eff.stereo";
-    objName = "STR";
+    objName = "Stereo Expander";
     uniqueId = MAKE_FOURCC('S','T','E','R');
 
     addParam(offset = new Parameter("OFFSET", 1.0f, 100.f, 10.0f, Units_Integer));
@@ -910,7 +1024,7 @@ void CStereo::processDSP(float* in_buff, float* out_buff, int num_frames)
 XDelay::XDelay() : dspCorePingPongDelay()
 {
     objId = "eff.delay";
-    objName = "DL1";
+    objName = "Ping-Pong Delay";
     uniqueId = MAKE_FOURCC('P','P','D','L');
 
     dspCorePingPongDelay.setTrueStereoMode(true);
@@ -1016,7 +1130,7 @@ void XDelay::processDSP(float* in_buff, float* out_buff, int num_frames)
 CReverb::CReverb() : dspCoreReverb()
 {
     objId = "eff.reverb";
-    objName = "RV1";
+    objName = "Reverberation";
     uniqueId = MAKE_FOURCC('R','E','V','R');
 
     addParam(preDelay  = new Parameter("PREDELAY", 0.0f, 200.0f, 0.0f, Units_ms));
@@ -1092,7 +1206,7 @@ void CReverb::processDSP(float* in_buff, float* out_buff, int num_frames)
 CChorus::CChorus()
 {
     objId = "eff.chorus";
-    objName = "CHO";
+    objName = "Chorus";
     uniqueId = MAKE_FOURCC('C','H','O','R');
 
     dspCoreChorus = new rosic::Chorus(65535);
@@ -1150,7 +1264,7 @@ void CChorus::processDSP(float* in_buff, float* out_buff, int num_frames)
 CFlanger::CFlanger()
 {
     objId = "eff.flanger";
-    objName = "FL1";
+    objName = "Flanger";
     uniqueId = MAKE_FOURCC('F','L','N','G');
 
     dspCoreFlanger.setTempoSync(false);
@@ -1229,7 +1343,7 @@ void CFlanger::processDSP(float* in_buff, float* out_buff, int num_frames)
 CPhaser::CPhaser()
 {
     objId = "eff.phaser";
-    objName = "PH1";
+    objName = "Phaser";
     uniqueId = MAKE_FOURCC('P','H','A','S');
 
     dspCorePhaser.setTempoSync(false);

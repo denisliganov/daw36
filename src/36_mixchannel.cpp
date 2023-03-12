@@ -133,14 +133,14 @@ void MixChannel::init(Instrument* ins)
         //addObject(volKnob = new Knob(volParam));
         //addObject(panKnob = new Knob(panParam));
 
-        muteparam = NULL; // instr->muteparam;
-        soloparam = NULL; // instr->soloparam;
+        //muteparam = NULL; // instr->muteparam;
+        //soloparam = NULL; // instr->soloparam;
     }
     else    // send or master
     {
         instr = NULL;
         mchanout = NULL;
-        muteparam = NULL;
+        //muteparam = NULL;
         soloparam = NULL;
         mutetoggle = NULL;
         solotoggle = NULL;
@@ -160,15 +160,16 @@ void MixChannel::remap()
     {
         //mixViewUpdate();
 
-        confine(0, 0, width, height - 50);
+        confine(FxPanelScrollerWidth, 0, width-1, height - FxPanelBottomHeight);
 
+        int xeff = FxPanelScrollerWidth;
         int yeff = 0;
 
         for (Eff* eff : effs)
         {
             eff->getDevice()->setEnable(true);
             eff->getDevice()->setVis(true);
-            eff->setCoords1(0, yeff, eff->getDevice()->getW(), eff->getDevice()->getH() + 14);
+            eff->setCoords1(xeff, yeff, eff->getDevice()->getW(), eff->getDevice()->getH() + 14);
 
             yeff += eff->getH() + 1;
         }
@@ -358,8 +359,8 @@ void MixChannel::save(XmlElement * xmlChanNode)
 
     //xmlChanNode->addChildElement(amount1->save());
 
-    xmlChanNode->setAttribute(T("Mute"), muteparam);
-    xmlChanNode->setAttribute(T("Solo"), soloparam);
+    //xmlChanNode->setAttribute(T("Mute"), muteparam);
+    //xmlChanNode->setAttribute(T("Solo"), soloparam);
 
     for(Eff* eff : effs)
     {
@@ -386,7 +387,7 @@ void MixChannel::save(XmlElement * xmlChanNode)
 
 void MixChannel::load(XmlElement * xmlNode)
 {
-    muteparam = xmlNode->getBoolAttribute(T("Mute"));
+    //muteparam = xmlNode->getBoolAttribute(T("Mute"));
     soloparam = xmlNode->getBoolAttribute(T("Solo"));
 
     if (soloparam)

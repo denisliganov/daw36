@@ -17,7 +17,8 @@ Knob::Knob(Parameter* par)
 
     addParam(par);
 
-    angleRange = PI * 1.9f;
+    angleRange = PI * 1.5f;
+
     angleOffset = float(2*PI - angleRange)*.5f;
 
     updPosition();
@@ -117,12 +118,11 @@ void Knob::drawSelf(Graphics& g)
 
     setc(g, .8f);
 
-    txt(g, fontId, param->getName(), height - 4, 10);
-    txt(g, fontId, param->getValString(), height - 4, height - 3);
+    txt(g, fontId, param->getName() + " " + param->getUnitString(), height , 10);
+    txt(g, fontId, param->getValString(), height, height - 3);
 
-    int unitstrLen = gGetTextWidth(fontId, param->getUnitString());
-
-    txt(g, fontId, param->getUnitString(), width - unitstrLen - 2, height - 3);
+    //int unitstrLen = gGetTextWidth(fontId, param->getUnitString());
+    //txt(g, fontId, param->getUnitString(), width - unitstrLen - 2, height - 3);
 
     setc(g, 1.f);
     fillx(g, height + 2, height/2, param->getValueNormalized()*(width - height - 2), 1);
@@ -171,7 +171,6 @@ void Knob::drawSelf(Graphics& g)
     //setc(g, .2f);
     //gPie(g, x, y, w, h, PI + angleOffset, 3*PI - angleOffset);
     //gPie(g, x, y, w, h, PI, 3*PI);
-
 
     //gEllipseFill(g, x1, y1, width, height);
 

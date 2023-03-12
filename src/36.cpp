@@ -57,6 +57,8 @@ int                 AuxHeight;
 int                 BottomPadHeight;
 int                 CtrlPanelHeight;
 int                 FxPanelMaxWidth;
+int                 FxPanelScrollerWidth;
+int                 FxPanelBottomHeight;
 int                 GridScrollWidth;
 int                 InstrScrollerWidth;
 int                 InstrWidth;
@@ -112,6 +114,8 @@ MainWinObject::MainWinObject()
     InstrScrollerWidth =    16;
     InstrHeight =           32;
     FxPanelMaxWidth =       360;
+    FxPanelScrollerWidth =  20;
+    FxPanelBottomHeight =   100;
     LeftGap =               26;
     LineNumWidth =          18;
     MixerHeight =           500;

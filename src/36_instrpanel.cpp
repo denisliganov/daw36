@@ -866,11 +866,11 @@ void InstrPanel::remap()
     {
         btHideFX->setCoords1(width - btW - 1, 0, btW, btW);
 
-        allChannelsView->setCoords1(10, 0, btW, btW);
+        allChannelsView->setCoords1(2, 0, btW, btW);
 
-        confine(10, instrListY, FxPanelMaxWidth, height);
+        confine(0, instrListY, FxPanelMaxWidth-1, height);
 
-        mixr->setCoords1(10, instrListY, FxPanelMaxWidth - 10, instrListHeight);
+        mixr->setCoords1(0, instrListY, FxPanelMaxWidth, instrListHeight);
     }
     else
     {
