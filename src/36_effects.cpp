@@ -168,8 +168,9 @@ Eff::Eff(Device36* dev)
     addObject(device);
 
     device->placeControls1(FxPanelMaxWidth - FxPanelScrollerWidth);
+    device->setWH(FxPanelMaxWidth - FxPanelScrollerWidth - 5, device->getH());
 
-    device->setEnable(false);
+    device->setContainer(this);
 
     addObject(guiButt = new EffGuiButton());
     addObject(enableButt = new EffEnableButton(device->enabled));
@@ -240,7 +241,7 @@ void Eff::drawSelf(Graphics& g)
     //txtfit(g, FontSmall, objName, 3, th - 2, width - 2);
 
     setc(g, 1.f);
-    txtfit(g, FontInst, device->getObjName(), 4, th - 1, width - 4);
+    txtfit(g, FontSmall, device->getObjName(), 6, th - 1, width - 4);
 }
 
 Eff* Eff::clone()
@@ -322,7 +323,13 @@ void Eff::handleMouseDrag(InputEvent& ev)
 
 void Eff::handleChildEvent(Gobj * obj, InputEvent& ev)
 {
-    
+    if (obj == guiButt)
+    {
+        if (ev.clickDown)
+        {
+            device->showWindow(!device->isWindowVisible());
+        }
+    }
 }
 
 

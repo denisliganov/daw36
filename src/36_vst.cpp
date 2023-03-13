@@ -828,7 +828,9 @@ bool Vst2Plugin::onSetParameterAutomated(long index,float value)
         if (param->getIndex() == index)
         {
             setParamLock(true);
+
             param->adjustFromControl(NULL, 0, value);
+
             setParamLock(false);
 
             break;

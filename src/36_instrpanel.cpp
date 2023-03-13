@@ -819,7 +819,7 @@ void InstrPanel::remap()
 
     //masterVolBox->setCoords1(width - 120, 6, -1, 16);
 
-    masterVolKnob->setCoords1(width - 120, 1, 100, MainLineHeight - 2);
+    masterVolKnob->setCoords1(width - 130, 1, 100, MainLineHeight - 2);
 
     int instrListY = MainLineHeight + 1;
     int instrListHeight = height - (instrListY + BottomPadHeight);

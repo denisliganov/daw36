@@ -115,7 +115,7 @@ MainWinObject::MainWinObject()
     InstrHeight =           32;
     FxPanelMaxWidth =       360;
     FxPanelScrollerWidth =  20;
-    FxPanelBottomHeight =   100;
+    FxPanelBottomHeight =   60;
     LeftGap =               26;
     LineNumWidth =          18;
     MixerHeight =           500;

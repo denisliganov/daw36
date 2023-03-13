@@ -114,18 +114,21 @@ void Knob::drawSelf(Graphics& g)
 {
     Instrument* instr = dynamic_cast<Instrument*>(parent);
 
-    fill(g, .28f);
+    fill(g, .3f);
+    //fill(g, .32f);
 
     setc(g, .8f);
 
-    txt(g, fontId, param->getName() + " " + param->getUnitString(), height , 10);
-    txt(g, fontId, param->getValString(), height, height - 3);
+    int textX = 4;  // height + 2
+
+    txt(g, fontId, param->getName() + " " + param->getUnitString(), textX, 12);
+    txt(g, fontId, param->getValString(), textX, height - 6);
 
     //int unitstrLen = gGetTextWidth(fontId, param->getUnitString());
     //txt(g, fontId, param->getUnitString(), width - unitstrLen - 2, height - 3);
 
-    setc(g, 1.f);
-    fillx(g, height + 2, height/2, param->getValueNormalized()*(width - height - 2), 1);
+    //setc(g, 1.f);
+    //fillx(g, height + 2, height/2, param->getValueNormalized()*(width - height - 2), 1);
 
     //txt(g, FontSmall, prm->getValString(), 0, height - 2);
     //txt(g, FontSmall, prm->getUnitString(), width - gGetTextWidth(FontSmall, prm->getUnitString()), height - 2);
@@ -136,91 +139,83 @@ void Knob::drawSelf(Graphics& g)
 
     //float s = 1.f/2*PI*((width-2)/2);
 
-    gSetMonoColor(g, .3f);
-
-    int w = height*0.8f;
-    int h = height*0.8f;
-
-    //w = MAX(w, h)/2;
-    //h = w;
-
-    int x = x1 + 2;
-    int y = y1 + 2;
-
-    gSetMonoColor(g, .4f);
-    gEllipseFill(g, x, y, w, h);
-
-    //(55, 45, 35)
-    //drawGlassRound(g,  x, y, w, Colour(90, 80, 10), 1);
-
-    if(0 && param->getOffset() < 0)
+    // Knob
+    if (false)
     {
-        float o = param->getOffset() / param->getRange();
-        float oa = abs(o*angleRange);
 
-        float rad = float(w-2)/2;
-        float singleAngle = 1.f/(2*PI);
-        float ratio = 1.f/(2*PI*rad);
-        float singlePixelAngle = ratio*2*PI;
+        gSetMonoColor(g, .3f);
 
-        gSetMonoColor(g, .6f);
+        int w = height*0.8f;
+        int h = height*0.8f;
 
-        gPie(g, x1+1, y1+1, width-2, height-2, PI + angleOffset + oa, PI + angleOffset + oa);
+        //w = MAX(w, h)/2;
+        //h = w;
+
+        int x = x1 + 2;
+        int y = y1 + 2;
+
+        gSetMonoColor(g, .4f);
+        gEllipseFill(g, x, y, w, h);
+
+        //(55, 45, 35)
+        //drawGlassRound(g,  x, y, w, Colour(90, 80, 10), 1);
+
+        if(0 && param->getOffset() < 0)
+        {
+            float o = param->getOffset() / param->getRange();
+            float oa = abs(o*angleRange);
+
+            float rad = float(w-2)/2;
+            float singleAngle = 1.f/(2*PI);
+            float ratio = 1.f/(2*PI*rad);
+            float singlePixelAngle = ratio*2*PI;
+
+            gSetMonoColor(g, .6f);
+
+            gPie(g, x1+1, y1+1, width-2, height-2, PI + angleOffset + oa, PI + angleOffset + oa);
+        }
+
+        //setc(g, .2f);
+        //gPie(g, x, y, w, h, PI + angleOffset, 3*PI - angleOffset);
+        //gPie(g, x, y, w, h, PI, 3*PI);
+
+        //gEllipseFill(g, x1, y1, width, height);
+
+        float xadv0, xadv1, yadv0, yadv1;
+
+        int rrad0 = w/2 - 1;
+        int rrad1 = rrad0/4.f;
+
+        float ang = positionAngle - (PI/2.f - angleOffset);
+
+        if (positionAngle >= PI / 2)
+        {
+            xadv0 = rrad0 * cos(ang);
+            xadv1 = rrad1 * cos(ang);
+        }
+        else
+        {
+            xadv0 = -float(rrad0 * cos(PI - ang));
+            xadv1 = -float(rrad1 * cos(PI - ang));
+        }
+
+        yadv1 = rrad1 * sin(ang);
+        yadv0 = rrad0 * sin(ang);
+
+        //if(instr)
+        //    instr->setMyColor(g,.9);
+        //else
+        //    parent->setMyColor(g, .9f);
+
+        setc(g, 0.9f);
+
+        int kx1 = (float)RoundFloat(x + w/2 + xadv1);
+        int ky1 = (float)RoundFloat(y + h/2 - yadv1);
+        int kx2 = (float)RoundFloat(x + w/2 + xadv0);
+        int ky2 = (float)RoundFloat(y + h/2 - yadv0);
+
+        gDoubleLine(g, kx1, ky1, kx2, ky2, 2);
     }
-
-    //setc(g, .2f);
-    //gPie(g, x, y, w, h, PI + angleOffset, 3*PI - angleOffset);
-    //gPie(g, x, y, w, h, PI, 3*PI);
-
-    //gEllipseFill(g, x1, y1, width, height);
-
-    float xadv0, xadv1, yadv0, yadv1;
-
-    int rrad0 = w/2 - 1;
-    int rrad1 = rrad0/4.f;
-
-    float ang = positionAngle - (PI/2.f - angleOffset);
-
-    if (positionAngle >= PI / 2)
-    {
-        xadv0 = rrad0 * cos(ang);
-        xadv1 = rrad1 * cos(ang);
-    }
-    else
-    {
-        xadv0 = -float(rrad0 * cos(PI - ang));
-        xadv1 = -float(rrad1 * cos(PI - ang));
-    }
-
-    yadv1 = rrad1 * sin(ang);
-    yadv0 = rrad0 * sin(ang);
-
-    //if(instr)
-    //    instr->setMyColor(g,.9);
-    //else
-    //    parent->setMyColor(g, .9f);
-
-    setc(g, 0.9f);
-
-    int kx1 = (float)RoundFloat(x + w/2 + xadv1);
-    int ky1 = (float)RoundFloat(y + h/2 - yadv1);
-    int kx2 = (float)RoundFloat(x + w/2 + xadv0);
-    int ky2 = (float)RoundFloat(y + h/2 - yadv0);
-
-    gDoubleLine(g, kx1, ky1, kx2, ky2, 2);
-
-    //Gobj::setc(g, 8.f);
-    //std::string val = prm->getValString() + " " + prm->getUnitString();
-    //txt(g, fontId, val, width/2 - gGetTextWidth(fontId, prm->getValString())/2, height/2 + headerHeight);
-
-    setc(g, 0.35f);
-    //fillx(g, 0, 0, width, headerHeight);
-
-    setc(g, 0.8f);
-    //txtfit(g, fontId, param->getName(), 3, 12, w - 2);
-
-    //setc(g, 0.5f);
-    //rectx(g, 0, headerHeight, width, height - headerHeight);
 }
 
 

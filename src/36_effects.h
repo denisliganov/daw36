@@ -34,7 +34,7 @@ public:
     virtual void                save(XmlElement* xmlEff);
     virtual void                setMixChannel(MixChannel* ncell);
 
-private:
+protected:
             void                drawSelf(Graphics& g);
             void                handleMouseUp(InputEvent& ev);
             void                handleMouseDown(InputEvent& ev);
