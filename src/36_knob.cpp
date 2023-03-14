@@ -114,7 +114,7 @@ void Knob::drawSelf(Graphics& g)
 {
     Instrument* instr = dynamic_cast<Instrument*>(parent);
 
-    fill(g, .3f);
+    fill(g, .28f);
     //fill(g, .32f);
 
     setc(g, .8f);

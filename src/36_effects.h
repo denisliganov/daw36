@@ -164,6 +164,8 @@ public:
             void                handleParamUpdate(Parameter* param = NULL);
             void                processDSP(float* in_buff, float* out_buff, int num_frames);
             void                reset();
+            void                drawSelf(Graphics & g);
+            void                drawOverChildren(Graphics & g);
 
 protected:
 

@@ -242,7 +242,7 @@ void ToggleBox::drawSelf(Graphics& g)
 //    rectx(g, width - width/4, 0, height, height);
 
     setc(g, .9f);
-    txtfit(g, FontBold, param->getName(), height + 6 /*(width - width/4)/2 - gGetTextWidth(fontId, prmToggle->getName())/2*/, height/2 + 4, width - height);
+    txtfit(g, FontSmall, param->getName(), height + 6 /*(width - width/4)/2 - gGetTextWidth(fontId, prmToggle->getName())/2*/, height/2 + 4, width - height);
 }
 
 void ToggleBox::handleMouseDown(InputEvent & ev)

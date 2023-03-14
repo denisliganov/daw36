@@ -648,6 +648,45 @@ EQ3::EQ3()
     reset();
 }
 
+void EQ3::drawSelf(Graphics & g)
+{
+    fill(g, .3f);
+    rect(g, .35f);
+}
+
+struct Point36 { int x; int y; };
+
+void EQ3::drawOverChildren(Graphics & g)
+{
+    setc(g, 0.8f);
+
+    Point36 eq3[7] = {  0,  10, 
+                        10, 0,
+                        20, 10,
+                        30, 0,
+                        40, 10,
+                        50, 0,
+                        60, 10};
+
+    Path p;
+
+    p.startNewSubPath(float(x1 + eq3[0].x), float(y1 + eq3[0].y));
+
+    for (int c = 1; c < 7; c++)
+    {
+        p.lineTo(float(x1 + eq3[c].x), float(y1 + eq3[c].y));
+    }
+    
+    //p.closeSubPath();
+/*
+    p.startNewSubPath(x1, y1);
+
+    p.lineTo(x1 + 30, y1 + 30);
+    p.lineTo(x1 + 40, y1 + 20);*/
+
+    g.strokePath(p, PathStrokeType(1));
+}
+
 void EQ3::handleParamUpdate(Parameter* param)
 {
     if(param == gain1)

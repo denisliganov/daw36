@@ -225,11 +225,11 @@ void MixChannel::drawSelf(Graphics& g)
 
     setc(g, .2f);
 
-    rectx(g, FxPanelScrollerWidth-1, 0, width - FxPanelScrollerWidth, height - FxPanelBottomHeight + 1);
+    rectx(g, 0, 0, width, height - FxPanelBottomHeight + 1);
 
     setc(g, .15f);
 
-    fillx(g, FxPanelScrollerWidth, 0, width - FxPanelScrollerWidth, height - FxPanelBottomHeight);
+    fillx(g, 0, 0, width, height - FxPanelBottomHeight);
 
     
 }
