@@ -692,14 +692,9 @@ Vst2Module* InstrPanel::loadVst(const char* path, Vst2Module* otherVst)
 {
     Vst2Module* vst = NULL;
 
-    if(path != NULL)
-    {
-        vst = new Vst2Module((char*)path, NULL);
-    }
-    else
-    {
-        vst = new Vst2Module(NULL, otherVst);
-    }
+    std::string vstPath = path != NULL ? path : otherVst->getPath();
+
+    vst = new Vst2Module((char*)path);
 
     if (!vst->isLoaded())
     {
@@ -708,14 +703,7 @@ Vst2Module* InstrPanel::loadVst(const char* path, Vst2Module* otherVst)
         return NULL;
     }
 
-    if(path != NULL)
-    {
-        vst->filePath = path;
-    }
-    else
-    {
-        vst->filePath = otherVst->filePath;
-    }
+    vst->setPath(path);
 
     return vst;
 }

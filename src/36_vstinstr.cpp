@@ -69,33 +69,19 @@ VstEffect::VstEffect(char* path)
 */
 
 
-Vst2Module::Vst2Module(char* fullpath, Vst2Module* vst)
+Vst2Module::Vst2Module(std::string fullpath)
 {
     numEvents = 0;
 
     isLoading = true;
 
-    if(fullpath != NULL)
-    {
-        vst2 = VstHost->loadModuleFromFile(fullpath);
-    }
-    else
-    {
-        vst2 = VstHost->loadModuleFromFile((char*)vst->filePath.data());
-    }
+    vst2 = VstHost->loadModuleFromFile((char*)fullpath.data());
 
     if (vst2 != NULL)
     {
         uniqueId = vst2->aeff->uniqueID;
 
-        if (fullpath)
-        {
-            filePath = fullpath;
-        }
-        else
-        {
-            filePath = vst2->vstpath;
-        }
+        setPath(fullpath);
 
         objName = ToUpperCase(vst2->objName);
 
@@ -126,7 +112,7 @@ Vst2Module::~Vst2Module()
 
 Vst2Module* Vst2Module::clone()
 {
-    Vst2Module* clone = new Vst2Module(NULL, this);
+    Vst2Module* clone = new Vst2Module(filePath);
 
     MemoryBlock m;
 

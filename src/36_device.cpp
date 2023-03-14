@@ -63,8 +63,6 @@ Device36::~Device36()
         delete param;
     }
 
-    //deletePresets();
-
     if(guiWindow)
     {
         guiWindow->setOpen(false);

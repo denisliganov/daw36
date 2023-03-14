@@ -121,7 +121,7 @@ void ParamObject::placeControls1(int maxW, int maxH)
     {
         Gobj* obj = NULL;
 
-        int defaultWidth = 60;
+        int defaultWidth = 80;
 
         if (prm && prm->getAutoPlaced())
         {
@@ -151,7 +151,7 @@ void ParamObject::placeControls1(int maxW, int maxH)
                                 obj = box;
                 */
                 obj = new Knob(prm);
-                obj->setWH(defaultWidth, 30);
+                obj->setWH(defaultWidth, 20);
             }
 
         }

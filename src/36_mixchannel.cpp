@@ -256,7 +256,7 @@ Eff* MixChannel::addEffectFromBrowser(BrwListEntry * de)
     if(de->getType() == Entry_DLL)
     {
         //VstEffect* vsteff = new VstEffect((char*)de->getPath().data());
-        Vst2Module*  vsteff = new Vst2Module((char*)de->getPath().data(), NULL);
+        Vst2Module*  vsteff = new Vst2Module(de->getPath());
 
         eff = new Eff(vsteff);
     }

@@ -36,7 +36,7 @@ Sample::Sample(float* data, char* smp_path, SF_INFO sfinfo)
 
     if(smp_path != NULL)
     {
-        filePath = smp_path;
+        setPath(smp_path);
  
         char* nm = (char*)smp_path;
 

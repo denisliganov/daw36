@@ -13,7 +13,7 @@ class Vst2Module: public Device36
 {
 public:
 
-            Vst2Module(char* fullpath, Vst2Module* vst);
+            Vst2Module(std::string fullpath);
     virtual ~Vst2Module();
 
             void                addNoteEvent(int note, long num_frames, long frame_phase, long total_frames, float volume);

@@ -112,7 +112,6 @@ Vst2Plugin::Vst2Plugin(const char* path, Vst2Host* host, void* ParentWindow)
     hasgui = false;
     generator = false;
     parendwindow = ParentWindow;
-    vstParamWin = NULL;
     numins = numouts = 0;
 
     if (!loadFromDll(path))                      // try to load the thing

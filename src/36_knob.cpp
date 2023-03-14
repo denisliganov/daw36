@@ -117,15 +117,17 @@ void Knob::drawSelf(Graphics& g)
     fill(g, .28f);
     //fill(g, .32f);
 
-    setc(g, .8f);
-
     int textX = 4;  // height + 2
+    int namestrLen = gGetTextWidth(fontId, param->getName());
+    int unitstrLen = gGetTextWidth(fontId, param->getUnitString());
 
-    txt(g, fontId, param->getName() + " " + param->getUnitString(), textX, 12);
-    txt(g, fontId, param->getValString(), textX, height - 6);
-
-    //int unitstrLen = gGetTextWidth(fontId, param->getUnitString());
-    //txt(g, fontId, param->getUnitString(), width - unitstrLen - 2, height - 3);
+    setc(g, .6f);
+    txt(g, fontId, param->getName() + ": ", textX, 12);
+    setc(g, .8f);
+    txt(g, fontId, param->getValString(), textX + namestrLen + 4, 12);
+    //txt(g, fontId, param->getValString(), textX, height - 5);
+    setc(g, .99f);
+    txt(g, fontId, param->getUnitString(), width - unitstrLen - 2, height - 5);
 
     //setc(g, 1.f);
     //fillx(g, height + 2, height/2, param->getValueNormalized()*(width - height - 2), 1);

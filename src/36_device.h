@@ -65,6 +65,8 @@ public:
     virtual void                setSampleRate(float sampleRate) {};
     virtual void                showWindow(bool show);
             void                setContainer(Gobj* cnt) { container = cnt; }
+            void                setPath(std::string path)       { filePath = path; }
+            std::string         getPath()       { return filePath; }
 
     virtual void                activateTrigger(Trigger* tg);
     virtual void                deactivateTrigger(Trigger* tg);

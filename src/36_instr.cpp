@@ -226,6 +226,8 @@ Instrument::~Instrument()
 
     device->removeElements();
 
+    delete device;
+
     ReleaseMutex(MixerMutex);
 }
 

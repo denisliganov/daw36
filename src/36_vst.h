@@ -49,10 +49,13 @@ friend  Vst2Module;
 
 public:
 
-            SubWindow*              vstGuiWin;
-            JuceVstParamWindow*     vstParamWin;
-
             AEffect                *aeff;               // Steinberg base struct
+            SubWindow*              vstGuiWin;
+            bool                    needidle;
+            bool                    wantsmidi;
+
+private:
+            
             Vst2Host               *vsthost;
             long                    vstindex;           // Index in VSTHost plugin array
             char                   *vstpath;
@@ -63,12 +66,8 @@ public:
             int                     numins;
             int                     numouts;
             bool                    guiopen;
-            bool                    needidle;
             bool                    ineditidle;
-            bool                    wantsmidi;
             bool                    settingprogram;
-
-private:
 
             void*                   parendwindow;
             float                 **inbuffs;
