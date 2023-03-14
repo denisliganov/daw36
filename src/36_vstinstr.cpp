@@ -684,13 +684,6 @@ bool Vst2Module::setPreset(long index)
     return vst2->setPreset(index);
 }
 
-bool Vst2Module::onUpdateDisplay()
-{
-    // here was redundant code for highlighting current preset
-
-    return true;
-}
-
 SubWindow* Vst2Module::createWindow()
 {
     if(vst2->hasGui())

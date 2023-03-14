@@ -77,10 +77,8 @@ void Parameter::paramInit(std::string name, ParamType pt, float min_val, float m
 {
     type = pt;
     unitsType = vt;
-
     prmName = name;
-
-    index = 0;
+    index = -1;
     autoPlaced = true;
     recording = false;
     envaffect = true;

@@ -221,54 +221,17 @@ void MixChannel::drawSelf(Graphics& g)
 {
     int baseheight = MixChannelPadHeight;
 
-    fill(g, .2f);
+    fill(g, .3f);
 
-    //setc(g, 1.f);
-    //gTextFit(g, FontSmall, instr->getObjName(), 0, 5, width);
-    //gText(g, FontSmall, "123", 0, 5);
+    setc(g, .2f);
 
-    if(instr != NULL)
-    {
-    /*
-        instr->setDrawColor(g, .47f);
+    rectx(g, FxPanelScrollerWidth-1, 0, width - FxPanelScrollerWidth, height - FxPanelBottomHeight + 1);
 
-        gFillRect(g, x1 + 1, y1 + 2, x2 - 1, y1 + MixerTopHeight - 2);
-        //gSetColor2(g, instr->getColor(), .57f);
-        //gLineHorizontal(g, y1 + 2, x1 + 1, x2 - 1);
+    setc(g, .15f);
 
-        if (instr == MInstrPanel->getCurrInstr())
-        {
-            gSetColor(g, 0xffFFDD60);
-            gLineHorizontal(g, getY1(), getX1(), getX2());
-            gSetColor(g, 0x9fFFDD60);
-            gLineHorizontal(g, getY1() + 1, getX1(), getX2());
+    fillx(g, FxPanelScrollerWidth, 0, width - FxPanelScrollerWidth, height - FxPanelBottomHeight);
 
-            gSetColor(g, 0xffFFDD60);
-        }
-        else
-        {
-            instr->setDrawColor(g, .8f);
-        }
-
-        std::string str = instr->instrAlias;
-
-        gTextFit(g, FontSmall, instr->getName(), x1 + 4, y1 + MixerTopHeight - 4, width - 4);*/
-    }
-    else
-    {
-    /*
-        gSetMonoColor(g, 0.7f);
-
-        if(master)
-        {
-            gText(g, FontFix, "MASTER", x1 + width/2 - gGetTextWidth(FontFix, "MASTER")/2, y1 + MixerTopHeight - 4);
-        }
-        else
-        {
-            gText(g, FontFix, chanTitle,  x1 + width/2 - gGetTextWidth(FontFix, chanTitle)/2, y1 + MixerTopHeight - 4);
-        }
-        */
-    }
+    
 }
 
 void MixChannel::addEffect(Eff* eff)

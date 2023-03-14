@@ -27,7 +27,6 @@ public:
             Vst2Plugin*         getVst2() { return vst2; }
             bool                isLoaded() { return vst2 != NULL; }
             void                load(XmlElement* instrNode);
-            bool                onUpdateDisplay();
             long                handleTrigger(Trigger* tg, long num_frames = 0, long buff_frame = 0);
             void                handleParamUpdate(Parameter* param = NULL);
             void                postNoteON(int note, float vol);
