@@ -214,19 +214,19 @@ Instrument::~Instrument()
 
     setEnable(false);
 
-    if(mixChannel != MMixer->getMasterChannel())
-    {
-        MMixer->deleteObject(mixChannel);
-    }
-
     if(this == SoloInstr)
     {
         SoloInstr = NULL;
     }
 
-    device->removeElements();
+    if (device != devDummy)
+    {
+        device->removeElements();
 
-    delete device;
+        delete device;
+    }
+
+    MMixer->removeMixChannel(this);
 
     ReleaseMutex(MixerMutex);
 }

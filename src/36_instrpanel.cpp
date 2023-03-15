@@ -93,8 +93,9 @@ protected:
         Instrument*     instr;
 };
 
-Device36* devDummy;
+Device36*   devDummy;
 
+extern Sample* prevSample;
 
 InstrPanel::InstrPanel(Mixer* mixer)
 {
@@ -125,6 +126,11 @@ InstrPanel::InstrPanel(Mixer* mixer)
     addHighlight(instrHighlight = new InstrHighlight());
 }
 
+InstrPanel::~InstrPanel()
+{
+    delete devDummy;
+}
+
 Instrument* InstrPanel::addVst(const char* path, Vst2Module* otherVst)
 {
     Vst2Module* vst = loadVst(path, otherVst);
@@ -146,23 +152,22 @@ Instrument* InstrPanel::addVst(const char* path, Vst2Module* otherVst)
     return i;
 }
 
-Instrument* InstrPanel::addSample(const char* path, bool temporaryForPreview)
+Sample* InstrPanel::addSample(const char* path, bool temporaryForPreview)
 {
     Sample* smp = loadSample(path);
 
     smp->addBasicParamSet();
     smp->createSelfPattern();
 
-    Instrument* i = NULL;
-
     if (smp != NULL)
     {
-        smp->previewOnly = temporaryForPreview;
-
-        i = addInstrument(smp);
+        if (!temporaryForPreview)
+        {
+            addInstrument(smp);
+        }
     }
 
-    return i;
+    return smp;
 }
 
 Instrument* InstrPanel::addInstrument(Device36 * dev, Instrument * objAfter)
@@ -258,8 +263,8 @@ void InstrPanel::colorizeInstruments()
     static uint8 leadColor1 = 0;
     static uint8 leadColor2 = 0;
 
-    uint8 constantPart = 155;
-    uint8 variablePart = 100;
+    uint8 constantPart = 120;
+    uint8 variablePart = 135;
 
     uint8 r = constantPart;
     uint8 g = constantPart;
@@ -299,15 +304,6 @@ void InstrPanel::deleteInstrument(Instrument* i)
 {
     WaitForSingleObject(AudioMutex, INFINITE);
 
-    if(currMixChannel != NULL)
-    {
-        currMixChannel->setEnable(false);
-
-        removeObject(currMixChannel);
-
-        currMixChannel = NULL;
-    }
-
     if(getCurrInstr() == i)
     {
         currInstr++;
@@ -334,20 +330,9 @@ void InstrPanel::deleteInstrument(Instrument* i)
 
     updateInstrIndexes();
 
-    if(i->device && i->device->previewOnly == false)
-    {
-        deleteObject(i);
+    deleteObject(i);
 
-        MProject.setChange();
-
-        remapAndRedraw();
-
-        //MGrid->syncToInstruments();
-
-        MEdit->remapAndRedraw();
-
-        MMixer->remapAndRedraw();
-    }
+    remapAndRedraw();
 
     colorizeInstruments();
 
@@ -447,6 +432,7 @@ Instrument* InstrPanel::getInstrFromLine(int trkLine)
     return NULL;
 }
 
+
 void InstrPanel::generateAll(long num_frames, long mixbuffframe)
 {
     for(Instrument* instr : instrs)
@@ -458,6 +444,9 @@ void InstrPanel::generateAll(long num_frames, long mixbuffframe)
             instr->device->generateData(NULL, mchan->inbuff, num_frames, mixbuffframe);
         }
     }
+
+    if (prevSample)
+        prevSample->generateData(NULL, MMixer->getMasterChannel()->inbuff, num_frames, mixbuffframe);
 }
 
 bool InstrPanel::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
@@ -633,32 +622,23 @@ void InstrPanel::updateInstrIndexes()
     }
 }
 
-Instrument* InstrPanel::addInstrFromNewBrowser(BrwListEntry* ble)
+void InstrPanel::addInstrFromNewBrowser(BrwListEntry* ble)
 {
     if (getNumInstrs() >= 37)
     {
         MWindow->showAlertBox("Can't load more than 36 instruments");
 
-        return NULL;
+        return;
     }
-
-    Instrument* ni = NULL;
 
     if (ble->getType() == Entry_Wave)
     {
-        ni = addSample(ble->getPath().data());
+        addSample(ble->getPath().data());
     }
     else if (ble->getType() == Entry_DLL)
     {
-        ni = addVst(ble->getPath().data(), NULL);
+        addVst(ble->getPath().data(), NULL);
     }
-
-    if(ni)
-    {
-        setCurrInstr(ni);
-    }
-
-    return ni;
 }
 
 void InstrPanel::setInstrFromNewBrowser(BrwListEntry* ble, Instrument* instr)

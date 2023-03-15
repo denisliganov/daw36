@@ -232,12 +232,26 @@ MixChannel* Mixer::addMixChannel(Instrument * instr)
 
     MixChannel* mixChannel = new MixChannel(instr);
 
-    mixChannel->mchanout = (MMixer->masterChannel);
+    mixChannel->mchanout = (masterChannel);
 
     addObject(mixChannel, "");
 
     ReleaseMutex(MixerMutex);
 
     return mixChannel;
+}
+
+void Mixer::removeMixChannel(Instrument * instr)
+{
+    WaitForSingleObject(MixerMutex, INFINITE);
+
+    MixChannel* mixChannel = instr->getMixChannel();
+
+    if (mixChannel != masterChannel)
+    {
+        deleteObject(mixChannel);
+    }
+
+    ReleaseMutex(MixerMutex);
 }
 

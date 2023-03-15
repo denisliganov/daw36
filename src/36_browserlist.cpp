@@ -8,6 +8,7 @@
 #include "36_note.h"
 #include "36_utils.h"
 #include "36_vst.h"
+#include "36_sampleinstr.h"
 
 
 //#include <windows.h>
@@ -210,6 +211,7 @@ void BrowserList::deleteEntries()
     while(brwEntries.size() > 0)
     {
         delete brwEntries[brwEntries.size() - 1];
+
         brwEntries.pop_back();
     }
 }
@@ -353,31 +355,31 @@ void BrowserList::handleChildEvent(Gobj * obj,InputEvent & ev)
     }
 }
 
+Sample* prevSample = NULL;
+
 void BrowserList::previewSample(BrwListEntry* ble, bool down)
 {
-    static Instrument* ipreview = NULL;
-
     if(down)
     {
         if(ble->getType() == Entry_Wave)
         {
-            ipreview = (Instrument*)MInstrPanel->addSample((char*)ble->getPath().data(), true);
+            prevSample = MInstrPanel->addSample((char*)ble->getPath().data(), true);
 
-            if(ipreview != NULL)
+            if(prevSample != NULL)
             {
-                ipreview->getDevice()->selfNote->preview();
+                prevSample->selfNote->preview();
             }
         }
     }
     else
     {
-        if(ipreview != NULL)
+        if(prevSample != NULL)
         {
             MAudio->releaseAllPreviews();
 
-            MInstrPanel->deleteInstrument(ipreview);
+            delete prevSample;
 
-            ipreview = NULL;
+            prevSample = NULL;
         }
     }
 }

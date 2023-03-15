@@ -121,7 +121,7 @@ void ParamObject::placeControls1(int maxW, int maxH)
     {
         Gobj* obj = NULL;
 
-        int defaultWidth = 80;
+        int defaultWidth = 100;
 
         if (prm && prm->getAutoPlaced())
         {

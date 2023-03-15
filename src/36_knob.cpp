@@ -123,11 +123,11 @@ void Knob::drawSelf(Graphics& g)
 
     setc(g, .6f);
     txt(g, fontId, param->getName() + ": ", textX, 12);
-    setc(g, .8f);
+    setc(g, .9f);
     txt(g, fontId, param->getValString(), textX + namestrLen + 4, 12);
     //txt(g, fontId, param->getValString(), textX, height - 5);
-    setc(g, .99f);
-    txt(g, fontId, param->getUnitString(), width - unitstrLen - 2, height - 5);
+    setc(g, .6f);
+    txt(g, fontId, param->getUnitString(), width - unitstrLen - 2, 12);
 
     //setc(g, 1.f);
     //fillx(g, height + 2, height/2, param->getValueNormalized()*(width - height - 2), 1);
