@@ -159,18 +159,37 @@ void MixChannel::remap()
     {
         //mixViewUpdate();
 
-        //confine(FxPanelScrollerWidth, 0, width-1, height - FxPanelBottomHeight - 2);
-
         int xeff = 0;
         int yeff = 0;
+        int totalHeight = 0;
+        int visibleHeight = height - FxPanelBottomHeight - 2;
+
+        confine(0, 1, width-1, visibleHeight);
 
         for (Eff* eff : effs)
         {
-            eff->getDevice()->setEnable(true);
-            eff->getDevice()->setVis(true);
-            eff->setCoords1(xeff, yeff, eff->getDevice()->getW(), eff->getDevice()->getH() + 14);
+            totalHeight += eff->getH() + 1;
+        }
+
+        if (totalHeight <= visibleHeight)
+        {
+            //vscr->setOffset(0);
+        }
+
+        vscr->updBounds(totalHeight, visibleHeight, vscr->getOffset());
+
+        for (Eff* eff : effs)
+        {
+            //eff->getDevice()->setEnable(true);
+            //eff->getDevice()->setVis(true);
+            eff->setCoords1(xeff, 1 + yeff - int(vscr->getOffset()), eff->getW(), eff->getH());
 
             yeff += eff->getH() + 1;
+        }
+
+        //if (vscr->isActive())
+        {
+            vscr->setCoords1(width - FxPanelScrollerWidth, 0, FxPanelScrollerWidth, visibleHeight);
         }
 
         //if(volslider)
@@ -219,14 +238,12 @@ void MixChannel::remap()
 
 void MixChannel::drawSelf(Graphics& g)
 {
-    int baseheight = MixChannelPadHeight;
-
     fill(g, .1f);
 
     setc(g, .3f);
-    fillx(g, 0, height - FxPanelBottomHeight - 1, width, FxPanelBottomHeight);
+    fillx(g, 0, height - FxPanelBottomHeight, width, FxPanelBottomHeight);
     setc(g, .4f);
-    rectx(g, 0, height - FxPanelBottomHeight - 1, width, FxPanelBottomHeight);
+    rectx(g, 0, height - FxPanelBottomHeight, width, FxPanelBottomHeight);
 }
 
 void MixChannel::addEffect(Eff* eff)
@@ -481,6 +498,15 @@ void MixChannel::activateMenuItem(std::string mi)
     }
 
     redraw();
+}
+
+void MixChannel::handleChildEvent(Gobj * obj,InputEvent & ev)
+{
+    if (obj == vscr)
+    {
+        remap();
+        redraw();
+    }
 }
 
 void MixChannel::handleMouseWheel(InputEvent& ev)

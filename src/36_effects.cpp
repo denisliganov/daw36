@@ -179,6 +179,8 @@ Eff::Eff(Device36* dev)
 
     setObjName(dev->getObjName());
 
+    setWH(device->getW(), device->getH() + 14);
+
     //setObjId(dev->getObjId());
     //addObject(previewButton = new EffGuiButton(), MixChanWidth - 21, 0, 20, 15);
     //addParam(new Parameter(1, 0, 1), "", sliderAmount = new Slider36(false));
@@ -208,12 +210,13 @@ void Eff::remap()
 
 void Eff::drawSelf(Graphics& g)
 {
-    fill(g, .32f);
+    fill(g, .22f);
+    rect(g, .32f);
 
     //device->setMyColor
 
-    setc(g, .45f);
-    fillx(g, 2, 0, width - 4, 16);
+    //setc(g, .36f);
+    //fillx(g, 2, 0, width - 4, 16);
 
     //rect(g, .3f);
 

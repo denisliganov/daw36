@@ -190,6 +190,7 @@ void Scroller::updBounds(float full_span, float visible_span, float offs)
     else
     {
         active = false;
+        offset = 0;
     }
 
     redraw();

@@ -160,16 +160,16 @@ void ParamObject::placeControls1(int maxW, int maxH)
         {
             addObject(obj);
 
+            putRight(obj, obj->getW(), obj->getH());
+
             rowNum++;
 
-            if (rowNum == 2 || (xstart1 + obj->getW() + objSpacing > maxWidth))
+            if (rowNum == 2)
             {
                 rowNum = 0;
 
                 returnLeft();
             }
-
-            putRight(obj, obj->getW(), obj->getH());
         }
     }
 
