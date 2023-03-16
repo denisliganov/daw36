@@ -109,7 +109,7 @@ void ParamObject::placeControls1(int maxW, int maxH)
 {
     int boxWidth = 130;
     int boxHeight = 22;
-
+    int rowNum = 0;
     int maxWidth = maxW;
 
     setObjSpacing(3);
@@ -160,8 +160,12 @@ void ParamObject::placeControls1(int maxW, int maxH)
         {
             addObject(obj);
 
-            if (xstart1 + obj->getW() + objSpacing > maxWidth)
+            rowNum++;
+
+            if (rowNum == 2 || (xstart1 + obj->getW() + objSpacing > maxWidth))
             {
+                rowNum = 0;
+
                 returnLeft();
             }
 

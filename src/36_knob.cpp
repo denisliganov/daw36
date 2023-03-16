@@ -121,10 +121,11 @@ void Knob::drawSelf(Graphics& g)
     int namestrLen = gGetTextWidth(fontId, param->getName());
     int unitstrLen = gGetTextWidth(fontId, param->getUnitString());
 
-    setc(g, .6f);
+    setc(g, .7f);
     txt(g, fontId, param->getName() + ": ", textX, 12);
-    setc(g, .9f);
-    txt(g, fontId, param->getValString(), textX + namestrLen + 4, 12);
+    setc(g, 1.f);
+    //txt(g, fontId, param->getValString(), textX + namestrLen + 4, 12);
+    txt(g, fontId, param->getValString(), textX + 60, 12);
     //txt(g, fontId, param->getValString(), textX, height - 5);
     setc(g, .6f);
     txt(g, fontId, param->getUnitString(), width - unitstrLen - 2, 12);

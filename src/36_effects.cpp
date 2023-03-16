@@ -168,6 +168,7 @@ Eff::Eff(Device36* dev)
     addObject(device);
 
     device->placeControls1(FxPanelMaxWidth - FxPanelScrollerWidth);
+
     device->setWH(FxPanelMaxWidth - FxPanelScrollerWidth - 5, device->getH());
 
     device->setContainer(this);
@@ -630,8 +631,9 @@ EQ3::EQ3()
     f2 = dspCoreEqualizer.addBand(rosic::TwoPoleFilter::PEAK, 0, 0, 0);
     f3 = dspCoreEqualizer.addBand(rosic::TwoPoleFilter::LOW_SHELF, 100, 0);
 
-
+    addParam(freq1 = new Parameter("HIGH.FREQ", Param_Freq, 0.f, 1.f, 0.5f, Units_Hz));
     addParam(freq2 = new Parameter("CENTERFREQ", Param_Freq, 0.f, 1.f, 0.6f, Units_Hz));
+    addParam(freq3 = new Parameter("LOW.FREQ", Param_Freq, 0.f, 1.f, 0.5f, Units_Hz));
     addParam(bandwidth = new Parameter("BW", 0.25f, 4.f, 1.5f, Units_Octave));
 
     addParam(gain1 = new Parameter("HIGH", -24.0f, 24.0f, 0.f, Units_dBGain));

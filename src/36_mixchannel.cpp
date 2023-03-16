@@ -159,9 +159,9 @@ void MixChannel::remap()
     {
         //mixViewUpdate();
 
-        confine(FxPanelScrollerWidth, 0, width-1, height - FxPanelBottomHeight);
+        //confine(FxPanelScrollerWidth, 0, width-1, height - FxPanelBottomHeight - 2);
 
-        int xeff = FxPanelScrollerWidth;
+        int xeff = 0;
         int yeff = 0;
 
         for (Eff* eff : effs)
@@ -221,17 +221,12 @@ void MixChannel::drawSelf(Graphics& g)
 {
     int baseheight = MixChannelPadHeight;
 
-    fill(g, .3f);
+    fill(g, .1f);
 
-    setc(g, .2f);
-
-    rectx(g, 0, 0, width, height - FxPanelBottomHeight + 1);
-
-    setc(g, .15f);
-
-    fillx(g, 0, 0, width, height - FxPanelBottomHeight);
-
-    
+    setc(g, .3f);
+    fillx(g, 0, height - FxPanelBottomHeight - 1, width, FxPanelBottomHeight);
+    setc(g, .4f);
+    rectx(g, 0, height - FxPanelBottomHeight - 1, width, FxPanelBottomHeight);
 }
 
 void MixChannel::addEffect(Eff* eff)
