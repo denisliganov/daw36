@@ -164,7 +164,6 @@ public:
             void                handleParamUpdate(Parameter* param = NULL);
             void                processDSP(float* in_buff, float* out_buff, int num_frames);
             void                reset();
-            void                drawSelf(Graphics & g);
             void                drawOverChildren(Graphics & g);
 
 protected:
@@ -172,7 +171,7 @@ protected:
             rosic::Equalizer    dspCoreEqualizer;
             Parameter           *freq1, *freq2, *freq3;
             int                 f1, f2, f3;
-            Parameter           *gain1, *gain2, *gain3, *bandwidth;
+            Parameter           *gain1, *gain2, *gain3, *bandw;
 };
 
 class XDelay : public Device36

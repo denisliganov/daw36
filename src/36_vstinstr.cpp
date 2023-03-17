@@ -120,28 +120,6 @@ Vst2Module* Vst2Module::clone()
 
     clone->vst2->setStateInformation(m.getData(), m.getSize());
 
-/*
-    // Set the current preset equal to its parent one
-
-    if (this->CurrentPreset != NULL)
-    {
-        clone->SetPreset(this->CurrentPreset->name, this->CurrentPreset->native);
-    }
-
-    // Now go through the list of parameters and tune them up to the parent effect
-
-    Parameter* pParam = this->firstParam;
-    Parameter* pCloneParam = clone->firstParam;
-
-    while((pParam != NULL) && (pCloneParam != NULL))
-    {
-        clone->ParamUpdate(pParam);
-        pCloneParam->SetNormalValue(pParam->val);
-        pParam = pParam->next;
-        pCloneParam = pCloneParam->next;
-    }
-*/
-
     return clone;
 }
 

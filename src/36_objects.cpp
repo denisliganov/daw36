@@ -435,8 +435,6 @@ void Gobj::remapAndRedraw()
 
 void Gobj::drawloop(Graphics& g)
 {
-    //gr = &g;
-
     g.saveState();
     g.reduceClipRegion(dx1, dy1, dwidth, dheight);
 

@@ -620,6 +620,8 @@ void GraphicEQ::processDSP(float* in_buff, float* out_buff, int num_frames)
     }
 }
 
+struct Point36 { float x; float y; };
+
 //
 // EQ3 Class Implementation
 //
@@ -634,14 +636,14 @@ EQ3::EQ3()
     f2 = dspCoreEqualizer.addBand(rosic::TwoPoleFilter::PEAK, 0, 0, 0);
     f3 = dspCoreEqualizer.addBand(rosic::TwoPoleFilter::LOW_SHELF, 100, 0);
 
-    addParam(freq1 = new Parameter("HIGH.FREQ", Param_Freq, 0.f, 1.f, 0.5f, Units_Hz));
-    addParam(freq2 = new Parameter("CENTERFREQ", Param_Freq, 0.f, 1.f, 0.6f, Units_Hz));
-    addParam(freq3 = new Parameter("LOW.FREQ", Param_Freq, 0.f, 1.f, 0.5f, Units_Hz));
-    addParam(bandwidth = new Parameter("BW", 0.25f, 4.f, 1.5f, Units_Octave));
+    addParam(freq3 = new Parameter("LOW.FREQ", Param_Freq, 0.f, 1.f, 0.2f, Units_Hz));
+    addParam(gain3 = new Parameter("LOW.GAIN", -24.0f, 24.0f, 0.f, Units_dBGain));
+    addParam(freq2 = new Parameter("CENTR.FREQ", Param_Freq, 0.f, 1.f, 0.5f, Units_Hz));
+    addParam(gain2 = new Parameter("CENTR.GAIN", -24.0f, 24.0f, 0.f, Units_dBGain));
+    addParam(freq1 = new Parameter("HIGH.FREQ", Param_Freq, 0.f, 1.f, 0.8f, Units_Hz));
+    addParam(gain1 = new Parameter("HIGH.GAIN", -24.0f, 24.0f, 0.f, Units_dBGain));
+    addParam(bandw = new Parameter("BANDWIDTH", 0.25f, 4.f, 1.5f, Units_Octave));
 
-    addParam(gain1 = new Parameter("HIGH", -24.0f, 24.0f, 0.f, Units_dBGain));
-    addParam(gain2 = new Parameter("CENTER", -24.0f, 24.0f, 0.f, Units_dBGain));
-    addParam(gain3 = new Parameter("LOW", -24.0f, 24.0f, 0.f, Units_dBGain));
 
 /*
     addParam(freq1 = new FrequencyParameter("High freq", 0.5, Units_Hz));
@@ -653,19 +655,12 @@ EQ3::EQ3()
     reset();
 }
 
-void EQ3::drawSelf(Graphics & g)
-{
-    fill(g, .3f);
-    rect(g, .35f);
-}
-
-struct Point36 { int x; int y; };
 
 void EQ3::drawOverChildren(Graphics & g)
 {
     setc(g, 0.8f);
 
-    Point36 eq3[7] = {  0,  10, 
+    Point36 eq[7] = {  0,  10, 
                         10, 0,
                         20, 10,
                         30, 0,
@@ -673,15 +668,38 @@ void EQ3::drawOverChildren(Graphics & g)
                         50, 0,
                         60, 10};
 
-    Path p;
+    eq[0].x = 0;
+    eq[0].y = height*gain3->getValueNormalized();
 
-    p.startNewSubPath(float(x1 + eq3[0].x), float(y1 + eq3[0].y));
+    eq[1].x = width*freq3->getValueNormalized();
+    eq[1].y = eq[0].y;
+
+    float band = bandw->getValueNormalized()*(width/6);
+
+    eq[2].x = width*(freq2->getValueNormalized()) - band/2;
+    eq[2].y = height/2;
+
+    eq[3].x = width*(freq2->getValueNormalized());
+    eq[3].y = height*gain2->getValueNormalized();
+
+    eq[4].x = width*(freq2->getValueNormalized()) + band/2;
+    eq[4].y = height/2;
+
+    eq[5].x = width*(freq1->getValueNormalized());
+    eq[5].y = height*gain1->getValueNormalized();
+
+    eq[6].x = width - 1;
+    eq[6].y = eq[5].y;
+
+
+    Path p;
+    p.startNewSubPath(float(x1 + eq[0].x), float(y1 + eq[0].y));
 
     for (int c = 1; c < 7; c++)
     {
-        p.lineTo(float(x1 + eq3[c].x), float(y1 + eq3[c].y));
+        p.lineTo(float(x1 + eq[c].x), float(y1 + eq[c].y));
     }
-    
+
     //p.closeSubPath();
 /*
     p.startNewSubPath(x1, y1);
@@ -689,7 +707,7 @@ void EQ3::drawOverChildren(Graphics & g)
     p.lineTo(x1 + 30, y1 + 30);
     p.lineTo(x1 + 40, y1 + 20);*/
 
-    g.strokePath(p, PathStrokeType(1));
+    g.strokePath(p, PathStrokeType(1, PathStrokeType::JointStyle::curved));
 }
 
 void EQ3::handleParamUpdate(Parameter* param)
@@ -718,10 +736,13 @@ void EQ3::handleParamUpdate(Parameter* param)
     {
         dspCoreEqualizer.setBandFrequency(f3, freq3->getOutVal());
     }
-    else if(param == bandwidth)
+    else if(param == bandw)
     {
-        dspCoreEqualizer.setBandBandwidth(f2, bandwidth->getOutVal());
+        dspCoreEqualizer.setBandBandwidth(f2, bandw->getOutVal());
     }
+
+    if (container)
+        container->redraw();
 }
 
 void EQ3::reset()
