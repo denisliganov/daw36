@@ -14,6 +14,8 @@
 //#include <windows.h>
 #include <direct.h>
 
+Sample* prevSample = NULL;
+
 
 BrwListEntry::BrwListEntry(std::string name, std::string path, EntryType entry_type)
 {
@@ -354,8 +356,6 @@ void BrowserList::handleChildEvent(Gobj * obj,InputEvent & ev)
         }
     }
 }
-
-Sample* prevSample = NULL;
 
 void BrowserList::previewSample(BrwListEntry* ble, bool down)
 {

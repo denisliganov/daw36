@@ -21,8 +21,6 @@
 #include "36_transport.h"
 #include "36_text.h"
 #include "36_utils.h"
-#include "36_vst.h"
-#include "36_vstinstr.h"
 #include "36_parambox.h"
 
 
@@ -158,13 +156,6 @@ Eff::Eff(Device36* dev)
 {
     device = dev;
 
-    Vst2Module* vstDevice = dynamic_cast<Vst2Module*>(device);
-
-    if (vstDevice)
-    {
-        device = vstDevice->getVst2();
-    }
- 
     addObject(device);
 
     device->placeControls1(FxPanelMaxWidth - FxPanelScrollerWidth);
@@ -619,8 +610,6 @@ void GraphicEQ::processDSP(float* in_buff, float* out_buff, int num_frames)
         out_buff[i+1]  = (float) inOutR;
     }
 }
-
-struct Point36 { float x; float y; };
 
 //
 // EQ3 Class Implementation

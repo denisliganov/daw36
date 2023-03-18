@@ -82,9 +82,10 @@ public:
 protected:
             Parameter*          depth;
             Parameter*          drywet;
-            rosic::Chorus*      dspCoreChorus;
             Parameter*          delay;
             Parameter*          freq;
+
+            rosic::Chorus*      dspCoreChorus;
 };
 
 class CFlanger : public Device36
@@ -97,13 +98,14 @@ public:
 
 protected:
             Parameter*          depth;
-            rosic::Flanger      dspCoreFlanger;
             Parameter*          drywet;
             Parameter*          frequency;
             Parameter*          feedback;
             float*              fmemory;
-            bool          invert;
+            bool                invert;
             Parameter*          modfreq;
+
+            rosic::Flanger      dspCoreFlanger;
 };
 
 class CPhaser : public Device36
@@ -115,7 +117,6 @@ public:
             void                reset();
 
 protected:
-            rosic::Phaser       dspCorePhaser;
             Parameter*          depth;
             Parameter*          drywet;
             Parameter*          frequency;
@@ -124,6 +125,8 @@ protected:
             Parameter*          modfreq;
             Parameter*          numstages;
             Parameter*          stereo;
+
+            rosic::Phaser       dspCorePhaser;
 };
 
 class EQ1 : public Device36
@@ -136,9 +139,10 @@ public:
 
 protected:
             Parameter           *bandwidth;
-            rosic::TwoPoleFilter dspCoreEq1;
             Parameter           *frequency;
             Parameter           *gain;
+
+            rosic::TwoPoleFilter dspCoreEq1;
 };
 
 class GraphicEQ : public Device36
@@ -151,9 +155,10 @@ public:
             void                reset();
 
 protected:
-            rosic::Equalizer    dspCoreEqualizer;
             int                 f1, f2, f3, f4, f5, f6, f7, f8, f9;
             Parameter           *gain1, *gain2, *gain3, *gain4, *gain5, *gain6, *gain7, *gain8, *gain9;
+
+            rosic::Equalizer    dspCoreEqualizer;
 };
 
 class EQ3 : public Device36
@@ -167,11 +172,11 @@ public:
             void                drawOverChildren(Graphics & g);
 
 protected:
-
-            rosic::Equalizer    dspCoreEqualizer;
             Parameter           *freq1, *freq2, *freq3;
             int                 f1, f2, f3;
             Parameter           *gain1, *gain2, *gain3, *bandw;
+
+            rosic::Equalizer    dspCoreEqualizer;
 };
 
 class XDelay : public Device36
@@ -192,7 +197,6 @@ protected:
             Parameter*          lowcut;
             Parameter*          drywet;
             Parameter*        delayMode;
-
             Parameter*      selectTypes;
 
             rosic::PingPongEcho dspCorePingPongDelay;
@@ -310,9 +314,9 @@ public:
             void                reset();
 
 protected:
-            Parameter           *highCut, *lowCut;
-            Parameter           *roomsize, *preDelay, *drywet, *decay;
-            Parameter           *lowscale, *highscale;
+            Parameter          *highCut, *lowCut;
+            Parameter          *roomsize, *preDelay, *drywet, *decay;
+            Parameter          *lowscale, *highscale;
 
             rosic::Reverb       dspCoreReverb;
 };

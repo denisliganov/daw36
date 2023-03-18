@@ -6,7 +6,8 @@
 #include "36_listbox.h"
 #include "36_params.h"
 #include "36_parambox.h"
-#include "36_vstinstr.h"
+#include "36_device.h"
+
 
 
 
@@ -33,16 +34,7 @@ void DevParamObject::placeControls()
 
     std::list<Parameter*>  showParams;
 
-    Vst2Module*  vsti = dynamic_cast<Vst2Module*>(device);
-
-    if (vsti)
-    {
-        showParams = vsti->getParams();
-    }
-    else
-    {
-        showParams = device->getParams();
-    }
+    showParams = device->getParams();
 
     for(Parameter* prm : showParams)
     {

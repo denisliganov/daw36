@@ -6,7 +6,7 @@
 #include "36_scroller.h"
 #include "36_utils.h"
 #include "36_effects.h"
-#include "36_vstinstr.h"
+#include "36_vst.h"
 #include "36_sampleinstr.h"
 #include "36_params.h"
 #include "36_instr.h"

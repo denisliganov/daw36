@@ -129,7 +129,6 @@ public:
 
             std::list<Control*> controls;
 
-
             float               lastValue;          // used for ramping
             float               declickCount;
             float               declickCoeff;
@@ -144,41 +143,40 @@ public:
 
 
 // Toggle
-            bool                        getBoolValue() { return currentOption > 0 ? true : false; }
-            void                        toggleValue();
+            bool                getBoolValue() { return currentOption > 0 ? true : false; }
+            void                toggleValue();
 
 // Radio/Selector
-            void                        addOption(std::string opt, bool val)    { options.push_back(opt); optValues.push_back(val); }
-            void                        addOption(std::string opt)              { options.push_back(opt); }
+            void                addOption(std::string opt, bool val)    { options.push_back(opt); optValues.push_back(val); }
+            void                addOption(std::string opt)              { options.push_back(opt); }
             std::vector<std::string>&   getAllOptions()                         { return options; }
-            int                         getNumOptions()                         { return options.size(); }
-            int                         getCurrentOption()                      { return currentOption; }
-            void                        setCurrentOption(int curr)               { currentOption = curr; }
+            int                 getNumOptions()                         { return options.size(); }
+            int                 getCurrentOption()                      { return currentOption; }
+            void                setCurrentOption(int curr)               { currentOption = curr; }
 
 // Selector
-            void                        setOptionVal(int optnum, bool new_val)  { optValues[optnum] = new_val; }
-            bool                        getOptionVal(int optnum)                { return optValues[optnum]; }
-            void                        toggleOption(int optnum)                 { optValues[optnum] = !optValues[optnum]; }
+            void                setOptionVal(int optnum, bool new_val)  { optValues[optnum] = new_val; }
+            bool                getOptionVal(int optnum)                { return optValues[optnum]; }
+            void                toggleOption(int optnum)                 { optValues[optnum] = !optValues[optnum]; }
 
 protected:
 
-            virtual float               calcOutputValue(float val);
-            void                        paramInit(std::string name, ParamType ptype, float def_val, float offs, float rng, UnitsType vt);
+            virtual float       calcOutputValue(float val);
+            void                paramInit(std::string name, ParamType ptype, float def_val, float offs, float rng, UnitsType vt);
 
-            float                       defaultValue;
-            float                       interval;
-            float                       logoffset;
-            float                       logRange;
-            float                       outVal;
-            float                       offset;
-            bool                        presetable;
-            float                       range;
-            bool                        reversed;
-            bool                        recording;
-            int                         sign;
-            UnitsType                   unitsType;
-            float                       value;
-            std::string                 prmValString;
+            float               defaultValue;
+            float               interval;
+            float               logoffset;
+            float               logRange;
+            float               outVal;
+            float               offset;
+            float               range;
+            bool                reversed;
+            bool                recording;
+            int                 sign;
+            UnitsType           unitsType;
+            float               value;
+            std::string         prmValString;
 
 
             std::vector<std::string>    options;

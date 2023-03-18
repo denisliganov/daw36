@@ -28,6 +28,13 @@ typedef enum ImageId
 }ImageId;
 
 
+struct Point36 
+{
+    float x; 
+    float y; 
+};
+
+
         void    gArc(Graphics& g, int x, int y, int w, int h, float startAngle, float endAngle);
         void    gCircle(Graphics& g, int x1, int y1, float rad);
         void    gCircle(Graphics& g, int x1, int y1, float rad);

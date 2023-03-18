@@ -43,43 +43,68 @@ extern Vst2Host*        VstHost;
 
 
 
+
+
+
+
 class Vst2Plugin : public Device36
 {
-friend  Vst2Module;
+friend  Vst2Plugin;
+friend  Vst2Host;
+
+//  Former "external" part of VST module
 
 public:
+            void                    addNoteEvent(int note, long num_frames, long frame_phase, long total_frames, float volume);
+            void                    checkBounds(Note* gnote, Trigger* tg, long num_frames);
+    virtual SubWindow*              createWindow();
+            Vst2Plugin*             clone();
+            void                    deactivateTrigger(Trigger* tg);
+            void                    fadeBetweenTriggers(Trigger* tgfrom, Trigger* tgto) {}; // stub to avoid any action here
+            void                    generateData(float* in_buff, float* out_buff, long num_frames = 0, long mix_buff_frame = 0);
+            bool                    isLoaded() { return aeff != NULL; }
+            long                    handleTrigger(Trigger* tg, long num_frames = 0, long buff_frame = 0);
+            void                    postNoteON(int note, float vol);
+            void                    postNoteOFF(int note, int velocity);
+            void                    postProcessTrigger(Trigger* tg = NULL, long num_frames = 0, long buff_frame = 0, long mix_buff_frame = 0, long remaining = 0);
+            void                    topAllNotes();
+            void                    stopAllNotes();
+            void                    vstProcess(float* in_buff, long num_frames, long buff_frame);
 
-            AEffect                *aeff;               // Steinberg base struct
-            SubWindow*              vstGuiWin;
-            bool                    needidle;
-            bool                    wantsmidi;
+//  Former "internal" part
 
 private:
-            
-            Vst2Host               *vsthost;
-            long                    vstindex;           // Index in VSTHost plugin array
-            char                   *vstpath;
-            char                   *vstdir;
+            AEffect                *aeff;               // Steinberg base struct
+            SubWindow*              vstGuiWin;
+            bool                    needIdle;
+            bool                    wantsMidi;
+
+            long                    vstIndex;           // Index in VSTHost plugin array
+            char*                   vstPath;
+            char*                   vstDir;
             HANDLE                  vstMutex;
             HMODULE                 hmodule;
             bool                    generator;
-            int                     numins;
-            int                     numouts;
-            bool                    guiopen;
-            bool                    ineditidle;
-            bool                    settingprogram;
+            int                     numIns;
+            int                     numOuts;
+            bool                    guiOpen;
+            bool                    inEditIdle;
+            bool                    settingProgram;
 
-            void*                   parendwindow;
-            float                 **inbuffs;
-            float                 **outbuffs;
-            bool                    isreplacing;
-            bool                    hasgui;
-            bool                    useschunks;
+            float                 **inBuffs;
+            float                 **outBuffs;
+            bool                    isReplacing;
+            bool                    _hasGui;
+            bool                    _usesChunks;
+
+            VstMidiEvent        midiEvents[800];
+            long                numEvents;
 
 public:
 
-            Vst2Plugin(const char* path, Vst2Host* vst_host, void* parent_window);
-            ~Vst2Plugin();
+            Vst2Plugin(std::string path);
+   virtual ~Vst2Plugin();
+            void                    loadAndInit(const char *path);
             bool                    loadFromDll(const char *nm) throw(...);
             long                    vstDispatch(const int opcode, const int index, const int value, void* const ptr, float opt);
             void                    processDSP(float* in_buff, float* out_buff, int num_frames);
@@ -90,15 +115,14 @@ public:
             void                    getDisplayValue(long index, char** disp_val);
             void                    getParamName(long index, char** ppName);
             void                    getParamLabel(long index, char **ppLabel);
-            void                    setReplacing(bool fReplace) { isreplacing = fReplace; };
-            bool                    hasGui() { return hasgui; };
-            bool                    usesChunks() { return useschunks; };
+            void                    setReplacing(bool fReplace) { isReplacing = fReplace; };
+            bool                    hasGui() { return _hasGui; };
+            bool                    usesChunks() { return _usesChunks; };
             void                    getDisplayName(char *name, unsigned int length);
             long                    getNumPresets();
             void                    getProgramName(char *name);
             long                    getProgram();
             void                    setProgram(long index);
-            bool                    isLoaded();
             void                    idle();
             void                    editIdle();
 
@@ -113,8 +137,11 @@ public:
             bool                    onSetParameterAutomated(long index,float value);
             void                    syncParamValues();
             void                    updParamValString(Parameter* param);
+
             bool                    setPreset(std::string pname);
             bool                    setPreset(long index);
+
+
             long                    getCurrentPreset();
             void                    save(XmlElement* xmlEff);
             void                    load(XmlElement* xmlEff);
@@ -132,8 +159,8 @@ public:
             void                    createTempParameterStore(MemoryBlock& dest);
             bool                    restoreProgramSettings(const fxProgram* const prog);
 ////
-            void                    setIndex(int nNewIndex) { vstindex = nNewIndex; }
-            long                    getIndex() { return vstindex; }
+            void                    setIndex(int nNewIndex) { vstIndex = nNewIndex; }
+            long                    getIndex() { return vstIndex; }
             bool                    loadBank(char *objName);
             void*                   onGetDirectory();
             void                    onSizeEditorWindow(long width, long height) {}
@@ -206,11 +233,13 @@ friend class Vst2Plugin;
 public:
             Vst2Host(void* main_window);
            ~Vst2Host();
-      Vst2Plugin*                   loadModuleFromFile(char* path);
+            void                    addModule(Vst2Plugin* vst_module);
+      Vst2Plugin*                   loadModuleFromFile(std::string path);
             void                    removeAllModules();
             void                    removeModule(Vst2Plugin *plug);
             bool                    checkModule(char *path, bool *is_generator, char* name);
-            void                    setSampleRate(float fSampleRate);
+            void                    setSampleRate(float sample_rate);
+            float                   getSampleRate()     { return sampleRate; }
             void                    setBufferSize(int size);
             void                    setBPM(float bpm);
             long                    onAudioMasterCallback(AEffect *effect, long opcode, long index, long value, void *ptr, float opt);
@@ -222,14 +251,14 @@ public:
 
 protected:
 
-    static long VSTCALLBACK audioMasterCallback(AEffect *effect, long opcode, long index, long value, void *ptr, float opt);
+     static long VSTCALLBACK        audioMasterCallback(AEffect *effect, long opcode, long index, long value, void *ptr, float opt);
 
             std::vector<Vst2Plugin*> plugins;
 
             void*                   ParentHWND;
             HANDLE                  vstMutex;
             VstTimeInfo             vstTimeInfo;
-            float                   fSampleRate;
+            float                   sampleRate;
             int                     buffSize;
 
             void                    calcTimeInfo(long mask = -1);

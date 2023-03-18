@@ -77,6 +77,7 @@ void Device36::addBasicParamSet()
 {
     addParam(vol = new Parameter("VOL", Param_Vol));
     addParam(pan = new Parameter("PAN", Param_Pan));
+
     vol->setAutoPlaced(false);
     pan->setAutoPlaced(false);
 }

@@ -7,7 +7,7 @@
 #include "36_globals.h"
 #include "36_instrpanel.h"
 #include "36_instr.h"
-#include "36_vstinstr.h"
+#include "36_vst.h"
 #include "36_sampleinstr.h"
 #include "36_scroller.h"
 #include "36_vu.h"
@@ -121,6 +121,7 @@ InstrPanel::InstrPanel(Mixer* mixer)
     //masterVolBox->setSliderOnly(true);
 
     addObject(masterVolKnob = new Knob(masterVolume));
+
     masterVolume->addControl(masterVolKnob);
 
     addHighlight(instrHighlight = new InstrHighlight());
@@ -131,9 +132,9 @@ InstrPanel::~InstrPanel()
     delete devDummy;
 }
 
-Instrument* InstrPanel::addVst(const char* path, Vst2Module* otherVst)
+Instrument* InstrPanel::addVst(const char* path, Vst2Plugin* otherVst)
 {
-    Vst2Module* vst = loadVst(path, otherVst);
+    Vst2Plugin* vst = loadVst(path, otherVst);
 
     vst->addBasicParamSet();
     vst->createSelfPattern();
@@ -668,13 +669,13 @@ void InstrPanel::setInstrFromNewBrowser(BrwListEntry* ble, Instrument* instr)
     }
 }
 
-Vst2Module* InstrPanel::loadVst(const char* path, Vst2Module* otherVst)
+Vst2Plugin* InstrPanel::loadVst(const char* path, Vst2Plugin* otherVst)
 {
-    Vst2Module* vst = NULL;
+    Vst2Plugin* vst = NULL;
 
     std::string vstPath = path != NULL ? path : otherVst->getPath();
 
-    vst = new Vst2Module((char*)path);
+    vst = new Vst2Plugin((char*)path);
 
     if (!vst->isLoaded())
     {

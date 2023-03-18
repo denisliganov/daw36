@@ -7,17 +7,18 @@
 // Denis L              11/15/2020                  Reworked version
 //
 
+#include "36.h"
 #include "36_vst.h"
 #include "36_utils.h"
 #include "36_config.h"
-#include "36_effects.h"
 #include "36_audio_dev.h"
 #include "36_transport.h"
 #include "36_params.h"
-#include "36.h"
 #include "36_vstwin.h"
 #include "36_window.h"
-
+#include "36_events_triggers.h"
+#include "36_note.h"
+#include "36_devwin.h"
 
 #include <windows.h>
 #include <direct.h>
@@ -90,144 +91,494 @@ struct fxProgramSet
 typedef AEffect* (*VstInitFunc) (long (*audioMaster)(AEffect *effect, long opcode, long index, long value, void *ptr, float opt));
 
 
-Vst2Plugin::Vst2Plugin(const char* path, Vst2Host* host, void* ParentWindow)
+
+
+
+void Vst2Plugin::checkBounds(Note * gnote, Trigger * tg, long num_frames)
 {
-    ERect *pRC = NULL;
-    aeff = NULL;
-
-    vsthost = host;
-    vstpath = NULL;
-    hmodule = NULL;
-    vstdir = NULL;
-    vstGuiWin = NULL;
-    inbuffs = NULL;
-    outbuffs = NULL;
-    guiopen = false;
-    needidle = false;
-    ineditidle = false;
-    wantsmidi = false;
-    settingprogram = false;
-    vstindex = -1;
-    isreplacing = true;
-    hasgui = false;
-    generator = false;
-    parendwindow = ParentWindow;
-    numins = numouts = 0;
-
-    if (!loadFromDll(path))                      // try to load the thing
+    if(tg->framePhase + num_frames >= gnote->getFrameLength() ||  tg->tgState == TS_Release || tg->tgState == TS_Finished ||tg->tgState == TS_SoftFinish)
     {
-        return;                                 // and regretfully return error
+        // Check: Or better stop?
+
+        tg->stop();
     }
+}
 
-    aeffEditGetRect(&pRC);
+long Vst2Plugin::handleTrigger(Trigger* tg, long num_frames, long buffframe)
+{
+    long loc_num_frames = num_frames;
 
-    if (pRC)
+    Note* gnote = (Note*)tg->el;
+
+    float vol = 1; // tg->tgPatt->vol->val
+
+    vol *= gnote->getVol()->getValue();
+
+    if(!tg->previewTrigger)
     {
-        hasgui = true;
-    }
-
-    useschunks = aeffUsesChunks();
-
-    int i, j;  
-
-    if (aeff->numInputs)                // allocate input pointers
-    {
-        // We need to allocate input and output buffer arrays on plugin initialization
-
-        inbuffs = new float *[aeff->numInputs];
-
-        for (i = 0; i < aeff->numInputs; ++i)
+        if(gnote->getFrameLength() - tg->framePhase < loc_num_frames)
         {
-            inbuffs[i] = new float[24000];
-
-            for (j = 0; j < 24000; ++j)
-            {
-                inbuffs[i][j] = 0;
-            }
+            loc_num_frames = gnote->getFrameLength() - tg->framePhase;
         }
 
-        long catg = aeffGetPlugCategory();
+        addNoteEvent(tg->noteVal, loc_num_frames, tg->framePhase, gnote->getFrameLength(), vol);
 
-        if (catg == kPlugCategGenerator || catg == kPlugCategSynth)
+        checkBounds(gnote, tg, loc_num_frames);
+    }
+    else
+    {
+        addNoteEvent(tg->noteVal, loc_num_frames, tg->framePhase, 1000000, vol);
+
+        if(tg->tgState == TS_Release || 
+           tg->tgState == TS_Finished ||
+           tg->tgState == TS_SoftFinish)
         {
-            generator = true;
+            // Check: Or better stop?
+
+            tg->stop();
+        }
+    }
+
+    tg->framePhase += num_frames;
+
+    return num_frames;
+}
+
+void Vst2Plugin::postProcessTrigger(Trigger* tg, long num_frames, long buff_frame, long mix_buff_frame, long remaining)
+{
+    float       panVal;
+    float       volL, volR;
+    long        tc, tc0;
+    int         ai;
+
+    panVal = pan->getOutVal();
+    // PanConstantRule(pan, &volL, &volR);
+    // Calculate constant rule directly here to improve performance
+    ai = int((PI_F*(panVal + 1)/4)/wt_angletoindex);
+    volL = wt_cosine[ai];
+    volR = wt_sine[ai];
+
+    Envelope* penv1 = NULL;
+
+    if(pan->envelopes != NULL)
+    {
+        penv1 = (Envelope*)pan->env;
+    }
+
+    tc = mix_buff_frame*2;
+    tc0 = buff_frame*2;
+
+    for(long cc = 0; cc < num_frames; cc++)
+    {
+        if(penv1 != NULL)
+        {
+            panVal = penv1->buffoutval[mix_buff_frame + cc];
+
+            // update pan
+            // PanConstantRule(pan, &volL, &volR);
+
+            ai = int((PI_F*(panVal + 1)/4)/wt_angletoindex);
+
+            volL = wt_cosine[ai];
+            volR = wt_sine[ai];
+        }
+    
+        outBuff[tc0] = tempBuff[tc0++]*volL;
+        outBuff[tc0] = tempBuff[tc0++]*volR;
+    }
+}
+
+void Vst2Plugin::deactivateTrigger(Trigger* tg)
+{
+    Note* gnote = (Note*)tg->el;
+
+    postNoteOFF(tg->noteVal, 127);
+
+    Device36::deactivateTrigger(tg);
+}
+
+void Vst2Plugin::vstProcess(float* in_buff, long num_frames, long buff_frame)
+{
+    /*
+    struct VstEvents            // a block of events for the current audio block
+    {
+        long numEvents;
+        long reserved;          // zero
+        VstEvent* events[2];    // variable
+    };
+    */
+
+    VstEvents* events = NULL;
+
+    if(numEvents > 0)
+    {
+        unsigned short      NumEvents = (unsigned short)numEvents;
+        long                EvSize = sizeof(long)+ sizeof(long) + (sizeof(VstEvent*)*NumEvents);
+
+        events = (VstEvents*)malloc(EvSize);
+        memset(events, 0, EvSize);
+        events->numEvents = NumEvents;
+        events->reserved = 0;
+
+        for (int i = 0; i < NumEvents; ++i)
+        {
+            events->events[i] = (VstEvent*) &(midiEvents[i]);
+        }
+
+        aeffProcessEvents(events);
+    }
+
+    processDSP(in_buff, &tempBuff[buff_frame*2], num_frames);
+
+    numEvents = 0;
+
+    // This freeing code was working here, but it causes Absynth 2.04 to crash, while other hosts work
+    // well with it. Probably it's responsibility of a plugin to free the memory allocated for VstEvents
+    // struct, although need to ensure later in this. Hahaha.
+    //if(NULL != events)
+    //{
+    //    free(events);
+    //}
+
+}
+
+void Vst2Plugin::generateData(float* in_buff, float* out_buff, long num_frames, long mix_buff_frame)
+{
+    bool off = false;
+
+    /*
+    if((muteparam != NULL && muteparam->getOutVal()) || (SoloInstr != NULL && SoloInstr != this))
+    {
+        off = true;
+    }
+    */
+
+    bool fill = true;
+
+    for(auto itr = activeTriggers.begin(); itr != activeTriggers.end(); )
+    {
+        Trigger* tg = *itr;
+        itr++;
+
+        handleTrigger(tg, num_frames);
+    }
+
+    memset(outBuff, 0, num_frames*sizeof(float)*2);
+    memset(tempBuff, 0, num_frames*sizeof(float)*2);
+
+    if(envelopes == NULL)
+    {
+        vstProcess(in_buff, num_frames, 0);
+    }
+    else
+    {
+        Envelope* env;
+        Parameter* param;
+        Trigger* tgenv;
+        long frames_to_process;
+        long frames_remaining = num_frames;
+        long buffFrame = 0;
+
+        while(frames_remaining > 0)
+        {
+            if(frames_remaining > BUFF_PROCESSING_CHUNK_SIZE)
+            {
+                frames_to_process = BUFF_PROCESSING_CHUNK_SIZE;
+            }
+            else
+            {
+                frames_to_process = frames_remaining;
+            }
+
+            /*
+            tgenv = envelopes;
+            while(tgenv != NULL)
+            {
+                env = (Envelope*)tgenv->el;
+                param = ((Envelope*)tgenv->el)->param;
+                param->setValueFromEnvelope(env->buff[mix_buff_frame + buffFrame], env);
+                tgenv = tgenv->group_prev;
+            }
+            */
+
+            vstProcess(in_buff, frames_to_process, buffFrame);
+
+            frames_remaining -= frames_to_process;
+
+            buffFrame += frames_to_process;
+        }
+    }
+
+    if(off == false)
+    {
+        if(muteCount > 0)
+        {
+            long tc = 0;
+            float aa;
+
+            while(tc < num_frames)
+            {
+                if(muteCount > 0)
+                {
+                    aa = float(DECLICK_COUNT - muteCount)/DECLICK_COUNT;
+
+                    muteCount--;
+                }
+
+                tempBuff[tc*2] *= aa;
+                tempBuff[tc*2 + 1] *= aa;
+
+                tc++;
+            }
         }
     }
     else
     {
-        generator = true;
-    }
-
-    numins = aeff->numInputs;
-
-    if (aeff->numOutputs)                   // allocate output pointers
-    {
-        int nAlloc;
-
-        if (aeff->numOutputs < 2)
+        if(muteCount < DECLICK_COUNT)
         {
-            nAlloc = 2;
+            long tc = 0;
+            float aa;
+
+            while(tc < num_frames)
+            {
+                if(muteCount < DECLICK_COUNT)
+                {
+                    aa = float(DECLICK_COUNT - muteCount)/DECLICK_COUNT;
+
+                    muteCount++;
+                }
+
+                tempBuff[tc*2] *= aa;
+                tempBuff[tc*2 + 1] *= aa;
+
+                tc++;
+            }
         }
         else
         {
-            nAlloc = aeff->numOutputs;
+            fill = false;
         }
-
-        outbuffs = new float *[nAlloc];      // and the buffers pointed to
-
-        for (i = 0; i < aeff->numOutputs; i++)
-        {
-            // for this sample project, I've assumed a maximum buffer size
-            // of 1/4 second at 96KHz - presumably, this is MUCH too much
-            // and should be tweaked to more reasonable values, since it
-            // requires a machine with lots of main memory this way...
-            // user configurability would be nice, of course.
-
-            outbuffs[i] = new float[24000];
-
-            for (j = 0; j < 24000; j++)
-            {
-                outbuffs[i][j] = 0.f;
-            }
-        }
-
-        // if less than 2, fill up by replicating buffer 0 pointer
-
-        for (; i < nAlloc; ++i)
-        {
-            outbuffs[i] = outbuffs[0];
-        }
-
-        numouts = nAlloc;
     }
 
+    if(fill)
+    {
+        //postProcessTrigger(NULL, num_frames, 0, mix_buff_frame);
 
-    // Init sequence
+        //memcpy(outBuff, tempBuff, num_frames*2);
 
-    aeffOpen();                            // open the effect                   
-    aeffSetSampleRate(host->fSampleRate);        // adjust its sample rate            
+        for(long cc = 0; cc < num_frames; cc++)
+        {
+            outBuff[cc*2] = tempBuff[cc*2];
+            outBuff[cc*2] = tempBuff[cc*2];
+        }
 
-    // this is a safety measure against some plugins that only set their buffers
-    // ONCE - this should ensure that they allocate a buffer that's large enough
+        fillOutputBuffer(out_buff, num_frames, 0, mix_buff_frame);
+    }
+}
 
-    aeffSetBlockSize(11025);
+void Vst2Plugin::addNoteEvent(int note, long num_frames, long frame_phase, long total_frames, float volume)
+{
+    VstMidiEvent* pEv = &(midiEvents[numEvents]);
 
-    // deal with changed behaviour in V2.4 plugins that don't call wantEvents()
+    //volume is the value from 0 to 1, if it's greater then it's gaining
 
-    wantsmidi = (aeffCanDo("receiveVstMidiEvent") == 1);
+    unsigned char velocity = (unsigned char)((volume <= 1) ? volume * 100 : 100 + (volume - 1)/(DAW_VOL_RANGE - 1)*0x1B);
 
-    aeffResume();                            // then force resume
-    aeffSuspend();                           // suspend again...
-    aeffSetBlockSize(host->getBuffSize());   // and buffer size
-    aeffResume();                            // then force resume
+/*
+struct VstMidiEvent		// to be casted from a VstEvent
+{
+    long type;			// kVstMidiType
+    long byteSize;		// 24
+    long deltaFrames;	// sample frames related to the current block start sample position
+    long flags;			// none defined yet
 
-    vstMutex = host->vstMutex;
+    long noteLength;	// (in sample frames) of entire note, if available, else 0
+    long noteOffset;	// offset into note from note start if available, else 0
 
-    char tmpname[30] = {};
+    char midiData[4];	// 1 thru 3 midi bytes; midiData[3] is reserved (zero)
+    char detune;		// -64 to +63 cents; for scales other than 'well-tempered' ('microtuning')
+    char noteOffVelocity;
+    char reserved1;		// zero
+    char reserved2;		// zero
+};
+*/
+    memset(pEv, 0, sizeof(VstMidiEvent));
 
-    getDisplayName(tmpname, 30);
+    pEv->type = kVstMidiType;
+    pEv->byteSize = sizeof(VstMidiEvent);
 
-    objName = tmpname;
+    //pEv->deltaFrames = (num_frames < total_frames - frame_phase)? (num_frames - 1): (total_frames - frame_phase);
+    //pEv->noteLength = total_frames - frame_phase;
+    //pEv->noteOffset = frame_phase;
+
+    pEv->deltaFrames = 0;
+    pEv->noteLength = 0;
+    pEv->noteOffset = 0;
+    pEv->flags = 0;
+
+    if (frame_phase == 0)
+    {
+        pEv->midiData[0] = (char)0x90;
+        pEv->midiData[1] = note;
+        pEv->midiData[2] = velocity;
+
+        numEvents++;
+    }
+    //else if (frame_phase < total_frames)
+    //{
+    //    pEv->midiData[0] = (char)0xa0;
+    //    pEv->midiData[1] = note;
+    //    pEv->midiData[2] = velocity;
+    //    numEvents++;
+    //}
+    else if(frame_phase > total_frames)
+    {
+        pEv->midiData[0] = (char)0x80;
+        pEv->midiData[1] = note;
+        pEv->midiData[2] = velocity;
+
+        numEvents++;
+    }
+}
+
+void Vst2Plugin::postNoteON(int note, float vol)
+{
+    VstMidiEvent* pEv = &(midiEvents[numEvents]);
+
+    //volume is the value from 0 to 1, if it's greater then its gaining
+
+    unsigned char l_velocity = (unsigned char)((vol <= 1) ? vol * 127 : 100 + (vol - 1)/(DAW_VOL_RANGE - 1)*0x1B);
+
+    memset(pEv, 0, sizeof(VstMidiEvent));
+
+    pEv->type = kVstMidiType;
+
+    pEv->byteSize = sizeof(VstMidiEvent);
+    pEv->deltaFrames = 0;
+    pEv->noteLength = 0;
+    pEv->noteOffset = 0;
+    pEv->flags = 0;
+
+    pEv->midiData[0] = (char)0x90;
+    pEv->midiData[1] = note;
+    pEv->midiData[2] = l_velocity;
+
+    numEvents++;
+}
+
+void Vst2Plugin::postNoteOFF(int note, int velocity)
+{
+    VstMidiEvent* pEv = &(midiEvents[numEvents]);
+
+    memset(pEv, 0, sizeof(VstMidiEvent));
+
+    pEv->type = kVstMidiType;
+
+    pEv->byteSize = sizeof(VstMidiEvent);
+
+    pEv->deltaFrames = 0;
+    pEv->noteLength = 0;
+    pEv->noteOffset = 0;
+    pEv->flags = 0;
+
+    pEv->midiData[0] = (char)0x80;
+    pEv->midiData[1] = note;
+    pEv->midiData[2] = velocity;
+
+    numEvents++;
+}
+
+void Vst2Plugin::stopAllNotes()
+{
+    VstMidiEvent* pEv = &(midiEvents[numEvents]);
+
+    memset(pEv, 0, sizeof(VstMidiEvent));
+
+    pEv->type = kVstMidiType;
+    pEv->byteSize = sizeof(VstMidiEvent);
+    pEv->deltaFrames = 0;
+    pEv->noteLength = 0;
+    pEv->noteOffset = 0;
+    pEv->flags = 0;
+
+    pEv->midiData[0] = (char)0xB0;
+    pEv->midiData[1] = 0x7B;
+    pEv->midiData[2] = 0x00;
+
+    numEvents++;
+}
+
+
+
+SubWindow* Vst2Plugin::createWindow()
+{
+    if(hasGui())
+    {
+        return MObject->addWindow(new VstComponent(this));
+    }
+    else
+    {
+        return MObject->addWindow((WinObject*)new DevParamObject(this));
+    }
+}
+
+
+
+Vst2Plugin* Vst2Plugin::clone()
+{
+    Vst2Plugin* clone = new Vst2Plugin(filePath);
+
+    MemoryBlock m;
+
+    getStateInformation(m);
+
+    clone->setStateInformation(m.getData(), m.getSize());
+
+    return clone;
+}
+
+
+
+Vst2Plugin::Vst2Plugin(std::string path)
+{
+    aeff = NULL;
+
+    vstPath = NULL;
+    hmodule = NULL;
+    vstDir = NULL;
+    vstGuiWin = NULL;
+    inBuffs = NULL;
+    outBuffs = NULL;
+    guiOpen = false;
+    needIdle = false;
+    inEditIdle = false;
+    wantsMidi = false;
+    settingProgram = false;
+    vstIndex = -1;
+    isReplacing = true;
+    _hasGui = false;
+    generator = false;
+
+    numIns = numOuts = 0;
+
+    loadAndInit(path.data());
+
+    if (aeff != NULL)
+    {
+        VstHost->addModule(this);
+
+        numEvents = 0;
+
+        uniqueId = aeff->uniqueID;
+
+        setPath(path);
+
+        objName = ToUpperCase(objName);
+
+        extractParams();
+
+        updatePresets();
+    }
 }
 
 Vst2Plugin::~Vst2Plugin()
@@ -236,36 +587,36 @@ Vst2Plugin::~Vst2Plugin()
 
     int i;
 
-    if (inbuffs != NULL)
+    if (inBuffs != NULL)
     {
-        for (i = 0; i < numins; ++i)
+        for (i = 0; i < numIns; ++i)
         {
-            if(inbuffs[i] != NULL)
+            if(inBuffs[i] != NULL)
             {
-                delete((void*)inbuffs[i]);
+                delete((void*)inBuffs[i]);
 
-                inbuffs[i] = NULL;
+                inBuffs[i] = NULL;
             }
         }
 
-        delete((void *) inbuffs);
+        delete((void *) inBuffs);
 
-        inbuffs = NULL;
+        inBuffs = NULL;
     }
 
-    for (i = 0; i < numouts; ++i)
+    for (i = 0; i < numOuts; ++i)
     {
-        if (outbuffs[i] != NULL)
+        if (outBuffs[i] != NULL)
         {
-            delete((void*)outbuffs[i]);
+            delete((void*)outBuffs[i]);
 
-            outbuffs[i] = NULL;
+            outBuffs[i] = NULL;
         }
     }
 
-    for (; i < numouts; ++i)  outbuffs[i] = NULL;
+    for (; i < numOuts; ++i)  outBuffs[i] = NULL;
 
-    delete((void *) outbuffs);
+    delete((void *) outBuffs);
 
     if(aeff != NULL)
     {
@@ -281,22 +632,145 @@ Vst2Plugin::~Vst2Plugin()
             hmodule = NULL; 
         }
 
-        if (vstdir)
+        if (vstDir)
         {
-            delete[] vstdir;
+            delete[] vstDir;
 
-            vstdir = NULL;
+            vstDir = NULL;
         }
 
-        if (vstpath) 
+        if (vstPath) 
         {
-            delete[] vstpath;
+            delete[] vstPath;
 
-            vstpath = NULL;
+            vstPath = NULL;
         }
     }
 
+    VstHost->removeModule(this);
+
     ReleaseMutex(vstMutex);
+}
+
+void Vst2Plugin::loadAndInit(const char *path) 
+{
+    ERect *pRC = NULL;
+
+    if (!loadFromDll(path))                      // try to load the thing
+    {
+        return;                                 // and regretfully return error
+    }
+
+    aeffEditGetRect(&pRC);
+
+    if (pRC)
+    {
+        _hasGui = true;
+    }
+
+    _usesChunks = aeffUsesChunks();
+
+    int i, j;  
+
+    if (aeff->numInputs)                // allocate input pointers
+    {
+        // We need to allocate input and output buffer arrays on plugin initialization
+
+        inBuffs = new float *[aeff->numInputs];
+
+        for (i = 0; i < aeff->numInputs; ++i)
+        {
+            inBuffs[i] = new float[24000];
+
+            for (j = 0; j < 24000; ++j)
+            {
+                inBuffs[i][j] = 0;
+            }
+        }
+
+        long catg = aeffGetPlugCategory();
+
+        if (catg == kPlugCategGenerator || catg == kPlugCategSynth)
+        {
+            generator = true;
+        }
+    }
+    else
+    {
+        generator = true;
+    }
+
+    numIns = aeff->numInputs;
+
+    if (aeff->numOutputs)                   // allocate output pointers
+    {
+        int nAlloc;
+
+        if (aeff->numOutputs < 2)
+        {
+            nAlloc = 2;
+        }
+        else
+        {
+            nAlloc = aeff->numOutputs;
+        }
+
+        outBuffs = new float *[nAlloc];      // and the buffers pointed to
+
+        for (i = 0; i < aeff->numOutputs; i++)
+        {
+            // for this sample project, I've assumed a maximum buffer size
+            // of 1/4 second at 96KHz - presumably, this is MUCH too much
+            // and should be tweaked to more reasonable values, since it
+            // requires a machine with lots of main memory this way...
+            // user configurability would be nice, of course.
+
+            outBuffs[i] = new float[24000];
+
+            for (j = 0; j < 24000; j++)
+            {
+                outBuffs[i][j] = 0.f;
+            }
+        }
+
+        // if less than 2, fill up by replicating buffer 0 pointer
+
+        for (; i < nAlloc; ++i)
+        {
+            outBuffs[i] = outBuffs[0];
+        }
+
+        numOuts = nAlloc;
+    }
+
+
+    // Init sequence
+
+    aeffOpen();                                 // open the effect                   
+
+    aeffSetSampleRate(VstHost->getSampleRate());       // adjust its sample rate            
+
+    // this is a safety measure against some plusgins that only set their buffers
+    // ONCE - this should ensure that they allocate a buffer that's large enough
+
+    aeffSetBlockSize(11025);
+
+    // deal with changed behaviour in V2.4 plugins that don't call wantEvents()
+
+    wantsMidi = (aeffCanDo("receiveVstMidiEvent") == 1);
+
+    aeffResume();                            // then force resume
+    aeffSuspend();                           // suspend again...
+    aeffSetBlockSize(VstHost->getBuffSize());   // and buffer size
+    aeffResume();                            // then force resume
+
+    vstMutex = VstHost->vstMutex;
+
+    char tmpname[30] = {};
+
+    getDisplayName(tmpname, 30);
+
+    objName = tmpname;
 }
 
 bool Vst2Plugin::loadFromDll(const char *path) 
@@ -322,7 +796,7 @@ bool Vst2Plugin::loadFromDll(const char *path)
         //__try
         try
         {
-            aeff = vstMainFunc(vsthost->audioMasterCallback);
+            aeff = vstMainFunc(VstHost->audioMasterCallback);
         }
         //__except (EXCEPTION_EXECUTE_HANDLER)
         catch(...)                              // if any error occured 
@@ -333,11 +807,13 @@ bool Vst2Plugin::loadFromDll(const char *path)
         if (aeff == NULL)
         {
             FreeLibrary(hmodule);
+
             hmodule = NULL;
         }
     }
 
     // check for correctness
+
     if (aeff && (aeff->magic != kEffectMagic))
     {
         aeff = NULL;
@@ -347,23 +823,24 @@ bool Vst2Plugin::loadFromDll(const char *path)
     {
         unsigned int len = strlen(path);
 
-        vstpath = new char[len + 1];
+        vstPath = new char[len + 1];
 
-        if (vstpath)
+        if (vstPath)
         {
-            strcpy(vstpath, path);
+            strcpy(vstPath, path);
         }
 
         const char *p = strrchr(path, '\\');
 
         if (p)
         {
-            vstdir = new char[p - path + 1];
+            vstDir = new char[p - path + 1];
 
-            if (vstdir)
+            if (vstDir)
             {
-                memcpy(vstdir, path, p - path);
-                vstdir[p - path] = '\0';
+                memcpy(vstDir, path, p - path);
+
+                vstDir[p - path] = '\0';
             }
         }
     }
@@ -374,11 +851,6 @@ bool Vst2Plugin::loadFromDll(const char *path)
 long Vst2Plugin::vstDispatch(const int opcode,const int index,const int value,void * const ptr,float opt)
 {
     return aeffDispatch(opcode, index, value, ptr, opt);
-}
-
-bool Vst2Plugin::isLoaded()
-{
-    return aeff != NULL;
 }
 
 void Vst2Plugin::idle()
@@ -407,6 +879,9 @@ void Vst2Plugin::editIdle()
 
 void Vst2Plugin::processDSP(float* in_buff, float* out_buff, int buff_size)
 {
+    // pVSTCollector->AcquireSema();
+    // pPlug->pEffect->EffResume();
+
     int i,j;
 
     WaitForSingleObject(vstMutex,INFINITE);
@@ -415,29 +890,29 @@ void Vst2Plugin::processDSP(float* in_buff, float* out_buff, int buff_size)
 
     if (in_buff != NULL)
     {
-        if (numins == 1)
+        if (numIns == 1)
         {
             for (j = 0; j < buff_size; ++j)
             {
-                inbuffs[0][j] = (in_buff[j*2] + in_buff[j*2+1])/2;
+                inBuffs[0][j] = (in_buff[j*2] + in_buff[j*2+1])/2;
             }
         }
         // if effect has more than one input
-        else if (numins > 1)
+        else if (numIns > 1)
         {
             for (j = 0; j < buff_size; ++j)
             {
                 //fill in only first two channels
 
-                inbuffs[0][j] = in_buff[j*2];
-                inbuffs[1][j] = in_buff[j*2+1];
+                inBuffs[0][j] = in_buff[j*2];
+                inBuffs[1][j] = in_buff[j*2+1];
             }
 
             //all extra inputs will be duplicated to firts input (we don't support them)
 
-            for (i = 2; i < numins; ++i)
+            for (i = 2; i < numIns; ++i)
             {
-                inbuffs[i] = inbuffs[0];
+                inBuffs[i] = inBuffs[0];
             }
         }
     }
@@ -450,7 +925,7 @@ void Vst2Plugin::processDSP(float* in_buff, float* out_buff, int buff_size)
     // First is Process - out += process(in)
     // Second is ProcessReplacing - out = process(in)
 
-    if (aeff->flags & effFlagsCanDoubleReplacing && isreplacing)
+    if (aeff->flags & effFlagsCanDoubleReplacing && isReplacing)
     {
         /* pEffect->EffProcessDoubleReplacing(
             (double *)inBufs,
@@ -458,33 +933,36 @@ void Vst2Plugin::processDSP(float* in_buff, float* out_buff, int buff_size)
             buff_size);
         */
     }
-    else if (aeff->flags & effFlagsCanReplacing && isreplacing)
+    else if (aeff->flags & effFlagsCanReplacing && isReplacing)
     {
-        aeffProcessReplacing(inbuffs, outbuffs, buff_size);
+        aeffProcessReplacing(inBuffs, outBuffs, buff_size);
     }
     else
     {
-        aeffProcess(inbuffs, outbuffs, buff_size);
+        aeffProcess(inBuffs, outBuffs, buff_size);
     }
 
     for (i = 0; i < buff_size; ++i)
     {
         //lets duplicate output if effect has only one
 
-        if (numouts == 1)
+        if (numOuts == 1)
         {
-            out_buff[i*2] = out_buff[i*2+1] = outbuffs[0][i];
+            out_buff[i*2] = out_buff[i*2+1] = outBuffs[0][i];
         }
-        else if (numouts > 1)//effect has more than one buffer
+        else if (numOuts > 1)//effect has more than one buffer
         {
             //use only first two channels and ignore all other if any
 
-            out_buff[i*2] = outbuffs[0][i];
-            out_buff[i*2+1] = outbuffs[1][i];
+            out_buff[i*2] = outBuffs[0][i];
+            out_buff[i*2+1] = outBuffs[1][i];
         }
     }
 
     ReleaseMutex(vstMutex);
+
+    // pPlug->pEffect->EffSuspend();
+    // pVSTCollector->ReleaseSema();
 }
 
 void Vst2Plugin::setParam(long index, float Value)
@@ -560,17 +1038,17 @@ void Vst2Plugin::getDisplayName(char *name, unsigned int length)
 
     if (strlen(namebuff) == 0)
     {
-        size_t      i = strlen(vstpath);
+        size_t      i = strlen(vstPath);
         unsigned    j = 0;
         bool        dots = false;
 
         // Go backward till find a dot in file name
 
-        while (vstpath[i--] != '.');
+        while (vstPath[i--] != '.');
 
         // Go backward until reach the first "\\"
 
-        while (vstpath[i--] != '\\')
+        while (vstPath[i--] != '\\')
         {
             ++len; // Here we calc length of file name (without extension)
         }
@@ -587,7 +1065,7 @@ void Vst2Plugin::getDisplayName(char *name, unsigned int length)
 
         while ((len--) != 0)
         {
-            name[j++] = vstpath[i++];
+            name[j++] = vstPath[i++];
         }
 
         if (dots == true)
@@ -639,6 +1117,8 @@ void Vst2Plugin::setSampleRate(float sampleRate)
 
 void Vst2Plugin::reset()
 {
+    stopAllNotes();
+
     /* // Absynt crashes everything when the below code works because of
     // conflict with StopAllNotes function in VSTGenerator on stopping. Probably unneeded.
     VstEvents myEvents;
@@ -773,8 +1253,6 @@ void Vst2Plugin::extractParams()
             addParam(param);
         }
     }
-
-    int a = 1;
 }
 
 void Vst2Plugin::updParamValString(Parameter* param)
@@ -808,15 +1286,18 @@ void Vst2Plugin::updParamValString(Parameter* param)
 
 void Vst2Plugin::handleParamUpdate(Parameter* param)
 {
-    Parameter* prm = dynamic_cast<Parameter*>(param);
-
-    if (prm != NULL && getParamLock() == false)
+    if (param != vol && param != pan && param != enabled)
     {
-        setParam(prm->getIndex(), prm->getValue());
+        Parameter* prm = dynamic_cast<Parameter*>(param);
 
-        // Update units string for the parameter
+        if (prm != NULL && prm->getType() == Param_Default && getParamLock() == false)
+        {
+            setParam(prm->getIndex(), prm->getValue());
 
-        updParamValString(prm);
+            // Update units string for the parameter
+
+            updParamValString(prm);
+        }
     }
 }
 
@@ -916,24 +1397,35 @@ void Vst2Plugin::setPresetName(char* new_name)
     aeffSetProgramName(new_name);
 }
 
-void Vst2Plugin::save(XmlElement * xmlEff)
+void Vst2Plugin::save(XmlElement * xmlContainer)
 {
+    XmlElement* vstModule = new XmlElement(T("VstModule"));
+
     XmlElement* state = new XmlElement("STATE");
     MemoryBlock m;
     getStateInformation(m);
     state->addTextElement(m.toBase64Encoding());
-    xmlEff->addChildElement(state);
+    vstModule->addChildElement(state);
+
+    xmlContainer->addChildElement(vstModule);
 }
 
-void Vst2Plugin::load(XmlElement * xmlEff)
+void Vst2Plugin::load(XmlElement * xmlContainer)
 {
-    const XmlElement* const state = xmlEff->getChildByName(T("STATE"));
+    XmlElement* vstModule = xmlContainer->getChildByName (T("VstModule"));
 
-    if(state != 0)
+    if(vstModule != NULL)
     {
-        MemoryBlock m;
-        m.fromBase64Encoding (state->getAllSubText());
-        setStateInformation (m.getData(), m.getSize());
+        const XmlElement* const state = vstModule->getChildByName(T("STATE"));
+
+        if(state != 0)
+        {
+            MemoryBlock m;
+
+            m.fromBase64Encoding(state->getAllSubText());
+
+            setStateInformation(m.getData(), m.getSize());
+        }
     }
 }
 
@@ -1285,7 +1777,7 @@ bool Vst2Plugin::loadBank(char *name)
 
 void * Vst2Plugin::onGetDirectory()
 {
-    return vstdir;
+    return vstDir;
 }
 
 bool Vst2Plugin::onUpdateDisplay() 
@@ -1399,11 +1891,6 @@ void Vst2Plugin::setProgram(long index)
 
     //void * pChunk = NULL;
     //aeffGetChunk(&pChunk, true);
-
-    if (vstGuiWin != NULL)
-    {
- //       vstGuiWin->updateTitle();
-    }
 }
 
 long Vst2Plugin::aeffGetProgram() 
@@ -1472,25 +1959,33 @@ long Vst2Plugin::aeffEditOpen(void *ptr)
 
     /* if (l > 0) */ 
 
-    guiopen = true; 
+    guiOpen = true; 
 
     return l; 
 }
 
 void Vst2Plugin::aeffEditClose() 
 {
-    if(aeff != NULL)  aeffDispatch(effEditClose); guiopen = false; 
+    if(aeff != NULL)
+    {
+        aeffDispatch(effEditClose); 
+    }
+
+    guiOpen = false; 
 }
 
 void Vst2Plugin::aeffEditIdle() 
 { 
-    if (!guiopen || ineditidle) return; 
+    if (!guiOpen || inEditIdle)
+    {
+        return; 
+    }
 
-    ineditidle = true; 
+    inEditIdle = true; 
 
     aeffDispatch(effEditIdle); 
 
-    ineditidle = false; 
+    inEditIdle = false; 
 }
 
 long Vst2Plugin::aeffGetChunk(void** ptr, bool isPreset)
@@ -1566,7 +2061,7 @@ long Vst2Plugin::aeffCanDo(const char *ptr)
 
 long Vst2Plugin::aeffIdle() 
 { 
-    if (needidle) 
+    if (needIdle) 
         return aeffDispatch(effIdle); 
     else 
         return 0; 
@@ -1586,14 +2081,14 @@ long Vst2Plugin::aeffGetVstVersion()
 
 long Vst2Plugin::aeffBeginSetProgram() 
 { 
-    settingprogram = !!aeffDispatch(effBeginSetProgram); 
+    settingProgram = !!aeffDispatch(effBeginSetProgram); 
 
-    return settingprogram; 
+    return settingProgram; 
 }
 
 long Vst2Plugin::aeffEndSetProgram() 
 { 
-    settingprogram = false; 
+    settingProgram = false; 
 
     return aeffDispatch(effEndSetProgram); 
 }
@@ -1640,10 +2135,10 @@ long Vst2Plugin::aeffGetNumMidiOutputChannels()
 
 Vst2Host::Vst2Host(void* MainWindowHandle)
 {
-    fSampleRate = 44100.;
+    sampleRate = 44100.;
 
     vstTimeInfo.samplePos = 0.0;
-    vstTimeInfo.sampleRate = fSampleRate;
+    vstTimeInfo.sampleRate = sampleRate;
     vstTimeInfo.nanoSeconds = 0.0;
     vstTimeInfo.ppqPos = 0.0;
     vstTimeInfo.tempo = MTransp->getBeatsPerMinute();
@@ -1698,46 +2193,29 @@ void Vst2Host::setBPM(float fBPM)
     vstTimeInfo.tempo = fBPM;
 }
 
-Vst2Plugin* Vst2Host::loadModuleFromFile(char* path)
+void Vst2Host::addModule(Vst2Plugin* vst_module)
 {
-    char szFile[MAX_PATH_LENGTH];       // buffer for file name
+    plugins.push_back(vst_module);
 
-    if (path == NULL)
-    {
-        String strPlugDir(WorkDirectory);
+    vst_module->setIndex(plugins.size() - 1);          // tell effect where it is 
+}
 
-        strPlugDir += LOCAL_PLUGIN_FOLDER;
-
-        juce::File defDir(strPlugDir);
-
-        //Let's show a dialog and allow user to choose a directory
-        FileChooser *fileSelector = new FileChooser(T("Open a file"), defDir, T("*.dll;*.DLL"), true);
-
-        if (fileSelector->browseForFileToOpen() == true)
-        {
-            juce::File vstFile = fileSelector->getResult();
-
-            vstFile.getFullPathName().copyToBuffer(szFile, MAX_NAME_LENGTH - 1);
-
-            delete fileSelector;
-        }
-    }
-    else
-    {
-        strcpy(szFile, path);
-    }
-
-    Vst2Plugin* plug = new Vst2Plugin(path, this, ParentHWND);
+Vst2Plugin* Vst2Host::loadModuleFromFile(std::string path)
+{
+    Vst2Plugin* plug = new Vst2Plugin(path);
 
     if(plug->isLoaded() == false)
     {
         // failed to load
+
         delete plug;
+
         plug = NULL;
     }
     else
     {
         plugins.push_back(plug);
+
         plug->setIndex(plugins.size() - 1);          // tell effect where it is 
     }
 
@@ -1753,7 +2231,7 @@ bool Vst2Host::checkModule(char *path, bool *is_generator, char* name)
 {
     bool ret_val = false;
 
-    Vst2Plugin *plug = new Vst2Plugin(path, this, ParentHWND);
+    Vst2Plugin *plug = new Vst2Plugin(path);
 
     if(plug->isLoaded())
     {
@@ -1786,7 +2264,7 @@ bool Vst2Host::checkModule(char *path, bool *is_generator, char* name)
 
         ret_val = true;
     }
-    
+
     removeModule(plug);
 
     return ret_val;
@@ -1794,15 +2272,6 @@ bool Vst2Host::checkModule(char *path, bool *is_generator, char* name)
 
 void Vst2Host::removeModule(Vst2Plugin *plug)
 {
-    if (plug->vstGuiWin != NULL)
-    {
-    //    plug->closeGui();
-
-        // todo: possibly unstable, test with different vsts
-
-    //    plug->aeffClose();
-    }
-
     int i = 0;
 
     for(Vst2Plugin* p : plugins)
@@ -1836,9 +2305,10 @@ void Vst2Host::setBufferSize(int size)
 
         for(Vst2Plugin* plug : plugins)
         {
-            // set new buffer size, then force resume
+            // Set new buffer size, then force resume
 
             plug->aeffSetBlockSize(buffSize);
+
             plug->aeffMainsChanged(true);
         }
     }
@@ -1849,6 +2319,7 @@ void Vst2Host::setBufferSize(int size)
 void Vst2Host::calcTimeInfo(long lMask)
 {
     // we don't care for the mask in here
+
     static double fSmpteDiv[] =
     {
         24.f,
@@ -1860,18 +2331,22 @@ void Vst2Host::calcTimeInfo(long lMask)
     };
 
     double dPos = vstTimeInfo.samplePos / vstTimeInfo.sampleRate;
+
     vstTimeInfo.ppqPos = dPos * vstTimeInfo.tempo / 60.L;
 
     // offset in fractions of a second 
+
     double dOffsetInSecond = dPos - floor(dPos);
+
     vstTimeInfo.smpteOffset = (long)(dOffsetInSecond * fSmpteDiv[vstTimeInfo.smpteFrameRate] * 80.L);
 }
 
 void Vst2Host::setSampleRate(float fSampleRate)
 {
-    if (fSampleRate != this->fSampleRate) 
+    if (fSampleRate != this->sampleRate) 
     {
-        this->fSampleRate = fSampleRate;    // remember new sample rate
+        sampleRate = fSampleRate;    // remember new sample rate
+
         vstTimeInfo.sampleRate = fSampleRate;
 
         // inform all loaded plugins 
@@ -1895,6 +2370,7 @@ long VSTCALLBACK Vst2Host::audioMasterCallback(AEffect *effect, long opcode, lon
 long Vst2Host::onAudioMasterCallback(AEffect *aeff, long opcode, long index, long value, void *ptr, float opt)
 {
     Vst2Plugin *plug = NULL;
+
     if(aeff != NULL)
     {
         for(Vst2Plugin* pl : plugins)
@@ -1907,7 +2383,10 @@ long Vst2Host::onAudioMasterCallback(AEffect *aeff, long opcode, long index, lon
         }
     }
 
-    if(plug == NULL) return 2400L;   // Just always return host version, when loading new plugin
+    if(plug == NULL)
+    {
+        return 2400L;   // Just always return host version, when loading new plugin
+    }
 
     switch (opcode)
     {
@@ -1936,7 +2415,7 @@ long Vst2Host::onAudioMasterCallback(AEffect *aeff, long opcode, long index, lon
                                         /* VST 2.0 additions...              */
         case audioMasterWantMidi :
         {
-            plug->wantsmidi = true;
+            plug->wantsMidi = true;
 
             return true;
         }
@@ -1970,7 +2449,7 @@ long Vst2Host::onAudioMasterCallback(AEffect *aeff, long opcode, long index, lon
         }
         case audioMasterNeedIdle :
         {
-            plug->needidle = true;
+            plug->needIdle = true;
             return true;
         }
         case audioMasterSizeWindow :
@@ -1980,8 +2459,8 @@ long Vst2Host::onAudioMasterCallback(AEffect *aeff, long opcode, long index, lon
         }
         case audioMasterGetSampleRate :
         {
-            plug->aeffSetSampleRate(fSampleRate);
-            return (long)fSampleRate;
+            plug->aeffSetSampleRate(sampleRate);
+            return (long)sampleRate;
         }
         case audioMasterGetBlockSize :
         {

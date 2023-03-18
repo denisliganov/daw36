@@ -54,7 +54,7 @@ Parameter::Parameter(std::string name, ParamType param_type)
     }
     else if (type == Param_Vol)
     {
-        paramInit(name, Param_Vol, 0.f, DAW_VOL_RANGE, 1.f, Units_dB);
+        paramInit(name, Param_Vol, 0.f, DAW_VOL_RANGE, 1.f, Units_Percent);
     }
     else if (type == Param_Pan)
     {
@@ -84,7 +84,6 @@ void Parameter::paramInit(std::string name, ParamType pt, float min_val, float m
     envaffect = true;
     envdirect = true;
     envtweaked = false;
-    presetable = true;
     reversed = false;
 
     envelopes = NULL;

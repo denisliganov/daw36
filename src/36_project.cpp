@@ -7,9 +7,7 @@
 #include "36_ctrlpanel.h"
 #include "36_instrpanel.h"
 #include "36_sampleinstr.h"
-#include "36_vstinstr.h"
 #include "36_instr.h"
-#include "36_vst.h"
 #include "36_effects.h"
 #include "36_keyboard.h"
 #include "36_pattern.h"
@@ -27,7 +25,7 @@
 #include "36_alertbox.h"
 
 
-// namespace M {
+
 
 
 // Project class instance

@@ -22,7 +22,6 @@
 #include "36_dragndrop.h"
 #include "36_text.h"
 #include "36_knob.h"
-#include "36_vstinstr.h"
 
 
 
@@ -189,7 +188,7 @@ void MixChannel::remap()
 
         //if (vscr->isActive())
         {
-            vscr->setCoords1(width - FxPanelScrollerWidth, 0, FxPanelScrollerWidth, visibleHeight);
+            vscr->setCoords1(width - FxPanelScrollerWidth - 2, 0, FxPanelScrollerWidth + 2, visibleHeight);
         }
 
         //if(volslider)
@@ -268,7 +267,7 @@ Eff* MixChannel::addEffectFromBrowser(BrwListEntry * de)
     if(de->getType() == Entry_DLL)
     {
         //VstEffect* vsteff = new VstEffect((char*)de->getPath().data());
-        Vst2Module*  vsteff = new Vst2Module(de->getPath());
+        Vst2Plugin*  vsteff = new Vst2Plugin(de->getPath());
 
         eff = new Eff(vsteff);
     }

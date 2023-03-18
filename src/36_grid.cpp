@@ -9,7 +9,6 @@
 #include "36_edit.h"
 #include "36_ctrlpanel.h"
 #include "36_instrpanel.h"
-#include "36_vstinstr.h"
 #include "36_history.h"
 #include "36_instr.h"
 #include "36_lane.h"

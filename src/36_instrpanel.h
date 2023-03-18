@@ -24,7 +24,7 @@ public:
 
             void                addInstrFromNewBrowser(BrwListEntry* ble);
             Instrument*         addInstrument(Device36* dev, Instrument* objAfter = NULL);
-            Instrument*         addVst(const char* path, Vst2Module* vst);
+            Instrument*         addVst(const char* path, Vst2Plugin* vst);
             Sample*             addSample(const char* path, bool temporaryForPreview = false);
             void                cloneInstrument(Instrument* i);
             void                colorizeInstruments();
@@ -43,7 +43,7 @@ public:
             void                handleMouseWheel(InputEvent& ev);
             void                hideFX();
             bool                isFxShowing()   { return fxShowing; }
-            Vst2Module*         loadVst(const char* path, Vst2Module* otherVst);
+            Vst2Plugin*         loadVst(const char* path, Vst2Plugin* otherVst);
             Sample*             loadSample(const char* path);
             void                placeBefore(Instrument* instr, Instrument* before);
             void                resetAll();
