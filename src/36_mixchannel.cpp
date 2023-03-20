@@ -690,54 +690,57 @@ void MixChannel::process(int num_frames, float* out_buff)
     {
         for(Eff* eff : effs)
         {
-            eff->getDevice()->generateData(inbuff, outbuff, num_frames);
-
-            if(eff->getDevice()->isEnabled())
+            if (eff->getDevice())
             {
-                // Copy output back to input for the next effect to process
+                eff->getDevice()->generateData(inbuff, outbuff, num_frames);
 
-                if(eff->getDevice()->muteCount > 0)
+                if(eff->getDevice()->isEnabled())
                 {
-                    long tc = 0;
-                    float aa;
+                    // Copy output back to input for the next effect to process
 
-                    while(tc < num_frames)
+                    if(eff->getDevice()->muteCount > 0)
                     {
-                        aa = float(DECLICK_COUNT - eff->getDevice()->muteCount)/DECLICK_COUNT;
+                        long tc = 0;
+                        float aa;
 
-                        inbuff[tc*2] = inbuff[tc*2]*(1.f - aa) + outbuff[tc*2]*aa;
-                        inbuff[tc*2 + 1] = inbuff[tc*2 + 1]*(1.f - aa) + outbuff[tc*2 + 1]*aa;
-
-                        tc++;
-
-                        if(eff->getDevice()->muteCount > 0)
+                        while(tc < num_frames)
                         {
-                            eff->getDevice()->muteCount--;
+                            aa = float(DECLICK_COUNT - eff->getDevice()->muteCount)/DECLICK_COUNT;
+
+                            inbuff[tc*2] = inbuff[tc*2]*(1.f - aa) + outbuff[tc*2]*aa;
+                            inbuff[tc*2 + 1] = inbuff[tc*2 + 1]*(1.f - aa) + outbuff[tc*2 + 1]*aa;
+
+                            tc++;
+
+                            if(eff->getDevice()->muteCount > 0)
+                            {
+                                eff->getDevice()->muteCount--;
+                            }
                         }
+                    }
+                    else
+                    {
+                        memcpy(inbuff, outbuff, sizeof(float)*num_frames*2);
                     }
                 }
                 else
                 {
-                    memcpy(inbuff, outbuff, sizeof(float)*num_frames*2);
-                }
-            }
-            else
-            {
-                if(eff->getDevice()->muteCount < DECLICK_COUNT)
-                {
-                    long tc = 0;
-                    float aa;
-
-                    while(tc < num_frames && eff->getDevice()->muteCount < DECLICK_COUNT)
+                    if(eff->getDevice()->muteCount < DECLICK_COUNT)
                     {
-                        aa = float(DECLICK_COUNT - eff->getDevice()->muteCount)/DECLICK_COUNT;
+                        long tc = 0;
+                        float aa;
 
-                        inbuff[tc*2] = inbuff[tc*2]*(1.f - aa) + outbuff[tc*2]*aa;
-                        inbuff[tc*2 + 1] = inbuff[tc*2 + 1]*(1.f - aa) + outbuff[tc*2 + 1]*aa;
+                        while(tc < num_frames && eff->getDevice()->muteCount < DECLICK_COUNT)
+                        {
+                            aa = float(DECLICK_COUNT - eff->getDevice()->muteCount)/DECLICK_COUNT;
 
-                        tc++;
+                            inbuff[tc*2] = inbuff[tc*2]*(1.f - aa) + outbuff[tc*2]*aa;
+                            inbuff[tc*2 + 1] = inbuff[tc*2 + 1]*(1.f - aa) + outbuff[tc*2 + 1]*aa;
 
-                        eff->getDevice()->muteCount++;
+                            tc++;
+
+                            eff->getDevice()->muteCount++;
+                        }
                     }
                 }
             }

@@ -97,8 +97,8 @@ private:
             bool                    _hasGui;
             bool                    _usesChunks;
 
-            VstMidiEvent        midiEvents[800];
-            long                numEvents;
+            VstMidiEvent            midiEvents[800];
+            long                    numEvents;
 
 public:
 

@@ -41,21 +41,14 @@ protected:
 
         void drawSelf(Graphics& g)
         {
-            Eff* eff = (Eff*)parent;
-            eff->setMyColor(g, .4f);
-
-            if(isPressed())
+            if (isPressed())
             {
-                //instr->setMyColor(g, 1.f);
-                setc(g, 0.8f);
+                drawGlassRect1(g, x1, y1, width, height, Colour(255,153,48), 1, 2, true, true, true, true);
             }
             else
             {
-                //instr->setMyColor(g, .6f);
-                setc(g, 0.4f);
+                drawGlassRect1(g, x1, y1, width, height, Colour(55, 55, 55), 1, 2, true, true, true, true);
             }
-
-            fillx(g, 0, 0, width, height);
         }
 
         void handleMouseDrag(InputEvent & ev)   { parent->handleMouseDrag(ev); }
@@ -76,23 +69,14 @@ protected:
 
         void drawSelf(Graphics& g)
         {
-            //Instrument* instr = (Instrument*)parent;
-            //instr->setMyColor(g, .4f);
-
-            if(param->getBoolValue())
+            if (param->getBoolValue())
             {
-                //instr->setMyColor(g, 1.f);
-                setc(g, 0.8f);
+                drawGlassRound(g, x1, y1, width, Colour(255,153,48), 1);
             }
             else
             {
-                //instr->setMyColor(g, .6f);
-                setc(g, 0.4f);
+                drawGlassRound(g, x1, y1, width, Colour(55, 55, 55), 1);
             }
-
-            fillx(g, 0, 0, width, height);
-
-            txt(g, FontVis, "#", width/2 - 2, height/2 + gGetTextHeight(FontVis)/2 - 1);
         }
 
         void handleMouseDrag(InputEvent & ev)   { parent->handleMouseDrag(ev); }
@@ -181,7 +165,9 @@ Eff::~Eff()
 {
     if (device)
     {
-        //delete device;
+        deleteObject(device);
+
+        device = NULL;
     }
 }
 

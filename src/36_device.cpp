@@ -49,6 +49,7 @@ Device36::Device36()
     lastNoteVal = BaseNote;
 
     addParam(enabled = new Parameter("ENABLED", true));
+
     enabled->setAutoPlaced(false);
 }
 

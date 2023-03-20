@@ -209,7 +209,6 @@
     <ClCompile Include="src\36_utils.cpp" />
     <ClCompile Include="src\36_vst.cpp" />
     <ClCompile Include="src\36_vst3.cpp" />
-    <ClCompile Include="src\36_vstinstr.cpp" />
     <ClCompile Include="src\36_vstwin.cpp" />
     <ClCompile Include="src\36_vu.cpp" />
     <ClCompile Include="src\36_window.cpp" />
@@ -394,7 +393,6 @@
     <ClInclude Include="src\36_utils.h" />
     <ClInclude Include="src\36_vst.h" />
     <ClInclude Include="src\36_vst3.h" />
-    <ClInclude Include="src\36_vstinstr.h" />
     <ClInclude Include="src\36_vstwin.h" />
     <ClInclude Include="src\36_vu.h" />
     <ClInclude Include="src\36_window.h" />

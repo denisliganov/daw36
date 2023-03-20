@@ -93,7 +93,6 @@ typedef AEffect* (*VstInitFunc) (long (*audioMaster)(AEffect *effect, long opcod
 
 
 
-
 void Vst2Plugin::checkBounds(Note * gnote, Trigger * tg, long num_frames)
 {
     if(tg->framePhase + num_frames >= gnote->getFrameLength() ||  tg->tgState == TS_Release || tg->tgState == TS_Finished ||tg->tgState == TS_SoftFinish)
@@ -539,6 +538,10 @@ Vst2Plugin* Vst2Plugin::clone()
 
 
 
+
+
+
+
 Vst2Plugin::Vst2Plugin(std::string path)
 {
     aeff = NULL;
@@ -620,7 +623,7 @@ Vst2Plugin::~Vst2Plugin()
 
     if(aeff != NULL)
     {
-        // aeffClose(); 
+        aeffClose(); 
 
         // if DLL instance available
         if (hmodule)

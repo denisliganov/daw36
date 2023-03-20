@@ -94,7 +94,6 @@ protected:
 };
 
 Device36*   devDummy;
-
 extern Sample* prevSample;
 
 InstrPanel::InstrPanel(Mixer* mixer)
