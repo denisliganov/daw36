@@ -41,13 +41,14 @@ protected:
 
         void drawSelf(Graphics& g)
         {
+            setc(g, .8f);
             if (isPressed())
             {
-                drawGlassRect1(g, x1, y1, width, height, Colour(255,153,48), 1, 2, true, true, true, true);
+                gDrawTriangle(g, x1, y1, x2, y1, x1 + (width / 2), y1 + height);
             }
             else
             {
-                drawGlassRect1(g, x1, y1, width, height, Colour(55, 55, 55), 1, 2, true, true, true, true);
+                gDrawTriangle(g, x1, y2, x2, y2, x1 + (width / 2), y1);
             }
         }
 
@@ -71,11 +72,11 @@ protected:
         {
             if (param->getBoolValue())
             {
-                drawGlassRound(g, x1, y1, width, Colour(255,153,48), 1);
+                drawGlassRound(g, x1+1, y1+1, width-2, Colour(255,153,48), 1);
             }
             else
             {
-                drawGlassRound(g, x1, y1, width, Colour(55, 55, 55), 1);
+                drawGlassRound(g, x1+1, y1+1, width-2, Colour(55, 55, 55), 1);
             }
         }
 
@@ -101,18 +102,18 @@ protected:
         {
             Eff* eff = (Eff*)parent;
 
+            setc(g, .8f);
+
             if(isPressed())
             {
-                //eff->setMyColor(g, 1.f);
                 setc(g, 0.8f);
             }
             else
             {
-                //eff->setMyColor(g, .6f);
                 setc(g, 0.4f);
             }
 
-            fillx(g, 0, 0, width, height);
+            rectx(g, 0, 0, width, height);
 
             bool wVis = (eff->getDevice() && eff->getDevice()->isWindowVisible());
 
@@ -125,8 +126,6 @@ protected:
             {
                 eff->setMyColor(g, .6f);
             }
-
-            //txt(g, fontId, eff->getAlias(), width/2 - tw/2 + 1, height/2 + th/2 - 1);
         }
 
         void handleMouseDrag(InputEvent & ev)   { parent->handleMouseDrag(ev); }
@@ -154,7 +153,7 @@ Eff::Eff(Device36* dev)
 
     setObjName(dev->getObjName());
 
-    setWH(device->getW(), device->getH() + 14);
+    setWH(device->getW(), device->getH() + 22);
 
     //setObjId(dev->getObjId());
     //addObject(previewButton = new EffGuiButton(), MixChanWidth - 21, 0, 20, 15);
@@ -177,12 +176,12 @@ void Eff::remap()
 
     if (MixViewSingle && device->isON())
     {
-        device->setCoords1(0, 16, device->getW(), device->getH());
+        device->setCoords1(0, 22, device->getW(), device->getH());
     }
 
-    guiButt->setCoords1(width - 60, 0, 15, 15);
-    enableButt->setCoords1(width - 40, 0, 15, 15);
-    foldButt->setCoords1(width - 20, 0, 15, 15);
+    //guiButt->setCoords1(width - 60, 0, 15, 15);
+    //foldButt->setCoords1(width - 40, 0, 15, 15);
+    enableButt->setCoords1(width - 25, 3, 20, 20);
 }
 
 void Eff::drawSelf(Graphics& g)
@@ -222,7 +221,7 @@ void Eff::drawSelf(Graphics& g)
     //txtfit(g, FontSmall, objName, 3, th - 2, width - 2);
 
     setc(g, 1.f);
-    txtfit(g, FontSmall, device->getObjName(), 6, th - 1, width - 4);
+    txtfit(g, FontSmall, device->getObjName(), 7, th + 1, width - 4);
 }
 
 Eff* Eff::clone()
@@ -283,6 +282,11 @@ void Eff::handleMouseDown(InputEvent& ev)
     if (mixChannel->instr)
     {
     //    MInstrPanel->setCurrInstr(mixChannel->instr);
+    }
+
+    if (ev.doubleClick)
+    {
+        device->showWindow(!device->isWindowVisible());
     }
 }
 
@@ -1334,7 +1338,7 @@ CFlanger::CFlanger()
 
     reset();
 
-    addParam(frequency = new Parameter("DELAY", Param_Freq, 0.5f, 0.f, 1.f, Units_ms2));
+    addParam(frequency = new Parameter("DELAY", Param_Freq, 0.f, 1.f, .5f, Units_ms2));
 
     frequency->setReversed(true);
 

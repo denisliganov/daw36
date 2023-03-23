@@ -541,36 +541,40 @@ void MixChannel::handleMouseUp(InputEvent& ev)
 
 bool MixChannel::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
 {
-    Gobj* o1 = NULL;
-    Gobj* o2 = NULL;
-
-    Gobj* o = CheckNeighborObjectsX(objs, "eff", mx, (Gobj**)&o1, (Gobj**)&o2);
-
-    redraw();
-
-    dropObj = o;
-
-    int xh = x1 + 1;
-    int yh1 = y1;
-    int yh2 = y2;
-
-/*
-    if(o2 != NULL)
+    if (!MixViewSingle)
     {
-        xh = o2->getX1() + 1;
-        yh1 = o2->getY1();
-        yh2 = o2->getY2();
-    }
-*/
+        Gobj* left = NULL;
+        Gobj* right = NULL;
 
-    if(o1 != NULL)
+        dropObj = CheckNeighborObjectsX(objs, "eff", mx, (Gobj**)&left, (Gobj**)&right);
+
+        if(left != NULL)
+        {
+            drag.setDropCoords(left->getX2() - 3, left->getY1(), 9, left->getH());
+        }
+        else
+        {
+            drag.setDropCoords(x1 + 1, y1, 1, height);
+        }
+
+        redraw();
+    }
+    else
     {
-        xh = o1->getX2() + 1;
-        yh1 = o1->getY1();
-        yh2 = o1->getY2();
-    }
+        Gobj* uper = NULL;
+        Gobj* lower = NULL;
 
-    drag.dropHighlightVertical->setCoordsUn(xh - 4, yh1, xh + 4, yh2);
+        dropObj = CheckNeighborObjectsY(objs, "eff", my, (Gobj**)&uper, (Gobj**)&lower);
+
+        if(uper != NULL)
+        {
+            drag.setDropCoords(uper->getX1(), uper->getY2() - 3, FxPanelMaxWidth - FxPanelScrollerWidth - 5, 9);
+        }
+        else
+        {
+            drag.setDropCoords(x1 + 1, y1, FxPanelMaxWidth - FxPanelScrollerWidth - 5, 1);
+        }
+    }
 
     int tw = gGetTextWidth(FontSmall, obj->getObjName());
     int th = gGetTextHeight(FontSmall);

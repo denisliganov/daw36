@@ -1250,6 +1250,7 @@ void Vst2Plugin::extractParams()
 
             param->setName(paramName);
             param->setIndex(index);      // for VST purpose
+            param->setAutoPlaced(false);
 
             updParamValString(param);
 

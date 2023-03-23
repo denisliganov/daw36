@@ -248,7 +248,7 @@ void Gobj::setCoordsAbs(int ax1, int ay1, int ax2, int ay2)
 
 // use absolute coords, not cropped
 
-void Gobj::setCoordsUn(int ax1, int ay1, int ax2, int ay2)
+void Gobj::setCoordsNoCrop(int ax1, int ay1, int ax2, int ay2)
 {
     relativeToParent = false;
 

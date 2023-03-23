@@ -2,43 +2,51 @@
 
 #include "36_dragndrop.h"
 #include "36_instr.h"
-#include "36_draw.h"
 #include "36_text.h"
+#include "36_draw.h"
 
 
 
-DropHighlight::DropHighlight(bool vert)
-{
-    vertical = vert;
 
-//    setrelative(false);
-}
+
 
 void DropHighlight::drawSelf(Graphics & g)
 {
-    uint32 color = 0xffFF9930;
-    uint32 clrDecr = 0x80000000;
-
-    int y = y1 + height/2;
-    int x = x1 + width/2;
-
-    for (int c = 0; c < 4; c++)
+    if (rect)
     {
-        g.setColour(Colour(color));
+        uint32 color = 0xffFF9930;
 
-        if(vertical)
-        {
-            g.drawVerticalLine(x + c, (float)y1, (float)y2);
-            g.drawVerticalLine(x - c, (float)y1, (float)y2);
-        }
-        else
-        {
-            g.drawHorizontalLine(y + c, (float)x1, (float)x2);
-            g.drawHorizontalLine(y - c, (float)x1, (float)x2);
-        }
+        setc(g, color);
 
-        color -= clrDecr;
-        clrDecr /=2;
+        rectx(g, 0, 0, width, height);
+    }
+    else
+    {
+        //fill(g, 1.f);
+
+        uint8 a = 255;
+
+        Rect36 drwRect ={(float)(x1), (float)y1, (float)width, (float)height};
+
+        for (int c = 0; c < 4; c++)
+        {
+            gSetColor(g, 255, 153, 48, 255 - a);
+
+            //gDrawRect(g, x1, y1, width, height);
+            gDrawRectWH(g, drwRect.x, drwRect.y, drwRect.w, drwRect.h);
+
+            drwRect.x++;
+            drwRect.y++;
+            drwRect.w -= 2;
+            drwRect.h -= 2;
+
+            if (drwRect.h < 1 || drwRect.w < 1)
+            {
+                break;
+            }
+
+            a /= 2;
+        }
     }
 }
 
@@ -48,9 +56,6 @@ void DropHighlightRect::drawSelf(Graphics & g)
 
     setc(g, color);
 
- //   g.setColour(Colour(color));
- //   g.drawHorizontalLine(y1 + 1, (float)x1, (float)x2);
-
     rectx(g, 0, 0, width, height);
 }
 
@@ -58,8 +63,7 @@ DragAndDrop::DragAndDrop()
 {
     setTouchable(false);
 
-    addHighlight(dropHighlightHorizontal = new DropHighlight(false));
-    addHighlight(dropHighlightVertical = new DropHighlight(true));
+    addHighlight(dropHighlight = new DropHighlight());
     addHighlight(dropRect = new DropHighlightRect());
 
     reset();
@@ -75,8 +79,7 @@ void DragAndDrop::reset()
 
     setCoords2(0, 0, -1, -1);
 
-    dropHighlightHorizontal->setVis(false);
-    dropHighlightVertical->setVis(false);
+    dropHighlight->setVis(false);
     dropRect->setVis(false);
 };
 
@@ -105,15 +108,13 @@ void DragAndDrop::start(Gobj * drag_obj,int mx,int my)
 {
     dragObj = drag_obj;
 
-    dropHighlightHorizontal->setCoords2(-1,-1, 1, 1);
-    dropHighlightVertical->setCoords2(-1,-1, 1, 1);
+    dropHighlight->setCoords2(-1,-1, 1, 1);
     dropRect->setCoords2(-1,-1, 1, 1);
 }
 
 void DragAndDrop::drag(Gobj* target_object, int mx, int my)
 {
-    dropHighlightHorizontal->setCoords1(-1,-1, 1, 1);   // disable by default
-    dropHighlightVertical->setCoords1(-1,-1, 1, 1);   // disable by default
+    dropHighlight->setCoords1(-1,-1, 1, 1);   // disable by default
     dropRect->setCoords1(-1,-1, 1, 1);
 
     bool result = target_object->handleObjDrag(*this, dragObj, mx, my);
@@ -148,35 +149,21 @@ void DragAndDrop::drawSelf(Graphics & g)
 
         if(!drawn)
         {
-            Instrument* i = dynamic_cast<Instrument*>(dragObj);
-            
-            if(i)
-            {
-                int tw = gGetTextWidth(FontSmall, i->getObjName());
+            setc(g, 0.5f);
 
-                int th = gGetTextHeight(FontSmall);
+            fillx(g, 0, 0, width, height);
 
-                setc(g, .6f);
+            setc(g, 0.99f);
 
-                fillx(g, 0, 0, width, height);
-
-                setc(g, 1.f);
-
-                gText(g, FontSmall, i->getObjName(), dx1, dy2 - 2);
-            }
-            else
-            {
-                setc(g, 0.5f);
-
-                fillx(g, 0, 0, width, height);
-
-                setc(g, 0.99f);
-
-                gText(g, FontSmall, dragObj->getObjName(), dx1, dy2 - 2);
-            }
+            gText(g, FontSmall, dragObj->getObjName(), dx1, dy2 - 2);
         }
     }
 }
 
 
+void DragAndDrop::setDropCoords(int x,int y,int w,int h,bool rect)
+{
+    dropHighlight->setCoordsNoCrop(x, y, x+w-1, y+h-1);
+    dropHighlight->setRectType(rect);
+}
 

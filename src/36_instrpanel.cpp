@@ -460,7 +460,8 @@ bool InstrPanel::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
 
         if (dropObj)
         {
-            drag.dropRect->setCoordsUn(dropObj->getX1(), dropObj->getY1(), dropObj->getX2(), dropObj->getY2());
+            //drag.dropRect->setCoordsNoCrop(dropObj->getX1(), dropObj->getY1(), dropObj->getX2(), dropObj->getY2());
+            drag.setDropCoords(dropObj->getX1(), dropObj->getY1(), dropObj->getW(), dropObj->getH(), true);
         }
 
 /*

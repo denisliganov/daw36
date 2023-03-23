@@ -124,7 +124,7 @@ void Knob::drawSelf(Graphics& g)
     setc(g, .7f);
     txt(g, fontId, param->getName() + ": ", textX, 12);
     setc(g, 1.f);
-    //txt(g, fontId, param->getValString(), textX + namestrLen + 4, 12);
+    //txt(g, fontId, param->getValString(), textX + namestrLen + 6, 12);
     txt(g, fontId, param->getValString(), textX + 60, 12);
     //txt(g, fontId, param->getValString(), textX, height - 5);
     setc(g, .6f);

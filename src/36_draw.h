@@ -30,8 +30,16 @@ typedef enum ImageId
 
 struct Point36 
 {
-    float x; 
-    float y; 
+        float   x; 
+        float   y; 
+};
+
+struct Rect36 
+{
+        float   x; 
+        float   y; 
+        float   w; 
+        float   h; 
 };
 
 

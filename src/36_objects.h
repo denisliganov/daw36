@@ -131,7 +131,7 @@ public:
     virtual void                setCoords1(int xNew, int yNew, int wNew = -1, int hNew = -1);
     virtual void                setCoords2(int xNew, int yNew, int x1New, int y1New);
             void                setCoordsAbs(int ax1, int ay1, int ax2, int ay2);
-            void                setCoordsUn(int ax1, int ay1, int ax2, int ay2);
+            void                setCoordsNoCrop(int ax1, int ay1, int ax2, int ay2);
     virtual void                setDrawAreaDirectly(int xabs1, int xabs2, int xabs3, int xabs4);
             void                setWH(int w, int h);
     virtual void                setMyColor(Graphics& g, float brightness=-1.f, float saturation = -1.f, float alpha=1.f);
