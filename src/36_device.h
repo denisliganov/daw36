@@ -40,33 +40,34 @@ public:
             void                addBasicParamSet();
     virtual SubWindow*          createWindow();
     virtual void                createSelfPattern();
+            ContextMenu*        createContextMenu()     {  return container->createContextMenu();  }
     virtual void                forceStop();
-            int                 getIndex() { return devIdx; }
-            float               getLastNoteLength() { return lastNoteLength; }
-            int                 getMuteCount()  { return muteCount; }
-            bool                isEnabled()     { return enabled->getBoolValue(); }
-            Gobj*               getContainer() { return container; }
+            int                 getIndex()              { return devIdx; }
+            float               getLastNoteLength()     { return lastNoteLength; }
+            int                 getMuteCount()          { return muteCount; }
+            bool                isEnabled()             { return enabled->getBoolValue(); }
+            Gobj*               getContainer()          { return container; }
             void                removeElements();
             void                handleWindowClosed();
             bool                isWindowVisible();
-            bool                isPreviewOnly() { return previewOnly; }
+            bool                isPreviewOnly()         { return previewOnly; }
 
             long                getNumPresets();
             void                getPresetName(long devIdx, char *name);
-    std::vector<std::string>&   getPresetList()  { return presets; }
+    std::vector<std::string>&   getPresetList()         { return presets; }
 
-    virtual bool                setPreset(long index) { return true; };
+    virtual bool                setPreset(long index)   { return true; };
     virtual bool                setPreset(std::string pname);
             void                savePreset();
 
-            void                setIndex(int idx) { devIdx = idx; }
+            void                setIndex(int idx)       { devIdx = idx; }
     virtual void                setBPM(float bpm) {};
     virtual void                setBufferSize(unsigned bufferSize) {};
     virtual void                setSampleRate(float sampleRate) {};
     virtual void                showWindow(bool show);
-            void                setContainer(Gobj* cnt) { container = cnt; }
+            void                setContainer(Gobj* cnt)     { container = cnt; }
             void                setPath(std::string path)       { filePath = path; }
-            std::string         getPath()       { return filePath; }
+            std::string         getPath()                   { return filePath; }
 
     virtual void                activateTrigger(Trigger* tg);
     virtual void                deactivateTrigger(Trigger* tg);

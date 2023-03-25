@@ -460,7 +460,6 @@ bool InstrPanel::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
 
         if (dropObj)
         {
-            //drag.dropRect->setCoordsNoCrop(dropObj->getX1(), dropObj->getY1(), dropObj->getX2(), dropObj->getY2());
             drag.setDropCoords(dropObj->getX1(), dropObj->getY1(), dropObj->getW(), dropObj->getH(), true);
         }
 
@@ -469,12 +468,10 @@ bool InstrPanel::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
 
         if(o2 != NULL)
         {
-            //drag.dropHighlightHorizontal->setCoords2(o2->getX1(), o2->getY1() - 2 - 4, o2->getX2() + 1, o2->getY1() - 2 + 4);
             drag.dropHighlightHorizontal->setCoordsUn(o2->getX1(), o2->getY1() - 2 - 4, o2->getX2() + 1, o2->getY1() - 2 + 4);
         }
         else if(o1 != NULL)
         {
-            //drag.dropHighlightHorizontal->setCoords2(o1->getX1(), o1->getY2() + 2 - 4, o1->getX2() + 1, o1->getY2() + 2 + 4);
             drag.dropHighlightHorizontal->setCoordsUn(o1->getX1(), o1->getY2() + 2 - 4, o1->getX2() + 1, o1->getY2() + 2 + 4);
         }
 */

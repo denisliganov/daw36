@@ -24,21 +24,35 @@ void DropHighlight::drawSelf(Graphics & g)
     {
         //fill(g, 1.f);
 
-        uint8 a = 255;
+        uint8 a = 128;
 
         Rect36 drwRect ={(float)(x1), (float)y1, (float)width, (float)height};
+
+        bool vert = drwRect.w < drwRect.h;
 
         for (int c = 0; c < 4; c++)
         {
             gSetColor(g, 255, 153, 48, 255 - a);
 
             //gDrawRect(g, x1, y1, width, height);
-            gDrawRectWH(g, drwRect.x, drwRect.y, drwRect.w, drwRect.h);
+            //gFillRectWH(g, drwRect.x, drwRect.y, drwRect.w, drwRect.h);
 
-            drwRect.x++;
-            drwRect.y++;
-            drwRect.w -= 2;
-            drwRect.h -= 2;
+            if (vert)
+            {
+                gFillRectWH(g, drwRect.x, drwRect.y, 1, drwRect.h);
+                gFillRectWH(g, drwRect.x + drwRect.w - 1, drwRect.y, 1, drwRect.h);
+
+                drwRect.x++;
+                drwRect.w -= 2;
+            }
+            else
+            {
+                gFillRectWH(g, drwRect.x, drwRect.y, drwRect.w, 1);
+                gFillRectWH(g, drwRect.x, drwRect.y + drwRect.h - 1, drwRect.w, 1);
+
+                drwRect.y++;
+                drwRect.h -= 2;
+            }
 
             if (drwRect.h < 1 || drwRect.w < 1)
             {

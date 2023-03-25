@@ -147,17 +147,13 @@ Eff::Eff(Device36* dev)
 
     device->setContainer(this);
 
+    setObjName(dev->getObjName());
+
     addObject(guiButt = new EffGuiButton());
     addObject(enableButt = new EffEnableButton(device->enabled));
     addObject(foldButt = new EffFoldButton());
 
-    setObjName(dev->getObjName());
-
     setWH(device->getW(), device->getH() + 22);
-
-    //setObjId(dev->getObjId());
-    //addObject(previewButton = new EffGuiButton(), MixChanWidth - 21, 0, 20, 15);
-    //addParam(new Parameter(1, 0, 1), "", sliderAmount = new Slider36(false));
 }
 
 Eff::~Eff()
@@ -177,27 +173,22 @@ void Eff::remap()
     if (MixViewSingle && device->isON())
     {
         device->setCoords1(0, 22, device->getW(), device->getH());
+
+        enableButt->setCoords1(width - 25, 3, 20, 20);
+    }
+    else
+    {
+        enableButt->setVis(false);
     }
 
     //guiButt->setCoords1(width - 60, 0, 15, 15);
     //foldButt->setCoords1(width - 40, 0, 15, 15);
-    enableButt->setCoords1(width - 25, 3, 20, 20);
 }
 
 void Eff::drawSelf(Graphics& g)
 {
     fill(g, .22f);
     rect(g, .32f);
-
-    //device->setMyColor
-
-    //setc(g, .36f);
-    //fillx(g, 2, 0, width - 4, 16);
-
-    //rect(g, .3f);
-
-    //setc(g, .2f);
-    //lineH(g, height-1, 0, width-1);
 
     if (device->guiWindow && device->guiWindow->isOpen())
     {
@@ -217,11 +208,12 @@ void Eff::drawSelf(Graphics& g)
 
     int th = gGetTextHeight(FontSmall);
 
-    //setc(g, .0f);
-    //txtfit(g, FontSmall, objName, 3, th - 2, width - 2);
+    setc(g, 8.f);
 
-    setc(g, 1.f);
-    txtfit(g, FontSmall, device->getObjName(), 7, th + 1, width - 4);
+    if (MixViewSingle)
+        txtfit(g, FontSmall, device->getObjName(), 7, th + 1, width - 4);
+    else
+        txtfit(g, FontSmall, device->getObjName(), 0, th + 1, width);
 }
 
 Eff* Eff::clone()
@@ -1003,8 +995,8 @@ CBitCrusher::CBitCrusher()
     objName = "BitCrusher";
     uniqueId = MAKE_FOURCC('B','I','T','C');
 
-    addParam(decimation = new Parameter("DECIMATION", 1.0f, 128.f, 1.0f, Units_Integer));
-    addParam(quantization = new Parameter("QUANTIZATION", 0.0f, 1.f, 0.0f));
+    addParam(decimation = new Parameter("Decimation", 1.0f, 128.f, 1.0f, Units_Integer));
+    addParam(quantization = new Parameter("Quantization", 0.0f, 1.f, 0.0f));
 
     dspCoreBC.setAmount(1);
 
@@ -1095,7 +1087,7 @@ XDelay::XDelay() : dspCorePingPongDelay()
     dspCorePingPongDelay.setPingPongMode(true);
     dspCorePingPongDelay.setStereoSwap(true);
 
-    addParam(delayMode = new Parameter("PING-PONG MODE", true));
+    addParam(delayMode = new Parameter("PING-PONG", true));
 
     addParam(delay = new Parameter("DELAY", 0.5f, 20.f, 3, Units_Ticks));
     delay->setInterval(0.25f);

@@ -122,17 +122,6 @@ void MixChannel::init(Instrument* ins)
     if(ins != NULL)
     {
         instr = ins;
-
-        int slLen = MixChanWidth - 10;
-
-        addParam(volParam = new Parameter("Volume", Param_Vol));
-        addParam(panParam = new Parameter("Panning", Param_Pan));
-
-        //addObject(volKnob = new Knob(volParam));
-        //addObject(panKnob = new Knob(panParam));
-
-        //muteparam = NULL; // instr->muteparam;
-        //soloparam = NULL; // instr->soloparam;
     }
     else    // send or master
     {
@@ -144,10 +133,13 @@ void MixChannel::init(Instrument* ins)
         solotoggle = NULL;
         volKnob = NULL;
         volKnob = NULL;
-
-        addParam(volParam = new Parameter("Volume", Param_Vol));
-        addParam(panParam = new Parameter("Panning", Param_Pan));
     }
+
+    addParam(volParam = new Parameter("Volume", Param_Vol));
+    addParam(panParam = new Parameter("Panning", Param_Pan));
+
+    addObject(volKnob = new Knob(volParam));
+    addObject(panKnob = new Knob(panParam));
 
     addObject(vu = new ChanVU(true), ObjGroup_VU);
 }
@@ -156,8 +148,6 @@ void MixChannel::remap()
 {
     if (MixViewSingle)
     {
-        //mixViewUpdate();
-
         int xeff = 0;
         int yeff = 0;
         int totalHeight = 0;
@@ -170,26 +160,16 @@ void MixChannel::remap()
             totalHeight += eff->getH() + 1;
         }
 
-        if (totalHeight <= visibleHeight)
-        {
-            //vscr->setOffset(0);
-        }
-
         vscr->updBounds(totalHeight, visibleHeight, vscr->getOffset());
 
         for (Eff* eff : effs)
         {
-            //eff->getDevice()->setEnable(true);
-            //eff->getDevice()->setVis(true);
             eff->setCoords1(xeff, 1 + yeff - int(vscr->getOffset()), eff->getW(), eff->getH());
 
             yeff += eff->getH() + 1;
         }
 
-        //if (vscr->isActive())
-        {
-            vscr->setCoords1(width - FxPanelScrollerWidth - 2, 0, FxPanelScrollerWidth + 2, visibleHeight);
-        }
+        vscr->setCoords1(width - FxPanelScrollerWidth - 2, 0, FxPanelScrollerWidth + 2, visibleHeight);
 
         //if(volslider)
         //    volslider->setCoords1(width - 30, 1, 10, height - 2);
@@ -201,8 +181,8 @@ void MixChannel::remap()
         //if(panslider)
         //    panslider->setCoords1(width - 18, 1, 10, height - 2);
 
-        //if(vu)
-        //    vu->setCoords1(1, 1, 10, height - 2);
+        if(vu)
+            vu->setCoords1(0, height - 50, 20, 50);
     }
     else
     {
@@ -219,30 +199,27 @@ void MixChannel::remap()
 
             xeff += eff->getW() + 1;
         }
+
+        vscr->setVis(false);
     }
-
-/*
-    confine(1, 1, MixChanWidth - 1, height - MixChannelPadHeight - 3);
-
-    int yeff = 1 - voffs;
-
-    for(Eff* eff : effs)
-    {
-        eff->setCoords1(1, yeff, MixChanWidth - 2, EffHeaderHeight);
-
-        yeff += eff->getH() + 2;
-    }
-*/
 }
 
 void MixChannel::drawSelf(Graphics& g)
 {
     fill(g, .1f);
 
-    setc(g, .3f);
-    fillx(g, 0, height - FxPanelBottomHeight, width, FxPanelBottomHeight);
-    setc(g, .4f);
-    rectx(g, 0, height - FxPanelBottomHeight, width, FxPanelBottomHeight);
+    if (MixViewSingle)
+    {
+        setc(g, .3f);
+        fillx(g, 0, height - FxPanelBottomHeight, width, FxPanelBottomHeight);
+        setc(g, .4f);
+        rectx(g, 0, height - FxPanelBottomHeight, width, FxPanelBottomHeight);
+    }
+    else
+    {
+        setc(g, .2f);
+        rectx(g, 0, 0, width, height);
+    }
 }
 
 void MixChannel::addEffect(Eff* eff)
@@ -550,11 +527,11 @@ bool MixChannel::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
 
         if(left != NULL)
         {
-            drag.setDropCoords(left->getX2() - 3, left->getY1(), 9, left->getH());
+            drag.setDropCoords(left->getX2() - 3, left->getY1(), 8, left->getH());
         }
         else
         {
-            drag.setDropCoords(x1 + 1, y1, 1, height);
+            drag.setDropCoords(x1 - 3, y1, 8, height);
         }
 
         redraw();
@@ -568,11 +545,11 @@ bool MixChannel::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
 
         if(uper != NULL)
         {
-            drag.setDropCoords(uper->getX1(), uper->getY2() - 3, FxPanelMaxWidth - FxPanelScrollerWidth - 5, 9);
+            drag.setDropCoords(uper->getX1(), uper->getY2() - 3, FxPanelMaxWidth - FxPanelScrollerWidth - 5, 8);
         }
         else
         {
-            drag.setDropCoords(x1 + 1, y1, FxPanelMaxWidth - FxPanelScrollerWidth - 5, 1);
+            drag.setDropCoords(x1 + 1, y1 - 3, FxPanelMaxWidth - FxPanelScrollerWidth - 5, 8);
         }
     }
 

@@ -38,7 +38,7 @@ public:
             Parameter*          panParam;
             bool                soloparam;
             Button36*           solotoggle;
-            Parameter*           volParam;
+            Parameter*          volParam;
             ChanVU*             vu;
             Knob*               volKnob;
 
@@ -72,9 +72,6 @@ public:
             void                save(XmlElement* xmlChanNode);
             void                setBufferSize(unsigned int bufferSize);
             void                setSampleRate(float sampleRate);
-
-//            void                handleMouseLeave(InputEvent & ev) {}
-//            void                handleMouseEnter(InputEvent & ev) {}
 };
 
 

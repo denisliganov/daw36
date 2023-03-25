@@ -172,6 +172,11 @@ void Scroller::updBounds(float full_span, float visible_span, float offs)
     {
         active = true;
 
+        if (full_span <= visible_span)
+        {
+            offset = 0;
+        }
+
         if(vertical)
         {
             fullpixlen = height - 2;
