@@ -29,24 +29,8 @@ ParamBox::ParamBox(Parameter* par)
     width += 20;
 }
 
-void ParamBox::drawSelf(Graphics& g)
+void ParamBox::drawSlider(Graphics& g)
 {
-    Instrument* i = dynamic_cast<Instrument*>(parent);
-
-    if (i) 
-        i->setMyColor(g, .4f);
-    else
-        setc(g, 0.25f);
-
-    fillx(g, 0, 0, width, height);
-
-    int txy = 0;
-
-    if (sliderOnly == false)
-    {
-        txy = textHeight + 1;
-    }
-
     float offs = param->getOffset();
     float range = param->getRange();
     float val = param->getValue();
@@ -64,79 +48,70 @@ void ParamBox::drawSelf(Graphics& g)
     }
 
     int w = xend - xstart;
-
-    int sh = height - txy;
+    int sh = height - (sliderOnly ? 0 : textHeight + 1);
 
     // Black notch for default (initial) value
     //setc(g, 0.f);
     //fillx(g, defPos, height - sh, 1, sh);
 
-    //setc(g, 0xffB0B000);
-
-    if (i) 
-        i->setMyColor(g, .4f);
-    else
-        setc(g, 0.4f);
-
+    setc(g, 0.4f);
     fillx(g, xstart, height - sh, w, sh);
 
-    if (i) 
-        i->setMyColor(g, .8f);
-    else
-        setc(g, 0.6f);
-
-    //setc(g, 0xffA0A060);
+    setc(g, 0.6f);
     fillx(g, xstart, height - sh+1, w, sh-2);
 
     //drawGlassRect(g, x1 + (float)xstart, y1 + (float)(height - sh+1), w, sh-1, Colour(180, 120, 120), 0, 0, true, true, true, true);
 
-    if (i) 
-        i->setMyColor(g, .2f);
-    else
-        setc(g, 0.2f);
-
-    //setc(g, 0xff505030);
+    setc(g, 0.2f);
     fillx(g, xoffs, height - sh, 1, sh);
 
-    if (i) 
-        i->setMyColor(g, 1.f);
-    else
-        setc(g, 1.f);
-
-    //setc(g, 0xffFFFFA0);
+    setc(g, 1.f);
     fillx(g, xval, height - sh + 1, 1, sh - 2);
+}
+
+void ParamBox::drawText(Graphics& g)
+{
+    int txty = textHeight - 3;
+
+    //setc(g, 0.8f);
+    setc(g, 1.f);
+
+    txtfit(g, fontId, param->getName(), 3, txty, width/2);
+
+    setc(g, 1.f);
+
+    std::string valstr = param->getValString();
+
+    int sub = 0;
+
+    if(valstr.data()[0] == '-' || 
+       valstr.data()[0] == '+' ||
+       valstr.data()[0] == '<')
+    {
+        int poffs = gGetTextWidth(fontId, valstr.substr(0, 1));
+
+        txt(g, fontId, param->getValString().substr(0, 1), width/2 - poffs, txty);
+
+        sub = 1;
+    }
+
+    setc(g, 1.f);
+
+    txt(g, fontId, param->getValString().substr(sub), width/2, txty);
+    txt(g, fontId, param->getUnitString(), width - tw3 - 2, txty);
+}
+
+
+void ParamBox::drawSelf(Graphics& g)
+{
+    setc(g, 0.25f);
+    fillx(g, 0, 0, width, height);
+
+    drawSlider(g);
 
     if (sliderOnly == false)
     {
-        txy = textHeight;
-
-        int txty = txy - 3;
-
-        //setc(g, 0.8f);
-        setc(g, 1.f);
-
-        txtfit(g, fontId, param->getName(), 3, txty, width/2);
-
-        setc(g, 1.f);
-
-        std::string valstr = param->getValString();
-
-        int sub = 0;
-
-        if(valstr.data()[0] == '-' || 
-           valstr.data()[0] == '+' ||
-           valstr.data()[0] == '<')
-        {
-            int poffs = gGetTextWidth(fontId, valstr.substr(0, 1));
-            txt(g, fontId, param->getValString().substr(0, 1), width/2 - poffs, txty);
-            sub = 1;
-        }
-
-        setc(g, 1.f);
-
-        txt(g, fontId, param->getValString().substr(sub), width/2, txty);
-
-        txt(g, fontId, param->getUnitString(), width - tw3 - 2, txty);
+        drawText(g);
     }
 }
 

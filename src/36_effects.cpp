@@ -168,8 +168,6 @@ Eff::~Eff()
 
 void Eff::remap()
 {
-    //previewButton->setCoords1(width - 13, 0, 12, 12);
-
     if (MixViewSingle && device->isON())
     {
         device->setCoords1(0, 22, device->getW(), device->getH());

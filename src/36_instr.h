@@ -12,9 +12,7 @@
 
 
 
-class PreviewButt;
 class EnableButton;
-class SoloButton;
 class GuiButt;
 
 
@@ -31,19 +29,14 @@ public:
             ~Instrument();
 
             Device36*           device;
-
-            std::string         instrAlias;
-
-            MixChannel*         mixChannel;
-
-            EnableButton*       muteButt;
             Button36*           guiButton;
-            SoloButton*         soloButt;
+            std::string         instrAlias;
             InstrVU*            ivu;
+            MixChannel*         mixChannel;
+            EnableButton*       muteButt;
+            ParamBox*           panBox;
             Knob*               volKnob;
             ParamBox*           volBox;
-            ParamBox*           panBox;
-            Button36*           previewButton;
 
 
             void                addMixChannel();

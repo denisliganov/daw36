@@ -21,14 +21,7 @@ protected:
         bool                rect;
 };
 
-class DropHighlightRect  : public Gobj
-{
-public:
 
-        DropHighlightRect() {}
-
-        void    drawSelf(Graphics& g);
-};
 
 class DragAndDrop  : public Gobj
 {
@@ -39,7 +32,6 @@ public:
         int                 count;
         Gobj*               dragObj;
         DropHighlight*      dropHighlight;
-        DropHighlightRect*  dropRect;
         Gobj*               targetObj;
 
         bool                canDrag();

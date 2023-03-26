@@ -26,6 +26,8 @@ protected:
             bool                sliderOnly;
 
             void                drawSelf(Graphics& g);
+            void                drawSlider(Graphics& g);
+            void                drawText(Graphics& g);
             void                handleMouseWheel(InputEvent& ev);
             void                handleNumDrag(int dragCount);
             void                handleMouseDown(InputEvent & ev);

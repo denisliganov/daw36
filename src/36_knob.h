@@ -10,7 +10,10 @@ class Knob : public Control
 public:
 
             Knob(Parameter* par);
+            void                drawKnob(Graphics& g);
             void                drawSelf(Graphics& g);
+            void                drawSlider(Graphics& g);
+            void                drawText(Graphics& g);
             void                handleMouseWheel(InputEvent& ev);
             void                handleMouseDrag(InputEvent& ev);
             void                handleMouseDown(InputEvent & ev);

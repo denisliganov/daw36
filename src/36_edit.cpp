@@ -10,7 +10,6 @@
 #include "36_auxkeys.h"
 #include "36_project.h"
 #include "36_text.h"
-#include "36_instrpanel.h"
 #include "36_sampleinstr.h"
 #include "36_history.h"
 #include "36_note.h"
@@ -146,7 +145,8 @@ void MainEdit::drawSelf(Graphics& g)
 
         setc(g, 0.0f);
         lineH(g, grid->getY() + lH*line - offs - 1, 0, LineNumWidth - 2);
-    }*/
+    }
+*/
 
 /*
     setc(g, 0.35f);

@@ -58,37 +58,6 @@ public:
         EnableButton(Parameter* ptg) : ToggleBox(ptg) {}
 };
 
-class SoloButton : public Button36
-{
-protected:
-
-        void drawSelf(Graphics& g)
-        {
-            Instrument* instr = (Instrument*)parent;
-
-            instr->setMyColor(g, .4f);
-            fillx(g, 0, 0, width, height);
-
-            if(pressed)
-            {
-                instr->setMyColor(g, 1.f);
-            }
-            else
-            {
-                instr->setMyColor(g, .6f);
-            }
-
-            txt(g, FontVis, "S", width/2 - 2, height/2 + gGetTextHeight(FontVis)/2 - 1);
-        }
-
-        void handleMouseDrag(InputEvent & ev)   { parent->handleMouseDrag(ev); }
-        void handleMouseWheel(InputEvent & ev)   { parent->handleMouseWheel(ev); }
-
-public:
-
-        SoloButton() : Button36(true) {}
-};
-
 
 class GuiButt : public Button36
 {
@@ -148,40 +117,6 @@ protected:
         void handleMouseWheel(InputEvent & ev)   { parent->handleMouseWheel(ev); }
 };
 
-class PreviewButt : public Button36
-{
-protected:
-
-        void drawSelf(Graphics& g)
-        {
-            Instrument* instr = (Instrument*)parent;
-            instr->setMyColor(g, .8f);
-
-            gTriangle(g, x1, y1, x2, y1 + height/2, x1, y2);
-
-            /*
-            Instrument* instr = (Instrument*)parent;
-            instr->setMyColor(g, .3f);
-            int yc = 0;
-            while (yc < height)
-            {
-                rectx(g, 0, yc, width, 1);
-                yc += 2;
-            }*/
-        }
-
-/*
-        void handleMouseEnter(InputEvent & ev)  { redraw(); }
-        void handleMouseLeave(InputEvent & ev)  { redraw(); }
-        void handleMouseDrag(InputEvent & ev)   { parent->handleMouseDrag(ev); }
-        void handleMouseWheel(InputEvent & ev)   { parent->handleMouseWheel(ev); }
-        //void handleMouseUp(InputEvent & ev)     { redraw();  parent->redraw();  }*/
-
-public:
-
-        PreviewButt() : Button36(true) {}
-};
-
 
 Instrument::Instrument(Device36* dev)
 {
@@ -200,8 +135,6 @@ Instrument::Instrument(Device36* dev)
     panBox->setSliderOnly(true);
 
     addObject(muteButt = new EnableButton(device->enabled));
-    addObject(previewButton = new PreviewButt());
-    //addObject(soloButt = new SoloButton());
 
     addObject(ivu = new InstrVU(), ObjGroup_VU);
 
@@ -399,7 +332,7 @@ std::list <Element*> Instrument::getNotesFromRange(float offset, float lastVisib
 
 void Instrument::handleChildEvent(Gobj * obj, InputEvent& ev)
 {
-    if(obj == previewButton || obj == ivu)
+    if(obj == ivu)
     {
         if (ev.clickDown)
         {
@@ -531,8 +464,6 @@ void Instrument::remap()
         //soloButt->setCoords1(width - bw*2 - 8, height - bw, bw, bw);
 
         muteButt->setCoords1(width - bw - bw, 0, bw, height);
-
-        //previewButton->setCoords1(height, height/2, height/2, height/2);
     }
     else
     {
@@ -547,8 +478,6 @@ void Instrument::remap()
         //soloButt->setVis(false);
 
         muteButt->setVis(false);
-
-        previewButton->setVis(false);
     }
 
     ivu->setCoords1(width - bw, 0, bw, height);

@@ -30,9 +30,15 @@ void DropHighlight::drawSelf(Graphics & g)
 
         bool vert = drwRect.w < drwRect.h;
 
-        for (int c = 0; c < 4; c++)
+        int count = vert ? width/2 : height/2;
+
+        for (int c = 0; c < count; c++)
         {
-            gSetColor(g, 255, 153, 48, 255 - a);
+            float m = (float)c/count;
+
+            m *= m;
+
+            gSetColor(g, 255, 153, 48, uint8(m*255));
 
             //gDrawRect(g, x1, y1, width, height);
             //gFillRectWH(g, drwRect.x, drwRect.y, drwRect.w, drwRect.h);
@@ -64,21 +70,11 @@ void DropHighlight::drawSelf(Graphics & g)
     }
 }
 
-void DropHighlightRect::drawSelf(Graphics & g)
-{
-    uint32 color = 0xffFF9930;
-
-    setc(g, color);
-
-    rectx(g, 0, 0, width, height);
-}
-
 DragAndDrop::DragAndDrop()
 {
     setTouchable(false);
 
     addHighlight(dropHighlight = new DropHighlight());
-    addHighlight(dropRect = new DropHighlightRect());
 
     reset();
 
@@ -94,7 +90,6 @@ void DragAndDrop::reset()
     setCoords2(0, 0, -1, -1);
 
     dropHighlight->setVis(false);
-    dropRect->setVis(false);
 };
 
 bool DragAndDrop::canDrag()
@@ -123,13 +118,11 @@ void DragAndDrop::start(Gobj * drag_obj,int mx,int my)
     dragObj = drag_obj;
 
     dropHighlight->setCoords2(-1,-1, 1, 1);
-    dropRect->setCoords2(-1,-1, 1, 1);
 }
 
 void DragAndDrop::drag(Gobj* target_object, int mx, int my)
 {
     dropHighlight->setCoords1(-1,-1, 1, 1);   // disable by default
-    dropRect->setCoords1(-1,-1, 1, 1);
 
     bool result = target_object->handleObjDrag(*this, dragObj, mx, my);
 

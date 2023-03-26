@@ -164,6 +164,9 @@ void MixChannel::remap()
 
         for (Eff* eff : effs)
         {
+            eff->getDevice()->setEnable(true);
+            eff->getDevice()->setVis(true);
+
             eff->setCoords1(xeff, 1 + yeff - int(vscr->getOffset()), eff->getW(), eff->getH());
 
             yeff += eff->getH() + 1;
@@ -171,15 +174,11 @@ void MixChannel::remap()
 
         vscr->setCoords1(width - FxPanelScrollerWidth - 2, 0, FxPanelScrollerWidth + 2, visibleHeight);
 
-        //if(volslider)
-        //    volslider->setCoords1(width - 30, 1, 10, height - 2);
+        if(volKnob)
+            volKnob->setCoords1(width - 50, 0, 22, 22);
 
-        //if(volKnob)
-        //    volKnob->setCoords1(width - 30, 0, 22, 22);
-        //if(panKnob)
-        //    panKnob->setCoords1(width - 30, 22, 22, 22);
-        //if(panslider)
-        //    panslider->setCoords1(width - 18, 1, 10, height - 2);
+        if(panKnob)
+            panKnob->setCoords1(width - 50, 30, 22, 22);
 
         if(vu)
             vu->setCoords1(0, height - 50, 20, 50);
@@ -243,7 +242,6 @@ Eff* MixChannel::addEffectFromBrowser(BrwListEntry * de)
 
     if(de->getType() == Entry_DLL)
     {
-        //VstEffect* vsteff = new VstEffect((char*)de->getPath().data());
         Vst2Plugin*  vsteff = new Vst2Plugin(de->getPath());
 
         eff = new Eff(vsteff);
@@ -565,26 +563,8 @@ bool MixChannel::handleObjDrop(Gobj * obj,int mx,int my,unsigned flags)
 {
     Eff* eff = NULL;
 
-   // BrwEntry* be = dynamic_cast<BrwEntry*>(obj);
     BrwListEntry* ble = dynamic_cast<BrwListEntry*>(obj);
 
-/*
-    if(be)
-    {
-        eff = addEffectFromBrowser((BrwEntry*)obj);
-        
-        if(eff != NULL)
-        {
-            placeEffectBefore(eff, (Eff*)dropObj);
-        }
-        else
-        {
-            MWindow->showAlertBox("Can't load effect");
-        }
-
-        return true;
-    }
-    else */
     if(ble)
     {
         eff = addEffectFromBrowser((BrwListEntry*)obj);
