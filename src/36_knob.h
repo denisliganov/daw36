@@ -18,6 +18,7 @@ public:
             void                handleMouseDrag(InputEvent& ev);
             void                handleMouseDown(InputEvent & ev);
             void                handleMouseUp(InputEvent & ev);
+            void                handleSliding(InputEvent& ev);
             void                remap();
             void                setVis(bool vis);
             void                updValue();
@@ -29,6 +30,8 @@ protected:
             float               angleOffset;      // in radians too
             float               positionAngle;    // in radians
             int                 ys;
+            int                 defPos;
             Instrument*         instr;
+            bool                knobMode;
 };
 

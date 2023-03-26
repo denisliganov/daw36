@@ -21,8 +21,11 @@ Knob::Knob(Parameter* par)
     addParam(par);
 
     angleRange = PI * 1.5f;
-
     angleOffset = float(2*PI - angleRange)*.5f;
+
+    knobMode = false;
+
+    defPos = 0;
 
     instr = NULL;
 
@@ -55,43 +58,81 @@ void Knob::updPosition()
 
 void Knob::handleMouseWheel(InputEvent& ev)
 {
-    positionAngle -= (float)((PI / 32) * ev.wheelDelta);
-
-    if (positionAngle < 0)
+    if (knobMode)
     {
-        positionAngle = 0 ;
-    }
-    else if (positionAngle > angleRange)
-    {
-        positionAngle = angleRange;
-    }
+        positionAngle -= (float)((PI / 32) * ev.wheelDelta);
 
-    updValue();
+        if (positionAngle < 0)
+        {
+            positionAngle = 0 ;
+        }
+        else if (positionAngle > angleRange)
+        {
+            positionAngle = angleRange;
+        }
+
+        updValue();
+    }
+    else
+    {
+        param->adjustFromControl(this, (float)ev.wheelDelta);
+
+        redraw();
+    }
 }
+
+void Knob::handleSliding(InputEvent& ev)
+{
+    if (abs(defPos - (ev.mouseX - x1)) < 2)
+    {
+        param->setValue(param->getDefaultValue());
+    }
+    else
+    {
+        param->adjustFromControl(this, 0, float(ev.mouseX - x1)/width);
+    }
+
+    redraw();
+}
+
 
 void Knob::handleMouseDrag(InputEvent& ev)
 {
-    int dy = ev.mouseY - ys;
-
-    positionAngle += (float)dy / 25;
-
-    if (positionAngle < 0)
+    if (knobMode)
     {
-        positionAngle = (float)0;
+        int dy = ev.mouseY - ys;
+
+        positionAngle += (float)dy / 25;
+
+        if (positionAngle < 0)
+        {
+            positionAngle = (float)0;
+        }
+        else if (positionAngle > angleRange)
+        {
+            positionAngle = angleRange;
+        }
+
+        updValue();
+
+        ys = ev.mouseY;
     }
-    else if (positionAngle > angleRange)
+    else
     {
-        positionAngle = angleRange;
+        handleSliding(ev);
     }
-
-    updValue();
-
-    ys = ev.mouseY;
 }
 
 void Knob::handleMouseDown(InputEvent & ev)
 {
-    ys = ev.mouseY;
+    if (knobMode)
+    {
+        ys = ev.mouseY;
+    }
+    else
+    {
+        handleSliding(ev);
+    }
 }
 
 void Knob::handleMouseUp(InputEvent & ev)
@@ -146,6 +187,8 @@ void Knob::remap()
             }
         }
     }
+
+    defPos = int(float(width-1)*param->getDefaultValueNormalized());
 }
 
 void Knob::drawText(Graphics& g)
