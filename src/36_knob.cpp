@@ -8,6 +8,9 @@
 #include "36_macros.h"
 #include "36_window.h"
 #include "36_instr.h"
+#include "36_mixchannel.h"
+#include "36_effects.h"
+
 
 
 
@@ -20,6 +23,8 @@ Knob::Knob(Parameter* par)
     angleRange = PI * 1.5f;
 
     angleOffset = float(2*PI - angleRange)*.5f;
+
+    instr = NULL;
 
     updPosition();
 }
@@ -105,9 +110,42 @@ void Knob::setVis(bool vis)
 
 void Knob::remap()
 {
-//    delete parentImage;
+    MixChannel* mchan = dynamic_cast<MixChannel*>(parent);
+    Eff* eff = dynamic_cast<Eff*>(parent);
+    Instrument* i = dynamic_cast<Instrument*>(parent);
+    Device36* dev = dynamic_cast<Device36*>(parent);
 
- //   parentImage = NULL;
+    if (i)
+    {
+        instr = i;
+    }
+    else if (eff)
+    {
+        instr = eff->getMixChannel()->getInstr();
+    }
+    else if (mchan)
+    {
+        instr = mchan->getInstr();
+    }
+    else if (dev)
+    {
+        eff = dynamic_cast<Eff*>(dev->getContainer());
+        i = dynamic_cast<Instrument*>(dev->getContainer());
+
+        if (i)
+        {
+            instr = i;
+        }
+        else if (eff)
+        {
+            mchan = eff->getMixChannel();
+
+            if (mchan)
+            {
+                instr = mchan->getInstr();
+            }
+        }
+    }
 }
 
 void Knob::drawText(Graphics& g)
@@ -115,15 +153,25 @@ void Knob::drawText(Graphics& g)
     int textX = 4;  // height + 2
     int namestrLen = gGetTextWidth(fontId, param->getName());
     int unitstrLen = gGetTextWidth(fontId, param->getUnitString());
+    int valstrLen = gGetTextWidth(fontId, param->getValString());
 
     setc(g, .7f);
-    txt(g, fontId, param->getName() + ": ", textX, 12);
-    setc(g, 1.f);
+    if (unitstrLen > 0)
+        txt(g, fontId, param->getName() + "." + param->getUnitString() + ": ", textX, 11);
+    else
+        txt(g, fontId, param->getName() + ": ", textX, 11);
+
+    //setc(g, .9f);
+    if (instr)
+        instr->setMyColor(g, 1.f);
+    else
+        setc(g, 1.f);
     //txt(g, fontId, param->getValString(), textX + namestrLen + 6, 12);
-    txt(g, fontId, param->getValString(), textX + 60, 12);
-    //txt(g, fontId, param->getValString(), textX, height - 5);
+    //txt(g, fontId, param->getValString(), textX + 60, 12);
+    txt(g, fontId, param->getValString(), width - valstrLen - 2, 11);
+
     setc(g, .6f);
-    txt(g, fontId, param->getUnitString(), width - unitstrLen - 2, 12);
+    //txt(g, fontId, param->getUnitString(), width - unitstrLen - 2, 12);
 }
 
 void Knob::drawSlider(Graphics& g)
@@ -145,25 +193,34 @@ void Knob::drawSlider(Graphics& g)
     }
 
     int w = xend - xstart;
-    int sh = height - (textHeight + 1);
+    int sh = 2;     //height - (textHeight + 1);
 
     // Black notch for default (initial) value
     //setc(g, 0.f);
     //fillx(g, defPos, height - sh, 1, sh);
 
-    setc(g, 0.4f);
+    if (instr)
+        instr->setMyColor(g, .8f);
+    else
+        setc(g, 0.8f);
     fillx(g, xstart, height - sh, w, sh);
 
-    setc(g, 0.6f);
+    if (instr)
+        instr->setMyColor(g, 1.f);
+    else
+        setc(g, 1.f);
     fillx(g, xstart, height - sh+1, w, sh-2);
 
     //drawGlassRect(g, x1 + (float)xstart, y1 + (float)(height - sh+1), w, sh-1, Colour(180, 120, 120), 0, 0, true, true, true, true);
 
-    setc(g, 0.2f);
+    if (instr)
+        instr->setMyColor(g, .4f);
+    else
+        setc(g, 0.4f);
     fillx(g, xoffs, height - sh, 1, sh);
 
     setc(g, 1.f);
-    fillx(g, xval, height - sh + 1, 1, sh - 2);
+    //fillx(g, xval, height - sh + 1, 1, sh - 2);
 }
 
 void Knob::drawKnob(Graphics& g)

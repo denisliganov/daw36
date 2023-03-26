@@ -137,6 +137,8 @@ protected:
 
 Eff::Eff(Device36* dev)
 {
+    mixChannel = NULL;
+
     device = dev;
 
     addObject(device);
@@ -166,6 +168,23 @@ Eff::~Eff()
     }
 }
 
+void Eff::showDevice(bool show)
+{
+    if (show)
+    {
+        device->setEnable(true);
+        device->setVis(true);
+
+        setWH(device->getW(), device->getH() + 22);
+    }
+    else
+    {
+        device->setEnable(false);
+        device->setVis(false);
+    }
+
+}
+
 void Eff::remap()
 {
     if (MixViewSingle && device->isON())
@@ -185,8 +204,11 @@ void Eff::remap()
 
 void Eff::drawSelf(Graphics& g)
 {
-    fill(g, .22f);
-    rect(g, .32f);
+    if (MixViewSingle)
+        fill(g, .22f);
+    else
+        fill(g, .32f);
+    //rect(g, .36f);
 
     if (device->guiWindow && device->guiWindow->isOpen())
     {
@@ -206,12 +228,12 @@ void Eff::drawSelf(Graphics& g)
 
     int th = gGetTextHeight(FontSmall);
 
-    setc(g, 8.f);
+    setc(g, .8f);
 
     if (MixViewSingle)
         txtfit(g, FontSmall, device->getObjName(), 7, th + 1, width - 4);
     else
-        txtfit(g, FontSmall, device->getObjName(), 0, th + 1, width);
+        txtfit(g, FontSmall, device->getObjName().substr(0, 4) + ".", 0, th + 1, width);
 }
 
 Eff* Eff::clone()
@@ -307,6 +329,10 @@ void Eff::handleChildEvent(Gobj * obj, InputEvent& ev)
     }
 }
 
+void Eff::handleMouseWheel(InputEvent & ev)
+{
+    parent->handleMouseWheel(ev);
+}
 
 Filter1::Filter1()
 {

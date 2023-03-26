@@ -426,6 +426,14 @@ void Device36::handleWindowClosed()
     }
 }
 
+void Device36::handleMouseWheel(InputEvent & ev)
+{
+    if (parent)
+    {
+        parent->handleMouseWheel(ev);
+    }
+}
+
 void Device36::activateTrigger(Trigger* tg)
 {
     Note* note = (Note*)tg->el;

@@ -164,8 +164,7 @@ void MixChannel::remap()
 
         for (Eff* eff : effs)
         {
-            eff->getDevice()->setEnable(true);
-            eff->getDevice()->setVis(true);
+            eff->showDevice(true);
 
             eff->setCoords1(xeff, 1 + yeff - int(vscr->getOffset()), eff->getW(), eff->getH());
 
@@ -174,14 +173,14 @@ void MixChannel::remap()
 
         vscr->setCoords1(width - FxPanelScrollerWidth - 2, 0, FxPanelScrollerWidth + 2, visibleHeight);
 
-        if(volKnob)
-            volKnob->setCoords1(width - 50, 0, 22, 22);
+        confine();
 
-        if(panKnob)
-            panKnob->setCoords1(width - 50, 30, 22, 22);
+        int yControls = height - FxPanelBottomHeight;
 
-        if(vu)
-            vu->setCoords1(0, height - 50, 20, 50);
+        volKnob->setCoords1(10, yControls + 2, 100, 22);
+        panKnob->setCoords1(10, yControls + 32, 100, 22);
+
+        vu->setCoords1(10, height - 20, 52, 18);
     }
     else
     {
@@ -191,8 +190,7 @@ void MixChannel::remap()
 
         for(Eff* eff : effs)
         {
-            eff->getDevice()->setEnable(false);
-            eff->getDevice()->setVis(false);
+            eff->showDevice(false);
 
             eff->setCoords1(xeff, 1, 32, height - 2);
 
@@ -200,6 +198,10 @@ void MixChannel::remap()
         }
 
         vscr->setVis(false);
+
+        volKnob->setVis(false);
+        panKnob->setVis(false);
+        vu->setVis(false);
     }
 }
 
@@ -485,7 +487,7 @@ void MixChannel::handleChildEvent(Gobj * obj,InputEvent & ev)
 
 void MixChannel::handleMouseWheel(InputEvent& ev)
 {
-    //
+    vscr->setOffset(vscr->getOffset() - ev.wheelDelta * 15);
 }
 
 void MixChannel::handleMouseDown(InputEvent& ev)
@@ -493,11 +495,6 @@ void MixChannel::handleMouseDown(InputEvent& ev)
     if(instr != NULL)
     {
         MInstrPanel->setCurrInstr(instr);
-
-        //if(ev.keyFlags & kbd_ctrl && ev.mouseY < y1 + MixerTopHeight)
-        {
-        //    instr->preview();
-        }
     }
 }
 
@@ -505,11 +502,11 @@ void MixChannel::handleMouseUp(InputEvent& ev)
 {
     MAudio->releaseAllPreviews();
 
-    //if(ev.mouseY < y1 + MixerTopHeight)
+    if(!MixViewSingle)
     {
         if(instr != NULL)
         {
-            //_MInstrPanel->setCurrentInstrument(instr);
+            MInstrPanel->setCurrInstr(instr);
         }
     }
 }

@@ -49,6 +49,7 @@ public:
             Gobj*               getContainer()          { return container; }
             void                removeElements();
             void                handleWindowClosed();
+            void                handleMouseWheel(InputEvent & ev);
             bool                isWindowVisible();
             bool                isPreviewOnly()         { return previewOnly; }
 
@@ -80,7 +81,6 @@ public:
     virtual void                postProcessTrigger(Trigger* tg, long num_frames = 0, long buff_frame = 0);
     virtual long                processTrigger(Trigger* tg, long num_frames, long remaining, long buff_frame);
     virtual void                processDSP(float* in_buff, float* out_buff, int num_frames);
-
     virtual void                reset() { }
 
             void                addNote(Note* note);

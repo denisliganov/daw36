@@ -842,9 +842,9 @@ void InstrPanel::remap()
     {
         btShowFX->setCoords1(width - btW - 1, 0, btW, btW);
 
-        mixr->setVis(false);
-
         allChannelsView->setVis(false);
+
+        mixr->setVis(false);
     }
 
     confine(0, instrListY-1, width, instrListY + instrListHeight - 1);

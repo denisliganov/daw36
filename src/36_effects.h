@@ -33,12 +33,14 @@ public:
             void                remap();
     virtual void                save(XmlElement* xmlEff);
     virtual void                setMixChannel(MixChannel* ncell);
+            void                showDevice(bool show);
 
 protected:
             void                drawSelf(Graphics& g);
             void                handleMouseUp(InputEvent& ev);
             void                handleMouseDown(InputEvent& ev);
             void                handleMouseDrag(InputEvent& ev);
+            void                handleMouseWheel(InputEvent & ev);
 
             EffFoldButton*      foldButt;
             EffGuiButton*       guiButt;

@@ -56,6 +56,7 @@ public:
             void                drawSelf(Graphics& g);
             void                doSend(float * sendbuff, float amount, int num_frames);
             void                deleteEffect(Eff* eff);
+            Instrument*         getInstr()  { return instr; }
             void                handleChildEvent(Gobj * obj,InputEvent & ev);
             void                handleMouseWheel(InputEvent& ev);
             void                handleMouseDown(InputEvent& ev);

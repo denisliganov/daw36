@@ -29,5 +29,6 @@ protected:
             float               angleOffset;      // in radians too
             float               positionAngle;    // in radians
             int                 ys;
+            Instrument*         instr;
 };
 
