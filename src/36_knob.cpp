@@ -187,22 +187,25 @@ void Knob::remap()
             }
         }
     }
+    
+    // Temp w/a
+    instr = NULL;
 
     defPos = int(float(width-1)*param->getDefaultValueNormalized());
 }
 
 void Knob::drawText(Graphics& g)
 {
-    int textX = 4;  // height + 2
+    int textX = 2;  // height + 2
     int namestrLen = gGetTextWidth(fontId, param->getName());
     int unitstrLen = gGetTextWidth(fontId, param->getUnitString());
     int valstrLen = gGetTextWidth(fontId, param->getValString());
 
-    setc(g, .7f);
+    setc(g, .8f);
     if (unitstrLen > 0)
-        txt(g, fontId, param->getName() + "." + param->getUnitString() + ": ", textX, 11);
+        txt(g, fontId, param->getName() + "." + param->getUnitString(), textX, 11);
     else
-        txt(g, fontId, param->getName() + ": ", textX, 11);
+        txt(g, fontId, param->getName(), textX, 11);
 
     //setc(g, .9f);
     if (instr)

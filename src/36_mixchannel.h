@@ -16,6 +16,20 @@
 Eff* CreateEffect(std::string effname);
 
 
+class SendControl : public Gobj
+{
+public:
+            SendControl(bool levelCtrl);
+            MixChannel*         getChannel()    {   return sendChannel;  }
+            void                handleMouseWheel(InputEvent& ev);
+            void                handleMouseDown(InputEvent& ev);
+            void                handleMouseDrag(InputEvent& ev);
+protected:
+
+            Parameter*          sendLevel;
+            MixChannel*         sendChannel;
+};
+
 class MixChannel : public Scrolled
 {
 friend  Mixer;

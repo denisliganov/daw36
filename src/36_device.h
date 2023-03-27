@@ -50,6 +50,7 @@ public:
             void                removeElements();
             void                handleWindowClosed();
             void                handleMouseWheel(InputEvent & ev);
+            void                handleMouseDrag(InputEvent& ev);
             bool                isWindowVisible();
             bool                isPreviewOnly()         { return previewOnly; }
 

@@ -434,6 +434,13 @@ void Device36::handleMouseWheel(InputEvent & ev)
     }
 }
 
+void Device36::handleMouseDrag(InputEvent& ev)
+{
+    if (parent)
+    {
+        parent->handleMouseDrag(ev);
+    }
+}
 void Device36::activateTrigger(Trigger* tg)
 {
     Note* note = (Note*)tg->el;

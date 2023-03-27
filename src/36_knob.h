@@ -14,6 +14,7 @@ public:
             void                drawSelf(Graphics& g);
             void                drawSlider(Graphics& g);
             void                drawText(Graphics& g);
+            float               getMinStep()    { return 1.f / width; }
             void                handleMouseWheel(InputEvent& ev);
             void                handleMouseDrag(InputEvent& ev);
             void                handleMouseDown(InputEvent & ev);
