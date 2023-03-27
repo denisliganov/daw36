@@ -205,9 +205,9 @@ void Eff::remap()
 void Eff::drawSelf(Graphics& g)
 {
     if (MixViewSingle)
-        fill(g, .22f);
+        fill(g, .2f);
     else
-        fill(g, .32f);
+        fill(g, .2f);
     //rect(g, .36f);
 
     if (device->guiWindow && device->guiWindow->isOpen())
@@ -226,14 +226,12 @@ void Eff::drawSelf(Graphics& g)
         }
     }
 
-    int th = gGetTextHeight(FontSmall);
-
     setc(g, .8f);
 
     if (MixViewSingle)
-        txtfit(g, FontSmall, device->getObjName(), 7, th + 1, width - 4);
+        txtfit(g, FontInst, device->getObjName(), 7, gGetTextHeight(FontInst) + 1, width - 4);
     else
-        txtfit(g, FontSmall, device->getObjName().substr(0, 4) + ".", 0, th + 1, width);
+        txtfit(g, FontSmall, device->getObjName().substr(0, 4) + ".", 0, gGetTextHeight(FontSmall) + 1, width);
 }
 
 Eff* Eff::clone()

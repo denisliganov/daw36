@@ -113,7 +113,7 @@ void ParamObject::placeControls1(int maxW, int maxH)
     int maxWidth = maxW;
     int numPut = 0;
 
-    setObjSpacing(3);
+    setObjSpacing(4);
     setBorder(5);
 
     putStart(border, border);

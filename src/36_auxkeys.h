@@ -10,8 +10,10 @@
 
 class AuxKeys : public Gobj
 {
-protected:
+public:
+            AuxKeys(Grid* gr, int key_width, bool vert);
 
+protected:
             bool        isVertical;
             Grid*       grid;
             int         keyWidth;
@@ -29,9 +31,7 @@ protected:
             void        drawHorizontalKeys(Graphics& g, int x, int y, int w, int h);
             void        drawSelf(Graphics& g);
             int         getNote(int mx, int my);
+            void        remap();
 
-public:
-
-            AuxKeys(Grid* gr, int key_width, bool vert);
 };
 

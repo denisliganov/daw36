@@ -200,17 +200,14 @@ ToggleBox::ToggleBox(Parameter* param_tg)
 
 void ToggleBox::drawSelf(Graphics& g)
 {
-    fill(g, 0.3f);
+    //fill(g, 0.3f);
+    setc(g, 0.18f);
+    fillx(g, 0, 0, height, height);
 
     if (param->getBoolValue())
     {
-        setc(g, 0.8f);
-        fillx(g, 0, 0, height, height);
-    }
-    else
-    {
-        setc(g, 0.45f);
-        fillx(g, 0, 0, height, height);
+        setc(g, 0.4f);
+        fillx(g, 1, 1, height-2, height-2);
     }
 
 //    setc(g, 0.4f);
@@ -231,6 +228,7 @@ void ToggleBox::handleMouseUp(InputEvent & ev)
 {
 }
 
+
 RadioBox::RadioBox(Parameter* param_radio)
 {
     param = param_radio;
@@ -242,15 +240,15 @@ RadioBox::RadioBox(Parameter* param_radio)
 
 void RadioBox::drawSelf(Graphics& g)
 {
-    fill(g, 0.3f);
+    //fill(g, 0.3f);
 
-    setc(g, .1f);
-    fillx(g, 0, headerHeight, width, height - headerHeight);
+    //setc(g, .1f);
+    //fillx(g, 0, headerHeight, width, height - headerHeight);
 
-    setc(g, 0.35f);
-    fillx(g, 0, 0, width, headerHeight - 1);
+    //setc(g, 0.35f);
+    //fillx(g, 0, 0, width, headerHeight - 1);
 
-    setc(g, 0.9f);
+    setc(g, 0.8f);
     txtfit(g, FontBold, param->getName(), 3, headerHeight - 4, width - 3);
 
 
@@ -259,15 +257,13 @@ void RadioBox::drawSelf(Graphics& g)
 
     for (std::string str : param->getAllOptions())
     {
+        setc(g, 0.2f);
+        fillx(g, 2, y + 2, textHeight, textHeight);
+
         if (param->getCurrentOption() == opt)
         {
             setc(g, 0.8f);
-            fillx(g, 2, y + 2, textHeight, textHeight);
-        }
-        else
-        {
-            setc(g, 0.4f);
-            fillx(g, 2, y + 2, textHeight, textHeight);
+            fillx(g, 3, y + 3, textHeight-2, textHeight-2);
         }
 
         setc(g, 1.f);

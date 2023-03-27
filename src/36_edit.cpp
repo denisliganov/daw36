@@ -22,6 +22,9 @@
 
 
 
+
+
+
 Note* AddNote(float tick, int line, Device36* instr, int note_val, float length, float vol, float pan, Pattern* ptBase)
 {
     Note* note = CreateNote(tick, line, instr, note_val, length, vol, pan, ptBase);
@@ -100,6 +103,8 @@ MainEdit::MainEdit()
     addObject(timeline = new Timeline(grid));
     addObject(grid = new Grid(2, 24, MPattern, timeline));
 
+    addObject(keys = new AuxKeys(grid, 20, false));
+
     addHighlight(playHead = new Playhead(grid));
 
     MGrid = grid;
@@ -109,10 +114,8 @@ MainEdit::MainEdit()
     MPattern->setBounds(0, 2147483647);
 
     addObject(grid->vscr);
-    MCtrllPanel->addObject(grid->hscr);
 
-    //grid->setvscr(*verticalGridScroller);
-    //grid->sethscr(MCtrllPanel->getScroller());
+    MCtrllPanel->addObject(grid->hscr);
 
     grid->redraw(true, true);
 
@@ -161,16 +164,19 @@ void MainEdit::drawSelf(Graphics& g)
 
 void MainEdit::remap()
 {
+    int kH = 100;;
+
     confine();
 
     timeline->setCoords2(0, 0, width - GridScrollWidth - 1, MainLineHeight - 1);
 
     //keys->setCoords1(LeftGap, MainLineHeight, 100, height - MainLineHeight - 1);
-    //keys1->setCoords2(LeftGap+100, height - 1 - 100, width - GridScrollWidth - 1, height - 1);
 
     grid->vscr->setCoords2(width - GridScrollWidth, MainLineHeight, width - 1, height - 1);
 
-    grid->setCoords2(0, MainLineHeight + 1, width - GridScrollWidth - 1, height - 1);
+    grid->setCoords2(0, MainLineHeight + 1, width - GridScrollWidth - 1, height - kH - 1);
+
+    keys->setCoords2(0, height - kH, width - GridScrollWidth - 1, height - 1);
 
     confine(0, 0, width - GridScrollWidth - 1, height - 1);
 

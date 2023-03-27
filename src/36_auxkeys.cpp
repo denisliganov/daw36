@@ -428,4 +428,8 @@ void AuxKeys::handleMouseDrag(InputEvent & ev)
 }
 
 
+void AuxKeys::remap()
+{
+    keyWidth = width/70;
+}
 

@@ -197,24 +197,25 @@ void Knob::remap()
 void Knob::drawText(Graphics& g)
 {
     int textX = 2;  // height + 2
+    int textY = 10;
     int namestrLen = gGetTextWidth(fontId, param->getName());
     int unitstrLen = gGetTextWidth(fontId, param->getUnitString());
     int valstrLen = gGetTextWidth(fontId, param->getValString());
 
     setc(g, .8f);
     if (unitstrLen > 0)
-        txt(g, fontId, param->getName() + "." + param->getUnitString(), textX, 11);
+        txt(g, fontId, param->getName() + "." + param->getUnitString(), textX, textY);
     else
-        txt(g, fontId, param->getName(), textX, 11);
+        txt(g, fontId, param->getName(), textX, textY);
 
     //setc(g, .9f);
     if (instr)
         instr->setMyColor(g, 1.f);
     else
-        setc(g, 1.f);
+        setc(g, .8f);
     //txt(g, fontId, param->getValString(), textX + namestrLen + 6, 12);
     //txt(g, fontId, param->getValString(), textX + 60, 12);
-    txt(g, fontId, param->getValString(), width - valstrLen - 2, 11);
+    txt(g, fontId, param->getValString(), width - valstrLen - 2, textY);
 
     setc(g, .6f);
     //txt(g, fontId, param->getUnitString(), width - unitstrLen - 2, 12);
@@ -239,31 +240,35 @@ void Knob::drawSlider(Graphics& g)
     }
 
     int w = xend - xstart;
-    int sh = 2;     //height - (textHeight + 1);
+    int sh = height;     //height - (textHeight + 1);
+    int ysl = height - sh;
 
     // Black notch for default (initial) value
     //setc(g, 0.f);
     //fillx(g, defPos, height - sh, 1, sh);
 
     if (instr)
-        instr->setMyColor(g, .8f);
+        instr->setMyColor(g, .2f);
     else
-        setc(g, 0.8f);
-    fillx(g, xstart, height - sh, w, sh);
+        setc(g, 0.2f);
+
+    fillx(g, xstart, ysl, w, sh);
 
     if (instr)
-        instr->setMyColor(g, 1.f);
+        instr->setMyColor(g, .3f);
     else
-        setc(g, 1.f);
-    fillx(g, xstart, height - sh+1, w, sh-2);
+        setc(g, .3f);
+
+    fillx(g, xstart, ysl+1, w, sh-2);
 
     //drawGlassRect(g, x1 + (float)xstart, y1 + (float)(height - sh+1), w, sh-1, Colour(180, 120, 120), 0, 0, true, true, true, true);
 
     if (instr)
-        instr->setMyColor(g, .4f);
+        instr->setMyColor(g, .0f);
     else
-        setc(g, 0.4f);
-    fillx(g, xoffs, height - sh, 1, sh);
+        setc(g, 0.0f);
+
+    fillx(g, xoffs, ysl, 1, sh);
 
     setc(g, 1.f);
     //fillx(g, xval, height - sh + 1, 1, sh - 2);
@@ -356,8 +361,10 @@ void Knob::drawSelf(Graphics& g)
 {
     //Instrument* instr = dynamic_cast<Instrument*>(parent);
 
-    fill(g, .28f);
+    fill(g, .18f);
     //fill(g, .32f);
+
+    drawSlider(g);
 
     drawText(g);
 
@@ -366,8 +373,6 @@ void Knob::drawSelf(Graphics& g)
     {
         drawKnob(g);
     }
-
-    drawSlider(g);
 }
 
 
