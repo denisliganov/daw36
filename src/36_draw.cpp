@@ -664,6 +664,7 @@ void drawGlassRound (Graphics& g,
 
     if (1)
     {
+    /*
         ColourGradient cg (Colours::white.overlaidWith (colour.withMultipliedAlpha (0.3f)), 0, y,
                            Colours::white.overlaidWith (colour.withMultipliedAlpha (0.3f)), 0, y + diameter, false);
 
@@ -673,8 +674,9 @@ void drawGlassRound (Graphics& g,
         g.setBrush(&GradientBrush(cg));
 #else
         g.setGradientFill(cg);
-#endif
+#endif*/
 
+        g.setColour(colour);
         g.fillPath (p);
     }
 

@@ -202,7 +202,7 @@ void Knob::drawText(Graphics& g)
     int unitstrLen = gGetTextWidth(fontId, param->getUnitString());
     int valstrLen = gGetTextWidth(fontId, param->getValString());
 
-    setc(g, .8f);
+    setc(g, .6f);
     if (unitstrLen > 0)
         txt(g, fontId, param->getName() + "." + param->getUnitString(), textX, textY);
     else
@@ -212,7 +212,7 @@ void Knob::drawText(Graphics& g)
     if (instr)
         instr->setMyColor(g, 1.f);
     else
-        setc(g, .8f);
+        setc(g, .6f);
     //txt(g, fontId, param->getValString(), textX + namestrLen + 6, 12);
     //txt(g, fontId, param->getValString(), textX + 60, 12);
     txt(g, fontId, param->getValString(), width - valstrLen - 2, textY);

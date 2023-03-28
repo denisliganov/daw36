@@ -72,7 +72,7 @@ protected:
         {
             if (param->getBoolValue())
             {
-                drawGlassRound(g, x1+1, y1+1, width-2, Colour(255,153,48), 1);
+                drawGlassRound(g, x1+1, y1+1, width-2, Colour(255,255,48), 1);
             }
             else
             {
@@ -1021,8 +1021,8 @@ CBitCrusher::CBitCrusher()
     objName = "BitCrusher";
     uniqueId = MAKE_FOURCC('B','I','T','C');
 
-    addParam(decimation = new Parameter("Decimation", 1.0f, 128.f, 1.0f, Units_Integer));
-    addParam(quantization = new Parameter("Quantization", 0.0f, 1.f, 0.0f));
+    addParam(decimation = new Parameter("DECIMATION", 1.0f, 128.f, 1.0f, Units_Integer));
+    addParam(quantization = new Parameter("QUANTIZATION", 0.0f, 1.f, 0.0f));
 
     dspCoreBC.setAmount(1);
 

@@ -293,8 +293,8 @@ void Instrument::drawSelf(Graphics& g)
 
     if(device != devDummy)
     {
-        float s = .6f;
-        float b = .5f;
+        float s = .4f;
+        float b = .7f;
         float a = 1;
 
         Colour clr = Colour(colorHue, s, b, a);
