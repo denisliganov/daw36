@@ -263,8 +263,8 @@ void InstrPanel::colorizeInstruments()
     static uint8 leadColor1 = 0;
     static uint8 leadColor2 = 0;
 
-    uint8 constantPart = 120;
-    uint8 variablePart = 135;
+    uint8 constantPart = 100;
+    uint8 variablePart = 155;
 
     uint8 r = constantPart;
     uint8 g = constantPart;
@@ -344,9 +344,6 @@ void InstrPanel::drawSelf(Graphics& g)
     fill(g, 0.1f);
     setc(g, .25f);
     fillx(g, 0, 0, width, MainLineHeight);
-
-    //setc(g, 0.1f);
-    //gLineHorizontal(g, y1 + MainLineHeight - 2, x1, x2 + 1);
 }
 
 Instrument* InstrPanel::getInstrByIndex(int index)

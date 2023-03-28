@@ -307,6 +307,8 @@ void LoadDefaultInstruments()
     MInstrPanel->addInstrument(NULL, NULL);
     MInstrPanel->addInstrument(NULL, NULL);
 
+    MInstrPanel->addSample("Samples\\SBAF.wav");
+
 
 /*
     MInstrPanel->addSample("Samples\\Clap.wav");

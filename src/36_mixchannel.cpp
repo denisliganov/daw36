@@ -168,7 +168,7 @@ void MixChannel::remap()
 
             eff->setCoords1(xeff, 1 + yeff - int(vscr->getOffset()), eff->getW(), eff->getH());
 
-            yeff += eff->getH() + 1;
+            yeff += eff->getH() + 2;
         }
 
         vscr->setCoords1(width - FxPanelScrollerWidth - 2, 0, FxPanelScrollerWidth + 2, visibleHeight);
@@ -219,7 +219,7 @@ void MixChannel::drawSelf(Graphics& g)
     else
     {
         setc(g, .2f);
-        rectx(g, 0, 0, width, height);
+        fillx(g, 0, 0, width, height);
     }
 }
 

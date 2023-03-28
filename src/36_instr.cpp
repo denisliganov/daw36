@@ -131,6 +131,7 @@ Instrument::Instrument(Device36* dev)
 
     addObject(volBox = new ParamBox(device->vol));
     volBox->setSliderOnly(true);
+
     addObject(panBox = new ParamBox(device->pan));
     panBox->setSliderOnly(true);
 
@@ -290,7 +291,17 @@ void Instrument::drawSelf(Graphics& g)
     //Colour clr = Colour(colorHue, s, b, a);
     //drawGlassRect1(g, (float)x1, (float)y1, width, height, clr, 1, 8, false, false, false, false);
 
-//    lineH(0, 0, width - 1);
+    if(device != devDummy)
+    {
+        float s = .6f;
+        float b = .5f;
+        float a = 1;
+
+        Colour clr = Colour(colorHue, s, b, a);
+
+        drawGlassRound(g, x2 - 65, y1 + 4, (height*0.65f), clr, 1);
+        drawGlassRound(g, x2 - 45, y1 + 4, (height*0.65f), clr, 1);
+    }
 }
 
 void Instrument::drawOverChildren(Graphics & g)
@@ -367,15 +378,13 @@ void Instrument::handleMouseDown(InputEvent& ev)
         {
             preview();
         }
-        /*
         else
         {
             if(ev.keyFlags == 0 && ev.doubleClick)
             {
-                showWindow(true);
+                device->showWindow(true);
             }
         }
-        */
     }
 }
 
@@ -456,10 +465,16 @@ void Instrument::remap()
         int slH = 4;
 
         if (panBox)
+        {
             panBox->setCoords1(width - 190, height - slH, 70, slH);
+            panBox->setVis(false);
+        }
 
         if (volBox)
+        {
             volBox->setCoords1(width - 110, height - slH, 80, slH);
+            volBox->setVis(false);
+        }
 
         //soloButt->setCoords1(width - bw*2 - 8, height - bw, bw, bw);
 

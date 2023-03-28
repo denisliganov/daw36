@@ -208,8 +208,11 @@ void Eff::drawSelf(Graphics& g)
         fill(g, .3f);
     else
         fill(g, .3f);
-    
+
     //rect(g, .36f);
+
+    setc(g, .2f);
+    fillx(g, 0, height-1, width-1, 1);
 
     if (device->guiWindow && device->guiWindow->isOpen())
     {
