@@ -453,7 +453,7 @@ void Instrument::remap()
     {
         guiButton->setTouchable(true);
 
-        int slH = 8;
+        int slH = 4;
 
         if (panBox)
             panBox->setCoords1(width - 190, height - slH, 70, slH);

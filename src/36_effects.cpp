@@ -140,6 +140,10 @@ Eff::Eff(Device36* dev)
     mixChannel = NULL;
 
     device = dev;
+    
+    addObject(guiButt = new EffGuiButton());
+    addObject(enableButt = new EffEnableButton(device->enabled));
+    addObject(foldButt = new EffFoldButton());
 
     addObject(device);
 
@@ -151,11 +155,8 @@ Eff::Eff(Device36* dev)
 
     setObjName(dev->getObjName());
 
-    addObject(guiButt = new EffGuiButton());
-    addObject(enableButt = new EffEnableButton(device->enabled));
-    addObject(foldButt = new EffFoldButton());
 
-    setWH(device->getW(), device->getH() + 22);
+    //setWH(device->getW(), device->getH() + 22);
 }
 
 Eff::~Eff()
@@ -175,7 +176,7 @@ void Eff::showDevice(bool show)
         device->setEnable(true);
         device->setVis(true);
 
-        setWH(device->getW(), device->getH() + 22);
+        setWH(device->getW(), device->getH());
     }
     else
     {
@@ -189,9 +190,8 @@ void Eff::remap()
 {
     if (MixViewSingle && device->isON())
     {
-        device->setCoords1(0, 22, device->getW(), device->getH());
-
         enableButt->setCoords1(width - 25, 3, 20, 20);
+        device->setCoords1(0, 0, device->getW(), device->getH());
     }
     else
     {
@@ -205,9 +205,10 @@ void Eff::remap()
 void Eff::drawSelf(Graphics& g)
 {
     if (MixViewSingle)
-        fill(g, .2f);
+        fill(g, .3f);
     else
-        fill(g, .2f);
+        fill(g, .3f);
+    
     //rect(g, .36f);
 
     if (device->guiWindow && device->guiWindow->isOpen())
@@ -229,7 +230,7 @@ void Eff::drawSelf(Graphics& g)
     setc(g, .8f);
 
     if (MixViewSingle)
-        txtfit(g, FontInst, device->getObjName(), 7, gGetTextHeight(FontInst) + 1, width - 4);
+        txtfit(g, FontInst, device->getObjName(), width - gGetTextWidth(FontInst, device->getObjName()) - 2, height - 3, width - 4);
     else
         txtfit(g, FontSmall, device->getObjName().substr(0, 4) + ".", 0, gGetTextHeight(FontSmall) + 1, width);
 }

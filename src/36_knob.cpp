@@ -196,7 +196,7 @@ void Knob::remap()
 
 void Knob::drawText(Graphics& g)
 {
-    int textX = 2;  // height + 2
+    int textX = 3;  // height + 2
     int textY = 10;
     int namestrLen = gGetTextWidth(fontId, param->getName());
     int unitstrLen = gGetTextWidth(fontId, param->getUnitString());

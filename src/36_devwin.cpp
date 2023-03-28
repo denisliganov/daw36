@@ -40,7 +40,7 @@ void DevParamObject::placeControls()
     {
         Gobj* obj = NULL;
 
-        if (prm)
+        if (prm->getIndex() != -1)
         {
             /*
             else if (prm->getType() == Param_Vol)

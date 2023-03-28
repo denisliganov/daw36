@@ -152,7 +152,7 @@ void ParamObject::placeControls1(int maxW, int maxH)
                                 obj = box;
                 */
                 obj = new Knob(prm);
-                obj->setWH(defaultWidth, 20);
+                obj->setWH(defaultWidth, 24);
             }
 
         }

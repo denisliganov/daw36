@@ -1332,6 +1332,11 @@ void Vst2Plugin::syncParamValues()
     {
         long idx = param->getIndex();
 
+        if (idx == -1)
+        {
+            continue;
+        }
+
         float fVal = getParam(idx);
 
         if(fVal < 0)

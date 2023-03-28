@@ -6,6 +6,9 @@
 
 
 
+
+
+
 SampleObject::SampleObject()
 {
     Gobj::addObject(slider1 = new Slider36(false), 10, 210, 60, 10);
