@@ -299,8 +299,8 @@ void Instrument::drawSelf(Graphics& g)
 
         Colour clr = Colour(colorHue, s, b, a);
 
-        drawGlassRound(g, x2 - 65, y1 + 4, (height*0.65f), clr, 1);
-        drawGlassRound(g, x2 - 45, y1 + 4, (height*0.65f), clr, 1);
+        drawGlassRound(g, x2 - 70, y1 + 4, (height*0.65f), clr, 1);
+        drawGlassRound(g, x2 - 47, y1 + 2, (height*0.8f), clr, 1);
     }
 }
 

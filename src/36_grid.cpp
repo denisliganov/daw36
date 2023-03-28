@@ -1637,6 +1637,21 @@ void Grid::handleMouseWheel(InputEvent& ev)
     {
         if (ev.keyFlags & kbd_ctrl)
         {
+            // Horizontal
+            //float ofsDelta = ev.wheelDelta*(hscr->getVisiblePart()*0.03f);
+            //hscr->setOffset(getHoffs() - ofsDelta);
+            
+            // Vertical
+             vscr->setOffset(vscr->getOffset() - ev.wheelDelta * (lheight*1.5f));
+        
+            //vscr->setOffset(vscr->getOffset() - ev.wheelDelta*(lheight*.5f));
+        
+            //MInstrPanel->setOffset((int)(MInstrPanel->getOffset() - ev.wheelDelta*int(InstrHeight*1.1f)));
+        
+            //MInstrPanel->setOffset(int(verticalGridScroller->getOffset()));
+        }
+        else
+        {
             if(ev.wheelDelta > 0)
             {
                 while(ev.wheelDelta > 0)
@@ -1660,20 +1675,6 @@ void Grid::handleMouseWheel(InputEvent& ev)
             {
                 action(GridAction_SelectRectangle);
             }
-        }
-        else
-        {
-            // Horizontal
-            //float ofsDelta = ev.wheelDelta*(visibleTickSpan*0.03f);
-            //setTickOffset(getHoffs() - ofsDelta);
-            
-            // Vertical
-            vscr->setOffset(vscr->getOffset() - ev.wheelDelta * (lheight*1.5f));
-            //vscr->setOffset(vscr->getOffset() - ev.wheelDelta*(lheight*.5f));
-
-            //MInstrPanel->setOffset((int)(MInstrPanel->getOffset() - ev.wheelDelta*int(InstrHeight*1.1f)));
-
-            //MInstrPanel->setOffset(int(verticalGridScroller->getOffset()));
         }
     }
 

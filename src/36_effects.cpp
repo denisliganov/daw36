@@ -209,10 +209,10 @@ void Eff::drawSelf(Graphics& g)
     else
         fill(g, .3f);
 
-    //rect(g, .36f);
+    rect(g, .22f);
 
-    setc(g, .2f);
-    fillx(g, 0, height-1, width-1, 1);
+    //setc(g, .2f);
+    //fillx(g, 0, height-1, width-1, 1);
 
     if (device->guiWindow && device->guiWindow->isOpen())
     {
@@ -233,7 +233,7 @@ void Eff::drawSelf(Graphics& g)
     setc(g, .8f);
 
     if (MixViewSingle)
-        txtfit(g, FontInst, device->getObjName(), width - gGetTextWidth(FontInst, device->getObjName()) - 2, height - 3, width - 4);
+        txtfit(g, FontInst, device->getObjName(), width - gGetTextWidth(FontInst, device->getObjName()) - 3, height - 5, width - 4);
     else
         txtfit(g, FontSmall, device->getObjName().substr(0, 4) + ".", 0, gGetTextHeight(FontSmall) + 1, width);
 }
