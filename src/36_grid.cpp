@@ -965,7 +965,7 @@ void Grid::changeBars(InputEvent& ev)
 
     Instrument* instr = MInstrPanel->getInstrFromLine(actionLine);
 
-    for(Note* note : instr->device->notes)
+    for(Note* note : instr->getDevice()->notes)
     {
         int noteX = note->getX1();
 
@@ -1777,8 +1777,7 @@ Note* Grid::putNote(float tick, int line, int noteVal)
     {
         MInstrPanel->setCurrInstr(instr);
 
-        Note* newNote = AddNote(tick, line, instr->device, noteVal > 0 ? noteVal : instr->device->lastNoteVal, 
-                                        instr->device->lastNoteLength, instr->device->lastNoteVol, instr->device->lastNotePan, getPattern());
+        Note* newNote = AddNote(tick, line, instr->getDevice(), noteVal > 0 ? noteVal : instr->device->lastNoteVal, instr->device->lastNoteLength, instr->device->lastNoteVol, instr->device->lastNotePan, getPattern());
 
         redraw(true);
 

@@ -72,7 +72,7 @@ protected:
         {
             if (param->getBoolValue())
             {
-                drawGlassRound(g, x1+1, y1+1, width-2, Colour(255,255,48), 1);
+                drawGlassRound(g, x1+1, y1+1, width-2, Colour(222,222,111), 1);
             }
             else
             {
@@ -230,12 +230,12 @@ void Eff::drawSelf(Graphics& g)
         }
     }
 
-    setc(g, .8f);
+    setc(g, .1f);
 
     if (MixViewSingle)
-        txtfit(g, FontInst, device->getObjName(), width - gGetTextWidth(FontInst, device->getObjName()) - 3, height - 5, width - 4);
+        txtfit(g, FontBold, device->getObjName(), width - gGetTextWidth(FontBold, device->getObjName()) - 3, height - 5, width - 4);
     else
-        txtfit(g, FontSmall, device->getObjName().substr(0, 4) + ".", 0, gGetTextHeight(FontSmall) + 1, width);
+        txtfit(g, FontBold, device->getObjName().substr(0, 4) + ".", 0, gGetTextHeight(FontBold) + 1, width);
 }
 
 Eff* Eff::clone()

@@ -26,7 +26,7 @@
 
 Note::Note()
 {
-    instr = NULL;
+    device = NULL;
 
     vol = NULL;
     pan = NULL;
@@ -36,9 +36,9 @@ Note::Note(Device36* i, int note_val)
 {
     type = El_GenNote;
 
-    instr = i;
+    device = i;
 
-    dev = (Device36*)instr;
+    dev = (Device36*)device;
 
     vol = new Parameter("Volume", Param_Vol);
     pan = new Parameter("Panning", Param_Pan);
@@ -58,7 +58,7 @@ Note::~Note()
 
     MGrid->removeElement(this);
 
-    instr->removeNote(this);
+    device->removeNote(this);
 
     delete vol;
     delete pan;
@@ -66,7 +66,7 @@ Note::~Note()
 
 Note* Note::clone(Device36* new_instr)
 {
-    return AddNote(tick1, line, new_instr == NULL ? instr : new_instr, noteValue, ticklen, vol->getValue(), pan->getValue(), patt);
+    return AddNote(tick1, line, new_instr == NULL ? device : new_instr, noteValue, ticklen, vol->getValue(), pan->getValue(), patt);
 }
 
 Element* Note::clone()
@@ -91,7 +91,7 @@ void Note::move(float dtick, int dtrack)
 {
     Element::setPos(tick1 + dtick, line + dtrack);
 
-    instr->reinsertNote(this);
+    device->reinsertNote(this);
 }
 
 void Note::load(XmlElement * xmlNode)
@@ -142,10 +142,12 @@ void Note::preview(int note, bool update_instr)
 
     if(update_instr)
     {
+        /*
         instr->lastNoteLength = getticklen();
         instr->lastNoteVol = vol->getValue();
         instr->lastNotePan = pan->getValue();
         instr->lastNoteVal = noteValue;
+        */
     }
 }
 
@@ -195,10 +197,10 @@ void Note::drawOnGrid(Graphics& g, Grid* grid)
     {
         FontId fnt = FontSmall;
 
-        instr->getContainer()->setMyColor(g, .6f);
+        device->getContainer()->setMyColor(g, .6f);
         gFillRect(g, x1, y1, x2, y2);
 
-        instr->getContainer()->setMyColor(g, 1.f);
+        device->getContainer()->setMyColor(g, 1.f);
         gFillRect(g, x1, y1, x1, y2);
 
         //fillx(g, 1.f, .3f);
@@ -217,7 +219,7 @@ void Note::drawOnGrid(Graphics& g, Grid* grid)
         if(issel())
         {
             //fill(g, 1.f, .2f);
-            instr->setMyColor(g, 1.f);
+            device->setMyColor(g, 1.f);
             rectx(g, 0, 0, width, height);
         }
     }
@@ -229,7 +231,7 @@ void Note::drawOnGrid(Graphics& g, Grid* grid)
         }
         else
         {
-            instr->setMyColor(g, .9f);
+            device->setMyColor(g, .9f);
         }
 
         int yTop = barStart;
@@ -316,7 +318,7 @@ void Note::save(XmlElement * xmlNode)
 {
     Element::save(xmlNode);
 
-    xmlNode->setAttribute(T("InstrIndex"), instr->getIndex());
+    xmlNode->setAttribute(T("InstrIndex"), device->getIndex());
     xmlNode->setAttribute(T("Volume"), vol->getValue());
     xmlNode->setAttribute(T("Panning"), pan->getValue());
 }
@@ -335,7 +337,7 @@ SampleNote::SampleNote(Sample* smp, int note_val) : Note(smp, note_val)
 {
     type = El_SampleNote;
 
-    instr = sample = smp;
+    device = sample = smp;
     sampleFrameLength = (long)sample->sample_info.frames;
 
     setTickLength(-1);

@@ -175,7 +175,8 @@ void MixChannel::remap()
 
         confine();
 
-        int yControls = height - FxPanelBottomHeight;
+        int sendPanelHeight = 30;
+        int yControls = height - FxPanelBottomHeight + sendPanelHeight;
 
         volKnob->setCoords1(10, yControls + 2, 100, 22);
         panKnob->setCoords1(10, yControls + 32, 100, 22);
@@ -211,9 +212,14 @@ void MixChannel::drawSelf(Graphics& g)
 
     if (MixViewSingle)
     {
-        setc(g, .3f);
-        fillx(g, 0, height - FxPanelBottomHeight, width, FxPanelBottomHeight);
+        int sendPanelHeight = 30;
+
         setc(g, .4f);
+        fillx(g, 0, height - FxPanelBottomHeight, width, FxPanelBottomHeight);
+        setc(g, .34f);
+        fillx(g, 0, height - FxPanelBottomHeight, width, sendPanelHeight);
+
+        setc(g, .46f);
         rectx(g, 0, height - FxPanelBottomHeight, width, FxPanelBottomHeight);
     }
     else

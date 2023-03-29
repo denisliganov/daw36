@@ -256,7 +256,10 @@ Instrument* Instrument::clone()
 
 void Instrument::drawSelf(Graphics& g)
 {
-    //Gobj::fill(g, .35f);
+    if (device->getIndex() == 36)
+    {
+        return;
+    }
 
     if(device != devDummy)
     {
@@ -479,8 +482,14 @@ void Instrument::remap()
             volBox->setVis(false);
         }
 
-        volKnob->setCoords1(width - 120, 0, int(height), int(height));
-        panKnob->setCoords1(width - 97, 0, int(height), int(height));
+        int kH = height;
+        if (kH % 2)
+        {
+            kH--;
+        }
+
+        volKnob->setCoords1(width - 120, 0, int(kH), int(kH));
+        panKnob->setCoords1(width - 97, 0, int(kH-2), int(kH-2));
 
         //drawGlassRound(g, x2 - 70, y1 + 4, (height * 0.65f), clr, 1);
         //drawGlassRound(g, x2 - 47, y1 + 2, (height * 0.8f), clr, 1);
@@ -523,8 +532,7 @@ bool Instrument::isDummy()
 
 void Instrument::setIndex(int idx)
 {
-    if (device)
-        device->devIdx = idx;
+    device->setIndex(idx);
 
     int num = idx;
 

@@ -20,12 +20,8 @@ DevParamObject::DevParamObject(Device36* dev)
 
 void DevParamObject::placeControls()
 {
-    //int border = 12;
     int boxWidth = 130;
     int boxHeight = 22;
-
-    //int x = 10;
-    //int y = border;
 
     setObjSpacing(2);
     setBorder(4);
@@ -35,6 +31,18 @@ void DevParamObject::placeControls()
     std::list<Parameter*>  showParams;
 
     showParams = device->getParams();
+
+    int numIndexed = showParams.size() - 3;
+    int xnum = 1;
+    int ynum = numIndexed;
+
+    while (numIndexed > 3 && ynum*(2 + 30) > 2*xnum*(2 + 100))
+    {
+        xnum ++;
+        ynum /= 2;
+    }
+
+    int numPut = 0;
 
     for(Parameter* prm : showParams)
     {
@@ -93,6 +101,13 @@ void DevParamObject::placeControls()
             WinObject::addObject(obj);
 
             putBelow(obj, obj->getW(), obj->getH());
+
+            numPut++;
+
+            if (numPut % ynum == 0 && numPut < numIndexed)
+            {
+                returnUp();
+            }
         }
     }
 

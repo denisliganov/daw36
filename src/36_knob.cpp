@@ -299,7 +299,7 @@ void Knob::drawKnob(Graphics& g)
         if (instr)
         {
             float s = .4f;
-            float b = .7f;
+            float b = .8f;
             float a = 1;
 
             clr = Colour(instr->getColorHue(), s, b, a);
@@ -334,7 +334,7 @@ void Knob::drawKnob(Graphics& g)
 
     float xadv0, xadv1, yadv0, yadv1;
 
-    int rrad0 = w/2 -1;
+    int rrad0 = w/2 - 2;
     int rrad1 = rrad0 / 5.f;
 
     float ang = positionAngle - (PI/2.f - angleOffset);

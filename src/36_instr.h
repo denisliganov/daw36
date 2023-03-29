@@ -58,12 +58,10 @@ virtual Instrument*             clone();
             bool                isDummy();
     virtual void                load(XmlElement* instrNode);
             void                preview(int note = BaseNote);
-
+            void                remap();
             void                setDevice(Device36* dev);
             void                setBufferSize(unsigned bufferSize);
             void                setSampleRate(float sampleRate);
-
-            void                remap();
             void                setIndex(int idx);
     virtual void                save(XmlElement* instrNode);
 

@@ -23,9 +23,9 @@ public:
             void                calcForGrid(Grid* grid);
             void                drawOnGrid(Graphics& g, Grid* grid);
             int                 getNoteValue() { return noteValue; }
-            Parameter*           getVol() {return vol;}
+            Parameter*          getVol() {return vol;}
             Parameter*          getPan() {return pan;}
-         Device36*              getInstr() { return instr; }
+         Device36*              getInstr() { return device; }
             float               getFreq() { return freq; }
        Parameter*               getParamByDisplayMode(GridDisplayMode mode);
             void                handleMouseUp(InputEvent& ev);
@@ -34,7 +34,7 @@ public:
             void                preview(int note = -1, bool update_instr = false);
             void                releasePreview();
             void                recalc();
-            void                setInstr(Device36* i) { instr = i; }
+            void                setInstr(Device36* i) { device = i; }
             void                setNote(int note_value);
             void                setPos(float tick,int line);
             void                propagateTriggers(Pattern* pt);
@@ -44,10 +44,10 @@ protected:
             int                 barStart;
             int                 barDraw;
             float               freq;
-            Device36*           instr;
+            Device36*           device;
             int                 noteValue;
             Parameter*          pan;
-            Parameter*           vol;
+            Parameter*          vol;
             int                 yBase;
 
             void                move(float dtick, int dtrack);
