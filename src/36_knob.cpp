@@ -14,7 +14,7 @@
 
 
 
-Knob::Knob(Parameter* par)
+Knob::Knob(Parameter* par, bool knob)
 {
     setFontId(FontSmall);
 
@@ -23,7 +23,7 @@ Knob::Knob(Parameter* par)
     angleRange = PI * 1.5f;
     angleOffset = float(2*PI - angleRange)*.5f;
 
-    knobMode = false;
+    knobMode = knob;
 
     defPos = 0;
 
@@ -189,7 +189,7 @@ void Knob::remap()
     }
     
     // Temp w/a
-    instr = NULL;
+    //instr = NULL;
 
     defPos = int(float(width-1)*param->getDefaultValueNormalized());
 }
@@ -282,20 +282,31 @@ void Knob::drawKnob(Graphics& g)
     //gEllipseFill(g, x1 + 3, y1 + 3, width-6, height-6);
     //float s = 1.f/2*PI*((width-2)/2);
 
-
-    gSetMonoColor(g, .3f);
-
-    int w = height*0.8f;
-    int h = height*0.8f;
-
-    //w = MAX(w, h)/2;
-    //h = w;
-
+    int w = height-4;// *0.8f;
+    int h = height-4;// *0.8f;
     int x = x1 + 2;
     int y = y1 + 2;
 
-    gSetMonoColor(g, .4f);
-    gEllipseFill(g, x, y, w, h);
+    if (0)
+    {
+        gSetMonoColor(g, .4f);
+        gEllipseFill(g, x, y, w, h);
+    }
+    else
+    {
+        Colour clr;
+
+        if (instr)
+        {
+            float s = .4f;
+            float b = .7f;
+            float a = 1;
+
+            clr = Colour(instr->getColorHue(), s, b, a);
+        }
+
+        drawGlassRound(g, x, y, w, clr, 1);
+    }
 
     //(55, 45, 35)
     //drawGlassRound(g,  x, y, w, Colour(90, 80, 10), 1);
@@ -323,8 +334,8 @@ void Knob::drawKnob(Graphics& g)
 
     float xadv0, xadv1, yadv0, yadv1;
 
-    int rrad0 = w/2 - 1;
-    int rrad1 = rrad0/4.f;
+    int rrad0 = w/2 -1;
+    int rrad1 = rrad0 / 5.f;
 
     float ang = positionAngle - (PI/2.f - angleOffset);
 
@@ -342,12 +353,12 @@ void Knob::drawKnob(Graphics& g)
     yadv1 = rrad1 * sin(ang);
     yadv0 = rrad0 * sin(ang);
 
-    //if(instr)
-    //    instr->setMyColor(g,.9);
-    //else
-    //    parent->setMyColor(g, .9f);
+    if(instr)
+        instr->setMyColor(g, .2f);
+    else
+        parent->setMyColor(g, .2f);
 
-    setc(g, 0.9f);
+    setc(g, .9f);
 
     int kx1 = (float)RoundFloat(x + w/2 + xadv1);
     int ky1 = (float)RoundFloat(y + h/2 - yadv1);
@@ -361,15 +372,21 @@ void Knob::drawSelf(Graphics& g)
 {
     //Instrument* instr = dynamic_cast<Instrument*>(parent);
 
-    fill(g, .18f);
     //fill(g, .32f);
 
-    drawSlider(g);
+    if (!knobMode)
+    {
+        fill(g, .18f);
+        
+        instr = NULL;
 
-    drawText(g);
+        drawSlider(g);
+
+        drawText(g);
+    }
 
     // Knob
-    if (false)
+    if (knobMode)
     {
         drawKnob(g);
     }

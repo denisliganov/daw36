@@ -206,7 +206,7 @@ void ToggleBox::drawSelf(Graphics& g)
 
     if (param->getBoolValue())
     {
-        setc(g, 0.4f);
+        setc(g, 0.6f);
         fillx(g, 1, 1, height-2, height-2);
     }
 
@@ -235,7 +235,7 @@ RadioBox::RadioBox(Parameter* param_radio)
 
     setFontId(FontSmall);
 
-    height = headerHeight + (textHeight + 4)*param->getNumOptions();
+    height = (textHeight + 4)*param->getNumOptions(); // + headerHeight
 }
 
 void RadioBox::drawSelf(Graphics& g)
@@ -248,22 +248,21 @@ void RadioBox::drawSelf(Graphics& g)
     //setc(g, 0.35f);
     //fillx(g, 0, 0, width, headerHeight - 1);
 
-    setc(g, 0.8f);
-    txtfit(g, FontBold, param->getName(), 3, headerHeight - 4, width - 3);
+    //setc(g, 0.8f);
+    //txtfit(g, FontBold, param->getName(), 3, headerHeight - 4, width - 3);
 
-
-    int y = headerHeight;
+    int y = 0; // headerHeight;
     int opt = 0;
 
     for (std::string str : param->getAllOptions())
     {
         setc(g, 0.2f);
-        fillx(g, 2, y + 2, textHeight, textHeight);
+        fillx(g, 1, y + 1, textHeight + 3, textHeight + 3);
 
         if (param->getCurrentOption() == opt)
         {
-            setc(g, 0.8f);
-            fillx(g, 3, y + 3, textHeight-2, textHeight-2);
+            setc(g, 0.6f);
+            fillx(g, 2, y + 2, textHeight + 1, textHeight + 1);
         }
 
         setc(g, 1.f);
@@ -276,9 +275,9 @@ void RadioBox::drawSelf(Graphics& g)
 
 void RadioBox::handleMouseDown(InputEvent & ev)
 {
-    if ((ev.mouseY - y1) > headerHeight)
+    //if ((ev.mouseY - y1) > headerHeight)
     {
-        param->setCurrentOption((ev.mouseY - y1 - headerHeight) / (textHeight + 4));
+        param->setCurrentOption((ev.mouseY - y1 /* - headerHeight*/) / (textHeight + 4));
     }
 
     redraw();

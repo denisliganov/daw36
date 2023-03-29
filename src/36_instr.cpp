@@ -135,6 +135,9 @@ Instrument::Instrument(Device36* dev)
     addObject(panBox = new ParamBox(device->pan));
     panBox->setSliderOnly(true);
 
+    addObject(volKnob = new Knob(device->vol, true));
+    addObject(panKnob = new Knob(device->pan, true));
+
     addObject(muteButt = new EnableButton(device->enabled));
 
     addObject(ivu = new InstrVU(), ObjGroup_VU);
@@ -476,6 +479,12 @@ void Instrument::remap()
             volBox->setVis(false);
         }
 
+        volKnob->setCoords1(width - 120, 0, int(height), int(height));
+        panKnob->setCoords1(width - 97, 0, int(height), int(height));
+
+        //drawGlassRound(g, x2 - 70, y1 + 4, (height * 0.65f), clr, 1);
+        //drawGlassRound(g, x2 - 47, y1 + 2, (height * 0.8f), clr, 1);
+
         //soloButt->setCoords1(width - bw*2 - 8, height - bw, bw, bw);
 
         muteButt->setCoords1(width - bw - bw, 0, bw, height);
@@ -484,11 +493,11 @@ void Instrument::remap()
     {
         guiButton->setTouchable(false);
 
-        if (volBox)
-            volBox->setVis(false);
+        volBox->setVis(false);
+        panBox->setVis(false);
 
-        if (panBox)
-            panBox->setVis(false);
+        volKnob->setVis(false);
+        panKnob->setVis(false);
 
         //soloButt->setVis(false);
 

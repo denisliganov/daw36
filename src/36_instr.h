@@ -35,9 +35,9 @@ public:
             MixChannel*         mixChannel;
             EnableButton*       muteButt;
             ParamBox*           panBox;
-            Knob*               volKnob;
             ParamBox*           volBox;
-
+            Knob*               volKnob;
+            Knob*               panKnob;
 
             void                addMixChannel();
             void                activateMenuItem(std::string item);

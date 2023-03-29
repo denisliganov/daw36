@@ -9,7 +9,7 @@ class Knob : public Control
 {
 public:
 
-            Knob(Parameter* par);
+            Knob(Parameter* par, bool knob = false);
             void                drawKnob(Graphics& g);
             void                drawSelf(Graphics& g);
             void                drawSlider(Graphics& g);
