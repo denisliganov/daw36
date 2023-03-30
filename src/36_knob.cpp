@@ -26,6 +26,7 @@ Knob::Knob(Parameter* par, bool knob)
     knobMode = knob;
 
     defPos = 0;
+    savedHeight = 0;
 
     instr = NULL;
 
@@ -212,7 +213,7 @@ void Knob::drawText(Graphics& g)
     if (instr)
         instr->setMyColor(g, 1.f);
     else
-        setc(g, .6f);
+        setc(g, .72f);
     //txt(g, fontId, param->getValString(), textX + namestrLen + 6, 12);
     //txt(g, fontId, param->getValString(), textX + 60, 12);
     txt(g, fontId, param->getValString(), width - valstrLen - 2, textY);
@@ -276,61 +277,74 @@ void Knob::drawSlider(Graphics& g)
 
 void Knob::drawKnob(Graphics& g)
 {
-    //gSetMonoColor(g, .5f, 1);
-    //gPie(g, x1 + 1, y1+1, width-2, height-2, PI - angleOffset, PI + angleOffset);
-    //gSetMonoColor(g, .3f);
-    //gEllipseFill(g, x1 + 3, y1 + 3, width-6, height-6);
-    //float s = 1.f/2*PI*((width-2)/2);
-
-    int w = height-4;// *0.8f;
-    int h = height-4;// *0.8f;
+    int w = height - 4;// *0.8f;
+    int h = height - 4;// *0.8f;
     int x = x1 + 2;
     int y = y1 + 2;
 
-    if (0)
+    if (bgSaved && savedHeight == h)
     {
-        gSetMonoColor(g, .4f);
-        gEllipseFill(g, x, y, w, h);
+        g.setColour(Colours::white);
+
+        drawSnap(g);
     }
     else
     {
-        Colour clr;
+        //gSetMonoColor(g, .5f, 1);
+        //gPie(g, x1 + 1, y1+1, width-2, height-2, PI - angleOffset, PI + angleOffset);
+        //gSetMonoColor(g, .3f);
+        //gEllipseFill(g, x1 + 3, y1 + 3, width-6, height-6);
+        //float s = 1.f/2*PI*((width-2)/2);
 
-        if (instr)
+        if (0)
         {
-            float s = .4f;
-            float b = .8f;
-            float a = 1;
+            gSetMonoColor(g, .4f);
+            gEllipseFill(g, x, y, w, h);
+        }
+        else
+        {
+            Colour clr;
 
-            clr = Colour(instr->getColorHue(), s, b, a);
+            if (instr)
+            {
+                float s = .4f;
+                float b = .64f;
+                float a = 1;
+
+                clr = Colour(instr->getColorHue(), s, b, a);
+            }
+
+            drawGlassRound(g, x, y, w, clr, 1);
         }
 
-        drawGlassRound(g, x, y, w, clr, 1);
+        //(55, 45, 35)
+        //drawGlassRound(g,  x, y, w, Colour(90, 80, 10), 1);
+
+        if(0 && param->getOffset() < 0)
+        {
+            float o = param->getOffset() / param->getRange();
+            float oa = abs(o*angleRange);
+
+            float rad = float(w-2)/2;
+            float singleAngle = 1.f/(2*PI);
+            float ratio = 1.f/(2*PI*rad);
+            float singlePixelAngle = ratio*2*PI;
+
+            gSetMonoColor(g, .6f);
+
+            gPie(g, x1+1, y1+1, width-2, height-2, PI + angleOffset + oa, PI + angleOffset + oa);
+        }
+
+        //setc(g, .2f);
+        //gPie(g, x, y, w, h, PI + angleOffset, 3*PI - angleOffset);
+        //gPie(g, x, y, w, h, PI, 3*PI);
+        //gEllipseFill(g, x1, y1, width, height);
+
+        createSnap();
+
+        bgSaved = true;
+        savedHeight = h;
     }
-
-    //(55, 45, 35)
-    //drawGlassRound(g,  x, y, w, Colour(90, 80, 10), 1);
-
-    if(0 && param->getOffset() < 0)
-    {
-        float o = param->getOffset() / param->getRange();
-        float oa = abs(o*angleRange);
-
-        float rad = float(w-2)/2;
-        float singleAngle = 1.f/(2*PI);
-        float ratio = 1.f/(2*PI*rad);
-        float singlePixelAngle = ratio*2*PI;
-
-        gSetMonoColor(g, .6f);
-
-        gPie(g, x1+1, y1+1, width-2, height-2, PI + angleOffset + oa, PI + angleOffset + oa);
-    }
-
-    //setc(g, .2f);
-    //gPie(g, x, y, w, h, PI + angleOffset, 3*PI - angleOffset);
-    //gPie(g, x, y, w, h, PI, 3*PI);
-
-    //gEllipseFill(g, x1, y1, width, height);
 
     float xadv0, xadv1, yadv0, yadv1;
 
@@ -370,8 +384,6 @@ void Knob::drawKnob(Graphics& g)
 
 void Knob::drawSelf(Graphics& g)
 {
-    //Instrument* instr = dynamic_cast<Instrument*>(parent);
-
     //fill(g, .32f);
 
     if (!knobMode)

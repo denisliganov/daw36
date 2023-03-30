@@ -10,6 +10,7 @@ Control::Control()
     dev = NULL;
     parentImage = NULL;
     headerOn = true;
+    bgSaved = false;
 
     setHint("");
 }

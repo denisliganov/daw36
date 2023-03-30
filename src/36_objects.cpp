@@ -24,6 +24,7 @@ Gobj::Gobj()
     parent = NULL;
     window = NULL;
     gr = NULL;
+    snap = NULL;
 
     monoLevel = -1;
     colorHue = -1;
@@ -157,6 +158,27 @@ void Gobj::addHighlight(Gobj* obj)
 void Gobj::removeObject(Gobj* obj)
 {
     objs.remove(obj);
+}
+
+void Gobj::createSnap()
+{
+    if (window)
+    {
+        if (snap)
+        {
+            delete snap;
+        }
+
+        snap = window->createSnapshot(x1, y1, width, height);
+    }
+}
+
+void Gobj::drawSnap(Graphics& g)
+{
+    if (snap)
+    {
+        g.drawImageAt(snap, x1, y1, false);
+    }
 }
 
 void Gobj::setEnable(bool en)

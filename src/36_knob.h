@@ -32,6 +32,7 @@ protected:
             float               positionAngle;    // in radians
             int                 ys;
             int                 defPos;
+            int                 savedHeight;
             Instrument*         instr;
             bool                knobMode;
 };

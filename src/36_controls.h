@@ -23,12 +23,13 @@ public:
 
 protected:
 
+            bool                bgSaved;
             bool                headerOn;
             int                 headerHeight;
             Device36*           dev;
             FontId              fontId;
             Image*              parentImage;
-            Parameter*              param;
+            Parameter*          param;
             int                 textHeight;
 };
 

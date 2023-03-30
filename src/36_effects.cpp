@@ -72,7 +72,7 @@ protected:
         {
             if (param->getBoolValue())
             {
-                drawGlassRound(g, x1+1, y1+1, width-2, Colour(222,222,111), 1);
+                drawGlassRound(g, x1+1, y1+1, width-2, Colour(255,255,222), 1);
             }
             else
             {
