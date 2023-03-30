@@ -367,7 +367,7 @@ void BrowserList::previewSample(BrwListEntry* ble, bool down)
 
             if(prevSample != NULL)
             {
-                prevSample->selfNote->preview();
+                prevSample->getSelfNote()->preview();
             }
         }
     }

@@ -32,34 +32,17 @@ protected:
 
 class MixChannel : public Scrolled
 {
-friend  Mixer;
+friend  Audio36;
 friend  ChanVU;
 friend  Eff;
+friend  Mixer;
+friend  InstrPanel;
+
 
 public:
             MixChannel();
             MixChannel(Instrument* i);
             ~MixChannel();
-
-            std::string         chanTitle;
-            Gobj*               dropObj;
-            std::list<Eff*>     effs;
-            Instrument*         instr;
-            MixChannel*         mchanout;
-            bool                master;
-            Button36*           mutetoggle;
-            Knob*               panKnob;
-            Parameter*          panParam;
-            bool                soloparam;
-            Button36*           solotoggle;
-            Parameter*          volParam;
-            ChanVU*             vu;
-            Knob*               volKnob;
-
-            int                 muteCount;
-
-            float               inbuff[MAX_BUFF_SIZE*2];
-            float               outbuff[MAX_BUFF_SIZE*2];
 
             void                activateEffectMenuItem(Eff* eff, std::string mi);
             void                activateMenuItem(std::string mi);
@@ -87,6 +70,29 @@ public:
             void                save(XmlElement* xmlChanNode);
             void                setBufferSize(unsigned int bufferSize);
             void                setSampleRate(float sampleRate);
+
+protected:
+
+            std::string         chanTitle;
+            Gobj*               dropObj;
+            std::list<Eff*>     effs;
+            Instrument*         instr;
+            MixChannel*         mchanout;
+            bool                master;
+            Button36*           mutetoggle;
+            Knob*               panKnob;
+            Parameter*          panParam;
+            bool                soloparam;
+            Button36*           solotoggle;
+            Parameter*          volParam;
+            ChanVU*             vu;
+            Knob*               volKnob;
+
+            int                 muteCount;
+
+            float               inbuff[MAX_BUFF_SIZE*2];
+            float               outbuff[MAX_BUFF_SIZE*2];
+
 };
 
 

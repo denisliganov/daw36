@@ -60,6 +60,11 @@ Gobj::~Gobj()
         window->unregisterObject(this);
     }
 
+    if(snap)
+    {
+        delete snap;
+    }
+
     deleteAllObjects();
 }
 

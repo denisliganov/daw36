@@ -297,14 +297,13 @@ void Instrument::drawSelf(Graphics& g)
     //Colour clr = Colour(colorHue, s, b, a);
     //drawGlassRect1(g, (float)x1, (float)y1, width, height, clr, 1, 8, false, false, false, false);
 
-    if(device != devDummy)
+    if(0 && device != devDummy)
     {
         float s = .4f;
         float b = .7f;
         float a = 1;
 
         Colour clr = Colour(colorHue, s, b, a);
-
         drawGlassRound(g, x2 - 70, y1 + 4, (height*0.65f), clr, 1);
         drawGlassRound(g, x2 - 47, y1 + 2, (height*0.8f), clr, 1);
     }
@@ -489,7 +488,7 @@ void Instrument::remap()
         }
 
         volKnob->setCoords1(width - 120, 0, int(kH), int(kH));
-        panKnob->setCoords1(width - 97, 0, int(kH-2), int(kH-2));
+        panKnob->setCoords1(width - 97, 0, int(kH), int(kH));
 
         //drawGlassRound(g, x2 - 70, y1 + 4, (height * 0.65f), clr, 1);
         //drawGlassRound(g, x2 - 47, y1 + 2, (height * 0.8f), clr, 1);

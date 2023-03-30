@@ -1111,7 +1111,7 @@ bool Grid::drawDraggedObject(Graphics & g,Gobj * obj)
 
     if(i != NULL && i->getDevice())
     {
-        i->getDevice()->selfNote->drawOnGrid(g, this);
+        i->getDevice()->getSelfNote()->drawOnGrid(g, this);
 
         return true;
     }

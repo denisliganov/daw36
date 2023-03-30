@@ -32,6 +32,7 @@ class Device36 : public ParamObject
 friend InstrPanel;
 friend Instrument;
 friend Eff;
+friend Grid;
 
 public:
             Device36();
@@ -57,6 +58,7 @@ public:
             float               getLastNoteLength()     { return lastNoteLength; }
             int                 getMuteCount()          { return muteCount; }
             Gobj*               getContainer()          { return container; }
+            Note*               getSelfNote()           { return selfNote; }
     virtual long                handleTrigger(Trigger* tg, long num_frames = 0, long buff_frame = 0) {return 0;};
             void                handleWindowClosed();
             void                handleMouseWheel(InputEvent & ev);
@@ -86,16 +88,6 @@ public:
             void                setVU(ChanVU* v) { vu = v; }
 
 
-            bool                previewOnly;
-            float               pan0, pan1, pan2, pan3;
-            int                 rampCount;
-            float               rampCounterV;
-            Pattern*            selfPattern;
-            Note*               selfNote;
-            float               tempBuff[MAX_BUFF_SIZE*2];     // Data for single trigger
-            long                uniqueId;
-            float               volBase;
-            Parameter*          vol;
             float               lastNoteLength;
             float               lastNoteVol;
             float               lastNotePan;
@@ -114,14 +106,24 @@ protected:
             float               outBuff[MAX_BUFF_SIZE*2];      // Data for whole session
             Parameter*          pan;
             std::vector<std::string>    presets;
+            bool                previewOnly;
+            float               pan0, pan1, pan2, pan3;
+            int                 rampCount;
+            float               rampCounterV;
+            Pattern*            selfPattern;
+            Note*               selfNote;
 
             Gobj*               container;
             Parameter*          enabled;
             std::string         filePath;
             bool                isLoading;
             int                 lastParamIdx;
+            float               tempBuff[MAX_BUFF_SIZE*2];     // Data for single trigger
             InstrType           type;
+            long                uniqueId;
             ChanVU*             vu;
+            Parameter*          vol;
+            float               volBase;
 
             void                deletePresets();
             void                restoreState(XmlElement & xmlStateNode, bool global = false);
