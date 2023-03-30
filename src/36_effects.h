@@ -172,11 +172,12 @@ public:
             void                processDSP(float* in_buff, float* out_buff, int num_frames);
             void                reset();
             void                drawOverChildren(Graphics & g);
+            void                drawCurve(Graphics& g, int x, int y, int w, int h);
 
 protected:
-            Parameter           *freq1, *freq2, *freq3;
+            Parameter           *freqHigh, *freqCentr, *freqLow;
             int                 f1, f2, f3;
-            Parameter           *gain1, *gain2, *gain3, *bandw;
+            Parameter           *gainHigh, *gainCentr, *gainLow, *centrBW;
 
             rosic::Equalizer    dspCoreEqualizer;
 };

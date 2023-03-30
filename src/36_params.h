@@ -92,7 +92,7 @@ public:
             float               getOutVal() { return outVal; }
             float               getValue() { return value; }
             float               getDefaultValue() { return defaultValue; }
-            float               getValueNormalized();
+            float               getNormalizedValue();
             float               getDefaultValueNormalized();
     virtual float               getEditorValue();
             bool                getAutoPlaced() { return autoPlaced; }

@@ -633,13 +633,15 @@ EQ3::EQ3()
     f2 = dspCoreEqualizer.addBand(rosic::TwoPoleFilter::PEAK, 0, 0, 0);
     f3 = dspCoreEqualizer.addBand(rosic::TwoPoleFilter::LOW_SHELF, 100, 0);
 
-    addParam(freq3 = new Parameter("LOW.FREQ", Param_Freq, 0.f, 1.f, 0.2f, Units_Hz));
-    addParam(gain3 = new Parameter("LOW.GAIN", -24.0f, 24.0f, 0.f, Units_dBGain));
-    addParam(freq2 = new Parameter("CENTR.FREQ", Param_Freq, 0.f, 1.f, 0.5f, Units_Hz));
-    addParam(gain2 = new Parameter("CENTR.GAIN", -24.0f, 24.0f, 0.f, Units_dBGain));
-    addParam(freq1 = new Parameter("HIGH.FREQ", Param_Freq, 0.f, 1.f, 0.8f, Units_Hz));
-    addParam(gain1 = new Parameter("HIGH.GAIN", -24.0f, 24.0f, 0.f, Units_dBGain));
-    addParam(bandw = new Parameter("BANDWIDTH", 0.25f, 4.f, 1.5f, Units_Octave));
+    freqLow = gainLow = freqCentr = gainCentr = freqHigh = gainHigh = centrBW = NULL;
+
+    addParam(freqLow = new Parameter("LOW.FREQ", Param_Freq, 0.f, 1.f, 0.2f, Units_Hz));
+    addParam(gainLow = new Parameter("LOW.GAIN", -24.0f, 24.0f, 0.f, Units_dBGain));
+    addParam(freqCentr = new Parameter("CENTR.FREQ", Param_Freq, 0.f, 1.f, 0.5f, Units_Hz));
+    addParam(gainCentr = new Parameter("CENTR.GAIN", -24.0f, 24.0f, 0.f, Units_dBGain));
+    addParam(freqHigh = new Parameter("HIGH.FREQ", Param_Freq, 0.f, 1.f, 0.8f, Units_Hz));
+    addParam(gainHigh = new Parameter("HIGH.GAIN", -24.0f, 24.0f, 0.f, Units_dBGain));
+    addParam(centrBW = new Parameter("BANDWIDTH", 0.25f, 4.f, 1.5f, Units_Octave));
 
 
 /*
@@ -652,53 +654,60 @@ EQ3::EQ3()
     reset();
 }
 
-
-void EQ3::drawOverChildren(Graphics & g)
+void EQ3::drawCurve(Graphics& g, int x, int y, int w, int h)
 {
-    setc(g, 0.8f);
+    setc(g, 0.4f);
 
-    Point36 eq[7] = {  0,  10, 
+    gDrawRectWH(g, x, y, w, h);
+
+    Point36 eq[7] = { 0,  10,
                         10, 0,
                         20, 10,
                         30, 0,
                         40, 10,
                         50, 0,
-                        60, 10};
+                        60, 10 };
+
+    float band = centrBW->getNormalizedValue() * (width / 6);
 
     eq[0].x = 0;
-    eq[0].y = height*gain3->getValueNormalized();
+    eq[0].y = h * (1 - gainLow->getNormalizedValue());
 
-    eq[1].x = width*freq3->getValueNormalized();
+    // Low 
+    eq[1].x = w * freqLow->getNormalizedValue();
     eq[1].y = eq[0].y;
 
-    float band = bandw->getValueNormalized()*(width/6);
+    eq[2].x = w * freqCentr->getNormalizedValue() - band / 2;
+    eq[2].y = h / 2;
 
-    eq[2].x = width*(freq2->getValueNormalized()) - band/2;
-    eq[2].y = height/2;
+    eq[3].x = w * freqCentr->getNormalizedValue();
+    eq[3].y = h * (1 - gainCentr->getNormalizedValue());
 
-    eq[3].x = width*(freq2->getValueNormalized());
-    eq[3].y = height*gain2->getValueNormalized();
+    eq[4].x = w * freqCentr->getNormalizedValue() + band / 2;
+    eq[4].y = h / 2;
 
-    eq[4].x = width*(freq2->getValueNormalized()) + band/2;
-    eq[4].y = height/2;
+    eq[5].x = w * freqHigh->getNormalizedValue();
+    eq[5].y = h * (1 - gainHigh->getNormalizedValue());
 
-    eq[5].x = width*(freq1->getValueNormalized());
-    eq[5].y = height*gain1->getValueNormalized();
-
-    eq[6].x = width - 1;
+    eq[6].x = w - 1;
     eq[6].y = eq[5].y;
 
+    gFillRectWH(g, x + eq[1].x, y, 1, h);
+    gFillRectWH(g, x + eq[3].x, y, 1, h);
+    gFillRectWH(g, x + eq[5].x, y, 1, h);
+
+    setc(g, 0.8f);
 
     Path p;
-    p.startNewSubPath(float(x1 + eq[0].x), float(y1 + eq[0].y));
+    p.startNewSubPath(float(x + eq[0].x), float(y + eq[0].y));
 
     for (int c = 1; c < 7; c++)
     {
-        p.lineTo(float(x1 + eq[c].x), float(y1 + eq[c].y));
+        p.lineTo(float(x + eq[c].x), float(y + eq[c].y));
     }
 
     //p.closeSubPath();
-/*
+    /*
     p.startNewSubPath(x1, y1);
 
     p.lineTo(x1 + 30, y1 + 30);
@@ -707,35 +716,61 @@ void EQ3::drawOverChildren(Graphics & g)
     g.strokePath(p, PathStrokeType(1, PathStrokeType::JointStyle::curved));
 }
 
+
+void EQ3::drawOverChildren(Graphics & g)
+{
+    drawCurve(g, x2 - 90, y1 + 10, 88, height - 20);
+}
+
 void EQ3::handleParamUpdate(Parameter* param)
 {
-    if(param == gain1)
+    if(param == gainHigh)
     {
-        dspCoreEqualizer.setBandGain(f1, gain1->getOutVal());
+        dspCoreEqualizer.setBandGain(f1, gainHigh->getOutVal());
     }
-    else if(param == gain2)
+    else if(param == gainCentr)
     {
-        dspCoreEqualizer.setBandGain(f2, gain2->getOutVal());
+        dspCoreEqualizer.setBandGain(f2, gainCentr->getOutVal());
     }
-    else if(param == gain3)
+    else if(param == gainLow)
     {
-        dspCoreEqualizer.setBandGain(f3, gain3->getOutVal());
+        dspCoreEqualizer.setBandGain(f3, gainLow->getOutVal());
     }
-    else if(param == freq1)
+    else if(param == freqHigh)
     {
-        dspCoreEqualizer.setBandFrequency(f1, freq1->getOutVal());
+        if (freqCentr != NULL && freqHigh->getNormalizedValue() < freqCentr->getNormalizedValue())
+        {
+            freqHigh->setNormalizedValue(freqCentr->getNormalizedValue());
+        }
+
+        dspCoreEqualizer.setBandFrequency(f1, freqHigh->getOutVal());
     }
-    else if(param == freq2)
+    else if(param == freqCentr)
     {
-        dspCoreEqualizer.setBandFrequency(f2, freq2->getOutVal());
+        if (freqHigh != NULL && freqCentr->getNormalizedValue() > freqHigh->getNormalizedValue())
+        {
+            freqCentr->setNormalizedValue(freqHigh->getNormalizedValue());
+        }
+
+        if (freqLow != NULL && freqCentr->getNormalizedValue() < freqLow->getNormalizedValue())
+        {
+            freqCentr->setNormalizedValue(freqLow->getNormalizedValue());
+        }
+
+        dspCoreEqualizer.setBandFrequency(f2, freqCentr->getOutVal());
     }
-    else if(param == freq3)
+    else if(param == freqLow)
     {
-        dspCoreEqualizer.setBandFrequency(f3, freq3->getOutVal());
+        if (freqCentr != NULL && freqLow->getNormalizedValue() > freqCentr->getNormalizedValue())
+        {
+            freqLow->setNormalizedValue(freqCentr->getNormalizedValue());
+        }
+
+        dspCoreEqualizer.setBandFrequency(f3, freqLow->getOutVal());
     }
-    else if(param == bandw)
+    else if(param == centrBW)
     {
-        dspCoreEqualizer.setBandBandwidth(f2, bandw->getOutVal());
+        dspCoreEqualizer.setBandBandwidth(f2, centrBW->getOutVal());
     }
 
     if (container)

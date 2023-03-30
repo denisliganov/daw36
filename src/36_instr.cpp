@@ -258,7 +258,7 @@ void Instrument::drawSelf(Graphics& g)
 {
     if (device->getIndex() == 36)
     {
-        return;
+        //return;
     }
 
     if(device != devDummy)

@@ -80,7 +80,7 @@ void ParamObject::enqueueParamEnvelope(Trigger* tg)
     envelopes = tg;
 
     Parameter* prm = ((Envelope*)tg->el)->param;
-    tg->prev_value = prm->getValueNormalized();
+    tg->prev_value = prm->getNormalizedValue();
 
     // New envelopes unblock the param ability to be changed by envelope
     prm->unblockEnvAffect();

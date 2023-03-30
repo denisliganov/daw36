@@ -32,7 +32,7 @@ void Slider36::updPosition()
 {
     if (prm != NULL)
     {
-        slLen = RoundFloat((float)length * prm->getValueNormalized());
+        slLen = RoundFloat((float)length * prm->getNormalizedValue());
 
         slMul = (float)length * prm->getValue();
     }

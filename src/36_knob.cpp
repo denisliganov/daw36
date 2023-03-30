@@ -46,7 +46,7 @@ void Knob::updPosition()
 {
     if (param != NULL)
     {
-        positionAngle = float((1 - param->getValueNormalized()) * angleRange);
+        positionAngle = float((1 - param->getNormalizedValue()) * angleRange);
     }
     else
     {
@@ -335,7 +335,7 @@ void Knob::drawKnob(Graphics& g)
     float xadv0, xadv1, yadv0, yadv1;
 
     int rrad0 = w/2 - 2;
-    int rrad1 = rrad0 / 5.f;
+    int rrad1 = 0; // rrad0 / 5.f;
 
     float ang = positionAngle - (PI/2.f - angleOffset);
 
