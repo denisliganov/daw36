@@ -518,6 +518,7 @@ void Audio36::releaseAllPreviews()
         }
     }
 
+    /*
 start_cleanup:
 
     for(Instrument* i : MInstrPanel->instrs)
@@ -528,7 +529,7 @@ start_cleanup:
 
             goto start_cleanup;
         }
-    }
+    }*/
 }
 
 void Audio36::processPreviews()

@@ -24,7 +24,6 @@
 
 Device36::Device36()
 {
-    previewOnly = false;
     muteCount = 0;
     uniqueId = -1;
     devIdx = -1;
@@ -420,9 +419,9 @@ void Device36::handleWindowClosed()
 {
     redraw();
 
-    if (container)
+    if (parent)
     {
-        container->redraw();
+        parent->redraw();
     }
 }
 

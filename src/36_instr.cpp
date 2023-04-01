@@ -120,10 +120,7 @@ protected:
 
 Instrument::Instrument(Device36* dev)
 {
-    device = dev;
-
-    volBox = NULL;
-    panBox = NULL;
+    device = devDummy;
 
     addObject(guiButton = new GuiButt());
 
@@ -158,9 +155,7 @@ Instrument::~Instrument()
 
     if (device != devDummy)
     {
-        device->removeElements();
-
-        delete device;
+        //delete device;
     }
 
     MMixer->removeMixChannel(this);
@@ -170,16 +165,18 @@ Instrument::~Instrument()
 
 void Instrument::setDevice(Device36* dev)
 {
-    //if (device != devDummy)
+    if (device != NULL)
     {
-        volBox->removeParam(device->vol);
-        panBox->removeParam(device->pan);
+        volKnob->removeParam(device->vol);
+        panKnob->removeParam(device->pan);
         muteButt->removeParam(device->enabled);
 
-        if (device != devDummy)
+        //if (device != devDummy)
         {
         //    device->setContainer(NULL);
         }
+
+        removeObject(device);
 
         setObjName("");
     }
@@ -188,19 +185,25 @@ void Instrument::setDevice(Device36* dev)
 
     if (device)
     {
-        device->setContainer(this);
+        addObject(device);
+
+        device->setEnable(false);
+
+        //device->setContainer(this);
 
         //if (device != devDummy)
         {
             device->setVU(ivu);
 
-            volBox->addParam(device->vol);
-            panBox->addParam(device->pan);
+            volKnob->addParam(device->vol);
+            panKnob->addParam(device->pan);
             muteButt->addParam(device->enabled);
 
-            setObjName(dev->getObjName());
+            setObjName(device->getObjName());
         }
     }
+
+    redraw();
 }
 
 void Instrument::activateMenuItem(std::string item)
@@ -264,10 +267,10 @@ void Instrument::drawSelf(Graphics& g)
     if(device != devDummy)
     {
         Gobj::setMyColor(g, .7f);
+        //setc(g, 1.f);
 
         fillx(g, 0, 0, width, height);
 
-       // setc(g, .31f);
         Gobj::setMyColor(g, .5f);
         fillx(g, 0, 0, width, height/2);
     }
@@ -307,6 +310,8 @@ void Instrument::drawSelf(Graphics& g)
         drawGlassRound(g, x2 - 70, y1 + 4, (height*0.65f), clr, 1);
         drawGlassRound(g, x2 - 47, y1 + 2, (height*0.8f), clr, 1);
     }
+
+    //createSnap();
 }
 
 void Instrument::drawOverChildren(Graphics & g)

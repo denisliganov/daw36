@@ -752,7 +752,26 @@ void JuceListener::redrawPerAction()
 
         Graphics imG(*mainComp->bufferedImage);
 
-        for(Gobj* obj : mainComp->getWinObject().changedObjects)
+        std::list<Gobj*>  co = mainComp->getWinObject().changedObjects;
+
+        // If changed list has both parents and their childs, then remove all childs, since redrawing parent will
+        // redraw its childs as well
+
+cleanChilds:
+        for(Gobj* oP : co)
+        {
+            for(Gobj* oC : co)
+            {
+                if(oC->getParent() == oP)
+                {
+                    co.remove(oC);
+
+                    goto cleanChilds;
+                }
+            }
+        }
+
+        for(Gobj* obj : co)
         {
             if (obj->isShown() && obj->isChanged())
             {
@@ -1494,9 +1513,18 @@ void WinObject::setMousePosition(int x, int y)
     Desktop::setMousePosition(wx + cx + x, wy + cy + y);
 }
 
-Image* WinObject::createSnapshot(int x, int y, int width, int height)
+Image* WinObject::createSnapshot(int x, int y, int w, int h)
 {
-    Image* image = createComponentSnapshot (Rectangle (x, y, getWidth(), getHeight()));
+    Image* image = NULL;
+
+    if (bufferedImage != NULL)
+    {
+        makeSnapshot(&image, x, y, w, h, NULL);
+    }
+    else
+    {
+        image = createComponentSnapshot (Rectangle (x, y, getWidth(), getHeight()));
+    }
 
     return image;
 }
@@ -1521,17 +1549,17 @@ void WinObject::registerObject(Gobj * obj)
 void WinObject::unregisterObject(Gobj * obj)
 {
     WaitForSingleObject(guiMutex, INFINITE);
-    
+
     if (changedObjects.size() > 0)
     {
         changedObjects.remove(obj);
     }
-    
+
     if (highlights.size() > 0 &&obj->getObjGroup() == ObjGroup_Highlight)
     {
         highlights.remove(obj);
     }
-    
+
     if (vus.size() > 0 && obj->getObjGroup() == ObjGroup_VU)
     {
         vus.remove(obj);

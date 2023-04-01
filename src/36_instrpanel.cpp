@@ -194,7 +194,7 @@ Instrument* InstrPanel::addInstrument(Device36 * dev, Instrument * objAfter)
         updateInstrIndexes();
     }
 
-    if(!(device && device->previewOnly))
+    //if(!(device && device->previewOnly))
     {
         i->addMixChannel();
 
@@ -394,8 +394,8 @@ int InstrPanel::getNumInstrs()
 
     for(Instrument* instr : instrs)
     {
-        if (instr->getDevice() && instr->getDevice()->previewOnly)
-            continue;
+        //if (instr->getDevice() && instr->getDevice()->previewOnly)
+        //    continue;
 
         num++;
     }
@@ -418,7 +418,7 @@ Instrument* InstrPanel::getInstrFromLine(int trkLine)
 
     for(Instrument* instr : instrs)
     {
-        if (!instr->device->previewOnly && line == trkLine)
+        if (line == trkLine)
         {
             return instr;
         }
@@ -526,6 +526,8 @@ bool InstrPanel::handleObjDrop(Gobj * obj, int mx, int my, unsigned int flags)
         
     }
 
+
+    //MObject->redraw();
 /*
     if (ble)
     {
@@ -806,7 +808,7 @@ void InstrPanel::remap()
     {
         if (i->getDevice()->previewOnly)
         {
-            continue;
+            //continue;
         }
 
         if((yoffs + i->getH()) >= 0 && yoffs <= instrListHeight)

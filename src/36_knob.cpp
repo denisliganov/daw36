@@ -308,13 +308,16 @@ void Knob::drawKnob(Graphics& g)
             if (instr)
             {
                 float s = .4f;
-                float b = .64f;
+                float b = .66f;
                 float a = 1;
 
                 clr = Colour(instr->getColorHue(), s, b, a);
             }
 
             drawGlassRound(g, x, y, w, clr, 1);
+
+            ///gSetMonoColor(g, 0, .3f);
+            //gPie(g, x+2, y+2, w-2, w-2, PI - angleOffset, PI + angleOffset);
         }
 
         //(55, 45, 35)
@@ -341,6 +344,7 @@ void Knob::drawKnob(Graphics& g)
         //gEllipseFill(g, x1, y1, width, height);
 
         createSnap();
+        //window->makeSnapshot(&snap, xRel, yRel, width, height, instr->getSnap());
 
         bgSaved = true;
         savedHeight = h;

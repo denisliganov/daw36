@@ -24,7 +24,10 @@ void Control::addParam(Parameter* p)
         param->addControl(this);
     }
 
+    updPosition();
+
     //remap();
+    //redraw();
 }
 
 void Control::removeParam(Parameter* p)

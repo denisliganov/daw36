@@ -43,7 +43,7 @@ public:
     virtual void                activateTrigger(Trigger* tg);
     virtual SubWindow*          createWindow();
     virtual void                createSelfPattern();
-            ContextMenu*        createContextMenu()     {  return container->createContextMenu();  }
+            ContextMenu*        createContextMenu()     {  return parent->createContextMenu();  }
     virtual void                deactivateTrigger(Trigger* tg);
     virtual void                deClick(Trigger* tg, long num_frames, long buff_frame = 0);
             void                fillOutputBuffer(float* out_buff, long num_frames, long buff_frame, long mix_buff_frame);

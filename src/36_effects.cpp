@@ -72,7 +72,7 @@ protected:
         {
             if (param->getBoolValue())
             {
-                drawGlassRound(g, x1+1, y1+1, width-2, Colour(255,255,222), 1);
+                drawGlassRound(g, x1+1, y1+1, width-2, Colour(255,255,55), 1);
             }
             else
             {
@@ -773,8 +773,8 @@ void EQ3::handleParamUpdate(Parameter* param)
         dspCoreEqualizer.setBandBandwidth(f2, centrBW->getOutVal());
     }
 
-    if (container)
-        container->redraw();
+    if (parent)
+        parent->redraw();
 }
 
 void EQ3::reset()

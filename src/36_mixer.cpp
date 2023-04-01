@@ -133,11 +133,6 @@ void Mixer::remap()
 
         for(Instrument* instr : MInstrPanel->getInstrs())
         {
-            if (instr->device && instr->device->isPreviewOnly())
-            {
-                continue;
-            }
-
             if((yCh + InstrHeight > 0) && yCh < getH())
             {
                 instr->mixChannel->setCoords1(0, yCh, width, instr->getH());

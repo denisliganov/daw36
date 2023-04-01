@@ -17,13 +17,14 @@ public:
     virtual void                removeParam(Parameter* p);
     virtual void                updPosition() {};
     virtual void                updValue() {};
-    virtual float               getMinStep() {return 0;};
+    virtual float               getMinStep() { return 0; };
     virtual void                reset() {};
     virtual void                setFontId(FontId fId);
 
+            bool                bgSaved;
+
 protected:
 
-            bool                bgSaved;
             bool                headerOn;
             int                 headerHeight;
             Device36*           dev;

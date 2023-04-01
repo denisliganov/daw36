@@ -102,6 +102,7 @@ public:
             int                 getDrawWidth()      { return dwidth; };
             int                 getDrawHeight()     { return dheight; };
             Gobj*               getLastTouchedObject(int mx, int my);
+            Image*              getSnap()           { return snap; }
 
     virtual void                handleMouseMove(InputEvent& ev) {}
     virtual void                handleMouseWheel(InputEvent& ev) {};

@@ -260,7 +260,7 @@ void gArc(Graphics& g, int x, int y, int w, int h, float startAngle, float endAn
     Path p;
     p.addArc(x, y, w, h, startAngle, endAngle);
     g.fillPath (p);
-    g.strokePath (p, PathStrokeType (1));
+    g.strokePath (p, PathStrokeType (0));
 }
 
 void gPie(Graphics& g, int x, int y, int w, int h, float startAngle, float endAngle)
@@ -268,7 +268,7 @@ void gPie(Graphics& g, int x, int y, int w, int h, float startAngle, float endAn
     Path p;
     p.addPieSegment(x, y, w, h, startAngle, endAngle, 0);
     g.fillPath (p);
-    g.strokePath (p, PathStrokeType (1));
+    g.strokePath (p, PathStrokeType (0));
 }
 
 void gDrawTriangle(Graphics& g, int x1, int y1, int x2, int y2, int x3, int y3)
@@ -696,11 +696,25 @@ void drawGlassRound (Graphics& g,
     {
         ColourGradient cg (Colours::transparentBlack,
                            x + diameter * 0.5f, y + diameter * 0.5f,
+
                            Colours::black.withAlpha (0.5f * outlineThickness * colour.getFloatAlpha()),
-                           x, y + diameter * 0.5f, true);
+                           x, y + diameter * 0.5f, 
+                           true);
+
+        /*
+        ColourGradient cg (Colours::red,
+                           x + diameter * 0.5f, y + diameter * 0.5f,
+
+                           Colours::green,
+                           x, y + diameter * 0.5f, 
+                           true);
+        */
 
         cg.addColour (0.7, Colours::transparentBlack);
         cg.addColour (0.8, Colours::black.withAlpha (0.1f * outlineThickness));
+
+        //cg.addColour (0.7, Colours::transparentBlack);
+        //cg.addColour (0.8, Colours::black.withAlpha (0.1f * outlineThickness));
 
 #ifdef USE_OLD_JUCE
         g.setBrush(&GradientBrush(cg));
