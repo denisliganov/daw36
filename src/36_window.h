@@ -186,7 +186,7 @@ public:
             ~JuceComponent();
 
             void                addRepaint(int x, int y, int w, int h);
-            void                addChangedObject(Gobj* obj);
+            bool                addChangedObject(Gobj* obj);
             void                buttonClicked(Button* button);
             WinObject&          getWinObject() { return *winObject; }
     virtual void                handleWindowResize(int wx, int wh) {}

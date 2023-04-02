@@ -754,23 +754,6 @@ void JuceListener::redrawPerAction()
 
         std::list<Gobj*>  co = mainComp->getWinObject().changedObjects;
 
-        // If changed list has both parents and their childs, then remove all childs, since redrawing parent will
-        // redraw its childs as well
-
-cleanChilds:
-        for(Gobj* oP : co)
-        {
-            for(Gobj* oC : co)
-            {
-                if(oC->getParent() == oP)
-                {
-                    co.remove(oC);
-
-                    goto cleanChilds;
-                }
-            }
-        }
-
         for(Gobj* obj : co)
         {
             if (obj->isShown() && obj->isChanged())
@@ -1017,13 +1000,37 @@ void JuceComponent::addRepaint(int x,int y,int w,int h)
     ReleaseMutex(winObject->guiMutex);
 }
 
-void JuceComponent::addChangedObject(Gobj* obj)
+bool JuceComponent::addChangedObject(Gobj* obj)
 {
     WaitForSingleObject(winObject->guiMutex, INFINITE);
 
-    winObject->changedObjects.push_back(obj);
+    std::list<Gobj*>  co = winObject->changedObjects;
+
+    bool add = true;
+
+restart:
+    for(Gobj* o : co)
+    {
+        if(o->getParent() == obj)
+        {
+            co.remove(o);
+
+            goto restart;
+        }
+        else if (o == obj->getParent())
+        {
+            add = false;
+        }
+    }
+
+    winObject->changedObjects = co;
+
+    if (add)
+        winObject->changedObjects.push_back(obj);
 
     ReleaseMutex(winObject->guiMutex);
+
+    return add;
 }
 
 void JuceComponent::resized()

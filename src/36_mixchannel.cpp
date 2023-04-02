@@ -96,6 +96,46 @@ Eff* CreateEffect(std::string effalias)
 }
 
 
+
+
+SendControl::SendControl(std::string name, bool levelCtrl)
+{
+    setObjName(name);
+
+    sendLevel = new Parameter("Level", 0, 1, 0);
+
+    if (levelCtrl)
+    {
+        sendKnob = new Knob(sendLevel, true);
+    }
+    else
+    {
+        sendKnob = NULL;
+    }
+
+    chIndex = 36;   // Master
+}
+
+void SendControl::drawSelf(Graphics & g)
+{
+    fill(g, .18f);
+
+    setc(g, .6f);
+
+    txt(g, FontSmall, "SND", 2, 12);
+
+    txt(g, FontSmall, "--", 2, height - 1);
+}
+
+void SendControl::remap()
+{
+    if (sendKnob)
+    {
+        sendKnob->setCoords1(width-height, 0, height, height);
+    }
+}
+
+
 MixChannel::MixChannel()
 {
     init(NULL);
@@ -142,16 +182,25 @@ void MixChannel::init(Instrument* ins)
     addObject(panKnob = new Knob(panParam));
 
     addObject(vu = new ChanVU(true), ObjGroup_VU);
+
+    addObject(send1 = new SendControl("Send1", true));
+    addObject(send2 = new SendControl("Send2", true));
+    addObject(send3 = new SendControl("Send3", true));
+    addObject(send4 = new SendControl("Send4", true));
+
+    addObject(sendOut = new SendControl("OUT", false));
 }
 
 void MixChannel::remap()
 {
     if (MixViewSingle)
     {
+        int sendPanelHeight = 30;
+
         int xeff = 0;
         int yeff = 0;
         int totalHeight = 0;
-        int visibleHeight = height - FxPanelBottomHeight - 2;
+        int visibleHeight = height - FxPanelBottomHeight - sendPanelHeight - 2;
 
         confine(0, 1, width-1, visibleHeight);
 
@@ -175,11 +224,18 @@ void MixChannel::remap()
 
         confine();
 
-        int sendPanelHeight = 30;
+        int ySendControls = height - FxPanelBottomHeight;
+
+        send1->setCoords1(10, ySendControls, 50, sendPanelHeight);
+        send2->setCoords1(70, ySendControls, 50, sendPanelHeight);
+        send3->setCoords1(130, ySendControls, 50, sendPanelHeight);
+        send4->setCoords1(190, ySendControls, 50, sendPanelHeight);
+        sendOut->setCoords1(width - 60, ySendControls, 50, sendPanelHeight);
+
         int yControls = height - FxPanelBottomHeight + sendPanelHeight;
 
-        volKnob->setCoords1(10, yControls + 2, 100, 22);
-        panKnob->setCoords1(10, yControls + 32, 100, 22);
+        volKnob->setCoords1(8, yControls + 5, 100, 22);
+        panKnob->setCoords1(8, yControls + 32, 100, 22);
 
         vu->setCoords1(10, height - 20, 52, 18);
     }

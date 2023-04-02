@@ -15,7 +15,7 @@ class ParamObject : public Gobj
 public:
 
             ParamObject();
-
+            ~ParamObject();
     virtual void                addParam(Parameter* param);
             void                dequeueParamEnvelope(Trigger* tgenv);
             void                enqueueParamEnvelope(Trigger* tgenv);

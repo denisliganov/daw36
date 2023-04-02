@@ -16,18 +16,24 @@
 Eff* CreateEffect(std::string effname);
 
 
-class SendControl : public Gobj
+class SendControl : public Control
 {
 public:
-            SendControl(bool levelCtrl);
+            SendControl(std::string name, bool levelCtrl);
             MixChannel*         getChannel()    {   return sendChannel;  }
-            void                handleMouseWheel(InputEvent& ev);
-            void                handleMouseDown(InputEvent& ev);
-            void                handleMouseDrag(InputEvent& ev);
-protected:
+            void                handleMouseWheel(InputEvent& ev) {}
+            void                handleMouseDown(InputEvent& ev) {}
+            void                handleMouseDrag(InputEvent& ev) {}
 
+private:
+
+            void                drawSelf(Graphics & g);
+            void                remap();
+
+            int                 chIndex;
             Parameter*          sendLevel;
             MixChannel*         sendChannel;
+            Knob*               sendKnob;
 };
 
 class MixChannel : public Scrolled
@@ -71,27 +77,30 @@ public:
             void                setBufferSize(unsigned int bufferSize);
             void                setSampleRate(float sampleRate);
 
-protected:
+private:
 
             std::string         chanTitle;
             Gobj*               dropObj;
             std::list<Eff*>     effs;
+            float               inbuff[MAX_BUFF_SIZE*2];
             Instrument*         instr;
             MixChannel*         mchanout;
             bool                master;
+            int                 muteCount;
             Button36*           mutetoggle;
+            float               outbuff[MAX_BUFF_SIZE*2];
             Knob*               panKnob;
             Parameter*          panParam;
             bool                soloparam;
             Button36*           solotoggle;
+            SendControl*        send1;
+            SendControl*        send2;
+            SendControl*        send3;
+            SendControl*        send4;
+            SendControl*        sendOut;
             Parameter*          volParam;
             ChanVU*             vu;
             Knob*               volKnob;
-
-            int                 muteCount;
-
-            float               inbuff[MAX_BUFF_SIZE*2];
-            float               outbuff[MAX_BUFF_SIZE*2];
 
 };
 

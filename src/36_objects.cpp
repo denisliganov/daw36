@@ -441,12 +441,17 @@ void Gobj::redraw(bool change)
 
     if(change && window && window != this)
     {
-        if(objGroup != ObjGroup_Highlight)
+        if(objGroup == ObjGroup_Highlight)
         {
-            window->addChangedObject(this);
+            window->addRepaint(dx1, dy1, dwidth, dheight);
         }
-
-        window->addRepaint(dx1, dy1, dwidth, dheight);
+        else
+        {
+            if (window->addChangedObject(this))
+            {
+                window->addRepaint(dx1, dy1, dwidth, dheight);
+            }
+        }
     }
 }
 

@@ -393,7 +393,7 @@ void Knob::drawSelf(Graphics& g)
     if (!knobMode)
     {
         fill(g, .18f);
-        
+
         instr = NULL;
 
         drawSlider(g);

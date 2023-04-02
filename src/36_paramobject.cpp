@@ -25,6 +25,11 @@ ParamObject::ParamObject()
     invokeButton = NULL;
 }
 
+ParamObject::~ParamObject()
+{
+    
+}
+
 void ParamObject::addParam(Parameter* param)
 {
     param->setModule(this);
