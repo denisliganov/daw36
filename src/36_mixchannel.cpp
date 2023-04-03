@@ -98,20 +98,22 @@ Eff* CreateEffect(std::string effalias)
 
 
 
-SendControl::SendControl(std::string name, bool levelCtrl)
+SendControl::SendControl()
 {
-    setObjName(name);
+    //setObjName(name);
 
     sendLevel = new Parameter("Level", 0, 1, 0);
 
-    if (levelCtrl)
+    //if (levelCtrl)
     {
         sendKnob = new Knob(sendLevel, true);
     }
+    /*
     else
     {
         sendKnob = NULL;
     }
+    */
 
     chIndex = 36;   // Master
 }
@@ -181,14 +183,7 @@ void MixChannel::init(Instrument* ins)
     addObject(volKnob = new Knob(volParam));
     addObject(panKnob = new Knob(panParam));
 
-    addObject(vu = new ChanVU(true), ObjGroup_VU);
-
-    addObject(send1 = new SendControl("Send1", true));
-    addObject(send2 = new SendControl("Send2", true));
-    addObject(send3 = new SendControl("Send3", true));
-    addObject(send4 = new SendControl("Send4", true));
-
-    addObject(sendOut = new SendControl("OUT", false));
+    addObject(vu = new ChanVU(false), ObjGroup_VU);
 }
 
 void MixChannel::remap()
@@ -226,18 +221,12 @@ void MixChannel::remap()
 
         int ySendControls = height - FxPanelBottomHeight;
 
-        send1->setCoords1(10, ySendControls, 50, sendPanelHeight);
-        send2->setCoords1(70, ySendControls, 50, sendPanelHeight);
-        send3->setCoords1(130, ySendControls, 50, sendPanelHeight);
-        send4->setCoords1(190, ySendControls, 50, sendPanelHeight);
-        sendOut->setCoords1(width - 60, ySendControls, 50, sendPanelHeight);
-
         int yControls = height - FxPanelBottomHeight + sendPanelHeight;
 
         volKnob->setCoords1(8, yControls + 5, 100, 22);
         panKnob->setCoords1(8, yControls + 32, 100, 22);
 
-        vu->setCoords1(10, height - 20, 52, 18);
+        vu->setCoords1(0, height - 20, width/2, 20);
     }
     else
     {

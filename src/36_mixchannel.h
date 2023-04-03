@@ -19,7 +19,7 @@ Eff* CreateEffect(std::string effname);
 class SendControl : public Control
 {
 public:
-            SendControl(std::string name, bool levelCtrl);
+            SendControl();
             MixChannel*         getChannel()    {   return sendChannel;  }
             void                handleMouseWheel(InputEvent& ev) {}
             void                handleMouseDown(InputEvent& ev) {}
@@ -93,11 +93,8 @@ private:
             Parameter*          panParam;
             bool                soloparam;
             Button36*           solotoggle;
-            SendControl*        send1;
-            SendControl*        send2;
-            SendControl*        send3;
-            SendControl*        send4;
-            SendControl*        sendOut;
+
+            SendControl         send[NUM_CHANNELS + 1];     // Num channels plus master
             Parameter*          volParam;
             ChanVU*             vu;
             Knob*               volKnob;

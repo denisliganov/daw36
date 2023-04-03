@@ -582,6 +582,8 @@ Vst2Plugin::Vst2Plugin(std::string path)
 
         updatePresets();
     }
+
+    setWH(10, 10);
 }
 
 Vst2Plugin::~Vst2Plugin()

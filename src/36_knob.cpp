@@ -205,7 +205,8 @@ void Knob::drawText(Graphics& g)
 
     setc(g, .6f);
     if (unitstrLen > 0)
-        txt(g, fontId, param->getName() + "." + param->getUnitString(), textX, textY);
+        //txt(g, fontId, param->getName() + "." + param->getUnitString(), textX, textY);
+        txt(g, fontId, param->getName(), textX, textY);
     else
         txt(g, fontId, param->getName(), textX, textY);
 
@@ -213,13 +214,13 @@ void Knob::drawText(Graphics& g)
     if (instr)
         instr->setMyColor(g, 1.f);
     else
-        setc(g, .72f);
+        setc(g, .76f);
     //txt(g, fontId, param->getValString(), textX + namestrLen + 6, 12);
     //txt(g, fontId, param->getValString(), textX + 60, 12);
     txt(g, fontId, param->getValString(), width - valstrLen - 2, textY);
 
-    setc(g, .6f);
-    //txt(g, fontId, param->getUnitString(), width - unitstrLen - 2, 12);
+    setc(g, .52f);
+    txt(g, fontId, param->getUnitString(), width - unitstrLen - 2, height - 3);
 }
 
 void Knob::drawSlider(Graphics& g)
@@ -258,16 +259,16 @@ void Knob::drawSlider(Graphics& g)
     if (instr)
         instr->setMyColor(g, .3f);
     else
-        setc(g, .3f);
+        setc(g, .36f);
 
     fillx(g, xstart, ysl+1, w, sh-2);
 
     //drawGlassRect(g, x1 + (float)xstart, y1 + (float)(height - sh+1), w, sh-1, Colour(180, 120, 120), 0, 0, true, true, true, true);
 
     if (instr)
-        instr->setMyColor(g, .0f);
+        instr->setMyColor(g, .34f);
     else
-        setc(g, 0.0f);
+        setc(g, .1f);
 
     fillx(g, xoffs, ysl, 1, sh);
 
@@ -290,10 +291,6 @@ void Knob::drawKnob(Graphics& g)
     }
     else
     {
-        //gSetMonoColor(g, .5f, 1);
-        //gPie(g, x1 + 1, y1+1, width-2, height-2, PI - angleOffset, PI + angleOffset);
-        //gSetMonoColor(g, .3f);
-        //gEllipseFill(g, x1 + 3, y1 + 3, width-6, height-6);
         //float s = 1.f/2*PI*((width-2)/2);
 
         if (0)
@@ -303,6 +300,16 @@ void Knob::drawKnob(Graphics& g)
         }
         else
         {
+            //setc(g, .2f);
+            //gPie(g, x1, y1, width, height, PI - angleOffset, PI + angleOffset);
+            //gArc(g, x1, y1, width, height, PI - angleOffset, PI + angleOffset);
+
+            if(instr)
+                instr->setMyColor(g, 1.f);
+            else
+                parent->setMyColor(g, 1.f);
+            //gEllipseFill(g, x1+1, y1+1, width-2, height-2);
+
             Colour clr;
 
             if (instr)

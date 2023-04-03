@@ -30,7 +30,7 @@ ChanVU::ChanVU(bool vert)
 
     leftVal = rightVal = 0;
 
-    decrement = .04f;
+    decrement = .02f;
 
     maxValue = DAW_VOL_RANGE; // 1.5f;
 }
@@ -129,11 +129,11 @@ void ChanVU::drawSelf(Graphics & g)
 
         if(i)
         {
-            i->setMyColor(g, .4f);
+            i->setMyColor(g, .3f);
         }
         else
         {
-            gSetMonoColor(g, .4f);
+            gSetMonoColor(g, .3f);
         }
 
         int x = 0;
@@ -167,7 +167,7 @@ void ChanVU::drawSelf(Graphics & g)
 
             if(x < right)
             {
-                 gLineVertical(g, x1 + x, y1 + height/2 + 1, y2);
+                gLineVertical(g, x1 + x, y1 + height/2 + 1, y2);
             }
 
             x += 1;

@@ -290,7 +290,7 @@ void InstrPanel::colorizeInstruments()
             hue -= 1;
         }
 
-        instr->defineHueColor(hue, 0.4f);
+        instr->defineHueColor(hue, 0.5f);
 
         idx++;
     }

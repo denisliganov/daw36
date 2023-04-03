@@ -114,7 +114,7 @@ MainWinObject::MainWinObject()
     InstrScrollerWidth =    16;
     InstrHeight =           32;
     FxPanelMaxWidth =       380;
-    FxPanelScrollerWidth =  20;
+    FxPanelScrollerWidth =  10;
     FxPanelBottomHeight =   130;
     LeftGap =               26;
     LineNumWidth =          18;
