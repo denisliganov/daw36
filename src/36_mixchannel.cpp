@@ -188,20 +188,23 @@ void MixChannel::init(Instrument* ins)
 
 void MixChannel::remap()
 {
+    int w = width - 32;
+
     if (MixViewSingle)
     {
         int sendPanelHeight = 30;
 
-        int xeff = 0;
+        int xeff = FxPanelScrollerWidth + 1;
         int yeff = 0;
         int totalHeight = 0;
         int visibleHeight = height - FxPanelBottomHeight - 2;
+        int gap = 5;
 
-        confine(0, 1, width-1, visibleHeight);
+        confine(0, 1, w - 1, visibleHeight);
 
         for (Eff* eff : effs)
         {
-            totalHeight += eff->getH() + 1;
+            totalHeight += eff->getH() + gap;
         }
 
         vscr->updBounds(totalHeight, visibleHeight, vscr->getOffset());
@@ -210,12 +213,12 @@ void MixChannel::remap()
         {
             eff->showDevice(true);
 
-            eff->setCoords1(xeff, 1 + yeff - int(vscr->getOffset()), eff->getW(), eff->getH());
+            eff->setCoords1(xeff, 1 + yeff - int(vscr->getOffset()), w - xeff - 4, eff->getH());
 
-            yeff += eff->getH() + 5;
+            yeff += eff->getH() + gap;
         }
 
-        vscr->setCoords1(width - FxPanelScrollerWidth - 2, 0, FxPanelScrollerWidth + 2, visibleHeight);
+        vscr->setCoords1(0, 0, FxPanelScrollerWidth, visibleHeight);
 
         confine();
 
@@ -223,14 +226,14 @@ void MixChannel::remap()
 
         int yControls = height - FxPanelBottomHeight + sendPanelHeight;
 
-        volKnob->setCoords1(8, yControls + 5, 100, 22);
-        panKnob->setCoords1(8, yControls + 32, 100, 22);
+        volKnob->setCoords1(6, yControls + 5, 100, 22);
+        panKnob->setCoords1(6, yControls + 32, 100, 22);
 
-        vu->setCoords1(0, height - 20, width/2, 20);
+        vu->setCoords1(6, height - 24, w/2, 20);
     }
     else
     {
-        confine(0, 0, width - 1, height);
+        confine(0, 0, w - 1, height);
 
         int xeff = 0;
 
@@ -255,22 +258,24 @@ void MixChannel::drawSelf(Graphics& g)
 {
     fill(g, .1f);
 
+    int w = width - 32;
+
     if (MixViewSingle)
     {
         int sendPanelHeight = 30;
 
         setc(g, .4f);
-        fillx(g, 0, height - FxPanelBottomHeight, width, FxPanelBottomHeight);
+        fillx(g, 0, height - FxPanelBottomHeight, w, FxPanelBottomHeight);
         setc(g, .34f);
-        fillx(g, 0, height - FxPanelBottomHeight, width, sendPanelHeight);
+        fillx(g, 0, height - FxPanelBottomHeight, w, sendPanelHeight);
 
         setc(g, .46f);
-        rectx(g, 0, height - FxPanelBottomHeight, width, FxPanelBottomHeight);
+        rectx(g, 0, height - FxPanelBottomHeight, w, FxPanelBottomHeight);
     }
     else
     {
         setc(g, .2f);
-        fillx(g, 0, 0, width, height);
+        fillx(g, 0, 0, w, height);
     }
 }
 

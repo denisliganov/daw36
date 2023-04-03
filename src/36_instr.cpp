@@ -268,7 +268,6 @@ void Instrument::drawSelf(Graphics& g)
     {
         Gobj::setMyColor(g, .7f);
         //setc(g, 1.f);
-
         fillx(g, 0, 0, width, height);
 
         Gobj::setMyColor(g, .5f);

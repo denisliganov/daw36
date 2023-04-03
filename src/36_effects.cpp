@@ -70,14 +70,19 @@ protected:
 
         void drawSelf(Graphics& g)
         {
+            setc(g, 0.18f);
+            fillx(g, 0, 0, height, height);
+
             if (param->getBoolValue())
             {
-                drawGlassRound(g, x1+1, y1+1, width-2, Colour(255,255,55), 1);
+                setc(g, 0xffFFDD80);
+                fillx(g, 1, 1, height-2, height-2);
             }
-            else
-            {
-                drawGlassRound(g, x1+1, y1+1, width-2, Colour(55, 55, 55), 1);
-            }
+
+            //if (param->getBoolValue())
+            //    drawGlassRound(g, x1+1, y1+1, width-2, Colour(255,255,55), 1);
+            //else
+            //    drawGlassRound(g, x1+1, y1+1, width-2, Colour(55, 55, 55), 1);
         }
 
         void handleMouseDrag(InputEvent & ev)   { parent->handleMouseDrag(ev); }
@@ -190,7 +195,7 @@ void Eff::remap()
 {
     if (MixViewSingle && device->isON())
     {
-        enableButt->setCoords1(width - 25, 3, 20, 20);
+        enableButt->setCoords1(width - 20, 0, 20, 20);
         device->setCoords1(0, 0, device->getW(), device->getH());
     }
     else
