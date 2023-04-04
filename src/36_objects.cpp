@@ -168,7 +168,8 @@ void Gobj::removeObject(Gobj* obj)
 void Gobj::createSnap()
 {
     if (window)
-    {
+    {
+
         if (snap)
         {
             delete snap;
@@ -448,7 +449,8 @@ void Gobj::redraw(bool change)
         else
         {
             if (window->addChangedObject(this))
-            {
+            {
+
                 window->addRepaint(dx1, dy1, dwidth, dheight);
             }
         }

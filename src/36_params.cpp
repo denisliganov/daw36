@@ -54,7 +54,7 @@ Parameter::Parameter(std::string name, ParamType param_type)
     }
     else if (type == Param_Vol)
     {
-        paramInit(name, Param_Vol, 0.f, DAW_VOL_RANGE, 1.f, Units_Percent);
+        paramInit(name, Param_Vol, 0.f, DAW_VOL_RANGE, 1.f, Units_dB);
     }
     else if (type == Param_Pan)
     {

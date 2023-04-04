@@ -75,7 +75,7 @@ protected:
 
             if (param->getBoolValue())
             {
-                setc(g, 0.38f);
+                setc(g, 0.8f);
                 fillx(g, 1, 1, height-2, height-2);
             }
 

@@ -20,23 +20,24 @@ class SendControl : public Control
 {
 public:
             SendControl();
-            MixChannel*         getChannel()    {   return sendChannel;  }
-            void                handleMouseWheel(InputEvent& ev) {}
-            void                handleMouseDown(InputEvent& ev) {}
-            void                handleMouseDrag(InputEvent& ev) {}
-
+            MixChannel*         getOutChannel()         {   return outChannel;  }
+            MixChannel*         getInChannel()         {   return inChannel;  }
 private:
 
             void                drawSelf(Graphics & g);
             void                remap();
+            void                handleMouseWheel(InputEvent& ev) {}
+            void                handleMouseDown(InputEvent& ev) {}
+            void                handleMouseDrag(InputEvent& ev) {}
 
             int                 chIndex;
             Parameter*          sendLevel;
-            MixChannel*         sendChannel;
             Knob*               sendKnob;
+            MixChannel*         inChannel;
+            MixChannel*         outChannel;
 };
 
-class MixChannel : public Scrolled
+class MixChannel : public ParamObject
 {
 friend  Audio36;
 friend  ChanVU;
@@ -98,6 +99,7 @@ private:
             Parameter*          volParam;
             ChanVU*             vu;
             Knob*               volKnob;
+            Scroller*           vscr;
 
 };
 

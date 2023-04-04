@@ -307,15 +307,17 @@ void Knob::drawKnob(Graphics& g)
             if(instr)
                 instr->setMyColor(g, 1.f);
             else
-                parent->setMyColor(g, 1.f);
+                //parent->setMyColor(g, 1.f);
+                setc(g, .3f);
+            
             //gEllipseFill(g, x1+1, y1+1, width-2, height-2);
 
-            Colour clr;
+            Colour clr = Colour(1.f, 0.f, 1.f, 1.f);
 
             if (instr)
             {
                 float s = .4f;
-                float b = .58f;
+                float b = .68f;
                 float a = 1;
 
                 clr = Colour(instr->getColorHue(), s, b, a);

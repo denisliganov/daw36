@@ -16,6 +16,7 @@
 #include "36_instrpanel.h"
 #include "36_menu.h"
 #include "36_project.h"
+#include "36_parambox.h"
 #include "36_draw.h"
 #include "36_keyboard.h"
 #include "36_audio_dev.h"
@@ -95,6 +96,39 @@ Eff* CreateEffect(std::string effalias)
     return new Eff(dev);
 }
 
+
+
+class ChanOutToggle : public ToggleBox
+{
+public:
+
+    ChanOutToggle(Parameter* ptg) : ToggleBox(ptg)
+    {
+        ///
+    }
+
+protected:
+
+    void drawSelf(Graphics& g)
+    {
+        setc(g, 0.18f);
+        fillx(g, 0, 0, height, height);
+
+        if (param->getBoolValue())
+        {
+            setc(g, 0.8f);
+            fillx(g, 1, 1, height - 2, height - 2);
+        }
+
+        //if (param->getBoolValue())
+        //    drawGlassRound(g, x1+1, y1+1, width-2, Colour(255,255,55), 1);
+        //else
+        //    drawGlassRound(g, x1+1, y1+1, width-2, Colour(55, 55, 55), 1);
+    }
+
+    void handleMouseDrag(InputEvent& ev) { parent->handleMouseDrag(ev); }
+    void handleMouseWheel(InputEvent& ev) { parent->handleMouseWheel(ev); }
+};
 
 
 
@@ -184,6 +218,19 @@ void MixChannel::init(Instrument* ins)
     addObject(panKnob = new Knob(panParam));
 
     addObject(vu = new ChanVU(false), ObjGroup_VU);
+
+    addObject(vscr = new Scroller(true));
+
+    for (int i = 0; i < NUM_CHANNELS + 1; i++)
+    {
+        Parameter* p = new Parameter("snd", Param_Default);      
+        addParam(p);
+        addObject(new Knob(p, true), "knob.snd");
+
+        p = new Parameter("out", Param_Toggle);
+
+        addObject(new ChanOutToggle(p), "tg.out");
+    }
 }
 
 void MixChannel::remap()
@@ -230,6 +277,16 @@ void MixChannel::remap()
         panKnob->setCoords1(6, yControls + 32, 100, 22);
 
         vu->setCoords1(6, height - 24, w/2, 20);
+
+        int yKnob = 0;
+        for (Gobj* o : objs)
+        {
+            if (o->getObjId() == "knob.snd")
+            {
+                o->setCoords1(width - 23, yKnob + 1, 20, 20);
+                yKnob += InstrHeight + 1;
+            }
+        }
     }
     else
     {

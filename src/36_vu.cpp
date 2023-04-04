@@ -99,7 +99,7 @@ void ChanVU::drawSelf(Graphics & g)
         int right = (int)(height*getR());
         int both = (int)(height*((getL() + getR())/2.f));
 
-        fill(g, .4f);
+        fill(g, .24f);
 
         if(i)
         {
@@ -108,7 +108,7 @@ void ChanVU::drawSelf(Graphics & g)
         else
         {
             //gSetMonoColor(g, .99f);
-            gSetColor2(g, 0xffFFB040, 1);
+            gSetColor2(g, 0xff80E0800, 1);
         }
 
         int y = 0;
