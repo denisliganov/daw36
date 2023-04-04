@@ -315,7 +315,7 @@ void Knob::drawKnob(Graphics& g)
             if (instr)
             {
                 float s = .4f;
-                float b = .66f;
+                float b = .58f;
                 float a = 1;
 
                 clr = Colour(instr->getColorHue(), s, b, a);
@@ -409,6 +409,7 @@ void Knob::drawSelf(Graphics& g)
     }
 
     // Knob
+
     if (knobMode)
     {
         drawKnob(g);

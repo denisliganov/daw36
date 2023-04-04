@@ -75,7 +75,7 @@ protected:
 
             if (param->getBoolValue())
             {
-                setc(g, 0xffFFDD80);
+                setc(g, 0.38f);
                 fillx(g, 1, 1, height-2, height-2);
             }
 
@@ -195,7 +195,7 @@ void Eff::remap()
 {
     if (MixViewSingle && device->isON())
     {
-        enableButt->setCoords1(width - 20, 0, 20, 20);
+        enableButt->setCoords1(width - 12, 0, 12, 12);
         device->setCoords1(0, 0, device->getW(), device->getH());
     }
     else

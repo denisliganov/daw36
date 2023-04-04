@@ -61,22 +61,24 @@ void Browser::remap()
     int cw = 200;
     float lstHeight = (float)(height - cy - 1);
 
+    int lw = width/7;
+
     int xLists = cx;
 
     int fileBrwWidth = 300;
 
-    confine(xLists, cy, width - fileBrwWidth, height); // no args -> reset bounds
+    confine(xLists, cy, width - lw, height); // no args -> reset bounds
 
     setObjSpacing(2);
 
     putStart(xLists, cy);
 
-    putRight(internalList1, 250, lstHeight);
-    putRight(sampleList1, 250, lstHeight);
-    putRight(plugList, 250, lstHeight);
-    putRight(vstList1, 250, lstHeight);
-    putRight(vstList2, 250, lstHeight);
-    putRight(projectsList1, 250, lstHeight);
+    putRight(internalList1, lw, lstHeight);
+    putRight(sampleList1, lw, lstHeight);
+    putRight(plugList, lw, lstHeight);
+    putRight(vstList1, lw, lstHeight);
+    putRight(vstList2, lw, lstHeight);
+    putRight(projectsList1, lw, lstHeight);
 
 
     //for (ListBoxx* lb : listBoxes)
@@ -84,7 +86,7 @@ void Browser::remap()
 
     confine();
 
-    fileBox->setCoords1(width - fileBrwWidth + 2, cy, fileBrwWidth - 4, lstHeight);
+    fileBox->setCoords1(width - lw + 2, cy, lw - 4, lstHeight);
 }
 
 
