@@ -102,32 +102,72 @@ class ChanOutToggle : public ToggleBox
 {
 public:
 
-    ChanOutToggle(Parameter* ptg) : ToggleBox(ptg)
+    ChanOutToggle(MixChannel* chan, Parameter* par) : ToggleBox(par)
     {
-        ///
+        channel = chan;
+        par->setModule(channel);
     }
 
-protected:
+private:
 
     void drawSelf(Graphics& g)
     {
-        setc(g, 0.18f);
-        fillx(g, 0, 0, height, height);
-
         if (param->getBoolValue())
-        {
-            setc(g, 0.8f);
-            fillx(g, 1, 1, height - 2, height - 2);
-        }
-
-        //if (param->getBoolValue())
-        //    drawGlassRound(g, x1+1, y1+1, width-2, Colour(255,255,55), 1);
-        //else
-        //    drawGlassRound(g, x1+1, y1+1, width-2, Colour(55, 55, 55), 1);
+            drawGlassRound(g, x1+1, y1+1, width-2, Colour(255,255,255), 1);
+        else
+            drawGlassRound(g, x1+1, y1+1, width-2, Colour(55, 55, 55), 1);
     }
 
-    void handleMouseDrag(InputEvent& ev) { parent->handleMouseDrag(ev); }
+    std::string ChanOutToggle::getHint()
+    {
+        std::string hint = param->getName().data();
+    
+        hint += ": ";
+        hint += param->getValString();
+    
+        return hint;
+    }
+
+    //void handleMouseDown(InputEvent & ev) {  }
     void handleMouseWheel(InputEvent& ev) { parent->handleMouseWheel(ev); }
+
+    MixChannel*     channel;
+    MixChannel*     outChannel;
+};
+
+
+class SendKnob : public Knob
+{
+public:
+
+    SendKnob(MixChannel* chan, Parameter* par) : Knob(par, true)
+    {
+        channel = chan;
+
+        setParam(par);
+
+        par->setModule(channel);
+    }
+
+    MixChannel* getOutChannel()
+    {
+        return outChannel;
+    }
+
+private:
+
+    std::string getHint()
+    {
+        std::string hint = param->getName().data();
+
+        hint += ": ";
+        hint += param->getValString();
+
+        return hint;
+    }
+
+    MixChannel*     channel;
+    MixChannel*     outChannel;
 };
 
 
@@ -211,7 +251,7 @@ void MixChannel::init(Instrument* ins)
         volKnob = NULL;
     }
 
-    addParam(volParam = new Parameter("Volume", Param_Vol));
+    addParam(volParam = new Parameter("Volume", Param_Vol, 0.f, DAW_VOL_RANGE, 1.f, Units_Percent));
     addParam(panParam = new Parameter("Panning", Param_Pan));
 
     addObject(volKnob = new Knob(volParam));
@@ -223,13 +263,19 @@ void MixChannel::init(Instrument* ins)
 
     for (int i = 0; i < NUM_CHANNELS + 1; i++)
     {
-        Parameter* p = new Parameter("snd", Param_Default);      
+        Parameter* p = new Parameter("snd", Param_Default);
+
         addParam(p);
-        addObject(new Knob(p, true), "knob.snd");
+
+        Knob* k = new SendKnob(this, p);
+
+        k->setHint("Send");
+
+        addObject(k, "knob.snd");
 
         p = new Parameter("out", Param_Toggle);
 
-        addObject(new ChanOutToggle(p), "tg.out");
+        addObject(new ChanOutToggle(this, p), "tg.out");
     }
 }
 
@@ -270,7 +316,6 @@ void MixChannel::remap()
         confine();
 
         int ySendControls = height - FxPanelBottomHeight;
-
         int yControls = height - FxPanelBottomHeight + sendPanelHeight;
 
         volKnob->setCoords1(6, yControls + 5, 100, 22);
@@ -279,11 +324,18 @@ void MixChannel::remap()
         vu->setCoords1(6, height - 24, w/2, 20);
 
         int yKnob = 0;
+
         for (Gobj* o : objs)
         {
             if (o->getObjId() == "knob.snd")
             {
-                o->setCoords1(width - 23, yKnob + 1, 20, 20);
+                o->setCoords1(width - 32, yKnob + 1, 20, 20);
+            }
+
+            if (o->getObjId() == "tg.out")
+            {
+                o->setCoords1(width - 12, yKnob + 5, 12, 12);
+
                 yKnob += InstrHeight + 1;
             }
         }
@@ -726,6 +778,21 @@ bool MixChannel::handleObjDrop(Gobj * obj,int mx,int my,unsigned flags)
     return false;
 }
 
+void MixChannel::handleParamUpdate(Parameter * param)
+{
+    if (param->getName() == "snd")
+    {
+        SendKnob* sk = dynamic_cast<SendKnob*>(param->getControl());
+
+        if (sk)
+        {
+            MixChannel* outChan = sk->getOutChannel();
+
+            int a = 1;
+        }
+    }
+}
+
 void MixChannel::placeEffectBefore(Eff* eff, Eff* before)
 {
     WaitForSingleObject(MixerMutex, INFINITE);
@@ -854,6 +921,7 @@ void MixChannel::process(int num_frames, float* out_buff)
 
             if(volParam != NULL && panParam != NULL)
             {
+                /*
                 if(volParam->envelopes != NULL)
                 {
                     //venv = (Envelope*)((Command*)volParam->envelopes->el)->paramedit;
@@ -862,7 +930,7 @@ void MixChannel::process(int num_frames, float* out_buff)
                 if(panParam->envelopes != NULL)
                 {
                     ///penv = (Envelope*)((Command*)panParam->envelopes->el)->paramedit;
-                }
+                }*/
 
                 volv = volParam->getOutVal();
 

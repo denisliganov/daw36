@@ -55,6 +55,9 @@ friend  Vst2Host;
 //  Former "external" part of VST module
 
 public:
+             Vst2Plugin(std::string path);
+    virtual ~Vst2Plugin();
+
             void                    addNoteEvent(int note, long num_frames, long frame_phase, long total_frames, float volume);
             void                    checkBounds(Note* gnote, Trigger* tg, long num_frames);
     virtual SubWindow*              createWindow();
@@ -71,39 +74,6 @@ public:
             void                    stopAllNotes();
             void                    vstProcess(float* in_buff, long num_frames, long buff_frame);
 
-//  Former "internal" part
-
-private:
-            AEffect                *aeff;               // Steinberg base struct
-            SubWindow*              vstGuiWin;
-            bool                    needIdle;
-            bool                    wantsMidi;
-
-            long                    vstIndex;           // Index in VSTHost plugin array
-            char*                   vstPath;
-            char*                   vstDir;
-            HANDLE                  vstMutex;
-            HMODULE                 hmodule;
-            bool                    generator;
-            int                     numIns;
-            int                     numOuts;
-            bool                    guiOpen;
-            bool                    inEditIdle;
-            bool                    settingProgram;
-
-            float                 **inBuffs;
-            float                 **outBuffs;
-            bool                    isReplacing;
-            bool                    _hasGui;
-            bool                    _usesChunks;
-
-            VstMidiEvent            midiEvents[800];
-            long                    numEvents;
-
-public:
-
-            Vst2Plugin(std::string path);
-   virtual ~Vst2Plugin();
             void                    loadAndInit(const char *path);
             bool                    loadFromDll(const char *nm) throw(...);
             long                    vstDispatch(const int opcode, const int index, const int value, void* const ptr, float opt);
@@ -141,24 +111,12 @@ public:
             bool                    setPreset(std::string pname);
             bool                    setPreset(long index);
 
-
             long                    getCurrentPreset();
             void                    save(XmlElement* xmlEff);
             void                    load(XmlElement* xmlEff);
             const String            getCurrPresetName();
             void                    setStateInformation (const void* data, int sizeInBytes);
             void                    getStateInformation (MemoryBlock& destData);
-
-//// Stolen from JUCE:
-            void                    setChunkData(const char* data, int size, bool isPreset);
-            void                    getChunkData(MemoryBlock& mb, bool isPreset, int maxSizeMB);
-            bool                    saveToFXBFile(MemoryBlock& dest, bool isFXB, int maxSizeMB);
-            bool                    loadFromFXBFile(const void* const data, const int dataSize);
-            void                    setParamsInProgramBlock (fxProgram* const prog);
-            void                    restoreFromTempParameterStore(const MemoryBlock& m);
-            void                    createTempParameterStore(MemoryBlock& dest);
-            bool                    restoreProgramSettings(const fxProgram* const prog);
-////
             void                    setIndex(int nNewIndex) { vstIndex = nNewIndex; }
             long                    getIndex() { return vstIndex; }
             bool                    loadBank(char *objName);
@@ -168,6 +126,19 @@ public:
             void*                   onOpenWindow(VstWindow* window);
             bool                    onCloseWindow(VstWindow* window);
             bool                    onIOChanged();
+
+//// Taken from JUCE:
+            void                    setChunkData(const char* data, int size, bool isPreset);
+            void                    getChunkData(MemoryBlock& mb, bool isPreset, int maxSizeMB);
+            bool                    saveToFXBFile(MemoryBlock& dest, bool isFXB, int maxSizeMB);
+            bool                    loadFromFXBFile(const void* const data, const int dataSize);
+            void                    setParamsInProgramBlock (fxProgram* const prog);
+            void                    restoreFromTempParameterStore(const MemoryBlock& m);
+            void                    createTempParameterStore(MemoryBlock& dest);
+            bool                    restoreProgramSettings(const fxProgram* const prog);
+////
+
+protected:
 
             void                    aeffOpen();
             void                    aeffClose();
@@ -223,6 +194,35 @@ public:
 // VST 2.4 extensions
             long                    aeffGetNumMidiInputChannels();
             long                    aeffGetNumMidiOutputChannels();
+
+//  Former "internal" part
+
+private:
+            AEffect                *aeff;               // Steinberg base struct
+            SubWindow*              vstGuiWin;
+            bool                    needIdle;
+            bool                    wantsMidi;
+
+            long                    vstIndex;           // Index in VSTHost plugin array
+            char*                   vstPath;
+            char*                   vstDir;
+            HANDLE                  vstMutex;
+            HMODULE                 hmodule;
+            bool                    generator;
+            int                     numIns;
+            int                     numOuts;
+            bool                    guiOpen;
+            bool                    inEditIdle;
+            bool                    settingProgram;
+
+            float                 **inBuffs;
+            float                 **outBuffs;
+            bool                    isReplacing;
+            bool                    _hasGui;
+            bool                    _usesChunks;
+
+            VstMidiEvent            midiEvents[800];
+            long                    numEvents;
 };
 
 

@@ -65,8 +65,6 @@ void Browser::remap()
 
     int xLists = cx;
 
-    int fileBrwWidth = 300;
-
     confine(xLists, cy, width - lw, height); // no args -> reset bounds
 
     setObjSpacing(2);

@@ -10,7 +10,7 @@
 
 
 #include <list>
-
+#include <vector>
 
 
 
@@ -36,7 +36,7 @@ public:
             void                generateAll(long num_frames, long mixbuffframe);
             Instrument*         getInstrFromLine(int trkLine);
             Instrument*         getCurrInstr();
-        std::list<Instrument*>& getInstrs() { return instrs; }
+        std::vector<Instrument*>& getInstrs() { return instrs; }
             bool                handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my);
             bool                handleObjDrop(Gobj * obj,int mx,int my, unsigned int flags);
             void                handleChildEvent(Gobj* obj, InputEvent& ev);
@@ -60,8 +60,8 @@ public:
             Button36*           btHideFX;
             Button36*           allChannelsView;;
 
-protected:
-            MixChannel*         currMixChannel;
+private:
+
             Gobj*               dropObj;
             InstrHighlight*     instrHighlight;
             bool                fxShowing;
@@ -72,7 +72,8 @@ protected:
             Parameter*          masterVolume;
 
             std::list<Instrument*>::iterator    currInstr;
-            std::list<Instrument*>              instrs;
+            std::vector<Instrument*>              instrs;
+            Instrument*         curr;
 };
 
 

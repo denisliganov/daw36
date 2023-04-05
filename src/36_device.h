@@ -29,10 +29,13 @@ typedef enum InstrType
 
 class Device36 : public ParamObject
 {
-friend InstrPanel;
-friend Instrument;
-friend Eff;
-friend Grid;
+friend  InstrPanel;
+friend  Instrument;
+friend  Eff;
+friend  Grid;
+friend  MixChannel;
+friend  Vst2Plugin;
+friend  Sample;
 
 public:
             Device36();
@@ -65,7 +68,6 @@ public:
             void                handleMouseDrag(InputEvent& ev);
             bool                isEnabled()             { return enabled->getBoolValue(); }
             bool                isWindowVisible();
-            bool                isPreviewOnly()         { return previewOnly; }
     virtual void                preProcessTrigger(Trigger* tg, bool* skip, bool* fill, long num_frames, long buff_frame = 0);
     virtual void                postProcessTrigger(Trigger* tg, long num_frames = 0, long buff_frame = 0);
     virtual long                processTrigger(Trigger* tg, long num_frames, long remaining, long buff_frame);
@@ -88,6 +90,7 @@ public:
             void                setVU(ChanVU* v) { vu = v; }
 
 
+private:
             float               lastNoteLength;
             float               lastNoteVol;
             float               lastNotePan;
@@ -95,7 +98,6 @@ public:
             int                 muteCount;
             std::list<Note*>    notes;
 
-protected:
             std::list<Trigger*> activeTriggers;
             float               cfsV;
             int                 devIdx;
@@ -106,7 +108,6 @@ protected:
             float               outBuff[MAX_BUFF_SIZE*2];      // Data for whole session
             Parameter*          pan;
             std::vector<std::string>    presets;
-            bool                previewOnly;
             float               pan0, pan1, pan2, pan3;
             int                 rampCount;
             float               rampCounterV;

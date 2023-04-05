@@ -18,7 +18,7 @@ Knob::Knob(Parameter* par, bool knob)
 {
     setFontId(FontSmall);
 
-    addParam(par);
+    setParam(par);
 
     angleRange = PI * 1.5f;
     angleOffset = float(2*PI - angleRange)*.5f;
@@ -312,12 +312,15 @@ void Knob::drawKnob(Graphics& g)
             
             //gEllipseFill(g, x1+1, y1+1, width-2, height-2);
 
-            Colour clr = Colour(1.f, 0.f, 1.f, 1.f);
+            Colour clr = Colour(1.f, 0.f, .22f, 1.f);
 
-            if (instr)
+            if (objId.find("knob.snd") != std::string::npos)
+            {
+            }
+            else if (instr)
             {
                 float s = .4f;
-                float b = .68f;
+                float b = .6f;
                 float a = 1;
 
                 clr = Colour(instr->getColorHue(), s, b, a);
@@ -353,7 +356,6 @@ void Knob::drawKnob(Graphics& g)
         //gEllipseFill(g, x1, y1, width, height);
 
         createSnap();
-        //window->makeSnapshot(&snap, xRel, yRel, width, height, instr->getSnap());
 
         bgSaved = true;
         savedHeight = h;

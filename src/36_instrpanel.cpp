@@ -100,9 +100,7 @@ InstrPanel::InstrPanel(Mixer* mixer)
 {
     fxShowing = false;
 
-    currInstr = instrs.begin();
-
-    currMixChannel = NULL;
+    //currInstr = NULL;
 
     devDummy = new Device36();
     devDummy->setTouchable(false);
@@ -394,9 +392,6 @@ int InstrPanel::getNumInstrs()
 
     for(Instrument* instr : instrs)
     {
-        //if (instr->getDevice() && instr->getDevice()->previewOnly)
-        //    continue;
-
         num++;
     }
 
@@ -806,11 +801,6 @@ void InstrPanel::remap()
 
     for (Instrument* i : instrs)
     {
-        if (i->getDevice()->previewOnly)
-        {
-            //continue;
-        }
-
         if((yoffs + i->getH()) >= 0 && yoffs <= instrListHeight)
         {
             i->setCoords1(width - InstrControlWidth + 1, instrListY + yoffs, InstrControlWidth - 11, InstrHeight);

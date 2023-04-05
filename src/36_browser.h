@@ -25,7 +25,7 @@ public:
             void                handleChildEvent(Gobj * obj, InputEvent& ev);
             void                remap();
 
-protected:
+private:
 
             Instrument*         ipreview;
 
@@ -36,8 +36,5 @@ protected:
             BrowserList*        sampleList1;
             BrowserList*        vstList1;
             BrowserList*        vstList2;
-
-private:
-            
 };
 

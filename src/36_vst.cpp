@@ -158,11 +158,11 @@ void Vst2Plugin::postProcessTrigger(Trigger* tg, long num_frames, long buff_fram
     volR = wt_sine[ai];
 
     Envelope* penv1 = NULL;
-
+    /*
     if(pan->envelopes != NULL)
     {
         penv1 = (Envelope*)pan->env;
-    }
+    }*/
 
     tc = mix_buff_frame*2;
     tc0 = buff_frame*2;

@@ -345,7 +345,7 @@ Filter1::Filter1()
 {
     objId = "eff.filter1";
     objName = "Filter";
-    uniqueId = MAKE_FOURCC('C','F','L','T');
+    //uniqueId = MAKE_FOURCC('C','F','L','T');
 
     //dspCoreCFilter3.useTwoStages(false);
     f_master = false;
@@ -493,7 +493,7 @@ EQ1::EQ1()
 {
     objId = "eff.eq1";
     objName = "1-Band Equalizer";
-    uniqueId = MAKE_FOURCC('E','Q','0','1');
+    //uniqueId = MAKE_FOURCC('E','Q','0','1');
 
     //frequency = new Parameter(1000.0f, 20.0f, 19980.0f, Param_Default);
     addParam(frequency = new Parameter("FREQ", Param_Freq, 0.f, 1.f, 0.5f, Units_Hz));
@@ -549,7 +549,7 @@ GraphicEQ::GraphicEQ()
 {
     objId = "eff.grapheq";
     objName = "Graphic Equalizer";
-    uniqueId = MAKE_FOURCC('G','R','E','Q');
+    //uniqueId = MAKE_FOURCC('G','R','E','Q');
 
     f1 = dspCoreEqualizer.addBand(rosic::TwoPoleFilter::HIGH_SHELF, 8000, 0, 1);
     f6 = dspCoreEqualizer.addBand(rosic::TwoPoleFilter::PEAK, 6500, 0, 1);
@@ -632,7 +632,7 @@ EQ3::EQ3()
 {
     objId = "eff.eq3";
     objName = "3-Band Equalizer";
-    uniqueId = MAKE_FOURCC('E','Q','0','3');
+    //uniqueId = MAKE_FOURCC('E','Q','0','3');
 
     f1 = dspCoreEqualizer.addBand(rosic::TwoPoleFilter::HIGH_SHELF, 4000, 0);
     f2 = dspCoreEqualizer.addBand(rosic::TwoPoleFilter::PEAK, 0, 0, 0);
@@ -807,7 +807,7 @@ CTremolo::CTremolo()
 {
     objId = "eff.tremolo";
     objName = "Amp. Tremolo";
-    uniqueId = MAKE_FOURCC('T','R','E','M');
+    //uniqueId = MAKE_FOURCC('T','R','E','M');
 
     addParam(speed = new Parameter("SPEED", 0.1f, 2.35f, 1.f));
     addParam(depth = new Parameter("DEPTH", 0.f, 1.0f, 0.5f));
@@ -853,7 +853,7 @@ Compressor::Compressor()
 {
     objId = "eff.comp";
     objName = "Compressor";
-    uniqueId = MAKE_FOURCC('C','O','M','P');
+    //uniqueId = MAKE_FOURCC('C','O','M','P');
 
     //addParam(mode = new BoolParam(false, "MODE", "LIMITER MODE"));
 
@@ -945,7 +945,7 @@ CWahWah::CWahWah()
 {
     objId = "eff.wah";
     objName = "WahWahWah";
-    uniqueId = MAKE_FOURCC('W','A','H','W');
+    //uniqueId = MAKE_FOURCC('W','A','H','W');
 
     addParam(modfreq = new Parameter("MODFREQ", 0.1f, 5.f, 1.25f, Units_Hz1));
     addParam(depth = new Parameter("DEPTH", 2.f, 48.f, 48.f, Units_Semitones));
@@ -1004,7 +1004,7 @@ CDistort::CDistort()
 {
     objId = "eff.dist";
     objName = "Distortion";
-    uniqueId = MAKE_FOURCC('D','I','S','T');
+    //uniqueId = MAKE_FOURCC('D','I','S','T');
 
     addParam(drive = new Parameter("DRIVE", 0.0f, 48.f, 32.0f, Units_dB));
     addParam(postgain = new Parameter("POSTGAIN", -48.0f, 0.f, 0.0f, Units_dB));
@@ -1059,7 +1059,7 @@ CBitCrusher::CBitCrusher()
 {
     objId = "eff.bitcrush";
     objName = "BitCrusher";
-    uniqueId = MAKE_FOURCC('B','I','T','C');
+    //uniqueId = MAKE_FOURCC('B','I','T','C');
 
     addParam(decimation = new Parameter("DECIMATION", 1.0f, 128.f, 1.0f, Units_Integer));
     addParam(quantization = new Parameter("QUANTIZATION", 0.0f, 1.f, 0.0f));
@@ -1106,7 +1106,7 @@ CStereo::CStereo()
 {
     objId = "eff.stereo";
     objName = "Stereo Expander";
-    uniqueId = MAKE_FOURCC('S','T','E','R');
+    //uniqueId = MAKE_FOURCC('S','T','E','R');
 
     addParam(offset = new Parameter("OFFSET", 1.0f, 100.f, 10.0f, Units_Integer));
 
@@ -1147,7 +1147,7 @@ XDelay::XDelay() : dspCorePingPongDelay()
 {
     objId = "eff.delay";
     objName = "Ping-Pong Delay";
-    uniqueId = MAKE_FOURCC('P','P','D','L');
+    //uniqueId = MAKE_FOURCC('P','P','D','L');
 
     dspCorePingPongDelay.setTrueStereoMode(true);
     dspCorePingPongDelay.setPingPongMode(true);
@@ -1253,7 +1253,7 @@ CReverb::CReverb() : dspCoreReverb()
 {
     objId = "eff.reverb";
     objName = "Reverberation";
-    uniqueId = MAKE_FOURCC('R','E','V','R');
+    //uniqueId = MAKE_FOURCC('R','E','V','R');
 
     addParam(preDelay  = new Parameter("PREDELAY", 0.0f, 200.0f, 0.0f, Units_ms));
     addParam(roomsize = new Parameter("ROOM", 4.0f, 100.0f, 100.0f, Units_Integer));
@@ -1329,7 +1329,7 @@ CChorus::CChorus()
 {
     objId = "eff.chorus";
     objName = "Chorus";
-    uniqueId = MAKE_FOURCC('C','H','O','R');
+    //uniqueId = MAKE_FOURCC('C','H','O','R');
 
     dspCoreChorus = new rosic::Chorus(65535);
     dspCoreChorus->setTempoSync(false);
@@ -1387,7 +1387,7 @@ CFlanger::CFlanger()
 {
     objId = "eff.flanger";
     objName = "Flanger";
-    uniqueId = MAKE_FOURCC('F','L','N','G');
+    //uniqueId = MAKE_FOURCC('F','L','N','G');
 
     dspCoreFlanger.setTempoSync(false);
 
@@ -1466,7 +1466,7 @@ CPhaser::CPhaser()
 {
     objId = "eff.phaser";
     objName = "Phaser";
-    uniqueId = MAKE_FOURCC('P','H','A','S');
+    //uniqueId = MAKE_FOURCC('P','H','A','S');
 
     dspCorePhaser.setTempoSync(false);
 

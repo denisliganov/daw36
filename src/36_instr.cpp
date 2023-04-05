@@ -120,6 +120,8 @@ protected:
 
 Instrument::Instrument(Device36* dev)
 {
+    index = -1;
+
     device = devDummy;
 
     addObject(guiButton = new GuiButt());
@@ -195,9 +197,9 @@ void Instrument::setDevice(Device36* dev)
         {
             device->setVU(ivu);
 
-            volKnob->addParam(device->vol);
-            panKnob->addParam(device->pan);
-            muteButt->addParam(device->enabled);
+            volKnob->setParam(device->vol);
+            panKnob->setParam(device->pan);
+            muteButt->setParam(device->enabled);
 
             setObjName(device->getObjName());
         }
@@ -535,6 +537,7 @@ bool Instrument::isDummy()
 
 void Instrument::setIndex(int idx)
 {
+    index = idx;
     device->setIndex(idx);
 
     int num = idx;

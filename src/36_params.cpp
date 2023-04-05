@@ -134,6 +134,19 @@ bool Parameter::getEnvDirect()
     return envdirect;
 }
 
+Control* Parameter::getControl()
+{
+    if (controls.size() > 0)
+    {
+        return controls.front();
+    }
+    else
+    {
+        return NULL;
+    }
+}
+
+
 std::string Parameter::getUnitString()
 {
     if (unitStr != "")
@@ -143,45 +156,45 @@ std::string Parameter::getUnitString()
 
     switch (unitsType)
     {
-    case Units_Hz:
-    case Units_Hz1:
-    case Units_Hz2:
-        return "Hz";
-        break;
-    case Units_kHz:
-        return "kHz";
-        break;
-    case Units_Percent:
-    {
-        return "%";
-    } break;
-    case Units_dB:
-    case Units_dBGain:
-    {
-        return "dB";
-    }break;
-    case Units_ms:
-    case Units_ms2:
-        return "ms";
-        break;
-    case Units_Seconds:
-        return "sec";
-        break;
-    case Units_Octave:
-        return "oct";
-        break;
-    case Units_Semitones:
-        return "st";
-        break;
-    case Units_Beats:
-        return "beats";
-        break;
-    case Units_Ticks:
-        return "ticks";
-        break;
-    default:
-        return "";
-        break;
+        case Units_Hz:
+        case Units_Hz1:
+        case Units_Hz2:
+            return "Hz";
+            break;
+        case Units_kHz:
+            return "kHz";
+            break;
+        case Units_Percent:
+        {
+            return "%";
+        } break;
+        case Units_dB:
+        case Units_dBGain:
+        {
+            return "dB";
+        }break;
+        case Units_ms:
+        case Units_ms2:
+            return "ms";
+            break;
+        case Units_Seconds:
+            return "sec";
+            break;
+        case Units_Octave:
+            return "oct";
+            break;
+        case Units_Semitones:
+            return "st";
+            break;
+        case Units_Beats:
+            return "beats";
+            break;
+        case Units_Ticks:
+            return "ticks";
+            break;
+        default:
+            return "";
+            break;
     }
 }
 
@@ -223,16 +236,24 @@ std::string Parameter::calcValStr(float val)
     else if (type == Param_Vol)
     {
         std::string valStr;
+        char str[100] = {};
 
-        if (outVal == 0)
+        if (unitsType == Units_dB)
         {
-            valStr = "INF";
+            if (outVal == 0)
+            {
+                valStr = "INF";
+            }
+            else
+            {
+                double pval = (amp2dB(val));
+                sprintf(str, "%.2f", pval);
+                valStr = str;
+            }
         }
         else
         {
-            char str[100] = {};
-            double pval = (amp2dB(val));
-            sprintf(str, "%.2f", pval);
+            sprintf(str, ("%.0f"), value);
             valStr = str;
         }
 
@@ -274,7 +295,7 @@ std::string Parameter::calcValStr(float val)
             }break;
             case Units_dBGain:
             {
-                if (val <= 0)
+                if (absVal <= 0)
                 {
                     sprintf(str, "%.1f", absVal);
                 }
@@ -317,7 +338,7 @@ std::string Parameter::calcValStr(float val)
             stdstr = str;
         }
 
-        return stdstr;
+        return str;
     }
 }
 
