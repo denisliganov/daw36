@@ -16,7 +16,7 @@ public:
             Slider36() {};
             Slider36(bool vert);
 
-    virtual void                addParam(Parameter* p) {prm = p;}
+    virtual void                setParam(Parameter* p) {prm = p;}
             std::string         getHint();
 
 protected:

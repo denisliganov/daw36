@@ -122,7 +122,6 @@ std::string Slider36::getHint()
 void Slider36::drawSelf(Graphics& g)
 {
     Instrument* instr = dynamic_cast<Instrument*>(parent);
-    //MixChannel* mc = dynamic_cast<MixChannel*>(parent);
 
     fill(g, .4f);
 

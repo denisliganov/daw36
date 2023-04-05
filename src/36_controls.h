@@ -13,7 +13,7 @@ class Control : public Gobj
 public:
 
             Control();
-    virtual void                addParam(Parameter* p);
+    virtual void                setParam(Parameter* p);
     virtual void                removeParam(Parameter* p);
     virtual void                updPosition() {};
     virtual void                updValue() {};

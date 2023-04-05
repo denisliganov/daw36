@@ -38,6 +38,7 @@ public:
             ParamBox*           volBox;
             Knob*               volKnob;
             Knob*               panKnob;
+            int                 index;
 
             void                addMixChannel();
             void                activateMenuItem(std::string item);
@@ -47,6 +48,7 @@ virtual Instrument*             clone();
             void                drawOverChildren(Graphics & g);
             std::string         getAlias()      {return instrAlias;};
             Device36*           getDevice()     { return device; };
+            int                 getIndex()      {   return index; }
             void                deleteDevice();
         std::list <Element*>    getNotesFromRange(float tick_offset, float lastVisibleTick);
             MixChannel*         getMixChannel() { return mixChannel; }

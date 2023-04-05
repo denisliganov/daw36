@@ -14,7 +14,7 @@ ParamBox::ParamBox(Parameter* par)
 {
     param = par;
 
-    addParam(param);
+    setParam(param);
 
     setFontId(FontSmall);
 

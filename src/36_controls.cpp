@@ -15,7 +15,7 @@ Control::Control()
     setHint("");
 }
 
-void Control::addParam(Parameter* p)
+void Control::setParam(Parameter* p)
 {
     if (p != NULL)
     {

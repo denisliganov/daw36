@@ -52,6 +52,10 @@ typedef enum UnitsType
 
 class Parameter
 {
+friend MixChannel;
+friend Device36;
+friend Audio36;
+
 public:
             Parameter();
             Parameter(std::string param_name, ParamType param_type);
@@ -65,19 +69,14 @@ public:
 
 
             void                addControl(Control* ct);
+            void                adjustFromControl(Control* ctrl, int step, float nval = -1, float min_step = 0.1f);
+    virtual float               adjustForEditor(float val);
             std::string         getName()           { return prmName; };
             int                 getIndex()          { return index; }
             bool                getEnvDirect();
             ParamType           getType()       { return type; }
-            void                removeControl(Control* ct);
-            void                setIndex(int idx)   { index = idx; }
-            void                setName(std::string name)   { prmName = name; };
-            void                setEnvDirect(bool envdir);
-            void                setModule(ParamObject* md) { module = md; };
+            Control*            getControl();
 
-
-            void                adjustFromControl(Control* ctrl, int step, float nval = -1, float min_step = 0.1f);
-    virtual float               adjustForEditor(float val);
             void                blockEnvAffect() { envaffect = false; }
     virtual std::string         calcValStr(float uv);
             void                dequeueEnvelopeTrigger(Trigger* tg);
@@ -92,6 +91,7 @@ public:
             float               getOutVal() { return outVal; }
             float               getValue() { return value; }
             float               getDefaultValue() { return defaultValue; }
+            ParamObject*        getModule()     { return module; }
             float               getNormalizedValue();
             float               getDefaultValueNormalized();
     virtual float               getEditorValue();
@@ -102,6 +102,11 @@ public:
             bool                isRecording() { return recording; }
             void                load(XmlElement* xmlParamNode);
     virtual void                reset();
+            void                removeControl(Control* ct);
+            void                setIndex(int idx)   { index = idx; }
+            void                setName(std::string name)   { prmName = name; };
+            void                setEnvDirect(bool envdir);
+            void                setModule(ParamObject* md) { module = md; };
             void                setAutoPlaced(bool auto_placed) { autoPlaced = auto_placed; }
     virtual void                setValue(float val);
     virtual void                setNormalizedValue(float nval);
@@ -116,31 +121,7 @@ public:
             XmlElement*         save4Preset();
             virtual void        updateLinks();
             void                unblockEnvAffect() { envaffect = true; }
-
-
-            Control*            ctrlUpdatingFrom;
-            bool                envdirect;
-            int                 globalindex;
-            int                 index;
-            ParamObject*        module;
-            std::string         prmName;
-            ParamType           type;
-            std::string         unitStr;
-
-            std::list<Control*> controls;
-
-            float               lastValue;          // used for ramping
-            float               declickCount;
-            float               declickCoeff;
-            Trigger*            envelopes;
-            Envelope*           autoenv;
-            Envelope*           env;
-            bool                envaffect;
-            bool                envtweaked;
-            long                lastsetframe;
-            EnvPoint*           lastrecpoint;
-            bool                autoPlaced;
-
+ 
 
 // Toggle
             bool                getBoolValue() { return currentOption > 0 ? true : false; }
@@ -149,7 +130,7 @@ public:
 // Radio/Selector
             void                addOption(std::string opt, bool val)    { options.push_back(opt); optValues.push_back(val); }
             void                addOption(std::string opt)              { options.push_back(opt); }
-            std::vector<std::string>&   getAllOptions()                         { return options; }
+    std::vector<std::string>&   getAllOptions()                     { return options; }
             int                 getNumOptions()                         { return options.size(); }
             int                 getCurrentOption()                      { return currentOption; }
             void                setCurrentOption(int curr)               { currentOption = curr; }
@@ -159,11 +140,31 @@ public:
             bool                getOptionVal(int optnum)                { return optValues[optnum]; }
             void                toggleOption(int optnum)                 { optValues[optnum] = !optValues[optnum]; }
 
-protected:
+private:
 
             virtual float       calcOutputValue(float val);
             void                paramInit(std::string name, ParamType ptype, float def_val, float offs, float rng, UnitsType vt);
 
+            Envelope*           autoenv;
+            bool                autoPlaced;
+            float               lastValue;          // used for ramping
+            float               declickCount;
+            float               declickCoeff;
+            Trigger*            envelopes;
+            Envelope*           env;
+            bool                envaffect;
+            bool                envtweaked;
+            long                lastsetframe;
+            EnvPoint*           lastrecpoint;
+            Control*            ctrlUpdatingFrom;
+            bool                envdirect;
+            int                 globalindex;
+            int                 index;
+            ParamObject*        module;
+            std::string         prmName;
+            ParamType           type;
+            std::string         unitStr;
+            std::list<Control*> controls;
             float               defaultValue;
             float               interval;
             float               logoffset;
