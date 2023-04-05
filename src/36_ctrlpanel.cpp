@@ -448,9 +448,11 @@ void ControlPanel::handleChildEvent(Gobj* obj, InputEvent& ev)
                 if (bw == NULL)
                 {
                     MBrowser->setEnable(true);
-                    BrwWinObject* ro = new BrwWinObject(MBrowser);
-                    //o->setInvokeButton(btRender);
-                    bw = MObject->addWindow((WinObject*)ro);
+                    BrwWinObject* bo = new BrwWinObject(MBrowser);
+
+                    bo->setInvokeButton(btBrowser);
+
+                    bw = MObject->addWindow((WinObject*)bo);
                 }
 
                 bw->setOpen(!bw->isOpen());

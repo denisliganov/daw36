@@ -36,7 +36,7 @@ public:
             void                generateAll(long num_frames, long mixbuffframe);
             Instrument*         getInstrFromLine(int trkLine);
             Instrument*         getCurrInstr();
-        std::vector<Instrument*>& getInstrs() { return instrs; }
+        std::list<Instrument*>& getInstrs() { return instrs; }
             bool                handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my);
             bool                handleObjDrop(Gobj * obj,int mx,int my, unsigned int flags);
             void                handleChildEvent(Gobj* obj, InputEvent& ev);
@@ -72,7 +72,7 @@ private:
             Parameter*          masterVolume;
 
             std::list<Instrument*>::iterator    currInstr;
-            std::vector<Instrument*>              instrs;
+            std::list<Instrument*>              instrs;
             Instrument*         curr;
 };
 
