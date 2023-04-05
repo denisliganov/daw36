@@ -14,6 +14,18 @@
 
 
 
+class BrwWinObject : public WinObject
+{
+public:
+
+            BrwWinObject(Browser* brw);
+
+private:
+            void                drawSelf(Graphics& g);
+            void                remap();
+
+            Browser*            browser;
+};
 
 
 class Browser : public ParamObject

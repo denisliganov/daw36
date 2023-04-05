@@ -205,7 +205,7 @@ void MainWinObject::remap()
     {
         MEdit->setCoords2(mainX1 + 2, mainY1 - MainLineHeight + PanelGap, mainX2, mainY2 - 1);
     }
-    else if (MBrowser->isON())
+    else if (MBrowser->isON() && MBrowser->getParent() == this)
     {
         MBrowser->setCoords2(mainX1 + 2, mainY1 - MainLineHeight + PanelGap, mainX2, mainY2 - 1);
     }

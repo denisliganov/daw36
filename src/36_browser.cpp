@@ -23,13 +23,36 @@
 #include "36_textinput.h"
 #include "36_listbox.h"
 
-
 #include <windows.h>
 #include <direct.h>
 
 
 
 
+
+
+BrwWinObject::BrwWinObject(Browser* brw)
+{
+    browser = brw;
+
+    addObject(browser, 0, 0, 1200, 900);
+    //setWH(browser->getW(), browser->getH());
+
+    setWidthHeight(1200, 900);
+
+    //setResiz
+}
+
+
+void BrwWinObject::drawSelf(Graphics& g)
+{
+    Gobj::fill(g, 0.f);
+}
+
+void BrwWinObject::remap()
+{
+    browser->setCoords1(0, 0, getW(), getH());
+}
 
 Browser::Browser(std::string dirpath)
 {
@@ -51,7 +74,7 @@ void Browser::drawSelf(Graphics& g)
 
 void Browser::handleChildEvent(Gobj * obj, InputEvent& ev)
 {
-
+    int a = 1;
 }
 
 void Browser::remap()

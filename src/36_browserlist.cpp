@@ -355,6 +355,10 @@ void BrowserList::handleChildEvent(Gobj * obj,InputEvent & ev)
             }
         }
     }
+    else
+    {
+        remapAndRedraw();
+    }
 }
 
 void BrowserList::previewSample(BrwListEntry* ble, bool down)

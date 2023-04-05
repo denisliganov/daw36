@@ -316,19 +316,6 @@ void ControlPanel::handleChildEvent(Gobj* obj, InputEvent& ev)
     {
         MGrid->redraw(true);
     }
-    else if(obj == btBrowser)
-    {
-        if (MBrowser->isON())
-        {
-            MObject->switchBrowser(false);
-
-            btBrowser->revertToPrevious();
-        }
-        else
-        {
-            MObject->switchBrowser(true);
-        }
-    }
     else if (ev.wheelDelta != 0 && (obj == btZoomIn || obj == btZoomOut))
     {
         if (ev.wheelDelta > 0)
@@ -453,6 +440,33 @@ void ControlPanel::handleChildEvent(Gobj* obj, InputEvent& ev)
                 }
 
                 rw->setOpen(!rw->isOpen());
+            }
+            else if (obj == btBrowser)
+            {
+                static SubWindow* bw = NULL;
+
+                if (bw == NULL)
+                {
+                    MBrowser->setEnable(true);
+                    BrwWinObject* ro = new BrwWinObject(MBrowser);
+                    //o->setInvokeButton(btRender);
+                    bw = MObject->addWindow((WinObject*)ro);
+                }
+
+                bw->setOpen(!bw->isOpen());
+
+                /*
+                if (MBrowser->isON())
+                {
+                    MObject->switchBrowser(false);
+
+                    btBrowser->revertToPrevious();
+                }
+                else
+                {
+                    MObject->switchBrowser(true);
+                }
+                */
             }
             else if (obj == btRec)
             {
