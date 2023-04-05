@@ -209,18 +209,6 @@ void Mixer::drawSelf(Graphics& g)
     g.drawVerticalLine(xBound + 1, (float)getY1(), (float)getY2());*/
 }
 
-void Mixer::updateChannelIndexes()
-{
-    int idx = 0;
-
-    for(Instrument* instr : MInstrPanel->getInstrs())
-    {
-        //instr->getMixChannel()->setIndex(idx++);
-    }
-
-    //masterChannel->setIndex(idx++);
-}
-
 MixChannel* Mixer::addMixChannel(Instrument * instr)
 {
     WaitForSingleObject(MixerMutex, INFINITE);

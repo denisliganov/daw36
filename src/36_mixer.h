@@ -27,7 +27,6 @@ public:
             void                remap();
             void                resetAll();
             void                setCurrentEffect(Eff* eff);
-            void                updateChannelIndexes();
             void                removeMixChannel(Instrument * instr);
 
 protected:

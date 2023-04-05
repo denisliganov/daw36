@@ -94,10 +94,11 @@ void Project36::releaseAllOnExit()
 
     //MInstrPanel->setEnable(false);
 
+/*
     while(MInstrPanel->getInstrs().size() > 0)
     {
         MInstrPanel->deleteInstrument(MInstrPanel->getInstrs().front());
-    }
+    }*/
 
     // Erase remembered session files
 
@@ -167,10 +168,11 @@ void Project36::deleteProject()
         GetButton(MCtrllPanel, "bt.play")->release();
     }
 
+/*
     while(MInstrPanel->getInstrs().size() > 0)
     {
         MInstrPanel->deleteInstrument(MInstrPanel->getInstrs().front());
-    }
+    }*/
 
     MPattern->deleteAllElements(true, true);
 
@@ -487,7 +489,7 @@ bool Project36::loadProjectData(File chosenFile, LoadThread* thread)
 
             loadElementsFromNode(xmlMainNode, NULL);
 
-            MInstrPanel->setCurrInstr(NULL);
+            //MInstrPanel->setCurrInstr(NULL);
         }
     }
 
@@ -525,7 +527,7 @@ void Project36::saveProjectData(File chosenFile)
 
 
     // Save instruments
-
+    /*
     for(Instrument* i : MInstrPanel->getInstrs())
     {
         XmlElement* xmlInstr = new XmlElement(T("Instrument"));
@@ -534,7 +536,7 @@ void Project36::saveProjectData(File chosenFile)
         XmlElement* xmlMChan = new XmlElement(T("MixChannel"));
         //i->mixChannel->save(xmlMChan);
         xmlProjectMain.addChildElement(xmlMChan);
-    }
+    }*/
 
     //
     // Save sends and master

@@ -256,9 +256,7 @@ void MixChannel::init(Instrument* ins)
 
     addObject(volKnob = new Knob(volParam));
     addObject(panKnob = new Knob(panParam));
-
     addObject(vu = new ChanVU(false), ObjGroup_VU);
-
     addObject(vscr = new Scroller(true));
 
     for (int i = 0; i < NUM_CHANNELS + 1; i++)

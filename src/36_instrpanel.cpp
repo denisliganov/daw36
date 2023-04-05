@@ -101,6 +101,7 @@ InstrPanel::InstrPanel(Mixer* mixer)
     fxShowing = false;
 
     //currInstr = NULL;
+    curr = NULL;
 
     devDummy = new Device36();
     devDummy->setTouchable(false);
@@ -178,14 +179,19 @@ Instrument* InstrPanel::addInstrument(Device36 * dev, Instrument * objAfter)
 
     instrs.push_back(i);
 
+    /*
     if(instrs.size() == 1)
     {
         // If at least 1 instrument present, init iterator for current
 
         currInstr = instrs.begin();
     }
+    */
 
-    //i->setColor();
+    if (curr == NULL)
+    {
+        setCurrInstr(i);
+    }
 
     if(!MProject.isLoading())
     {
@@ -228,21 +234,16 @@ void InstrPanel::cloneInstrument(Instrument* i)
     Instrument* ni = i->clone();
 
     // Place right after current instrument
-
-    instrs.remove(ni);
-    currInstr++;
-    instrs.insert(currInstr, ni);
-    currInstr--;
-
-    updateInstrIndexes();
+    //instrs.remove(ni);
+    //currInstr++;
+    //instrs.insert(currInstr, ni);
+    //currInstr--;
+    //updateInstrIndexes();
 
     // And set it current
+    // setCurrInstr(i);
 
-    setCurrInstr(i);
-
-    colorizeInstruments();
-
-    // redraw all
+    // colorizeInstruments();
 
     remapAndRedraw();
 
@@ -302,6 +303,7 @@ void InstrPanel::deleteInstrument(Instrument* i)
 {
     WaitForSingleObject(AudioMutex, INFINITE);
 
+    /*
     if(getCurrInstr() == i)
     {
         currInstr++;
@@ -323,8 +325,9 @@ void InstrPanel::deleteInstrument(Instrument* i)
             //currMixChannel->setEnable(true);
         }
     }
+    */
 
-    instrs.remove(i);
+    //instrs.remove(i);
 
     updateInstrIndexes();
 
@@ -359,6 +362,9 @@ Instrument* InstrPanel::getInstrByIndex(int index)
 
 Instrument* InstrPanel::getCurrInstr()
 {
+    return curr;
+
+/*
     if (instrs.size() > 0 && currInstr != instrs.end())
     {
         return *currInstr;
@@ -367,6 +373,7 @@ Instrument* InstrPanel::getCurrInstr()
     {
         return NULL;
     }
+    */
 }
 
 Instrument* InstrPanel::getInstrByAlias(std::string alstr)
@@ -499,6 +506,11 @@ bool InstrPanel::handleObjDrop(Gobj * obj, int mx, int my, unsigned int flags)
         {
             // move from other instr
 
+            if (flags & kbd_shift)
+            {
+//                i = getCurrInstr()->clone();
+            }
+
             Instrument* iTo = (Instrument*)dropObj;
             Instrument* iFrom = (Instrument*)obj;
 
@@ -520,37 +532,6 @@ bool InstrPanel::handleObjDrop(Gobj * obj, int mx, int my, unsigned int flags)
     {
         
     }
-
-
-    //MObject->redraw();
-/*
-    if (ble)
-    {
-        i = loadInstrFromNewBrowser(ble);
-    }
-    else
-    {
-        i = getCurrInstr();
-
-        if (flags & kbd_shift)
-        {
-            i = getCurrInstr()->clone();
-        }
-
-        if (i == dropObj)
-        {
-            i = NULL;
-        }
-    }
-
-    if(i != NULL)
-    {
-        placeBefore(i, (Instrument*)dropObj);
-
-        updateInstrIndexes();
-
-        return true;
-    }*/
 
     return false;
 }
@@ -733,38 +714,6 @@ void Add_SoundFont(const char* path, const char* name, const char* alias)
 }
 */
 
-void InstrPanel::placeBefore(Instrument* instr, Instrument* before)
-{
-    WaitForSingleObject(AudioMutex, INFINITE);
-
-    instrs.remove(instr);
-
-    auto it = instrs.begin();
-
-    if(before == NULL)      // Insert to end
-    {
-        it = instrs.end();
-    }
-    else
-    {
-        for(; it != instrs.end() && *it != before; it++);
-    }
-
-    instrs.insert(it, instr);
-
-    it--;
-
-    currInstr = it;
-
-    ReleaseMutex(AudioMutex);
-
-    colorizeInstruments();
-
-    MInstrPanel->remapAndRedraw();
-
-    MMixer->remapAndRedraw();
-}
-
 void InstrPanel::resetAll()
 {
     for(Instrument* instr : instrs)
@@ -859,26 +808,7 @@ void InstrPanel::setBufferSize(unsigned bufferSize)
 
 void InstrPanel::setCurrInstr(Instrument* instr)
 {
-    if(*currInstr == instr)
-    {
-        return;
-    }
-
-    Instrument* oldInstr = *currInstr;
-
-    currInstr = instrs.begin();
-
-    // NULL sets the first instrument as current
-
-    if (instr != NULL)
-    {
-        while(*currInstr != instr)
-        {
-            currInstr++;
-        }
-    }
-
-    instr = *currInstr;
+    curr = instr;
 
     redraw();
 

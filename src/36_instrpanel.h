@@ -36,7 +36,7 @@ public:
             void                generateAll(long num_frames, long mixbuffframe);
             Instrument*         getInstrFromLine(int trkLine);
             Instrument*         getCurrInstr();
-        std::list<Instrument*>& getInstrs() { return instrs; }
+        std::vector<Instrument*>& getInstrs() { return instrs; }
             bool                handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my);
             bool                handleObjDrop(Gobj * obj,int mx,int my, unsigned int flags);
             void                handleChildEvent(Gobj* obj, InputEvent& ev);
@@ -45,7 +45,6 @@ public:
             bool                isFxShowing()   { return fxShowing; }
             Vst2Plugin*         loadVst(const char* path, Vst2Plugin* otherVst);
             Sample*             loadSample(const char* path);
-            void                placeBefore(Instrument* instr, Instrument* before);
             void                resetAll();
             void                remap();
             void                setSampleRate(float sampleRate);
@@ -71,8 +70,7 @@ private:
             Knob*               masterVolKnob;
             Parameter*          masterVolume;
 
-            std::list<Instrument*>::iterator    currInstr;
-            std::list<Instrument*>              instrs;
+    std::vector<Instrument*>    instrs;
             Instrument*         curr;
 };
 
