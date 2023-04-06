@@ -160,10 +160,14 @@ ControlPanel::ControlPanel()
     addObject(octaveBox = new OctaveBox(5));
     addObject(snapMenu = new SnapMenu());
     addObject(timeScreen = new TimeScreen(), "pos.display");
-    addObject(btBrowser = new GroupButton(2), "bt.browser");
+    //addObject(btBrowser = new GroupButton(2), "bt.browser");
+    addObject(btBrowser = new Button36(true), "bt.browser");
+
     addObject(btBarMode = new GroupButton(2), "bt.bars"); 
     addObject(btVols = new GroupButton(2), "bt.vols"); 
     addObject(btPans = new GroupButton(2), "bt.pans"); 
+
+    btBarMode->press();
 
     int buttonWidth = 30;
     int buttonHeight = 30;
@@ -448,6 +452,7 @@ void ControlPanel::handleChildEvent(Gobj* obj, InputEvent& ev)
                 if (bw == NULL)
                 {
                     MBrowser->setEnable(true);
+                    
                     BrwWinObject* bo = new BrwWinObject(MBrowser);
 
                     bo->setInvokeButton(btBrowser);

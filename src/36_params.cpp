@@ -253,7 +253,7 @@ std::string Parameter::calcValStr(float val)
         }
         else
         {
-            sprintf(str, ("%.0f"), value);
+            sprintf(str, ("%d"), int(value*100));
             valStr = str;
         }
 

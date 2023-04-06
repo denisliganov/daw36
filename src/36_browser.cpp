@@ -43,7 +43,6 @@ BrwWinObject::BrwWinObject(Browser* brw)
     //setResiz
 }
 
-
 void BrwWinObject::drawSelf(Graphics& g)
 {
     WinObject::fill(g, 0.f);
@@ -53,6 +52,14 @@ void BrwWinObject::remap()
 {
     //browser->setCoords1(0, 0, Gobj::getW(), Gobj::getH());
 }
+
+void BrwWinObject::handleClose()
+{
+    ParamObject::handleClose();
+}
+
+
+
 
 Browser::Browser(std::string dirpath)
 {

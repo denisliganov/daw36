@@ -188,11 +188,6 @@ Instrument* InstrPanel::addInstrument(Device36 * dev, Instrument * objAfter)
     }
     */
 
-    if (curr == NULL)
-    {
-        setCurrInstr(i);
-    }
-
     if(!MProject.isLoading())
     {
         updateInstrIndexes();
@@ -218,6 +213,11 @@ Instrument* InstrPanel::addInstrument(Device36 * dev, Instrument * objAfter)
         //MGrid->syncToInstruments();
 
         MEdit->remapAndRedraw();
+    }
+
+    if (curr == NULL)
+    {
+        setCurrInstr(i);
     }
 
     colorizeInstruments();

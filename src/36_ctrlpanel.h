@@ -59,7 +59,7 @@ protected:
             Button36*           btScale2;
             Button36*           btScale3;
 
-            GroupButton*        btBrowser;
+            Button36*           btBrowser;
             GroupButton*        btStepMode;
             GroupButton*        btBarMode;
             GroupButton*        btVols;

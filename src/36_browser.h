@@ -20,6 +20,8 @@ public:
 
             BrwWinObject(Browser* brw);
 
+            void                handleClose();
+
 private:
             void                drawSelf(Graphics& g);
             void                remap();

@@ -363,7 +363,7 @@ void LoadDefaultInstruments()
     //    MInstrPanel->setCurrInstr(MInstrPanel->instrs.front());
     //}
 
-    MInstrPanel->setCurrInstr(NULL);
+    //MInstrPanel->setCurrInstr(NULL);
 }
 
 void LoadCursorImages()
