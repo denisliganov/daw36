@@ -265,34 +265,6 @@ void ControlPanel::remap()
 void ControlPanel::drawSelf(Graphics& g)
 {
     fill(g, 0.4f);
-
-    setc(g, .25f);
-
-    //lineH(g, 0, 0, width - 1);
-
-    for(int i = 1; i < 40; i++)
-    {
-        float clr = .55f/(float(i));
-
-        //gSetMonoColor(g, .8f, clr);
-        //gSetColorHue(g, .15f, 1, .1f, clr);
-        //gFillRectWH(g, x1, y1 + i - 1, width, 1);
-    }
-
-/*
-    gSetMonoColor(g, 0.75f);
-    float alpha = 0.1f;
-    for(int c = 0; c < height - 1; c++)
-    {
-        //g.setColour(Colour(color));
-        gSetMonoColor(g, 1.f, alpha);
-        gLineHorizontal(g, y1 + c, (float)x1, (float)x2);
-        alpha -= 0.0015f;
-        if (alpha <= 0)
-        {
-            break;
-        }
-    }*/
 }
 
 ContextMenu* ControlPanel::createContextMenu()

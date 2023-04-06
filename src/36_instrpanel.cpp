@@ -127,7 +127,7 @@ InstrPanel::InstrPanel(Mixer* mixer)
 
 InstrPanel::~InstrPanel()
 {
-    delete devDummy;
+    //delete devDummy;
 }
 
 Instrument* InstrPanel::addVst(const char* path, Vst2Plugin* otherVst)
@@ -303,32 +303,6 @@ void InstrPanel::deleteInstrument(Instrument* i)
 {
     WaitForSingleObject(AudioMutex, INFINITE);
 
-    /*
-    if(getCurrInstr() == i)
-    {
-        currInstr++;
-
-        if (currInstr == instrs.end())
-        {
-            currInstr--;
-
-            if (currInstr != instrs.begin())
-            {
-                currInstr--;
-            }
-        }
-
-        if (*currInstr != i)
-        {
-            //currMixChannel = (*currInstr)->mixChannel;
-            //addObject(currMixChannel);
-            //currMixChannel->setEnable(true);
-        }
-    }
-    */
-
-    //instrs.remove(i);
-
     updateInstrIndexes();
 
     deleteObject(i);
@@ -363,17 +337,6 @@ Instrument* InstrPanel::getInstrByIndex(int index)
 Instrument* InstrPanel::getCurrInstr()
 {
     return curr;
-
-/*
-    if (instrs.size() > 0 && currInstr != instrs.end())
-    {
-        return *currInstr;
-    }
-    else
-    {
-        return NULL;
-    }
-    */
 }
 
 Instrument* InstrPanel::getInstrByAlias(std::string alstr)
