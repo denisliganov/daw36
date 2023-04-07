@@ -102,11 +102,14 @@ class ChanOutToggle : public ToggleBox
 {
 public:
 
-    ChanOutToggle(MixChannel* chan, Parameter* par) : ToggleBox(par)
+    ChanOutToggle(MixChannel* chan, int idx) : ToggleBox(new Parameter("out", Param_Toggle))
     {
+        index = idx;
         channel = chan;
-        par->setModule(channel);
+        param->setModule(channel);
     }
+
+    int getIndex()  { return index; }
 
 private:
 
@@ -131,6 +134,7 @@ private:
     //void handleMouseDown(InputEvent & ev) {  }
     void handleMouseWheel(InputEvent& ev) { parent->handleMouseWheel(ev); }
 
+    int             index;
     MixChannel*     channel;
     MixChannel*     outChannel;
 };
@@ -140,19 +144,23 @@ class SendKnob : public Knob
 {
 public:
 
-    SendKnob(MixChannel* chan, Parameter* par) : Knob(par, true)
+    SendKnob(MixChannel* chan, int idx, std::string nm) : Knob(new Parameter(nm, Param_Default), true)
     {
+        setHint("Send");
+        
+        index = idx;
         channel = chan;
+        outChannel = MInstrPanel->getInstrByIndex(idx)->getMixChannel();
 
-        setParam(par);
-
-        par->setModule(channel);
+        param->setModule(channel);
     }
 
     MixChannel* getOutChannel()
     {
         return outChannel;
     }
+
+    int getIndex() { return index; }
 
 private:
 
@@ -166,50 +174,13 @@ private:
         return hint;
     }
 
+    int             index;
     MixChannel*     channel;
     MixChannel*     outChannel;
 };
 
 
 
-SendControl::SendControl()
-{
-    //setObjName(name);
-
-    sendLevel = new Parameter("Level", 0, 1, 0);
-
-    //if (levelCtrl)
-    {
-        sendKnob = new Knob(sendLevel, true);
-    }
-    /*
-    else
-    {
-        sendKnob = NULL;
-    }
-    */
-
-    chIndex = 36;   // Master
-}
-
-void SendControl::drawSelf(Graphics & g)
-{
-    fill(g, .18f);
-
-    setc(g, .6f);
-
-    txt(g, FontSmall, "SND", 2, 12);
-
-    txt(g, FontSmall, "--", 2, height - 1);
-}
-
-void SendControl::remap()
-{
-    if (sendKnob)
-    {
-        sendKnob->setCoords1(width-height, 0, height, height);
-    }
-}
 
 
 MixChannel::MixChannel()
@@ -227,17 +198,57 @@ MixChannel::~MixChannel()
     //
 }
 
+void MixChannel::addSend(int idx)
+{
+    addObject(new SendKnob(this, idx, "snd"), "snd");
+    addObject(new ChanOutToggle(this, idx), "out");
+}
+
+void MixChannel::delSend(int idx)
+{
+    SendKnob* k = NULL;
+    ChanOutToggle* c = NULL;
+
+    for (Gobj* o : objs)
+    {
+        if (!k && o->getObjId() == "snd")
+        {
+            k = dynamic_cast<SendKnob*>(o);
+
+            if (k && k->getIndex() != idx)
+                k = NULL;
+        }
+
+        if (!c && o->getObjId() == "out")
+        {
+            c = dynamic_cast<ChanOutToggle*>(o);
+
+            if (c && c->getIndex() != idx)
+                c = NULL;
+        }
+    }
+
+    if (k)
+        deleteObject(k);
+
+    if (c)
+        deleteObject(c);
+}
+
 void MixChannel::init(Instrument* ins)
 {
     objId = "mixchan";
-
     master = false;
-
     muteCount = 0;
 
     if(ins != NULL)
     {
         instr = ins;
+
+        for (int i = 0; i < MInstrPanel->getNumInstrs(); i++)
+        {
+            addSend(i);
+        }
     }
     else    // send or master
     {
@@ -248,33 +259,15 @@ void MixChannel::init(Instrument* ins)
         mutetoggle = NULL;
         solotoggle = NULL;
         volKnob = NULL;
-        volKnob = NULL;
+        panKnob = NULL;
     }
 
     addParam(volParam = new Parameter("Volume", Param_Vol, 0.f, DAW_VOL_RANGE, 1.f, Units_Percent));
     addParam(panParam = new Parameter("Panning", Param_Pan));
-
     addObject(volKnob = new Knob(volParam));
     addObject(panKnob = new Knob(panParam));
     addObject(vu = new ChanVU(false), ObjGroup_VU);
     addObject(vscr = new Scroller(true));
-
-    for (int i = 0; i < NUM_CHANNELS + 1; i++)
-    {
-        Parameter* p = new Parameter("snd", Param_Default);
-
-        addParam(p);
-
-        Knob* k = new SendKnob(this, p);
-
-        k->setHint("Send");
-
-        addObject(k, "knob.snd");
-
-        p = new Parameter("out", Param_Toggle);
-
-        addObject(new ChanOutToggle(this, p), "tg.out");
-    }
 }
 
 void MixChannel::remap()
@@ -325,12 +318,12 @@ void MixChannel::remap()
 
         for (Gobj* o : objs)
         {
-            if (o->getObjId() == "knob.snd")
+            if (o->getObjId() == "snd")
             {
                 o->setCoords1(width - 32, yKnob + 1, 20, 20);
             }
 
-            if (o->getObjId() == "tg.out")
+            if (o->getObjId() == "out")
             {
                 o->setCoords1(width - 12, yKnob + 5, 12, 12);
 

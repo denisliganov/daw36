@@ -16,27 +16,6 @@
 Eff* CreateEffect(std::string effname);
 
 
-class SendControl : public Control
-{
-public:
-            SendControl();
-            MixChannel*         getOutChannel()         {   return outChannel;  }
-            MixChannel*         getInChannel()         {   return inChannel;  }
-private:
-
-            void                drawSelf(Graphics & g);
-            void                remap();
-            void                handleMouseWheel(InputEvent& ev) {}
-            void                handleMouseDown(InputEvent& ev) {}
-            void                handleMouseDrag(InputEvent& ev) {}
-
-            int                 chIndex;
-            Parameter*          sendLevel;
-            Knob*               sendKnob;
-            MixChannel*         inChannel;
-            MixChannel*         outChannel;
-};
-
 class MixChannel : public ParamObject
 {
 friend  Audio36;
@@ -78,6 +57,9 @@ public:
             void                save(XmlElement* xmlChanNode);
             void                setBufferSize(unsigned int bufferSize);
             void                setSampleRate(float sampleRate);
+            void                addSend(int idx);
+            void                delSend(int idx);
+
 
 private:
 
@@ -95,7 +77,6 @@ private:
             Parameter*          panParam;
             bool                soloparam;
             Button36*           solotoggle;
-            SendControl         send[NUM_CHANNELS + 1];     // Num channels plus master
             Parameter*          volParam;
             ChanVU*             vu;
             Knob*               volKnob;

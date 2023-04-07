@@ -179,41 +179,32 @@ Instrument* InstrPanel::addInstrument(Device36 * dev, Instrument * objAfter)
 
     instrs.push_back(i);
 
-    /*
-    if(instrs.size() == 1)
+    updateInstrIndexes();
+
+    i->addMixChannel();
+
+    addObject(i, "instr");
+
+
+    for (Instrument* instr : instrs)
     {
-        // If at least 1 instrument present, init iterator for current
+        if (instr == i) break;
 
-        currInstr = instrs.begin();
+        instr->getMixChannel()->addSend(i->getIndex());
     }
-    */
 
-    if(!MProject.isLoading())
+    remapAndRedraw();
+
+    MProject.setChange();
+
+    if(MMixer->isShown())
     {
-        updateInstrIndexes();
+        i->mixChannel->setEnable(true);
+
+        MMixer->remapAndRedraw();
     }
 
-    //if(!(device && device->previewOnly))
-    {
-        i->addMixChannel();
-
-        addObject(i, "instr");
-
-        remapAndRedraw();
-
-        MProject.setChange();
-
-        if(MMixer->isShown())
-        {
-            i->mixChannel->setEnable(true);
-
-            MMixer->remapAndRedraw();
-        }
-
-        //MGrid->syncToInstruments();
-
-        MEdit->remapAndRedraw();
-    }
+    MEdit->remapAndRedraw();
 
     if (curr == NULL)
     {
@@ -303,6 +294,17 @@ void InstrPanel::deleteInstrument(Instrument* i)
 {
     WaitForSingleObject(AudioMutex, INFINITE);
 
+    if (i == curr)
+    {
+        int idx = i->getIndex() - 1;
+
+        if (idx < 0) idx = 0;
+
+        setCurrInstr(instrs[idx]);
+    }
+
+    instrs.erase(instrs.begin() + i->getIndex());
+
     updateInstrIndexes();
 
     deleteObject(i);
@@ -325,7 +327,7 @@ Instrument* InstrPanel::getInstrByIndex(int index)
 {
     for(Instrument* instr : instrs)
     {
-        if(instr->device->devIdx == index)
+        if(instr->getIndex() == index)
         {
             return instr;
         }
