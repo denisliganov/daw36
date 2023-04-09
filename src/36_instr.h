@@ -59,6 +59,7 @@ virtual Instrument*             clone();
             void                handleChildEvent(Gobj * obj, InputEvent& ev);
             bool                isDummy();
     virtual void                load(XmlElement* instrNode);
+            bool                isMaster()  { return (instrAlias == "["); }
             void                preview(int note = BaseNote);
             void                remap();
             void                setDevice(Device36* dev);

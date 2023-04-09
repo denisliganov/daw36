@@ -37,6 +37,7 @@ public:
             ContextMenu*        createContextMenu();
             ContextMenu*        createContextMenuForEffect(Eff* eff);
             void                drawSelf(Graphics& g);
+            void                drawOverChildren(Graphics & g);
             void                doSend(float * sendbuff, float amount, int num_frames);
             void                deleteEffect(Eff* eff);
             Instrument*         getInstr()  { return instr; }
@@ -57,8 +58,8 @@ public:
             void                save(XmlElement* xmlChanNode);
             void                setBufferSize(unsigned int bufferSize);
             void                setSampleRate(float sampleRate);
-            void                addSend(int idx);
-            void                delSend(int idx);
+            void                addSend(MixChannel* mchan);
+            void                delSend(MixChannel* mchan);
 
 
 private:
@@ -75,8 +76,6 @@ private:
             float               outbuff[MAX_BUFF_SIZE*2];
             Knob*               panKnob;
             Parameter*          panParam;
-            bool                soloparam;
-            Button36*           solotoggle;
             Parameter*          volParam;
             ChanVU*             vu;
             Knob*               volKnob;

@@ -27,7 +27,6 @@ ParamObject::ParamObject()
 
 ParamObject::~ParamObject()
 {
-
     while (params.size() > 0)
     {
         Parameter* p = params.front();

@@ -283,6 +283,8 @@ void Knob::drawKnob(Graphics& g)
     int x = x1 + 2;
     int y = y1 + 2;
 
+    bool dim = (dimOnZero && param->getNormalizedValue() == 0);
+
     if (bgSaved && savedHeight == h)
     {
         g.setColour(Colours::white);
@@ -291,64 +293,22 @@ void Knob::drawKnob(Graphics& g)
     }
     else
     {
-        //float s = 1.f/2*PI*((width-2)/2);
+        Colour clr = Colour(1.f, 0.f, dim ? .22 : .62f, 1.f);
 
-        if (0)
+        if (objId.find("snd") != std::string::npos)
         {
-            gSetMonoColor(g, .4f);
-            gEllipseFill(g, x, y, w, h);
+            ///
         }
-        else
+        else if (instr)
         {
-            //setc(g, .2f);
-            //gPie(g, x1, y1, width, height, PI - angleOffset, PI + angleOffset);
-            //gArc(g, x1, y1, width, height, PI - angleOffset, PI + angleOffset);
+            float s = .4f;
+            float b = dim ? .22 : .72;
+            float a = 1;
 
-            if(instr)
-                instr->setMyColor(g, 1.f);
-            else
-                //parent->setMyColor(g, 1.f);
-                setc(g, .3f);
-            
-            //gEllipseFill(g, x1+1, y1+1, width-2, height-2);
-
-            Colour clr = Colour(1.f, 0.f, .22f, 1.f);
-
-            if (objId.find("knob.snd") != std::string::npos)
-            {
-            }
-            else if (instr)
-            {
-                float s = .4f;
-                float b = .6f;
-                float a = 1;
-
-                clr = Colour(instr->getColorHue(), s, b, a);
-            }
-
-            drawGlassRound(g, x, y, w, clr, 1);
-
-            ///gSetMonoColor(g, 0, .3f);
-            //gPie(g, x+2, y+2, w-2, w-2, PI - angleOffset, PI + angleOffset);
+            clr = Colour(instr->getColorHue(), s, b, a);
         }
 
-        //(55, 45, 35)
-        //drawGlassRound(g,  x, y, w, Colour(90, 80, 10), 1);
-
-        if(0 && param->getOffset() < 0)
-        {
-            float o = param->getOffset() / param->getRange();
-            float oa = abs(o*angleRange);
-
-            float rad = float(w-2)/2;
-            float singleAngle = 1.f/(2*PI);
-            float ratio = 1.f/(2*PI*rad);
-            float singlePixelAngle = ratio*2*PI;
-
-            gSetMonoColor(g, .6f);
-
-            gPie(g, x1+1, y1+1, width-2, height-2, PI + angleOffset + oa, PI + angleOffset + oa);
-        }
+        drawGlassRound(g, x, y, w, clr, 1);
 
         //setc(g, .2f);
         //gPie(g, x, y, w, h, PI + angleOffset, 3*PI - angleOffset);
@@ -361,9 +321,12 @@ void Knob::drawKnob(Graphics& g)
         savedHeight = h;
     }
 
+
+    setc(g, .18f, 1.f);
+
     float xadv0, xadv1, yadv0, yadv1;
 
-    int rrad0 = w/2 - 2;
+    int rrad0 = w/2 - 1;
     int rrad1 = 0; // rrad0 / 5.f;
 
     float ang = positionAngle - (PI/2.f - angleOffset);
@@ -381,13 +344,6 @@ void Knob::drawKnob(Graphics& g)
 
     yadv1 = rrad1 * sin(ang);
     yadv0 = rrad0 * sin(ang);
-
-    if(instr)
-        instr->setMyColor(g, .2f);
-    else
-        parent->setMyColor(g, .2f);
-
-    setc(g, .9f);
 
     int kx1 = (float)RoundFloat(x + w/2 + xadv1);
     int ky1 = (float)RoundFloat(y + h/2 - yadv1);

@@ -93,9 +93,24 @@ float   globalHue = 0.25f;
 float   globalSaturation = 0.f;
 float   brightnessCoeff = 1.f;
 
+float   currHue = 0.25f;
+float   currSat = 0.f;
+
+void gResetColorSettings()
+{
+    currHue = globalHue;
+    currSat = globalSaturation;
+}
+
+void gSetColorSettings(float hue, float sat)
+{
+    currHue = hue;
+    currSat = sat;
+}
+
 void gSetMonoColor(Graphics& g, float clr, float alpha)
 {
-    g.setColour(Colour(globalHue, globalSaturation, pow(clr, brightnessCoeff), alpha));
+    g.setColour(Colour(currHue, currSat, pow(clr, brightnessCoeff), alpha));
 }
 
 void gSetColor(Graphics& g, uint8 red, uint8 green, uint8 blue, uint8 alpha)

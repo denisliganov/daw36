@@ -100,7 +100,6 @@ InstrPanel::InstrPanel(Mixer* mixer)
 {
     fxShowing = false;
 
-    //currInstr = NULL;
     curr = NULL;
 
     devDummy = new Device36();
@@ -185,12 +184,17 @@ Instrument* InstrPanel::addInstrument(Device36 * dev, Instrument * objAfter)
 
     addObject(i, "instr");
 
-
     for (Instrument* instr : instrs)
     {
-        if (instr == i) break;
+        if (instr != i)
+        {
+            if (!i->isMaster())
+                i->getMixChannel()->addSend(instr->getMixChannel());
 
-        instr->getMixChannel()->addSend(i->getIndex());
+            {
+                instr->getMixChannel()->addSend(i->getMixChannel());
+            }
+        }
     }
 
     remapAndRedraw();
@@ -294,6 +298,8 @@ void InstrPanel::deleteInstrument(Instrument* i)
 {
     WaitForSingleObject(AudioMutex, INFINITE);
 
+    instrs.erase(instrs.begin() + i->getIndex());
+
     if (i == curr)
     {
         int idx = i->getIndex() - 1;
@@ -303,7 +309,13 @@ void InstrPanel::deleteInstrument(Instrument* i)
         setCurrInstr(instrs[idx]);
     }
 
-    instrs.erase(instrs.begin() + i->getIndex());
+    for (Instrument* ins : instrs)
+    {
+        if (ins == i || ins->isMaster()) 
+            continue;
+
+        ins->getMixChannel()->delSend(i->getMixChannel());
+    }
 
     updateInstrIndexes();
 

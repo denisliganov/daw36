@@ -22,11 +22,13 @@ public:
             void                handleSliding(InputEvent& ev);
             void                remap();
             void                setVis(bool vis);
+            void                setDimOnZero(bool dim) { dimOnZero = dim; }
             void                updValue();
             void                updPosition();
 
 protected:
 
+            bool                dimOnZero;
             float               angleRange;       // in radians too
             float               angleOffset;      // in radians too
             float               positionAngle;    // in radians

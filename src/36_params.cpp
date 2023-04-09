@@ -60,6 +60,10 @@ Parameter::Parameter(std::string name, ParamType param_type)
     {
         paramInit(name, Param_Pan, -1.f, 1.f, 0.f, Units_Percent);
     }
+    else if (type == Param_Default)
+    {
+        paramInit(name, Param_Default, 0.f, 1.f, 0.f, Units_Percent);
+    }
 }
 
 Parameter::Parameter(std::string param_name, bool def_val)

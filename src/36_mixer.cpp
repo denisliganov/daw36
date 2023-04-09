@@ -42,8 +42,6 @@ void Mixer::init()
 
     masterChannel->master = true;
     masterChannel->chanTitle = "MASTER";
-
-    //mixViewUpdate();
 }
 
 

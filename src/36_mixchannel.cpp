@@ -102,23 +102,39 @@ class ChanOutToggle : public ToggleBox
 {
 public:
 
-    ChanOutToggle(MixChannel* chan, int idx) : ToggleBox(new Parameter("out", Param_Toggle))
+    ChanOutToggle(MixChannel* chan, MixChannel* out_chan) : ToggleBox(new Parameter("out", Param_Toggle))
     {
-        index = idx;
         channel = chan;
+        outChannel = out_chan;
         param->setModule(channel);
     }
 
-    int getIndex()  { return index; }
+    MixChannel* getOutChannel()
+    {
+        return outChannel;
+    }
 
 private:
 
     void drawSelf(Graphics& g)
     {
+        Colour clr;
+        {
+            Instrument* instr = outChannel->getInstr();
+
+            float hue = instr->isMaster() ? 1.f : instr->getColorHue();
+
+            float s = .4f;
+            float b = .72;
+            float a = 1;
+
+            clr = Colour(hue, s, b, a);
+        }
+
         if (param->getBoolValue())
-            drawGlassRound(g, x1+1, y1+1, width-2, Colour(255,255,255), 1);
+            drawGlassRound(g, x1+1, y1+1, width-2, clr, 1);
         else
-            drawGlassRound(g, x1+1, y1+1, width-2, Colour(55, 55, 55), 1);
+            drawGlassRound(g, x1+1, y1+1, width-2, clr.withBrightness(.2f), 1);
     }
 
     std::string ChanOutToggle::getHint()
@@ -134,7 +150,6 @@ private:
     //void handleMouseDown(InputEvent & ev) {  }
     void handleMouseWheel(InputEvent& ev) { parent->handleMouseWheel(ev); }
 
-    int             index;
     MixChannel*     channel;
     MixChannel*     outChannel;
 };
@@ -144,23 +159,19 @@ class SendKnob : public Knob
 {
 public:
 
-    SendKnob(MixChannel* chan, int idx, std::string nm) : Knob(new Parameter(nm, Param_Default), true)
+    SendKnob(MixChannel* chan, MixChannel* out_chan, std::string nm) : Knob(new Parameter(nm, Param_Default), true)
     {
         setHint("Send");
-        
-        index = idx;
         channel = chan;
-        outChannel = MInstrPanel->getInstrByIndex(idx)->getMixChannel();
-
+        outChannel = out_chan;
         param->setModule(channel);
+        setDimOnZero(true);
     }
 
     MixChannel* getOutChannel()
     {
         return outChannel;
     }
-
-    int getIndex() { return index; }
 
 private:
 
@@ -174,7 +185,6 @@ private:
         return hint;
     }
 
-    int             index;
     MixChannel*     channel;
     MixChannel*     outChannel;
 };
@@ -198,13 +208,13 @@ MixChannel::~MixChannel()
     //
 }
 
-void MixChannel::addSend(int idx)
+void MixChannel::addSend(MixChannel* mchan)
 {
-    addObject(new SendKnob(this, idx, "snd"), "snd");
-    addObject(new ChanOutToggle(this, idx), "out");
+    addObject(new SendKnob(this, mchan, "snd"), "snd");
+    addObject(new ChanOutToggle(this, mchan), "out");
 }
 
-void MixChannel::delSend(int idx)
+void MixChannel::delSend(MixChannel* mchan)
 {
     SendKnob* k = NULL;
     ChanOutToggle* c = NULL;
@@ -215,7 +225,7 @@ void MixChannel::delSend(int idx)
         {
             k = dynamic_cast<SendKnob*>(o);
 
-            if (k && k->getIndex() != idx)
+            if (k && k->getOutChannel() != mchan)
                 k = NULL;
         }
 
@@ -223,7 +233,7 @@ void MixChannel::delSend(int idx)
         {
             c = dynamic_cast<ChanOutToggle*>(o);
 
-            if (c && c->getIndex() != idx)
+            if (c && c->getOutChannel() != mchan)
                 c = NULL;
         }
     }
@@ -245,22 +255,22 @@ void MixChannel::init(Instrument* ins)
     {
         instr = ins;
 
-        for (int i = 0; i < MInstrPanel->getNumInstrs(); i++)
+        for (Instrument* i : MInstrPanel->getInstrs())
         {
-            addSend(i);
+           // addSend(i->getMixChannel());
         }
     }
     else    // send or master
     {
         instr = NULL;
         mchanout = NULL;
-        //muteparam = NULL;
-        soloparam = NULL;
+        //soloparam = NULL;
         mutetoggle = NULL;
-        solotoggle = NULL;
         volKnob = NULL;
         panKnob = NULL;
     }
+
+    vu = NULL;
 
     addParam(volParam = new Parameter("Volume", Param_Vol, 0.f, DAW_VOL_RANGE, 1.f, Units_Percent));
     addParam(panParam = new Parameter("Panning", Param_Pan));
@@ -297,7 +307,7 @@ void MixChannel::remap()
         {
             eff->showDevice(true);
 
-            eff->setCoords1(xeff, 1 + yeff - int(vscr->getOffset()), w - xeff - 4, eff->getH());
+            eff->setCoords1(xeff, 1 + yeff - int(vscr->getOffset()), w - xeff - 16, eff->getH());
 
             yeff += eff->getH() + gap;
         }
@@ -316,6 +326,11 @@ void MixChannel::remap()
 
         int yKnob = 0;
 
+        if (instr->getIndex() == 0)
+        {
+            yKnob += InstrHeight + 1;
+        }
+
         for (Gobj* o : objs)
         {
             if (o->getObjId() == "snd")
@@ -328,6 +343,13 @@ void MixChannel::remap()
                 o->setCoords1(width - 12, yKnob + 5, 12, 12);
 
                 yKnob += InstrHeight + 1;
+
+                ChanOutToggle* t = dynamic_cast<ChanOutToggle*>(o);
+
+                if (t->getOutChannel()->getInstr()->getIndex() == instr->getIndex() - 1)
+                {
+                    yKnob += InstrHeight + 1;
+                }
             }
         }
     }
@@ -356,9 +378,25 @@ void MixChannel::remap()
 
 void MixChannel::drawSelf(Graphics& g)
 {
+    gSetColorSettings(instr->getColorHue(), .2f);
+    
     fill(g, .1f);
 
-    int w = width - 32;
+    int w = width - 64;
+
+    for (Gobj* o : objs)
+    {
+        if (o->getObjId() == "out")
+        {
+            ChanOutToggle* t = dynamic_cast<ChanOutToggle*>(o);
+
+            if (t->getBoolValue())
+            {
+                setc(g, .6f);
+                gLine(g, x1, y1 + height/2, t->getX1() + t->getW()/2, t->getY1() + t->getH()/2);
+            }
+        }
+    }
 
     if (MixViewSingle)
     {
@@ -377,6 +415,12 @@ void MixChannel::drawSelf(Graphics& g)
         setc(g, .2f);
         fillx(g, 0, 0, w, height);
     }
+}
+
+
+void MixChannel::drawOverChildren(Graphics& g)
+{
+    gResetColorSettings();
 }
 
 void MixChannel::addEffect(Eff* eff)
@@ -494,12 +538,9 @@ void MixChannel::save(XmlElement * xmlChanNode)
 void MixChannel::load(XmlElement * xmlNode)
 {
     //muteparam = xmlNode->getBoolAttribute(T("Mute"));
-    soloparam = xmlNode->getBoolAttribute(T("Solo"));
-
-    if (soloparam)
-    {
-        SoloMixChannel = this;
-    }
+    //soloparam = xmlNode->getBoolAttribute(T("Solo"));
+    //if (soloparam)
+    //    SoloMixChannel = this;
 
     XmlElement* xmlParam = NULL;
 
@@ -781,6 +822,10 @@ void MixChannel::handleParamUpdate(Parameter * param)
 
             int a = 1;
         }
+    }
+    else if (param->getName() == "out")
+    {
+        redraw();
     }
 }
 

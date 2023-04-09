@@ -160,7 +160,7 @@ Instrument::~Instrument()
         //delete device;
     }
 
-    //MMixer->removeMixChannel(this);
+    MMixer->removeMixChannel(this);
 
     ReleaseMutex(MixerMutex);
 }
@@ -365,7 +365,7 @@ void Instrument::handleChildEvent(Gobj * obj, InputEvent& ev)
     }
     else if (obj == guiButton)
     {
-        if (ev.clickDown)
+        if (ev.clickDown && device != devDummy)
         {
             MInstrPanel->setCurrInstr(this);
 
@@ -389,7 +389,7 @@ void Instrument::handleMouseDown(InputEvent& ev)
         {
             preview();
         }
-        else
+        else if (device != devDummy)
         {
             if(ev.keyFlags == 0 && ev.doubleClick)
             {

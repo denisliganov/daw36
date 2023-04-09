@@ -95,6 +95,7 @@ public:
             int                 getX2()             { return x2; };
             int                 getY2()             { return y2; };
             float               getColorHue()       { return colorHue;}
+            float               getColorSat()       { return colorSat;}
             int                 getDrawX1()         { return dx1; };
             int                 getDrawY1()         { return dy1; };
             int                 getDrawX2()         { return dx2; };

@@ -72,14 +72,17 @@ struct Rect36
         void    gLine(Graphics& g, float x1, float y1, float x2, float y2);
         void    gPanelRect(Graphics& g, int x1, int y1, int x2, int y2);
         void    gRound(Graphics& g, int x1, int y1, float rad);
+        void    gResetColorSettings();
         void    gSetPixel(Graphics& g, int x, int y);
         void    gSetColorIndex(Graphics& g, int color_index);
         void    gSetMonoColor(Graphics& g, float clr, float alpha = 1.f);
+        void    gSetColorSettings(float hue, float sat);
         void    gTriangle(Graphics& g, int x1, int y1, int x2, int y2, int x3, int y3, const Colour& fill, const Colour& outline);
         void    gTriangle(Graphics& g, int x1, int y1, int x2, int y2, int x3, int y3);
         void    gTriLine(Graphics& g, int x, int y, bool left, bool center, bool right);
 
         void    paintButton (Graphics& g, int x, int y, int w, int h, bool isMouseOverButton, bool isButtonDown);
+
         void    drawGlassRound (Graphics& g,
                                    const float x, const float y,
                                    const float diameter,
