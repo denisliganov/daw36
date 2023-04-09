@@ -27,6 +27,8 @@ Knob::Knob(Parameter* par, bool knob)
 
     defPos = 0;
     savedHeight = 0;
+    dim = false;
+    dimOnZero = false;
 
     instr = NULL;
 
@@ -283,7 +285,15 @@ void Knob::drawKnob(Graphics& g)
     int x = x1 + 2;
     int y = y1 + 2;
 
-    bool dim = (dimOnZero && param->getNormalizedValue() == 0);
+    bool old = dim;
+    
+    dim = (dimOnZero && param->getNormalizedValue() == 0);
+
+    if (dim != old)
+    {
+        bgSaved = false;
+        savedHeight = h;
+    }
 
     if (bgSaved && savedHeight == h)
     {

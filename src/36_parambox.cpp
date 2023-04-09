@@ -191,7 +191,7 @@ void ParamBox::redraw()
 
 ToggleBox::ToggleBox(Parameter* param_tg)
 {
-    param = param_tg;
+    setParam(param_tg);
 
     setFontId(FontSmall);
 

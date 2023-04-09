@@ -210,8 +210,15 @@ MixChannel::~MixChannel()
 
 void MixChannel::addSend(MixChannel* mchan)
 {
+    ChanOutToggle* c;
+
     addObject(new SendKnob(this, mchan, "snd"), "snd");
-    addObject(new ChanOutToggle(this, mchan), "out");
+    addObject(c = new ChanOutToggle(this, mchan), "out");
+
+    if (mchan == mchanout)
+    {
+        out = c;
+    }
 }
 
 void MixChannel::delSend(MixChannel* mchan)
@@ -248,7 +255,7 @@ void MixChannel::delSend(MixChannel* mchan)
 void MixChannel::init(Instrument* ins)
 {
     objId = "mixchan";
-    master = false;
+
     muteCount = 0;
 
     if(ins != NULL)
@@ -264,16 +271,17 @@ void MixChannel::init(Instrument* ins)
     {
         instr = NULL;
         mchanout = NULL;
-        //soloparam = NULL;
         mutetoggle = NULL;
         volKnob = NULL;
         panKnob = NULL;
     }
 
     vu = NULL;
+    out = NULL;
 
     addParam(volParam = new Parameter("Volume", Param_Vol, 0.f, DAW_VOL_RANGE, 1.f, Units_Percent));
     addParam(panParam = new Parameter("Panning", Param_Pan));
+
     addObject(volKnob = new Knob(volParam));
     addObject(panKnob = new Knob(panParam));
     addObject(vu = new ChanVU(false), ObjGroup_VU);
@@ -384,20 +392,6 @@ void MixChannel::drawSelf(Graphics& g)
 
     int w = width - 64;
 
-    for (Gobj* o : objs)
-    {
-        if (o->getObjId() == "out")
-        {
-            ChanOutToggle* t = dynamic_cast<ChanOutToggle*>(o);
-
-            if (t->getBoolValue())
-            {
-                setc(g, .6f);
-                gLine(g, x1, y1 + height/2, t->getX1() + t->getW()/2, t->getY1() + t->getH()/2);
-            }
-        }
-    }
-
     if (MixViewSingle)
     {
         int sendPanelHeight = 30;
@@ -420,6 +414,20 @@ void MixChannel::drawSelf(Graphics& g)
 
 void MixChannel::drawOverChildren(Graphics& g)
 {
+    for (Gobj* o : objs)
+    {
+        if (o->getObjId() == "out")
+        {
+            ChanOutToggle* t = dynamic_cast<ChanOutToggle*>(o);
+
+            if (t->getBoolValue())
+            {
+                setc(g, .6f);
+                gLine(g, x1, y1 + height/2, t->getX1() + t->getW()/2, t->getY1() + t->getH()/2);
+            }
+        }
+    }
+
     gResetColorSettings();
 }
 
@@ -818,13 +826,27 @@ void MixChannel::handleParamUpdate(Parameter * param)
 
         if (sk)
         {
-            MixChannel* outChan = sk->getOutChannel();
-
-            int a = 1;
+            if (sk->getParam()->getNormalizedValue() == 0)
+            {
+                sendsk.unique();
+                sendsk.remove(sk);
+            }
+            else
+            {
+                sendsk.push_back(sk);
+                sendsk.unique();
+            }
         }
     }
     else if (param->getName() == "out")
     {
+        if (param->getBoolValue())
+        {
+            ChanOutToggle* t = dynamic_cast<ChanOutToggle*>(param->getControl());
+
+            mchanout = t->getOutChannel();
+        }
+
         redraw();
     }
 }

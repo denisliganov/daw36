@@ -13,6 +13,9 @@
 
 
 
+class ChanOutToggle;
+class SendKnob;
+
 Eff* CreateEffect(std::string effname);
 
 
@@ -69,8 +72,10 @@ private:
             std::list<Eff*>     effs;
             float               inbuff[MAX_BUFF_SIZE*2];
             Instrument*         instr;
+    std::list<MixChannel*>      sends;
             MixChannel*         mchanout;
-            bool                master;
+    std::list<SendKnob*>        sendsk;
+            ChanOutToggle*      out;
             int                 muteCount;
             Button36*           mutetoggle;
             float               outbuff[MAX_BUFF_SIZE*2];

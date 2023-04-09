@@ -133,84 +133,33 @@ void Num2String(long num, char* string)
    *p_string = 0;
 }
 
-void ParamNum2String(long num, char* string)
+long getNumberFromString(std::string str)
 {
-    long    count_digits = 10;
-    long    count_num;
-    short   digit;
-    char    char_digit;
-    char*   p_string = string;
+    int order = str.size();
+    long value = 0;
 
-    if(num == 100)  // make dashed string "--" if 100
+    for (int i = 0; i < str.size(); i++)
     {
-        *p_string++ = 0x2D;
-        *p_string++ = 0x2D;
-    }
-    else if(num < 100)
-    {
-        count_num = num;
-
-        while(count_digits > 0)
-        {
-            digit = (short)(count_num / count_digits);
-            count_num = count_num % count_digits;
-
-            if(digit == 0)
-            {
-               *p_string = '0';
-                p_string++;
-            }
-
-            if(digit !=0)
-            {
-                char_digit = (char)(digit + 48);
-               *p_string = char_digit;
-                p_string++;
-            }
-
-            count_digits /= 10;
-        }
+        order--;
+        value += ((uint8)str[i] + 48)*10^order;
     }
 
-   *p_string = 0;
+    return value;
 }
 
-long ParamString2Num(char* string)
+std::string getStringFromNumber(long num)
 {
-    long    count_digits = 1;
-    int     digit, nc;
-    int     len = strlen(string);
-    long    num = 0;
-    int     dashcount = 0;
+    std::string strval;
+    long dec = 10;
 
-    if(len != 0)
+    do
     {
-        for(nc = len - 1; nc >= 0; nc--)
-        {
-            if(string[nc] == 0x2D)
-            {
-                dashcount++;
-            }
+        char d = num % dec;
+        strval.insert(0, 1, char(d + 48));
+        dec *= 10;
+    } while (dec <= num);
 
-            if((string[nc] >= 0x30)&&(string[nc] <= 0x39))
-            {
-                digit = string[nc] - 0x30;
-                num = num + digit * count_digits;
-                count_digits *= 10;
-            }
-            else if((string[nc] == 0x2D)||(string[nc] == 0x25))
-            {
-                count_digits *= 10;
-            }
-        }
-
-        if(dashcount == len)
-        {
-            num = 100; // 100 is a workaround for 2-digit number, likely to be changed to 10^len (len power of 10)
-        }
-    }
-
-    return(num);
+    return strval;
 }
 
 float Calc_SlideMultiplier(unsigned long frame_length, int semitones)

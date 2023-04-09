@@ -39,9 +39,6 @@ void Mixer::init()
     currentEffect = NULL;
 
     addObject(masterChannel = new MixChannel(), "mchan.master");
-
-    masterChannel->master = true;
-    masterChannel->chanTitle = "MASTER";
 }
 
 
@@ -211,11 +208,19 @@ MixChannel* Mixer::addMixChannel(Instrument * instr)
 {
     WaitForSingleObject(MixerMutex, INFINITE);
 
-    MixChannel* mixChannel = new MixChannel(instr);
+    MixChannel* mixChannel;
 
-    mixChannel->mchanout = (masterChannel);
-
-    addObject(mixChannel, "");
+    if (instr->isMaster())
+    {
+        mixChannel = (masterChannel);
+        mixChannel->instr = instr;
+    }
+    else
+    {
+        mixChannel = new MixChannel(instr);
+        mixChannel->mchanout = (masterChannel);
+        addObject(mixChannel, "");
+    }
 
     ReleaseMutex(MixerMutex);
 

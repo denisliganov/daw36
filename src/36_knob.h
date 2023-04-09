@@ -37,5 +37,6 @@ protected:
             int                 savedHeight;
             Instrument*         instr;
             bool                knobMode;
+            bool                dim;
 };
 
