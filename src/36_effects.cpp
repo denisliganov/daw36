@@ -296,8 +296,6 @@ void Eff::load(XmlElement * xmlEff)
 
 void Eff::handleMouseDown(InputEvent& ev)
 {
-    MMixer->setCurrentEffect(this);
-
     if (mixChannel->instr)
     {
     //    MInstrPanel->setCurrInstr(mixChannel->instr);

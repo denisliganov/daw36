@@ -114,9 +114,6 @@ InstrPanel::InstrPanel(Mixer* mixer)
 
     masterVolume = new Parameter("Master", Param_Vol);
 
-    //addObject(masterVolBox = new ParamBox(masterVolume));
-    //masterVolBox->setSliderOnly(true);
-
     addObject(masterVolKnob = new Knob(masterVolume));
 
     masterVolume->addControl(masterVolKnob);
@@ -467,7 +464,9 @@ bool InstrPanel::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
 
 bool InstrPanel::handleObjDrop(Gobj * obj, int mx, int my, unsigned int flags)
 {
-    if (dropObj)
+    Instrument* iTo = dynamic_cast<Instrument*>(dropObj);
+
+    if (dropObj && ! iTo->isMaster())
     {
         BrwListEntry* ble = dynamic_cast<BrwListEntry*>(obj);
 
@@ -475,9 +474,7 @@ bool InstrPanel::handleObjDrop(Gobj * obj, int mx, int my, unsigned int flags)
         {
             // load from browser
 
-            Instrument* i = dynamic_cast<Instrument*>(dropObj);
-
-            setInstrFromNewBrowser(ble, i);
+            setInstrFromNewBrowser(ble, iTo);
         }
         else
         {
@@ -488,8 +485,7 @@ bool InstrPanel::handleObjDrop(Gobj * obj, int mx, int my, unsigned int flags)
 //                i = getCurrInstr()->clone();
             }
 
-            Instrument* iTo = (Instrument*)dropObj;
-            Instrument* iFrom = (Instrument*)obj;
+            Instrument* iFrom = dynamic_cast<Instrument*>(obj);
 
             Device36* devTo = iTo->getDevice();
             Device36* devFrom = iFrom->getDevice();
@@ -504,10 +500,8 @@ bool InstrPanel::handleObjDrop(Gobj * obj, int mx, int my, unsigned int flags)
 
             remapAndRedraw();
         }
-    }
-    else
-    {
-        
+
+        return true;
     }
 
     return false;
@@ -702,8 +696,6 @@ void InstrPanel::resetAll()
 void InstrPanel::remap()
 {
     confine();
-
-    //masterVolBox->setCoords1(width - 120, 6, -1, 16);
 
     masterVolKnob->setCoords1(width - 130, 1, 100, MainLineHeight - 2);
 

@@ -29,14 +29,12 @@ Mixer::Mixer()
 
 Mixer::~Mixer()
 {
-    int a = 1;
+    ///
 }
 
 void Mixer::init()
 {
     objId = "mixer";
-
-    currentEffect = NULL;
 
     addObject(masterChannel = new MixChannel(), "mchan.master");
 }
@@ -86,18 +84,6 @@ void Mixer::resetAll()
     }
 
     masterChannel->reset();
-}
-
-void Mixer::setCurrentEffect(Eff * eff)
-{
-    WaitForSingleObject(MixerMutex, INFINITE);
-    //std::unique_lock<std::mutex> lock(MixMutex);
-
-    currentEffect = eff;
-
-    redraw();
-
-    ReleaseMutex(MixerMutex);
 }
 
 void Mixer::handleChildEvent(Gobj * obj, InputEvent& ev)

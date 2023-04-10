@@ -126,6 +126,7 @@ public:
 // Toggle
             bool                getBoolValue() { return currentOption > 0 ? true : false; }
             void                toggleValue();
+            void                setBoolValue(bool val);
 
 // Radio/Selector
             void                addOption(std::string opt, bool val)    { options.push_back(opt); optValues.push_back(val); }

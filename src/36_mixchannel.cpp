@@ -114,6 +114,11 @@ public:
         return outChannel;
     }
 
+    void setValue(bool val)
+    {
+        param->setBoolValue(val);
+    }
+
 private:
 
     void drawSelf(Graphics& g)
@@ -124,7 +129,7 @@ private:
 
             float hue = instr->isMaster() ? 1.f : instr->getColorHue();
 
-            float s = .4f;
+            float s = 0; //.4f;
             float b = .72;
             float a = 1;
 
@@ -140,14 +145,14 @@ private:
     std::string ChanOutToggle::getHint()
     {
         std::string hint = param->getName().data();
-    
+
         hint += ": ";
         hint += param->getValString();
-    
+
         return hint;
     }
 
-    //void handleMouseDown(InputEvent & ev) {  }
+    void handleMouseDown(InputEvent & ev) { param->setBoolValue(true); redraw(); }
     void handleMouseWheel(InputEvent& ev) { parent->handleMouseWheel(ev); }
 
     MixChannel*     channel;
@@ -218,6 +223,7 @@ void MixChannel::addSend(MixChannel* mchan)
     if (mchan == mchanout)
     {
         out = c;
+        out->setValue(true);
     }
 }
 
@@ -343,12 +349,12 @@ void MixChannel::remap()
         {
             if (o->getObjId() == "snd")
             {
-                o->setCoords1(width - 32, yKnob + 1, 20, 20);
+                o->setCoords1(width - 38, yKnob + 1, 20, 20);
             }
 
             if (o->getObjId() == "out")
             {
-                o->setCoords1(width - 12, yKnob + 5, 12, 12);
+                o->setCoords1(width - 15, yKnob + 5, 12, 12);
 
                 yKnob += InstrHeight + 1;
 
@@ -386,8 +392,8 @@ void MixChannel::remap()
 
 void MixChannel::drawSelf(Graphics& g)
 {
-    gSetColorSettings(instr->getColorHue(), .2f);
-    
+    //gSetColorSettings(instr->getColorHue(), .2f);
+
     fill(g, .1f);
 
     int w = width - 64;
@@ -414,6 +420,7 @@ void MixChannel::drawSelf(Graphics& g)
 
 void MixChannel::drawOverChildren(Graphics& g)
 {
+    /*
     for (Gobj* o : objs)
     {
         if (o->getObjId() == "out")
@@ -427,8 +434,19 @@ void MixChannel::drawOverChildren(Graphics& g)
             }
         }
     }
+    */
 
-    gResetColorSettings();
+    setc(g, .6f);
+
+    for (SendKnob* sk : sendsk)
+    {
+        gLine(g, x1, y1 + height/2, sk->getX1() + sk->getW()/2, sk->getY1() + sk->getH()/2);
+    }
+
+    if (out != NULL)
+        gLine(g, x1, y1 + height/2, out->getX1() + out->getW()/2, out->getY1() + out->getH()/2);
+
+    //gResetColorSettings();
 }
 
 void MixChannel::addEffect(Eff* eff)
@@ -464,8 +482,6 @@ Eff* MixChannel::addEffectFromBrowser(BrwListEntry * de)
     if(eff != NULL)
     {
         addEffect(eff);
-
-        MMixer->setCurrentEffect(eff);
     }
 
     return eff;
@@ -673,8 +689,6 @@ void MixChannel::activateMenuItem(std::string mi)
 
         addEffect(eff);
 
-        MMixer->setCurrentEffect(eff);
-
         ReleaseMutex(MixerMutex);
     }
 
@@ -828,13 +842,30 @@ void MixChannel::handleParamUpdate(Parameter * param)
         {
             if (sk->getParam()->getNormalizedValue() == 0)
             {
-                sendsk.unique();
+                for (SendKnob* s : sendsk)
+                {
+                    if (s == sk)
+                    {
+                        redraw();
+                        break;
+                    }
+                }
+
                 sendsk.remove(sk);
             }
             else
             {
+                for (SendKnob* s : sendsk)
+                {
+                    if (s == sk)
+                    {
+                        return;
+                    }
+                }
+
                 sendsk.push_back(sk);
-                sendsk.unique();
+
+                redraw();
             }
         }
     }
@@ -844,7 +875,18 @@ void MixChannel::handleParamUpdate(Parameter * param)
         {
             ChanOutToggle* t = dynamic_cast<ChanOutToggle*>(param->getControl());
 
-            mchanout = t->getOutChannel();
+            if (t->getBoolValue() == false || t == out)
+            {
+
+            }
+            else
+            {
+                mchanout = t->getOutChannel();
+
+                out->setValue(false);
+
+                out = t;
+            }
         }
 
         redraw();

@@ -722,6 +722,13 @@ void Parameter::toggleValue()
     module->handleParamUpdate(this);
 }
 
+void Parameter::setBoolValue(bool val)
+{
+    currentOption = val ? 1 : 0;
+
+    module->handleParamUpdate(this);
+}
+
 
 
 
