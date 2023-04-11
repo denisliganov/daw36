@@ -10,10 +10,6 @@ class Knob : public Control
 public:
 
             Knob(Parameter* par, bool knob = false);
-            void                drawKnob(Graphics& g);
-            void                drawSelf(Graphics& g);
-            void                drawSlider(Graphics& g);
-            void                drawText(Graphics& g);
             float               getMinStep()    { return 1.f / width; }
             void                handleMouseWheel(InputEvent& ev);
             void                handleMouseDrag(InputEvent& ev);
@@ -25,6 +21,13 @@ public:
             void                setDimOnZero(bool dim) { dimOnZero = dim; }
             void                updValue();
             void                updPosition();
+
+protected:
+
+    virtual void                drawKnob(Graphics& g);
+            void                drawSelf(Graphics& g);
+            void                drawSlider(Graphics& g);
+            void                drawText(Graphics& g);
 
 protected:
 

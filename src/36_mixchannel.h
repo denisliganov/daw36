@@ -39,6 +39,7 @@ public:
             Eff*                addEffectFromBrowser(BrwListEntry* de);
             ContextMenu*        createContextMenu();
             ContextMenu*        createContextMenuForEffect(Eff* eff);
+            bool                canAcceptInputFrom(MixChannel* other_chan);
             void                drawSelf(Graphics& g);
             void                drawOverChildren(Graphics & g);
             void                doSend(float * sendbuff, float amount, int num_frames);

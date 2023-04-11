@@ -119,11 +119,18 @@ public:
         param->setBoolValue(val);
     }
 
+    void setActive(bool act)
+    {
+        active = act;
+    }
+
 private:
 
     void drawSelf(Graphics& g)
     {
-        Colour clr;
+        Colour clr = Colour(0.f, 0.f, 0.f, 1.f);
+
+        if (active)
         {
             Instrument* instr = outChannel->getInstr();
 
@@ -155,6 +162,7 @@ private:
     void handleMouseDown(InputEvent & ev) { param->setBoolValue(true); redraw(); }
     void handleMouseWheel(InputEvent& ev) { parent->handleMouseWheel(ev); }
 
+    bool            active;
     MixChannel*     channel;
     MixChannel*     outChannel;
 };
@@ -178,6 +186,28 @@ public:
         return outChannel;
     }
 
+    void setActive(bool act)
+    {
+        active = act;
+    }
+
+    void drawKnob(Graphics & g)
+    {
+        if (active)
+        {
+            Knob::drawKnob(g);
+        }
+        else
+        {
+            int w = height - 4;// *0.8f;
+            int h = height - 4;// *0.8f;
+            int x = x1 + 2;
+            int y = y1 + 2;
+
+            drawGlassRound(g, x, y, w, Colours::black, 1);
+        }
+    }
+
 private:
 
     std::string getHint()
@@ -190,6 +220,7 @@ private:
         return hint;
     }
 
+    bool            active;
     MixChannel*     channel;
     MixChannel*     outChannel;
 };
@@ -342,28 +373,38 @@ void MixChannel::remap()
 
         if (instr->getIndex() == 0)
         {
-            yKnob += InstrHeight + 1;
+        //    yKnob += InstrHeight + 1;
         }
 
         for (Gobj* o : objs)
         {
             if (o->getObjId() == "snd")
             {
-                o->setCoords1(width - 38, yKnob + 1, 20, 20);
+                SendKnob* k = dynamic_cast<SendKnob*>(o);
+
+                //if (k->getOutChannel() != this)
+                {
+                    k->setCoords1(width - 40, yKnob + 1, 20, 20);
+
+                    k->setActive(k->getOutChannel()->canAcceptInputFrom(this));
+                }
             }
 
             if (o->getObjId() == "out")
             {
-                o->setCoords1(width - 15, yKnob + 5, 12, 12);
+                ChanOutToggle* t = dynamic_cast<ChanOutToggle*>(o);
+
+                //if (t->getOutChannel() != this)
+                {
+                    t->setCoords1(width - 17, yKnob + 5, 12, 12);
+
+                    t->setActive(t->getOutChannel()->canAcceptInputFrom(this));
+                }
 
                 yKnob += InstrHeight;
 
-                ChanOutToggle* t = dynamic_cast<ChanOutToggle*>(o);
-
-                if (t->getOutChannel()->getInstr()->getIndex() == instr->getIndex() - 1)
-                {
-                    yKnob += InstrHeight;
-                }
+                //if (t->getOutChannel()->getInstr()->getIndex() == instr->getIndex() - 1)
+                //    yKnob += InstrHeight;
             }
         }
     }
@@ -617,6 +658,24 @@ ContextMenu* MixChannel::createContextMenuForEffect(Eff* eff)
     menu->addMenuItem("Replace");
 
     return menu;
+}
+
+bool MixChannel::canAcceptInputFrom(MixChannel * other_chan)
+{
+    if (out->getOutChannel() == other_chan)
+    {
+        return false;
+    }
+
+    for (SendKnob* sk : sendsk)
+    {
+        if (sk->getOutChannel() == other_chan)
+        {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 void MixChannel::activateEffectMenuItem(Eff * eff, std::string mi)

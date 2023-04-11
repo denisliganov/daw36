@@ -183,11 +183,14 @@ Instrument* InstrPanel::addInstrument(Device36 * dev, Instrument * objAfter)
 
     for (Instrument* instr : instrs)
     {
-        if (instr != i)
+        //if (instr != i)
         {
             if (!i->isMaster())
+            {
                 i->getMixChannel()->addSend(instr->getMixChannel());
+            }
 
+            if (instr != i)
             {
                 instr->getMixChannel()->addSend(i->getMixChannel());
             }

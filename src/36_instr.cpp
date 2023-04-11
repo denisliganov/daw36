@@ -534,11 +534,6 @@ void Instrument::remap()
     }
 }
 
-bool Instrument::isDummy()
-{
-    return (device == devDummy);
-}
-
 void Instrument::setIndex(int idx)
 {
     index = idx;
