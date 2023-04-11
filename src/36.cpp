@@ -112,7 +112,7 @@ MainWinObject::MainWinObject()
     GridScrollWidth =       16;
     InstrControlWidth =     220;
     InstrScrollerWidth =    16;
-    InstrHeight =           32;
+    InstrHeight =           33;
     FxPanelMaxWidth =       380;
     FxPanelScrollerWidth =  10;
     FxPanelBottomHeight =   130;

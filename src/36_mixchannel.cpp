@@ -356,13 +356,13 @@ void MixChannel::remap()
             {
                 o->setCoords1(width - 15, yKnob + 5, 12, 12);
 
-                yKnob += InstrHeight + 1;
+                yKnob += InstrHeight;
 
                 ChanOutToggle* t = dynamic_cast<ChanOutToggle*>(o);
 
                 if (t->getOutChannel()->getInstr()->getIndex() == instr->getIndex() - 1)
                 {
-                    yKnob += InstrHeight + 1;
+                    yKnob += InstrHeight;
                 }
             }
         }
@@ -436,6 +436,7 @@ void MixChannel::drawOverChildren(Graphics& g)
     }
     */
 
+/*
     setc(g, .6f);
 
     for (SendKnob* sk : sendsk)
@@ -445,7 +446,7 @@ void MixChannel::drawOverChildren(Graphics& g)
 
     if (out != NULL)
         gLine(g, x1, y1 + height/2, out->getX1() + out->getW()/2, out->getY1() + out->getH()/2);
-
+*/
     //gResetColorSettings();
 }
 

@@ -708,7 +708,7 @@ void InstrPanel::remap()
 
     int ih = 33;
 
-    while (num*(ih + 1) > instrListHeight)
+    while (num*(ih) > instrListHeight)
     {
         ih--;
     }
@@ -728,7 +728,7 @@ void InstrPanel::remap()
             i->setVis(false);
         }
 
-        yoffs += InstrHeight + 1;
+        yoffs += InstrHeight;
     }
 
     confine();

@@ -261,6 +261,8 @@ Instrument* Instrument::clone()
 
 void Instrument::drawSelf(Graphics& g)
 {
+    int h = height - 1;
+
     if (device->getIndex() == 36)
     {
         //return;
@@ -270,25 +272,25 @@ void Instrument::drawSelf(Graphics& g)
     {
         Gobj::setMyColor(g, .7f);
         //setc(g, 1.f);
-        fillx(g, 0, 0, width, height);
+        fillx(g, 0, 0, width, h);
 
         Gobj::setMyColor(g, .5f);
-        fillx(g, 0, 0, width, height/2);
+        fillx(g, 0, 0, width, h/2);
     }
     else
     {
         Gobj::setMyColor(g, .4f);
 
-        fillx(g, 0, 0, width, height);
+        fillx(g, 0, 0, width, h);
     }
 
     //setc(g, .0f);
     Gobj::setMyColor(g, .5f);
-    txtfit(g, FontSmall, getObjName(), guiButton->getW() + 4, 10, width - (height+4));
+    txtfit(g, FontSmall, getObjName(), guiButton->getW() + 4, 10, width - (h+4));
 
     //setc(g, 1.f);
     Gobj::setMyColor(g, 1.f);
-    txtfit(g, FontSmall, getObjName(), guiButton->getW() + 4, 9, width - (height+4));
+    txtfit(g, FontSmall, getObjName(), guiButton->getW() + 4, 9, width - (h+4));
 
 
     //Colour clr = Colour(100, 110, 110);
@@ -308,8 +310,8 @@ void Instrument::drawSelf(Graphics& g)
         float a = 1;
 
         Colour clr = Colour(colorHue, s, b, a);
-        drawGlassRound(g, x2 - 70, y1 + 4, (height*0.65f), clr, 1);
-        drawGlassRound(g, x2 - 47, y1 + 2, (height*0.8f), clr, 1);
+        drawGlassRound(g, x2 - 70, y1 + 4, (h*0.65f), clr, 1);
+        drawGlassRound(g, x2 - 47, y1 + 2, (h*0.8f), clr, 1);
     }
 
     //createSnap();
@@ -465,7 +467,9 @@ void Instrument::preview(int note)
 
 void Instrument::remap()
 {
-    guiButton->setCoords1(0, 0, height/1.5f, height);
+    int h = height - 1;
+
+    guiButton->setCoords1(0, 0, h/1.5f, h);
 
     int bw = 12;
 
@@ -477,17 +481,17 @@ void Instrument::remap()
 
         if (panBox)
         {
-            panBox->setCoords1(width - 190, height - slH, 70, slH);
+            panBox->setCoords1(width - 190, h - slH, 70, slH);
             panBox->setVis(false);
         }
 
         if (volBox)
         {
-            volBox->setCoords1(width - 110, height - slH, 80, slH);
+            volBox->setCoords1(width - 110, h - slH, 80, slH);
             volBox->setVis(false);
         }
 
-        int kH = height;
+        int kH = h;
         if (kH % 2)
         {
             kH--;
@@ -501,7 +505,7 @@ void Instrument::remap()
 
         //soloButt->setCoords1(width - bw*2 - 8, height - bw, bw, bw);
 
-        muteButt->setCoords1(width - bw - bw, 0, bw, height);
+        muteButt->setCoords1(width - bw - bw, 0, bw, h);
     }
     else
     {
@@ -518,7 +522,7 @@ void Instrument::remap()
         muteButt->setVis(false);
     }
 
-    ivu->setCoords1(width - bw, 0, bw, height);
+    ivu->setCoords1(width - bw, 0, bw, h);
     
     if(gGetTextWidth(FontSmall, objName) > width - 38 - 50 - 10)
     {
