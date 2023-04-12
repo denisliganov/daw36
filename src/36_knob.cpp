@@ -61,6 +61,9 @@ void Knob::updPosition()
 
 void Knob::handleMouseWheel(InputEvent& ev)
 {
+    if (!active)
+        return;
+
     if (knobMode)
     {
         positionAngle -= (float)((PI / 32) * ev.wheelDelta);
@@ -101,6 +104,9 @@ void Knob::handleSliding(InputEvent& ev)
 
 void Knob::handleMouseDrag(InputEvent& ev)
 {
+    if (!active)
+        return;
+
     if (knobMode)
     {
         int dy = ev.mouseY - ys;
@@ -128,6 +134,9 @@ void Knob::handleMouseDrag(InputEvent& ev)
 
 void Knob::handleMouseDown(InputEvent & ev)
 {
+    if (!active)
+        return;
+
     if (knobMode)
     {
         ys = ev.mouseY;

@@ -21,11 +21,13 @@ public:
     virtual float               getMinStep() { return 0; };
     virtual void                reset() {};
     virtual void                setFontId(FontId fId);
+            void                setActive(bool act) { active = act; }
 
             bool                bgSaved;
 
 protected:
 
+            bool                active;
             bool                headerOn;
             int                 headerHeight;
             Device36*           dev;

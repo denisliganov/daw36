@@ -119,17 +119,10 @@ public:
         param->setBoolValue(val);
     }
 
-    void setActive(bool act)
-    {
-        active = act;
-    }
-
 private:
 
     void drawSelf(Graphics& g)
     {
-        Colour clr = Colour(0.f, 0.f, 0.f, 1.f);
-
         if (active)
         {
             Instrument* instr = outChannel->getInstr();
@@ -140,13 +133,19 @@ private:
             float b = .72;
             float a = 1;
 
-            clr = Colour(hue, s, b, a);
-        }
+            Colour clr = Colour(hue, s, b, a);
 
-        if (param->getBoolValue())
-            drawGlassRound(g, x1+1, y1+1, width-2, clr, 1);
+            if (param->getBoolValue())
+                drawGlassRound(g, x1+1, y1+1, width-2, clr, 1);
+            else
+                drawGlassRound(g, x1+1, y1+1, width-2, clr.withBrightness(.2f), 1);
+        }
         else
-            drawGlassRound(g, x1+1, y1+1, width-2, clr.withBrightness(.2f), 1);
+        {
+            //Colour clr = Colour(0.f, 0.f, 0.f, 1.f);
+
+            drawGlassRound(g, x1+1, y1+1, width-2, Colours::black, 1);
+        }
     }
 
     std::string ChanOutToggle::getHint()
@@ -159,10 +158,16 @@ private:
         return hint;
     }
 
-    void handleMouseDown(InputEvent & ev) { param->setBoolValue(true); redraw(); }
+    void handleMouseDown(InputEvent & ev) 
+    {
+        if (active)
+        {
+            param->setBoolValue(true);
+            redraw();
+        }
+    }
     void handleMouseWheel(InputEvent& ev) { parent->handleMouseWheel(ev); }
 
-    bool            active;
     MixChannel*     channel;
     MixChannel*     outChannel;
 };
@@ -184,11 +189,6 @@ public:
     MixChannel* getOutChannel()
     {
         return outChannel;
-    }
-
-    void setActive(bool act)
-    {
-        active = act;
     }
 
     void drawKnob(Graphics & g)
@@ -220,7 +220,6 @@ private:
         return hint;
     }
 
-    bool            active;
     MixChannel*     channel;
     MixChannel*     outChannel;
 };
@@ -662,6 +661,9 @@ ContextMenu* MixChannel::createContextMenuForEffect(Eff* eff)
 
 bool MixChannel::canAcceptInputFrom(MixChannel * other_chan)
 {
+    if (out == NULL)
+        return true;
+
     if (out->getOutChannel() == other_chan)
     {
         return false;
