@@ -931,28 +931,25 @@ void MixChannel::handleParamUpdate(Parameter * param)
     }
     else if (param->getName() == "out")
     {
-        //if (param->getBoolValue())
+        ChanOutToggle* t = dynamic_cast<ChanOutToggle*>(param->getControl());
+
+        if (t->getBoolValue() == false)
         {
-            ChanOutToggle* t = dynamic_cast<ChanOutToggle*>(param->getControl());
-
-            if (t->getBoolValue() == false)
+            if (t == outTg)
             {
-                if (t == outTg)
-                {
-                    outTg = NULL;
-                }
+                outTg = NULL;
             }
-            else
+        }
+        else
+        {
+            mchanout = t->getOutChannel();
+
+            if (outTg && outTg != t)
             {
-                mchanout = t->getOutChannel();
-
-                if (outTg && outTg != t)
-                {
-                    outTg->setValue(false);
-                }
-
-                outTg = t;
+                outTg->setValue(false);
             }
+
+            outTg = t;
         }
 
         redraw();

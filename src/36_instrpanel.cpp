@@ -604,11 +604,9 @@ void InstrPanel::setInstrFromNewBrowser(BrwListEntry* ble, Instrument* instr)
     if (dev)
     {
         dev->addBasicParamSet();
-
         dev->createSelfPattern();
 
         instr->deleteDevice();
-
         instr->setDevice(dev);
 
         remapAndRedraw();
@@ -817,6 +815,4 @@ void InstrPanel::updateWaves()
     }
 }
 
-
-//};
 

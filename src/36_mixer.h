@@ -8,6 +8,7 @@
 #include "36_config.h"
 
 
+#include <list>
 
 
 class Mixer : public Gobj
@@ -25,12 +26,14 @@ public:
             void                remap();
             void                resetAll();
             void                removeMixChannel(Instrument * instr);
+            void                updateMixingQueue();
 
 private:
             void                drawSelf(Graphics& g);
 
             MixChannel*         masterChannel;
-            MixChannel*         sendChannel[NUM_SENDS];
+
+    std::list<MixChannel*>      mixQueue;
 };
 
 

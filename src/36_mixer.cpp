@@ -46,7 +46,6 @@ void Mixer::cleanBuffers(int num_frames)
     {
         memset(instr->mixChannel->inbuff, 0, sizeof(float)*num_frames*2);
     }
-
     memset(masterChannel->inbuff, 0, sizeof(float)*num_frames*2);
 }
 
@@ -106,7 +105,6 @@ void Mixer::remap()
                 instr->getMixChannel()->setCoords1(0, 0, width, height);
             }
         }
-    
     }
     else
     {
@@ -126,49 +124,6 @@ void Mixer::remap()
             yCh += InstrHeight;
         }
     }
-
-/*
-    int base = 30;
-    int chanX = 0 ;
-    int mchanHeight = getH() - base - 2;
-
-    masterSectionWidth = (NUM_SENDS + 1)*(MixChanWidth + 1) + 50;
-
-    confine(0, 2, width - masterSectionWidth, 2 + mchanHeight);
-
-    // Instrument mixchannels, ordered according to the instruments
-
-    for(Instrument* instr : MInstrPanel->instrs)
-    {
-        if(!instr->previewOnly)
-        {
-            instr->mixChannel->setCoords1(chanX - xOffset, 2, MixChanWidth, mchanHeight);
-
-            chanX += MixChanWidth + 1;
-        }
-    }
-
-    confine();     // reset confinement
-
-    scroller->setCoords1(0, getH() - base + 1, width - masterSectionWidth, 30);
-
-    scroller->updateLimits((float)chanX, (float)(width - masterSectionWidth), (float)xOffset);
-
-    chanX = width - masterSectionWidth + 10;
-
-    for(int sc = 0; sc < NUM_SENDS; sc++)
-    {
-        sendChannel[sc]->setCoords1(chanX, 2, MixChanWidth, getH() - 2);
-
-        chanX += MixChanWidth + 1;
-    }
-
-    chanX += 10;
-
-    masterChannel->setCoords1(chanX, 2, MixChanWidth, getH() - 2);
-
-    chanX += MixChanWidth + 30;
-    */
 }
 
 void Mixer::drawSelf(Graphics& g)
@@ -177,17 +132,13 @@ void Mixer::drawSelf(Graphics& g)
 /*
     gSetMonoColor(g, 0.35f);
     gLineHorizontal(g, y1, x1, x2);
-
     gSetMonoColor(g, 0.29f);
     gLineHorizontal(g, y1 + 1, x1, x2);
-
     gSetMonoColor(g, 0.25f);
-
     gFillRect(g, getX1(), getY1() + 2, getX2(), getY2());
-
     int xBound = getX1() + getW() - MixChanWidth - 35;
-
-    g.drawVerticalLine(xBound + 1, (float)getY1(), (float)getY2());*/
+    g.drawVerticalLine(xBound + 1, (float)getY1(), (float)getY2());
+*/
 }
 
 MixChannel* Mixer::addMixChannel(Instrument * instr)
@@ -226,4 +177,14 @@ void Mixer::removeMixChannel(Instrument * instr)
 
     ReleaseMutex(MixerMutex);
 }
+
+void Mixer::updateMixingQueue()
+{
+    for (Instrument* instr : MInstrPanel->getInstrs())
+    {
+        MixChannel* mc = instr->getMixChannel();
+    }
+}
+
+
 
