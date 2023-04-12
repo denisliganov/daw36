@@ -123,7 +123,7 @@ void Mixer::remap()
                 instr->mixChannel->setVis(false);
             }
 
-            yCh += InstrHeight + 1;
+            yCh += InstrHeight;
         }
     }
 

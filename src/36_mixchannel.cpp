@@ -162,7 +162,7 @@ private:
     {
         if (active)
         {
-            param->setBoolValue(true);
+            param->setBoolValue(!param->getBoolValue());
             redraw();
         }
     }
@@ -245,15 +245,19 @@ MixChannel::~MixChannel()
 
 void MixChannel::addSend(MixChannel* mchan)
 {
+    //if (!mchan->getInstr()->isMaster())
+    {
+        addObject(new SendKnob(this, mchan, "snd"), "snd");
+    }
+
     ChanOutToggle* c;
-
-    addObject(new SendKnob(this, mchan, "snd"), "snd");
+  
     addObject(c = new ChanOutToggle(this, mchan), "out");
-
+    
     if (mchan == mchanout)
     {
-        out = c;
-        out->setValue(true);
+        outTg = c;
+        outTg->setValue(true);
     }
 }
 
@@ -294,26 +298,15 @@ void MixChannel::init(Instrument* ins)
 
     muteCount = 0;
 
-    if(ins != NULL)
-    {
-        instr = ins;
+    instr = ins;
 
-        for (Instrument* i : MInstrPanel->getInstrs())
-        {
-           // addSend(i->getMixChannel());
-        }
-    }
-    else    // send or master
-    {
-        instr = NULL;
-        mchanout = NULL;
-        mutetoggle = NULL;
-        volKnob = NULL;
-        panKnob = NULL;
-    }
+    mchanout = NULL;
+    mutetoggle = NULL;
+    volKnob = NULL;
+    panKnob = NULL;
 
     vu = NULL;
-    out = NULL;
+    outTg = NULL;
 
     addParam(volParam = new Parameter("Volume", Param_Vol, 0.f, DAW_VOL_RANGE, 1.f, Units_Percent));
     addParam(panParam = new Parameter("Panning", Param_Pan));
@@ -661,10 +654,15 @@ ContextMenu* MixChannel::createContextMenuForEffect(Eff* eff)
 
 bool MixChannel::canAcceptInputFrom(MixChannel * other_chan)
 {
-    if (out == NULL)
+    if (instr->isMaster())
         return true;
 
-    if (out->getOutChannel() == other_chan)
+    if (other_chan == this)
+    {
+        return false;
+    }
+
+    if (outTg && outTg->getOutChannel() == other_chan)
     {
         return false;
     }
@@ -933,21 +931,27 @@ void MixChannel::handleParamUpdate(Parameter * param)
     }
     else if (param->getName() == "out")
     {
-        if (param->getBoolValue())
+        //if (param->getBoolValue())
         {
             ChanOutToggle* t = dynamic_cast<ChanOutToggle*>(param->getControl());
 
-            if (t->getBoolValue() == false || t == out)
+            if (t->getBoolValue() == false)
             {
-
+                if (t == outTg)
+                {
+                    outTg = NULL;
+                }
             }
             else
             {
                 mchanout = t->getOutChannel();
 
-                out->setValue(false);
+                if (outTg && outTg != t)
+                {
+                    outTg->setValue(false);
+                }
 
-                out = t;
+                outTg = t;
             }
         }
 

@@ -160,7 +160,7 @@ Instrument::~Instrument()
         //delete device;
     }
 
-    MMixer->removeMixChannel(this);
+    //MMixer->removeMixChannel(this);
 
     ReleaseMutex(MixerMutex);
 }

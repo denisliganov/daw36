@@ -76,7 +76,7 @@ private:
     std::list<MixChannel*>      sends;
             MixChannel*         mchanout;
     std::list<SendKnob*>        sendsk;
-            ChanOutToggle*      out;
+            ChanOutToggle*      outTg;
             int                 muteCount;
             Button36*           mutetoggle;
             float               outbuff[MAX_BUFF_SIZE*2];
