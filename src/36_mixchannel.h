@@ -37,9 +37,11 @@ public:
             void                activateMenuItem(std::string mi);
             void                addEffect(Eff* eff);
             Eff*                addEffectFromBrowser(BrwListEntry* de);
+            void                addSend(MixChannel* mchan);
             ContextMenu*        createContextMenu();
             ContextMenu*        createContextMenuForEffect(Eff* eff);
             bool                canAcceptInputFrom(MixChannel* other_chan);
+            void                delSend(MixChannel* mchan);
             void                drawSelf(Graphics& g);
             void                drawOverChildren(Graphics & g);
             void                doSend(float * sendbuff, float amount, int num_frames);
@@ -62,8 +64,7 @@ public:
             void                save(XmlElement* xmlChanNode);
             void                setBufferSize(unsigned int bufferSize);
             void                setSampleRate(float sampleRate);
-            void                addSend(MixChannel* mchan);
-            void                delSend(MixChannel* mchan);
+            void                updateSends();
 
 
 private:
@@ -75,7 +76,7 @@ private:
             Instrument*         instr;
     std::list<MixChannel*>      sends;
             MixChannel*         mchanout;
-    std::list<SendKnob*>        sendsk;
+    std::list<SendKnob*>        sendsActive;
             ChanOutToggle*      outTg;
             int                 muteCount;
             Button36*           mutetoggle;

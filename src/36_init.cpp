@@ -125,7 +125,7 @@ void InitializeAndStartProgram()
 
     MKeys = new KeyHandler();
 
-    MTransp = new Transport(120, 4, 4);
+    MTransp = new Transport(80, 4, 4);
 
     MAudio = new Audio36(DEFAULT_SAMPLE_RATE);
 

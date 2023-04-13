@@ -117,6 +117,8 @@ public:
     void setValue(bool val)
     {
         param->setBoolValue(val);
+
+        redraw();
     }
 
 private:
@@ -374,29 +376,16 @@ void MixChannel::remap()
             {
                 SendKnob* k = dynamic_cast<SendKnob*>(o);
 
-                //if (k->getOutChannel() != this)
-                {
-                    k->setCoords1(width - 40, yKnob + 1, 20, 20);
-
-                    k->setActive(k->getOutChannel()->canAcceptInputFrom(this));
-                }
+                k->setCoords1(width - 40, yKnob + 1, 20, 20);
             }
 
             if (o->getObjId() == "out")
             {
                 ChanOutToggle* t = dynamic_cast<ChanOutToggle*>(o);
 
-                //if (t->getOutChannel() != this)
-                {
-                    t->setCoords1(width - 17, yKnob + 5, 12, 12);
-
-                    t->setActive(t->getOutChannel()->canAcceptInputFrom(this));
-                }
+                t->setCoords1(width - 17, yKnob + 5, 12, 12);
 
                 yKnob += InstrHeight;
-
-                //if (t->getOutChannel()->getInstr()->getIndex() == instr->getIndex() - 1)
-                //    yKnob += InstrHeight;
             }
         }
     }
@@ -655,21 +644,26 @@ ContextMenu* MixChannel::createContextMenuForEffect(Eff* eff)
 bool MixChannel::canAcceptInputFrom(MixChannel * other_chan)
 {
     if (instr->isMaster())
+    {
         return true;
+    }
 
     if (other_chan == this)
     {
         return false;
     }
 
-    if (outTg && outTg->getOutChannel() == other_chan)
+    if (outTg)
     {
-        return false;
+        if (!outTg->getOutChannel()->canAcceptInputFrom(other_chan))
+        {
+            return false;
+        }
     }
 
-    for (SendKnob* sk : sendsk)
+    for (SendKnob* sk : sendsActive)
     {
-        if (sk->getOutChannel() == other_chan)
+        if (!sk->getOutChannel()->canAcceptInputFrom(other_chan))
         {
             return false;
         }
@@ -902,7 +896,7 @@ void MixChannel::handleParamUpdate(Parameter * param)
         {
             if (sk->getParam()->getNormalizedValue() == 0)
             {
-                for (SendKnob* s : sendsk)
+                for (SendKnob* s : sendsActive)
                 {
                     if (s == sk)
                     {
@@ -911,11 +905,11 @@ void MixChannel::handleParamUpdate(Parameter * param)
                     }
                 }
 
-                sendsk.remove(sk);
+                sendsActive.remove(sk);
             }
             else
             {
-                for (SendKnob* s : sendsk)
+                for (SendKnob* s : sendsActive)
                 {
                     if (s == sk)
                     {
@@ -923,10 +917,12 @@ void MixChannel::handleParamUpdate(Parameter * param)
                     }
                 }
 
-                sendsk.push_back(sk);
+                sendsActive.push_back(sk);
 
                 redraw();
             }
+
+            sk->getOutChannel()->updateSends();
         }
     }
     else if (param->getName() == "out")
@@ -952,7 +948,25 @@ void MixChannel::handleParamUpdate(Parameter * param)
             outTg = t;
         }
 
-        redraw();
+        t->getOutChannel()->updateSends();
+    }
+}
+
+void MixChannel::updateSends()
+{
+    for (Gobj* o : objs)
+    {
+        if (o->getObjId() == "snd")
+        {
+            SendKnob* k = dynamic_cast<SendKnob*>(o);
+            k->setActive(k->getOutChannel()->canAcceptInputFrom(this));
+        }
+
+        if (o->getObjId() == "out")
+        {
+            ChanOutToggle* t = dynamic_cast<ChanOutToggle*>(o);
+            t->setActive(t->getOutChannel()->canAcceptInputFrom(this));
+        }
     }
 }
 
