@@ -44,9 +44,10 @@ void Mixer::cleanBuffers(int num_frames)
 {
     for(Instrument* instr : MInstrPanel->getInstrs())
     {
-        memset(instr->mixChannel->inbuff, 0, sizeof(float)*num_frames*2);
+        memset(instr->getMixChannel()->inbuff, 0, sizeof(float)*num_frames*2);
     }
-    memset(masterChannel->inbuff, 0, sizeof(float)*num_frames*2);
+
+    //memset(masterChannel->inbuff, 0, sizeof(float)*num_frames*2);
 }
 
 void Mixer::mixAll(int num_frames)
@@ -55,22 +56,40 @@ void Mixer::mixAll(int num_frames)
 
     for(Instrument* instr : MInstrPanel->getInstrs())
     {
-        if (instr->mixChannel != masterChannel)
-        {
-            instr->mixChannel->process(num_frames, masterChannel->inbuff);
-
-            for (int s = 0; s < NUM_SENDS; s++)
-            {
-                //float val = instr->mixChannel->sends[s].amount->getOutVal();
-                //if (val > 0)
-                //{
-                //    instr->mixChannel->doSend(sendChannel[s]->inbuff, val, num_frames);
-                //}
-            }
-        }
+        instr->getMixChannel()->prepareForMixing();
     }
 
-    masterChannel->process(num_frames, NULL);
+    bool incomplete;
+
+    do
+    {
+        incomplete = false;
+
+        for(Instrument* instr : MInstrPanel->getInstrs())
+        {
+            MixChannel* mc = instr->getMixChannel();
+
+            if (mc->getMixCounter() > 0)
+            {
+                incomplete = true;
+            }
+            else if (!mc->isProcessed())
+            {
+                mc->processChannel(num_frames);
+            }
+
+            /*
+                instr->getMixChannel()->process(num_frames, masterChannel->inbuff);
+            */
+            //float val = instr->mixChannel->sends[s].amount->getOutVal();
+            //if (val > 0)
+            //{
+            //    instr->mixChannel->doSend(sendChannel[s]->inbuff, val, num_frames);
+            //}
+        }
+    }while (incomplete);
+
+    //masterChannel->process(num_frames, NULL);
 
     ReleaseMutex(MixerMutex);
 }
@@ -79,7 +98,7 @@ void Mixer::resetAll()
 {
     for(Instrument* instr : MInstrPanel->getInstrs())
     {
-        instr->mixChannel->reset();
+        instr->getMixChannel()->reset();
     }
 
     masterChannel->reset();
@@ -114,11 +133,11 @@ void Mixer::remap()
         {
             if((yCh + InstrHeight > 0) && yCh < getH())
             {
-                instr->mixChannel->setCoords1(0, yCh, width, instr->getH());
+                instr->getMixChannel()->setCoords1(0, yCh, width, instr->getH());
             }
-            else if(instr->mixChannel->isShown())
+            else if(instr->getMixChannel()->isShown())
             {
-                instr->mixChannel->setVis(false);
+                instr->getMixChannel()->setVis(false);
             }
 
             yCh += InstrHeight;
@@ -129,6 +148,7 @@ void Mixer::remap()
 void Mixer::drawSelf(Graphics& g)
 {
     fill(g, .1f);
+
 /*
     gSetMonoColor(g, 0.35f);
     gLineHorizontal(g, y1, x1, x2);
@@ -149,15 +169,15 @@ MixChannel* Mixer::addMixChannel(Instrument * instr)
 
     if (instr->isMaster())
     {
-        mixChannel = (masterChannel);
-        mixChannel->instr = instr;
+        masterChannel->setInstrument(instr);
+
+        mixChannel = masterChannel;
     }
     else
     {
-        mixChannel = new MixChannel(instr);
-        mixChannel->mchanout = (masterChannel);
+        addObject(mixChannel = new MixChannel(instr), "");
 
-        addObject(mixChannel, "");
+        mixChannel->setOutChannel(masterChannel);
     }
 
     ReleaseMutex(MixerMutex);

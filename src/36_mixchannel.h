@@ -41,12 +41,14 @@ public:
             ContextMenu*        createContextMenu();
             ContextMenu*        createContextMenuForEffect(Eff* eff);
             bool                canAcceptInputFrom(MixChannel* other_chan);
+            void                decreaseMixCounter()      { mixCount--; }
             void                delSend(MixChannel* mchan);
             void                drawSelf(Graphics& g);
             void                drawOverChildren(Graphics & g);
             void                doSend(float * sendbuff, float amount, int num_frames);
             void                deleteEffect(Eff* eff);
             Instrument*         getInstr()  { return instr; }
+            int                 getMixCounter()       { return mixCount; }
             void                handleChildEvent(Gobj * obj,InputEvent & ev);
             void                handleMouseWheel(InputEvent& ev);
             void                handleMouseDown(InputEvent& ev);
@@ -55,34 +57,42 @@ public:
             bool                handleObjDrop(Gobj * obj, int mx, int my, unsigned flags);
             void                handleParamUpdate(Parameter * param);
             void                init(Instrument* i);
+            bool                isProcessed()           { return processed; }
+            void                increaseMixCounter()      { mixCount++; }
             void                load(XmlElement* xmlChanNode);
+            void                processChannel(int num_frames);
             void                process(int num_frames, float* outbuff);
             void                placeEffectBefore(Eff* eff, Eff* before);
+            void                prepareForMixing();
             void                remap();
             void                reset();
             void                removeEffect(Eff* eff);
             void                save(XmlElement* xmlChanNode);
             void                setBufferSize(unsigned int bufferSize);
             void                setSampleRate(float sampleRate);
+            void                setInstrument(Instrument* i);
+            void                setOutChannel(MixChannel* mc);
             void                updateSends();
 
 
 private:
 
+            bool                processed;
             std::string         chanTitle;
             Gobj*               dropObj;
             std::list<Eff*>     effs;
             float               inbuff[MAX_BUFF_SIZE*2];
             Instrument*         instr;
-    std::list<MixChannel*>      sends;
             MixChannel*         mchanout;
-    std::list<SendKnob*>        sendsActive;
-            ChanOutToggle*      outTg;
+            int                 mixCount;
             int                 muteCount;
             Button36*           mutetoggle;
+            ChanOutToggle*      outTg;
             float               outbuff[MAX_BUFF_SIZE*2];
             Knob*               panKnob;
             Parameter*          panParam;
+    std::list<SendKnob*>        sendsActive;
+    std::list<MixChannel*>      sends;
             Parameter*          volParam;
             ChanVU*             vu;
             Knob*               volKnob;

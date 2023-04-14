@@ -28,18 +28,6 @@ public:
             Instrument(Device36* dev);
             ~Instrument();
 
-            Device36*           device;
-            Button36*           guiButton;
-            std::string         instrAlias;
-            InstrVU*            ivu;
-            MixChannel*         mixChannel;
-            EnableButton*       muteButt;
-            ParamBox*           panBox;
-            ParamBox*           volBox;
-            Knob*               volKnob;
-            Knob*               panKnob;
-            int                 index;
-
             void                addMixChannel();
             void                activateMenuItem(std::string item);
             ContextMenu*        createContextMenu();
@@ -67,6 +55,18 @@ virtual Instrument*             clone();
             void                setIndex(int idx);
     virtual void                save(XmlElement* instrNode);
 
+private:
+            Device36*           device;
+            Button36*           guiButton;
+            std::string         instrAlias;
+            InstrVU*            ivu;
+            MixChannel*         mixChannel;
+            EnableButton*       muteButt;
+            ParamBox*           panBox;
+            ParamBox*           volBox;
+            Knob*               volKnob;
+            Knob*               panKnob;
+            int                 index;
 };
 
 

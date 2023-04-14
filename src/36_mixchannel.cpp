@@ -184,7 +184,9 @@ public:
         setHint("Send");
         channel = chan;
         outChannel = out_chan;
+
         param->setModule(channel);
+
         setDimOnZero(true);
     }
 
@@ -208,6 +210,11 @@ public:
 
             drawGlassRound(g, x, y, w, Colours::black, 1);
         }
+    }
+
+    float getValue()
+    {
+        return param->getOutVal();
     }
 
 private:
@@ -301,6 +308,7 @@ void MixChannel::init(Instrument* ins)
     objId = "mixchan";
 
     muteCount = 0;
+    mixCount = 0;
 
     instr = ins;
 
@@ -935,6 +943,8 @@ void MixChannel::handleParamUpdate(Parameter * param)
         {
             if (t == outTg)
             {
+                // Disable output completely
+
                 outTg = NULL;
             }
         }
@@ -944,6 +954,8 @@ void MixChannel::handleParamUpdate(Parameter * param)
 
             if (outTg && outTg != t)
             {
+                // Switch output to other channel
+
                 outTg->setValue(false);
             }
 
@@ -993,12 +1005,45 @@ void MixChannel::placeEffectBefore(Eff* eff, Eff* before)
 
     remapAndRedraw();
 
-    if(instr)
+    ReleaseMutex(MixerMutex);
+}
+
+void MixChannel::prepareForMixing()
+{
+    if (outTg)
     {
-        // MInstrPanel->setCurrInstr(instr);
+        outTg->getOutChannel()->increaseMixCounter();
+    }
+    else
+    {
+        for (SendKnob* sk : sendsActive)
+        {
+            sk->getOutChannel()->increaseMixCounter();
+        }
     }
 
-    ReleaseMutex(MixerMutex);
+    processed = false;
+}
+
+void MixChannel::processChannel(int num_frames)
+{
+    process(num_frames, NULL);
+
+    for (SendKnob* sk : sendsActive)
+    {
+        doSend(sk->getOutChannel()->inbuff, sk->getValue(), num_frames);
+
+        sk->getOutChannel()->decreaseMixCounter();
+    }
+
+    if (outTg)
+    {
+        doSend(outTg->getOutChannel()->inbuff, 1, num_frames);
+
+        outTg->getOutChannel()->decreaseMixCounter();
+    }
+
+    processed = true;
 }
 
 void MixChannel::process(int num_frames, float* out_buff)
@@ -1304,6 +1349,14 @@ void MixChannel::reset()
     }
 }
 
+void MixChannel::setInstrument(Instrument* i)
+{
+    instr = i;
+}
 
+void MixChannel::setOutChannel(MixChannel * mc)
+{
+    mchanout = mc;
+}
 
 
