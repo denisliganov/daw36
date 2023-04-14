@@ -41,7 +41,7 @@ public:
             ContextMenu*        createContextMenu();
             ContextMenu*        createContextMenuForEffect(Eff* eff);
             bool                canAcceptInputFrom(MixChannel* other_chan);
-            void                decreaseMixCounter()      { mixCount--; }
+            void                decreaseMixCounter()      { mixCount--; jassert(mixCount >= 0); }
             void                delSend(MixChannel* mchan);
             void                drawSelf(Graphics& g);
             void                drawOverChildren(Graphics & g);

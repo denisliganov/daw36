@@ -77,15 +77,6 @@ void Mixer::mixAll(int num_frames)
             {
                 mc->processChannel(num_frames);
             }
-
-            /*
-                instr->getMixChannel()->process(num_frames, masterChannel->inbuff);
-            */
-            //float val = instr->mixChannel->sends[s].amount->getOutVal();
-            //if (val > 0)
-            //{
-            //    instr->mixChannel->doSend(sendChannel[s]->inbuff, val, num_frames);
-            //}
         }
     }while (incomplete);
 

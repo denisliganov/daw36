@@ -42,6 +42,7 @@ protected:
         void drawSelf(Graphics& g)
         {
             setc(g, .8f);
+
             if (isPressed())
             {
                 gDrawTriangle(g, x1, y1, x2, y1, x1 + (width / 2), y1 + height);
@@ -64,6 +65,11 @@ public:
         EffEnableButton(Parameter* ptg) : ToggleBox(ptg)
         {
             ///
+        }
+
+        bool    isEnabled()
+        {
+            return param->getBoolValue();
         }
 
 protected:
@@ -248,6 +254,11 @@ Eff* Eff::clone()
     return CreateEffect(objId);
 }
 
+bool Eff::isEnabled()
+{
+    return enableButt->isEnabled();
+}
+
 ContextMenu* Eff::createContextMenu()
 {
     return mixChannel->createContextMenuForEffect(this);
@@ -331,6 +342,10 @@ void Eff::handleChildEvent(Gobj * obj, InputEvent& ev)
         {
             device->showWindow(!device->isWindowVisible());
         }
+    }
+    else if (obj == enableButt)
+    {
+        ///
     }
 }
 

@@ -535,28 +535,6 @@ void MixChannel::deleteEffect(Eff* eff)
     ReleaseMutex(MixerMutex);
 }
 
-void MixChannel::doSend(float * sendbuff, float amount, int num_frames)
-{
-    if(sendbuff != NULL)
-    {
-        float outL, outR;
-
-        int i = 0;
-        int fc = 0;
-
-        while(i < num_frames)
-        {
-            outL = outbuff[fc];
-            outR = outbuff[fc + 1];
-
-            sendbuff[fc++] += outL*amount;
-            sendbuff[fc++] += outR*amount;
-
-            i++;
-        }
-    }
-}
-
 void MixChannel::save(XmlElement * xmlChanNode)
 {
     //xmlChanNode->setAttribute(T("Index"), instr->instrAlias);
@@ -900,6 +878,8 @@ void MixChannel::handleParamUpdate(Parameter * param)
 {
     if (param->getName() == "snd")
     {
+        WaitForSingleObject(MixerMutex, INFINITE);
+
         SendKnob* sk = dynamic_cast<SendKnob*>(param->getControl());
 
         if (sk)
@@ -919,24 +899,22 @@ void MixChannel::handleParamUpdate(Parameter * param)
             }
             else
             {
-                for (SendKnob* s : sendsActive)
-                {
-                    if (s == sk)
-                    {
-                        return;
-                    }
-                }
-
                 sendsActive.push_back(sk);
+
+                sendsActive.unique();
 
                 redraw();
             }
 
             sk->getOutChannel()->updateSends();
         }
+
+        ReleaseMutex(MixerMutex);
     }
     else if (param->getName() == "out")
     {
+        WaitForSingleObject(MixerMutex, INFINITE);
+
         ChanOutToggle* t = dynamic_cast<ChanOutToggle*>(param->getControl());
 
         if (t->getBoolValue() == false)
@@ -963,6 +941,8 @@ void MixChannel::handleParamUpdate(Parameter * param)
         }
 
         t->getOutChannel()->updateSends();
+
+        ReleaseMutex(MixerMutex);
     }
 }
 
@@ -1014,15 +994,35 @@ void MixChannel::prepareForMixing()
     {
         outTg->getOutChannel()->increaseMixCounter();
     }
-    else
+
+    for (SendKnob* sk : sendsActive)
     {
-        for (SendKnob* sk : sendsActive)
-        {
-            sk->getOutChannel()->increaseMixCounter();
-        }
+        sk->getOutChannel()->increaseMixCounter();
     }
 
     processed = false;
+}
+
+void MixChannel::doSend(float* sendbuff, float amount, int num_frames)
+{
+    if (sendbuff != NULL)
+    {
+        float outL, outR;
+
+        int i = 0;
+        int fc = 0;
+
+        while (i < num_frames)
+        {
+            outL = outbuff[fc];
+            outR = outbuff[fc + 1];
+
+            sendbuff[fc++] += outL * amount;
+            sendbuff[fc++] += outR * amount;
+
+            i++;
+        }
+    }
 }
 
 void MixChannel::processChannel(int num_frames)
@@ -1052,58 +1052,61 @@ void MixChannel::process(int num_frames, float* out_buff)
     {
         for(Eff* eff : effs)
         {
-            if (eff->getDevice())
+            if(eff->isEnabled())
             {
                 eff->getDevice()->generateData(inbuff, outbuff, num_frames);
 
-                if(eff->getDevice()->isEnabled())
+                // Copy output back to input for the next effect to process
+
+                if(eff->getDevice()->muteCount > 0)
                 {
-                    // Copy output back to input for the next effect to process
+                    long tc = 0;
+                    float aa;
 
-                    if(eff->getDevice()->muteCount > 0)
+                    while(tc < num_frames)
                     {
-                        long tc = 0;
-                        float aa;
+                        aa = float(DECLICK_COUNT - eff->getDevice()->muteCount)/DECLICK_COUNT;
 
-                        while(tc < num_frames)
+                        inbuff[tc*2] = inbuff[tc*2]*(1.f - aa) + outbuff[tc*2]*aa;
+                        inbuff[tc*2 + 1] = inbuff[tc*2 + 1]*(1.f - aa) + outbuff[tc*2 + 1]*aa;
+
+                        tc++;
+
+                        if(eff->getDevice()->muteCount > 0)
                         {
-                            aa = float(DECLICK_COUNT - eff->getDevice()->muteCount)/DECLICK_COUNT;
-
-                            inbuff[tc*2] = inbuff[tc*2]*(1.f - aa) + outbuff[tc*2]*aa;
-                            inbuff[tc*2 + 1] = inbuff[tc*2 + 1]*(1.f - aa) + outbuff[tc*2 + 1]*aa;
-
-                            tc++;
-
-                            if(eff->getDevice()->muteCount > 0)
-                            {
-                                eff->getDevice()->muteCount--;
-                            }
+                            eff->getDevice()->muteCount--;
                         }
-                    }
-                    else
-                    {
-                        memcpy(inbuff, outbuff, sizeof(float)*num_frames*2);
                     }
                 }
                 else
                 {
-                    if(eff->getDevice()->muteCount < DECLICK_COUNT)
+                    memcpy(inbuff, outbuff, sizeof(float)*num_frames*2);
+                }
+            }
+            else
+            {
+                memcpy(outbuff, inbuff, sizeof(float) * num_frames * 2);
+
+                if(eff->getDevice()->muteCount < DECLICK_COUNT)
+                {
+                    long tc = 0;
+                    float aa;
+
+                    while(tc < num_frames && eff->getDevice()->muteCount < DECLICK_COUNT)
                     {
-                        long tc = 0;
-                        float aa;
+                        aa = float(DECLICK_COUNT - eff->getDevice()->muteCount)/DECLICK_COUNT;
 
-                        while(tc < num_frames && eff->getDevice()->muteCount < DECLICK_COUNT)
-                        {
-                            aa = float(DECLICK_COUNT - eff->getDevice()->muteCount)/DECLICK_COUNT;
+                        inbuff[tc*2] = inbuff[tc*2]*(1.f - aa) + outbuff[tc*2]*aa;
+                        inbuff[tc*2 + 1] = inbuff[tc*2 + 1]*(1.f - aa) + outbuff[tc*2 + 1]*aa;
 
-                            inbuff[tc*2] = inbuff[tc*2]*(1.f - aa) + outbuff[tc*2]*aa;
-                            inbuff[tc*2 + 1] = inbuff[tc*2 + 1]*(1.f - aa) + outbuff[tc*2 + 1]*aa;
+                        tc++;
 
-                            tc++;
-
-                            eff->getDevice()->muteCount++;
-                        }
+                        eff->getDevice()->muteCount++;
                     }
+                }
+                else
+                {
+                    //memcpy(inbuff, outbuff, sizeof(float)*num_frames*2);
                 }
             }
         }

@@ -29,6 +29,7 @@ public:
             MixChannel*         getMixChannel()     { return mixChannel; }
             Device36*           getDevice()         { return device; }
             void                handleChildEvent(Gobj * obj, InputEvent& ev);
+            bool                isEnabled();
     virtual void                load(XmlElement* xmlEff);
             void                remap();
     virtual void                save(XmlElement* xmlEff);
