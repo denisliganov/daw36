@@ -156,6 +156,7 @@ MixChannel* Mixer::addMixChannel(Instrument * instr)
     {
         mixChannel = new MixChannel(instr);
         mixChannel->mchanout = (masterChannel);
+
         addObject(mixChannel, "");
     }
 
@@ -183,6 +184,8 @@ void Mixer::updateMixingQueue()
     for (Instrument* instr : MInstrPanel->getInstrs())
     {
         MixChannel* mc = instr->getMixChannel();
+
+        
     }
 }
 

@@ -261,6 +261,8 @@ void MixChannel::addSend(MixChannel* mchan)
         outTg = c;
         outTg->setValue(true);
     }
+
+    updateSends();
 }
 
 void MixChannel::delSend(MixChannel* mchan)
