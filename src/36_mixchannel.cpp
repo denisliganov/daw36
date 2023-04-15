@@ -150,6 +150,7 @@ private:
         }
     }
 
+    /*
     std::string ChanOutToggle::getHint()
     {
         std::string hint = param->getName().data();
@@ -158,7 +159,7 @@ private:
         hint += param->getValString();
 
         return hint;
-    }
+    }*/
 
     void handleMouseDown(InputEvent & ev) 
     {
@@ -370,16 +371,11 @@ void MixChannel::remap()
         int yControls = height - FxPanelBottomHeight + sendPanelHeight;
 
         volKnob->setCoords1(FxPanelScrollerWidth, yControls + 5, 150, 22);
-        panKnob->setCoords1(FxPanelScrollerWidth, yControls + 32, 150, 16);
+        panKnob->setCoords1(FxPanelScrollerWidth, yControls + 32, 150, 22);
 
-        vu->setCoords1(FxPanelScrollerWidth, height - InstrHeight - 22, 150, 20);
+        vu->setCoords1(FxPanelScrollerWidth, height - 22, 150, 20);
 
         int yKnob = 0;
-
-        if (instr->getIndex() == 0)
-        {
-        //    yKnob += InstrHeight + 1;
-        }
 
         for (Gobj* o : objs)
         {
@@ -435,13 +431,13 @@ void MixChannel::drawSelf(Graphics& g)
     {
         int sendPanelHeight = 0;
 
-        setc(g, .42f);
+        setc(g, .4f);
         fillx(g, 0, height - FxPanelBottomHeight, w, FxPanelBottomHeight - InstrHeight);
 
         setc(g, .36f);
         fillx(g, 0, height - FxPanelBottomHeight, w, sendPanelHeight);
 
-        setc(g, .48f);
+        setc(g, .46f);
         rectx(g, 0, height - FxPanelBottomHeight, w, FxPanelBottomHeight - InstrHeight);
     }
     else
@@ -902,8 +898,15 @@ void MixChannel::handleParamUpdate(Parameter * param)
             else
             {
                 sendsActive.push_back(sk);
-
                 sendsActive.unique();
+
+                // Disable conflicting routing
+
+                if (outTg && outTg->getOutChannel() == sk->getOutChannel())
+                {
+                    outTg->setValue(false);
+                    outTg = NULL;
+                }
 
                 redraw();
             }
@@ -940,6 +943,18 @@ void MixChannel::handleParamUpdate(Parameter * param)
             }
 
             outTg = t;
+
+            // Disable possible conflicting send
+
+            for (SendKnob* s : sendsActive)
+            {
+                if (s->getOutChannel() == t->getOutChannel())
+                {
+                    s->setNormalizedValue(0);
+                    sendsActive.remove(s);
+                    break;
+                }
+            }
         }
 
         t->getOutChannel()->updateSends();
