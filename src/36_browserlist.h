@@ -63,7 +63,7 @@ class BrowserList  : public ListBoxx
 public:
 
             BrowserList(std::string name, std::string path="", BrwListType t = BrwList_Files);
-            void                addEntry(BrwListEntry* entry)                     { brwEntries.push_back(entry); remap(); }
+            void                addEntry(BrwListEntry* entry);
             int                 getCurrent()                                    { return currentEntry; }
             BrwListEntry*       getCurrentName()                                { return brwEntries[currentEntry]; }
             void                setList(std::vector<BrwListEntry*>&  entries_list)  { brwEntries = entries_list;  remap(); }

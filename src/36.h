@@ -32,7 +32,6 @@ public:
             void                setMainX2(int main_x2);
             void                setMainY1(int main_y1);
             void                setMainY2(int main_y2);
-            void                switchBrowser(bool on);
 
 protected:
 

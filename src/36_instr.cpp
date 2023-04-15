@@ -22,6 +22,8 @@
 #include "36_keyboard.h"
 #include "36_parambox.h"
 #include "36_params.h"
+#include "36_dragndrop.h"
+
 
 
 extern Device36* devDummy;
@@ -128,11 +130,11 @@ Instrument::Instrument(Device36* dev)
 
     mixChannel = MMixer->getMasterChannel();       // Default to master channel
 
-    addObject(volBox = new ParamBox(device->vol));
-    volBox->setSliderOnly(true);
-
-    addObject(panBox = new ParamBox(device->pan));
-    panBox->setSliderOnly(true);
+    //addObject(volBox = new ParamBox(device->vol));
+    //volBox->setSliderOnly(true);
+    //addObject(panBox = new ParamBox(device->pan));
+    //panBox->setSliderOnly(true);
+    panBox = volBox = NULL;
 
     addObject(volKnob = new Knob(device->vol, true));
     addObject(panKnob = new Knob(device->pan, true));
@@ -263,58 +265,61 @@ void Instrument::drawSelf(Graphics& g)
 {
     int h = height - 1;
 
-    if (device->getIndex() == 36)
+    if (isMaster())
     {
-        //return;
-    }
+        fill(g, .2f);
+        rect(g, .3f);
 
-    if(device != devDummy)
-    {
-        Gobj::setMyColor(g, .7f);
-        //setc(g, 1.f);
-        fillx(g, 0, 0, width, h);
-
-        Gobj::setMyColor(g, .5f);
-        fillx(g, 0, 0, width, h/2);
+        setc(g, .98f);
+        txt(g, FontInst, "LE MASTER", 18, height/2 + 3);
     }
     else
     {
-        Gobj::setMyColor(g, .4f);
+        if(device != devDummy)
+        {
+            Gobj::setMyColor(g, .7f);
+            //setc(g, 1.f);
+            fillx(g, 0, 0, width, h);
 
-        fillx(g, 0, 0, width, h);
+            Gobj::setMyColor(g, .5f);
+            fillx(g, 0, 0, width, h/2);
+        }
+        else
+        {
+            Gobj::setMyColor(g, .4f);
+
+            fillx(g, 0, 0, width, h);
+        }
+
+        //setc(g, .0f);
+        Gobj::setMyColor(g, .5f);
+        txtfit(g, FontSmall, getObjName(), guiButton->getW() + 4, 10, width - (h+4));
+
+        //setc(g, 1.f);
+        Gobj::setMyColor(g, 1.f);
+        txtfit(g, FontSmall, getObjName(), guiButton->getW() + 4, 9, width - (h+4));
+
+
+        //Colour clr = Colour(100, 110, 110);
+        //Colour clr = Colour(Gobj::colorHue, Gobj::colorSat, 1, 1);
+
+        //float s = .4f;
+        //float b = .8f;
+        //float a = 1;
+        //Colour clr = Colour(colorHue, s, b, a);
+        //drawGlassRect1(g, (float)x1, (float)y1, width, height, clr, 1, 8, false, false, false, false);
+
+        if(0 && device != devDummy)
+        {
+            float s = .4f;
+            float b = .7f;
+            float a = 1;
+
+            Colour clr = Colour(colorHue, s, b, a);
+            drawGlassRound(g, x2 - 70, y1 + 4, (h*0.65f), clr, 1);
+            drawGlassRound(g, x2 - 47, y1 + 2, (h*0.8f), clr, 1);
+        }
     }
-
-    //setc(g, .0f);
-    Gobj::setMyColor(g, .5f);
-    txtfit(g, FontSmall, getObjName(), guiButton->getW() + 4, 10, width - (h+4));
-
-    //setc(g, 1.f);
-    Gobj::setMyColor(g, 1.f);
-    txtfit(g, FontSmall, getObjName(), guiButton->getW() + 4, 9, width - (h+4));
-
-
-    //Colour clr = Colour(100, 110, 110);
-
-    //Colour clr = Colour(Gobj::colorHue, Gobj::colorSat, 1, 1);
-
-    //float s = .4f;
-    //float b = .8f;
-    //float a = 1;
-    //Colour clr = Colour(colorHue, s, b, a);
-    //drawGlassRect1(g, (float)x1, (float)y1, width, height, clr, 1, 8, false, false, false, false);
-
-    if(0 && device != devDummy)
-    {
-        float s = .4f;
-        float b = .7f;
-        float a = 1;
-
-        Colour clr = Colour(colorHue, s, b, a);
-        drawGlassRound(g, x2 - 70, y1 + 4, (h*0.65f), clr, 1);
-        drawGlassRound(g, x2 - 47, y1 + 2, (h*0.8f), clr, 1);
-    }
-
-    //createSnap();
 }
 
 void Instrument::drawOverChildren(Graphics & g)
@@ -410,9 +415,9 @@ void Instrument::handleMouseUp(InputEvent& ev)
 
 void Instrument::handleMouseDrag(InputEvent& ev)
 {
-    if(MObject->canDrag(this))
+    if(MDragDrop->canDrag())
     {
-        MObject->dragAdd(this, ev.mouseX, ev.mouseY);
+        MDragDrop->start(this, ev.mouseX, ev.mouseY);
 
         guiButton->release();
     }
@@ -469,68 +474,66 @@ void Instrument::remap()
 {
     int h = height - 1;
 
-    guiButton->setCoords1(0, 0, h/1.5f, h);
-
-    int bw = 12;
-
-    if (device != devDummy)
+    if (!isMaster())
     {
-        guiButton->setTouchable(true);
+        guiButton->setCoords1(0, 0, h/1.5f, h);
 
-        int slH = 4;
+        int bw = 12;
 
-        if (panBox)
+        if (device != devDummy)
         {
-            panBox->setCoords1(width - 190, h - slH, 70, slH);
-            panBox->setVis(false);
+            guiButton->setTouchable(true);
+
+            int slH = 4;
+
+            if (panBox)
+            {
+                panBox->setCoords1(width - 190, h - slH, 70, slH);
+                panBox->setVis(false);
+            }
+
+            if (volBox)
+            {
+                volBox->setCoords1(width - 110, h - slH, 80, slH);
+                volBox->setVis(false);
+            }
+
+            int kH = h;
+            if (kH % 2)
+            {
+                kH--;
+            }
+
+            volKnob->setCoords1(width - 80, 0, int(kH), int(kH));
+            panKnob->setCoords1(width - 57, 0, int(kH-2), int(kH-2));
+
+            muteButt->setCoords1(width - bw - bw, 0, bw, h);
+        }
+        else
+        {
+            guiButton->setTouchable(false);
+
+            //volBox->setVis(false);
+            //panBox->setVis(false);
+
+            volKnob->setVis(false);
+            panKnob->setVis(false);
+
+            //soloButt->setVis(false);
+
+            muteButt->setVis(false);
         }
 
-        if (volBox)
+        ivu->setCoords1(width - bw, 0, bw, h);
+        
+        if(gGetTextWidth(FontSmall, objName) > width - 38 - 50 - 10)
         {
-            volBox->setCoords1(width - 110, h - slH, 80, slH);
-            volBox->setVis(false);
+            setHint(objName);
         }
-
-        int kH = h;
-        if (kH % 2)
+        else
         {
-            kH--;
+            setHint("");
         }
-
-        volKnob->setCoords1(width - 80, 0, int(kH), int(kH));
-        panKnob->setCoords1(width - 57, 0, int(kH-2), int(kH-2));
-
-        //drawGlassRound(g, x2 - 70, y1 + 4, (height * 0.65f), clr, 1);
-        //drawGlassRound(g, x2 - 47, y1 + 2, (height * 0.8f), clr, 1);
-
-        //soloButt->setCoords1(width - bw*2 - 8, height - bw, bw, bw);
-
-        muteButt->setCoords1(width - bw - bw, 0, bw, h);
-    }
-    else
-    {
-        guiButton->setTouchable(false);
-
-        volBox->setVis(false);
-        panBox->setVis(false);
-
-        volKnob->setVis(false);
-        panKnob->setVis(false);
-
-        //soloButt->setVis(false);
-
-        muteButt->setVis(false);
-    }
-
-    ivu->setCoords1(width - bw, 0, bw, h);
-    
-    if(gGetTextWidth(FontSmall, objName) > width - 38 - 50 - 10)
-    {
-        setHint(objName);
-    }
-    else
-    {
-        setHint("");
     }
 }
 
@@ -563,6 +566,8 @@ void Instrument::setIndex(int idx)
 
 void Instrument::setBufferSize(unsigned bufferSize)
 {
+    device->setBufferSize(bufferSize);
+
     mixChannel->setBufferSize(bufferSize);
 }
 

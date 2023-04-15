@@ -320,26 +320,18 @@ void ControlPanel::handleChildEvent(Gobj* obj, InputEvent& ev)
             if(obj == btVols)
             {
                 MGrid->setEditMode(GridDisplayMode_Volumes);
-
-                MObject->switchBrowser(false);
             }
             else if(obj == btPans)
             {
                 MGrid->setEditMode(GridDisplayMode_Pans);
-
-                MObject->switchBrowser(false);
             }
             else if(obj == btStepMode)
             {
                 MGrid->setEditMode(GridDisplayMode_Steps);
-
-                MObject->switchBrowser(false);
             }
             else if(obj == btBarMode)
             {
                 MGrid->setEditMode(GridDisplayMode_Bars);
-
-                MObject->switchBrowser(false);
             }
             else if (obj == btScale1)
             {
@@ -423,8 +415,8 @@ void ControlPanel::handleChildEvent(Gobj* obj, InputEvent& ev)
 
                 if (bw == NULL)
                 {
-                    MBrowser->setEnable(true);
-                    
+                    //MBrowser->setEnable(true);
+
                     BrwWinObject* bo = new BrwWinObject(MBrowser);
 
                     bo->setInvokeButton(btBrowser);

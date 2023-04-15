@@ -183,6 +183,7 @@ void Knob::remap()
     else if (dev)
     {
         eff = dynamic_cast<Eff*>(dev->getContainer());
+
         i = dynamic_cast<Instrument*>(dev->getContainer());
 
         if (i)
@@ -312,7 +313,7 @@ void Knob::drawKnob(Graphics& g)
     }
     else
     {
-        Colour clr = Colour(1.f, 0.f, dim ? .22 : .62f, 1.f);
+        Colour clr = Colour(1.f, 0.f, dim ? .22 : .82f, 1.f);
 
         if (objId.find("snd") != std::string::npos)
         {

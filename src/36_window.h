@@ -259,7 +259,6 @@ public:
             void                handleMouseUp(InputEvent& ev);
             void                handleMouseDown(InputEvent& ev);
             void                handleMouseDrag(InputEvent& ev);
-            bool                isDragging();
             void                refreshActiveObject();
             void                registerObject(Gobj* obj);
             void                setCursor(CursorType cur_type);

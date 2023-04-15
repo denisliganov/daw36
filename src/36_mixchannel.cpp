@@ -132,7 +132,7 @@ private:
             float hue = instr->isMaster() ? 1.f : instr->getColorHue();
 
             float s = 0; //.4f;
-            float b = .72;
+            float b = 1.0f;
             float a = 1;
 
             Colour clr = Colour(hue, s, b, a);
@@ -181,7 +181,7 @@ public:
 
     SendKnob(MixChannel* chan, MixChannel* out_chan, std::string nm) : Knob(new Parameter(nm, Param_Default), true)
     {
-        setHint("Send");
+        //setHint("Send");
         channel = chan;
         outChannel = out_chan;
 
@@ -218,7 +218,7 @@ public:
     }
 
 private:
-
+/*
     std::string getHint()
     {
         std::string hint = param->getName().data();
@@ -227,7 +227,7 @@ private:
         hint += param->getValString();
 
         return hint;
-    }
+    }*/
 
     MixChannel*     channel;
     MixChannel*     outChannel;
@@ -254,15 +254,16 @@ MixChannel::~MixChannel()
 
 void MixChannel::addSend(MixChannel* mchan)
 {
-    //if (!mchan->getInstr()->isMaster())
-    {
-        addObject(new SendKnob(this, mchan, "snd"), "snd");
-    }
+    SendKnob* sk;
+    addObject(sk = new SendKnob(this, mchan, "snd"), "snd");
+
+    sk->setHint("Send to " + mchan->getInstr()->getAlias());
 
     ChanOutToggle* c;
-  
     addObject(c = new ChanOutToggle(this, mchan), "out");
-    
+
+    c->setHint("Route to " + mchan->getInstr()->getAlias());
+
     if (mchan == mchanout)
     {
         outTg = c;
@@ -333,11 +334,9 @@ void MixChannel::init(Instrument* ins)
 
 void MixChannel::remap()
 {
-    int w = width - 32;
-
     if (MixViewSingle)
     {
-        int sendPanelHeight = 30;
+        int sendPanelHeight = 0;
 
         int xeff = FxPanelScrollerWidth + 1;
         int yeff = 0;
@@ -345,7 +344,7 @@ void MixChannel::remap()
         int visibleHeight = height - FxPanelBottomHeight - 2;
         int gap = 5;
 
-        confine(0, 1, w - 1, visibleHeight);
+        confine(xeff, 1, width - 80, visibleHeight);
 
         for (Eff* eff : effs)
         {
@@ -358,22 +357,22 @@ void MixChannel::remap()
         {
             eff->showDevice(true);
 
-            eff->setCoords1(xeff, 1 + yeff - int(vscr->getOffset()), w - xeff - 16, eff->getH());
+            eff->setCoords1(xeff, 1 + yeff - int(vscr->getOffset()), eff->getW(), eff->getH());
 
             yeff += eff->getH() + gap;
         }
 
-        vscr->setCoords1(0, 0, FxPanelScrollerWidth, visibleHeight);
-
         confine();
+
+        vscr->setCoords1(0, 0, FxPanelScrollerWidth, visibleHeight);
 
         int ySendControls = height - FxPanelBottomHeight;
         int yControls = height - FxPanelBottomHeight + sendPanelHeight;
 
-        volKnob->setCoords1(6, yControls + 5, 100, 22);
-        panKnob->setCoords1(6, yControls + 32, 100, 22);
+        volKnob->setCoords1(FxPanelScrollerWidth, yControls + 5, 150, 22);
+        panKnob->setCoords1(FxPanelScrollerWidth, yControls + 32, 150, 16);
 
-        vu->setCoords1(6, height - 24, w/2, 20);
+        vu->setCoords1(FxPanelScrollerWidth, height - InstrHeight - 22, 150, 20);
 
         int yKnob = 0;
 
@@ -403,7 +402,7 @@ void MixChannel::remap()
     }
     else
     {
-        confine(0, 0, w - 1, height);
+        confine(0, 0, width - 10, height);
 
         int xeff = 0;
 
@@ -430,19 +429,20 @@ void MixChannel::drawSelf(Graphics& g)
 
     fill(g, .1f);
 
-    int w = width - 64;
+    int w = width - 80; //width - 64;
 
     if (MixViewSingle)
     {
-        int sendPanelHeight = 30;
+        int sendPanelHeight = 0;
 
-        setc(g, .4f);
-        fillx(g, 0, height - FxPanelBottomHeight, w, FxPanelBottomHeight);
-        setc(g, .34f);
+        setc(g, .42f);
+        fillx(g, 0, height - FxPanelBottomHeight, w, FxPanelBottomHeight - InstrHeight);
+
+        setc(g, .36f);
         fillx(g, 0, height - FxPanelBottomHeight, w, sendPanelHeight);
 
-        setc(g, .46f);
-        rectx(g, 0, height - FxPanelBottomHeight, w, FxPanelBottomHeight);
+        setc(g, .48f);
+        rectx(g, 0, height - FxPanelBottomHeight, w, FxPanelBottomHeight - InstrHeight);
     }
     else
     {

@@ -35,7 +35,10 @@ BrwWinObject::BrwWinObject(Browser* brw)
 {
     browser = brw;
 
+    browser->setEnable(true);
+
     WinObject::addObject(browser, 0, 0, 1200, 900);
+
     //setWH(browser->getW(), browser->getH());
 
     setWidthHeight(1200, 800);

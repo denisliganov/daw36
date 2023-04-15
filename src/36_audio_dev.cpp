@@ -186,92 +186,6 @@ void Audio36::handleMetronome(long framesPerBuffer, bool pre)
     }
 }
 
-/*
-void Audio36::mixMaster(const void* inputBuffer, void* outputBuffer, long totalFrames)
-{
-    // Cast data passed through stream to our structure.
-
-    float          *out = (float*)outputBuffer;
-    const float    *in = (float*)inputBuffer;
-
-    Envelope* mvenv = NULL;
-    Trigger* tgenv = MasterVol->envelopes;
-
-    if(tgenv != NULL && MasterVol->envaffect)
-    {
-        mvenv = ((Envelope*)tgenv->el);
-    }
-
-    float vol = MInstrPanel->masterVolume->getOutVal(); //MasterVol->outVal;
-
-    if(MasterVol->lastValue == -1)
-    {
-        MasterVol->setLastVal(MasterVol->getOutVal());
-    }
-    else if(MasterVol->lastValue != MasterVol->getOutVal())
-    {
-        if(MasterVol->declickCount == 0)
-        {
-            MasterVol->declickCount = DECLICK_COUNT;
-            MasterVol->declickCoeff = float(MasterVol->getOutVal() - MasterVol->lastValue) / DECLICK_COUNT;
-
-            vol = MasterVol->lastValue;
-        }
-        else
-        {
-            vol = MasterVol->lastValue + (DECLICK_COUNT - MasterVol->declickCount)*MasterVol->declickCoeff;
-        }
-    }
-    else if(MasterVol->declickCount > 0) // (params->vol->lastval == params->vol->outval)
-    {
-        MasterVol->declickCount = 0;
-        MasterVol->declickCoeff = 0;
-    }
-
-    float outL, outR, lMax, rMax;
-    lMax = rMax = 0;
-    long bc = 0;
-
-    if(in == NULL)
-    {
-        for(long offset = 0; offset < totalFrames; offset++)
-        {
-            if(mvenv != NULL && offset >= mvenv->last_buffframe && MasterVol->declickCount == 0)
-            {
-                vol = mvenv->buffoutval[offset];
-
-                if(offset == mvenv->last_buffframe_end - 1)
-                {
-                    MasterVol->setValueFromEnvelope(mvenv->buff[offset], mvenv);
-                    MasterVol->setLastVal(MasterVol->getOutVal());
-                }
-            }
-
-            if(MasterVol->declickCount > 0)
-            {
-                vol += MasterVol->declickCoeff;
-                MasterVol->declickCount--;
-
-                if(MasterVol->declickCount == 0)  MasterVol->setLastVal(MasterVol->getOutVal());
-            }
-
-            outL = MMixer->getMasterChannel()->outBuff[bc++]*vol;
-            outR = MMixer->getMasterChannel()->outBuff[bc++]*vol;
-
-            if(outL > lMax)  lMax = outL;
-            if(outR > rMax)  rMax = outR;
-
-           *out++ = outL;
-           *out++ = outR;
-        }
-
-        //_MControlPanel->getTimeScreen().vu->setValues(lMax, rMax);
-
-        //if(_MMixer->masterchan->chanvu != NULL && _MMixer->masterchan->chanvu->isShown())
-        //    _MMixer->masterchan->chanvu->setValues(lMax, rMax);
-    }
-}
-*/
 
 //
 // This callback does three things:
@@ -342,9 +256,13 @@ void Audio36::generalCallBack(const void* inputBuffer, void* outputBuffer, long 
         frames = nextFrames;
     }
 
+
+
     // Post-process metronome
 
     handleMetronome(totalFrames, false);
+
+
 
     // Cleanup active triggers
 

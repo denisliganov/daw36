@@ -9,6 +9,8 @@
 #include "36_utils.h"
 #include "36_vst.h"
 #include "36_sampleinstr.h"
+#include "36_dragndrop.h"
+
 
 
 //#include <windows.h>
@@ -46,6 +48,15 @@ BrowserList::BrowserList(std::string name, std::string path, BrwListType t) : Li
     }
 
     composeList();
+}
+
+void BrowserList::addEntry(BrwListEntry* entry)
+{
+    addObject(entry);
+
+    brwEntries.push_back(entry); 
+
+    remap(); 
 }
 
 void BrowserList::composeList()
@@ -212,7 +223,8 @@ void BrowserList::deleteEntries()
 {
     while(brwEntries.size() > 0)
     {
-        delete brwEntries[brwEntries.size() - 1];
+        //delete brwEntries[brwEntries.size() - 1];
+        removeObject(brwEntries[brwEntries.size() - 1]);
 
         brwEntries.pop_back();
     }
@@ -329,9 +341,15 @@ void BrowserList::handleMouseDrag(InputEvent & ev)
             brwEntries[currentEntry]->getType() == Entry_DLL ||
             brwEntries[currentEntry]->getType() == Entry_Native)
         {
+            /*
             if(MObject->canDrag(this))
             {
                 MObject->dragAdd(brwEntries[currentEntry], ev.mouseX, ev.mouseY);
+            }*/
+
+            if (MDragDrop->canDrag())
+            {
+                MDragDrop->start(brwEntries[currentEntry], ev.mouseX, ev.mouseY);
             }
         }
     }

@@ -84,7 +84,6 @@ class TextCursor;
 class Vst2Plugin;
 class Vst2Host;
 class WinObject;
-class WinObject;
 
 
 struct RenderConfig;
@@ -155,6 +154,7 @@ extern HelperPanel*     MHelperPanel;
 extern Browser*         MBrowser;
 extern Pattern*         MPattern;
 extern TextCursor*      MCursor;
+extern DragAndDrop*     MDragDrop;
 
 extern JuceAudioDeviceManager*     JAudManager;
 

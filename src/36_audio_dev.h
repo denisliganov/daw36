@@ -35,7 +35,6 @@ public:
             void                initMetronome();
             bool                isNotePlayingOnPreview(int note_val);
             void                generalCallBack(const void* inputBuffer, void* outputBuffer, long framesPerBuffer);
-//            void                mixMaster(const void* inputBuffer, void* outputBuffer, long totalFrames);
             void                processPreviews();
             void                releasePreviewByElement(Element* el);
             void                releasePreviewByNote(int note_val);

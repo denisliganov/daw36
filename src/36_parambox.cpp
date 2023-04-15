@@ -265,7 +265,7 @@ void RadioBox::drawSelf(Graphics& g)
             fillx(g, 2, y + 2, textHeight + 1, textHeight + 1);
         }
 
-        setc(g, 1.f);
+        setc(g, .74f);
         txtfit(g, fontId, str, (textHeight + 4) + 6, y + textHeight - 1, width - (textHeight + 4));
 
         y += textHeight + 4;
@@ -313,7 +313,7 @@ void SelectorBox::drawSelf(Graphics& g)
             fillx(g, 2, y + 2, textHeight, textHeight);
         }
 
-        setc(g, 1.f);
+        setc(g, .74f);
         txtfit(g, fontId, str, (textHeight + 4) + 6, y + textHeight - 1, width - h1);
 
         y += textHeight + 4;

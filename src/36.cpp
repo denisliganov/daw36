@@ -94,6 +94,7 @@ HelperPanel*        MHelperPanel;
 KeyHandler*         MKeys;
 MainWinObject*      MObject;
 TextCursor*         MCursor;
+DragAndDrop*        MDragDrop;
 
 bool                InitComplete = false;
 
@@ -115,7 +116,7 @@ MainWinObject::MainWinObject()
     InstrHeight =           33;
     FxPanelMaxWidth =       380;
     FxPanelScrollerWidth =  10;
-    FxPanelBottomHeight =   130;
+    FxPanelBottomHeight =   100;
     LeftGap =               26;
     LineNumWidth =          18;
     MixerHeight =           500;
@@ -139,6 +140,8 @@ MainWinObject::MainWinObject()
     addObject(MInstrPanel = new InstrPanel(MMixer = new Mixer));
     addObject(MBrowser = new Browser(WorkDirectory));
 
+    MDragDrop = new DragAndDrop();
+
     MMixer->setEnable(false);
     MHelperPanel->setEnable(true);
     MInstrPanel->setEnable(true);
@@ -152,8 +155,8 @@ MainWinObject::MainWinObject()
     MMixer->setCoords1(mainX1, height - MixerHeight, mainX2 - mainX1 + 1, MixerHeight);
 
     MLanePanel->setEnable(false);
+
     currAuxPanel = NULL;
-    //MLanePanel->setType(Lane_Keys);
 
     setMode(DragMode_Default);
 
@@ -460,24 +463,6 @@ void MainWinObject::setMainY2(int main_y2)
     }
 
     remap();
-}
-
-void MainWinObject::switchBrowser(bool on)
-{
-    if (on)
-    {
-        MEdit->setEnable(false);
-        MBrowser->setEnable(true);
-
-        remapAndRedraw();
-    }
-    else
-    {
-        MEdit->setEnable(true);
-        MBrowser->setEnable(false);
-
-        remapAndRedraw();
-    }
 }
 
 void MainWinObject::handleClose()

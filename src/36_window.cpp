@@ -1400,6 +1400,11 @@ void WinObject::refreshActiveObject()
 
 void WinObject::handleMouseEnter(InputEvent& ev)
 {
+    if (MDragDrop->isActive())
+    {
+        addHighlight(MDragDrop);
+    }
+
     updActiveObject(ev);
 
     lastEvent = ev;
@@ -1407,6 +1412,11 @@ void WinObject::handleMouseEnter(InputEvent& ev)
 
 void WinObject::handleMouseLeave(InputEvent& ev)
 {
+    if (MDragDrop->getWindow() == this && MDragDrop->isActive())
+    {
+        removeObject(MDragDrop);
+    }
+
     updActiveObject(ev);
 
     updateHint(ev);
@@ -1444,9 +1454,10 @@ void WinObject::handleMouseWheel(InputEvent& ev)
 
 void WinObject::handleMouseUp(InputEvent& ev)
 {
-    if (drag->isActive())
+    if (MDragDrop->getWindow() == this && MDragDrop->isActive())
     {
-        dragDrop(ev.mouseX, ev.mouseY, ev.keyFlags);
+        //dragDrop(ev.mouseX, ev.mouseY, ev.keyFlags);
+        MDragDrop->drop(ev.mouseX, ev.mouseY, ev.keyFlags);
     }
     else if (activeObj != NULL)
     {
@@ -1463,9 +1474,9 @@ void WinObject::handleMouseUp(InputEvent& ev)
         }
     }
 
-    if (drag)
+    if (MDragDrop)
     {
-        drag->reset();
+        MDragDrop->reset();
     }
 
     lastEvent = ev;
@@ -1475,11 +1486,12 @@ void WinObject::handleMouseUp(InputEvent& ev)
 
 void WinObject::handleMouseDrag(InputEvent& ev)
 {
-    if(drag->isActive())
+    if (MDragDrop->getWindow() == this && MDragDrop->isActive())
     {
         Gobj* dropObj = getLastTouchedObject(ev.mouseX, ev.mouseY);
+        //drag->drag(dropObj, ev.mouseX, ev.mouseY);
 
-        drag->drag(dropObj, ev.mouseX, ev.mouseY);
+        MDragDrop->drag(dropObj, ev.mouseX, ev.mouseY);
     }
     else if(activeObj)
     {
@@ -1495,9 +1507,6 @@ void WinObject::handleMouseDrag(InputEvent& ev)
 
 void WinObject::handleMouseDown(InputEvent& ev)
 {
-    if(MWindow->isContextMenuActive())
-        int a = 1;
-
     dragDistance = 0;
 
     if (activeObj != NULL)
@@ -1584,11 +1593,5 @@ void WinObject::unregisterObject(Gobj * obj)
     }
     
     ReleaseMutex(getWinObject().guiMutex);
-}
-
-
-bool WinObject::isDragging()
-{
-    return drag->isActive();
 }
 

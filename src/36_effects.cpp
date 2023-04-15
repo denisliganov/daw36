@@ -151,21 +151,22 @@ Eff::Eff(Device36* dev)
     mixChannel = NULL;
 
     device = dev;
-    
+
     addObject(guiButt = new EffGuiButton());
     addObject(enableButt = new EffEnableButton(device->enabled));
     addObject(foldButt = new EffFoldButton());
 
     addObject(device);
 
-    device->placeControls1(FxPanelMaxWidth - FxPanelScrollerWidth);
+    int devWidth = FxPanelMaxWidth - 80 - FxPanelScrollerWidth - 1;
 
-    device->setWH(FxPanelMaxWidth - FxPanelScrollerWidth - 5, device->getH());
+    device->placeControls1(devWidth);
+
+    device->setWH(devWidth, device->getH());
 
     device->setContainer(this);
 
     setObjName(dev->getObjName());
-
 
     //setWH(device->getW(), device->getH() + 22);
 }

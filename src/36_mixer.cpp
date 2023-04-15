@@ -46,8 +46,6 @@ void Mixer::cleanBuffers(int num_frames)
     {
         memset(instr->getMixChannel()->tempBuff, 0, sizeof(float)*num_frames*2);
     }
-
-    //memset(masterChannel->inbuff, 0, sizeof(float)*num_frames*2);
 }
 
 void Mixer::mixAll(int num_frames)
@@ -80,8 +78,6 @@ void Mixer::mixAll(int num_frames)
         }
     }while (incomplete);
 
-    //masterChannel->process(num_frames, NULL);
-
     ReleaseMutex(MixerMutex);
 }
 
@@ -91,8 +87,6 @@ void Mixer::resetAll()
     {
         instr->getMixChannel()->reset();
     }
-
-    masterChannel->reset();
 }
 
 void Mixer::handleChildEvent(Gobj * obj, InputEvent& ev)

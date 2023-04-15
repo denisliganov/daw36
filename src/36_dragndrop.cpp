@@ -4,7 +4,7 @@
 #include "36_instr.h"
 #include "36_text.h"
 #include "36_draw.h"
-
+#include "36_window.h"
 
 
 
@@ -117,6 +117,8 @@ void DragAndDrop::start(Gobj * drag_obj,int mx,int my)
 {
     dragObj = drag_obj;
 
+    dragObj->getWindow()->addHighlight(this);
+
     dropHighlight->setCoords2(-1,-1, 1, 1);
 }
 
@@ -144,6 +146,8 @@ void DragAndDrop::drop(int mx,int my,unsigned int flags)
     {
         targetObj->handleObjDrop((Gobj*)dragObj, mx, my, flags);
     }
+
+    dragObj->getWindow()->removeObject(this);
 
     reset();
 }
