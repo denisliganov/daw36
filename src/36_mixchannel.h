@@ -19,7 +19,7 @@ class SendKnob;
 Eff* CreateEffect(std::string effname);
 
 
-class MixChannel : public ParamObject
+class MixChannel : public Device36
 {
 friend  Audio36;
 friend  ChanVU;
@@ -61,7 +61,7 @@ public:
             void                increaseMixCounter()      { mixCount++; }
             void                load(XmlElement* xmlChanNode);
             void                processChannel(int num_frames);
-            void                process(int num_frames, float* outbuff);
+            void                process(int num_frames);
             void                placeEffectBefore(Eff* eff, Eff* before);
             void                prepareForMixing();
             void                remap();
@@ -81,19 +81,14 @@ private:
             std::string         chanTitle;
             Gobj*               dropObj;
             std::list<Eff*>     effs;
-            float               inbuff[MAX_BUFF_SIZE*2];
             Instrument*         instr;
             MixChannel*         mchanout;
             int                 mixCount;
-            int                 muteCount;
             Button36*           mutetoggle;
             ChanOutToggle*      outTg;
-            float               outbuff[MAX_BUFF_SIZE*2];
             Knob*               panKnob;
-            Parameter*          panParam;
     std::list<SendKnob*>        sendsActive;
     std::list<MixChannel*>      sends;
-            Parameter*          volParam;
             ChanVU*             vu;
             Knob*               volKnob;
             Scroller*           vscr;

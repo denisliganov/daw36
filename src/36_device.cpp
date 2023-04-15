@@ -757,7 +757,7 @@ void Device36::fillOutputBuffer(float* out_buff, long num_frames, long buff_fram
 
 void Device36::processDSP(float* in_buff, float* out_buff, int num_frames)
 {
-    
+    // Stub for DSP effects
 }
 
 void Device36::generateData(float* in_buff, float* out_buff, long num_frames, long mix_buff_frame)
@@ -832,11 +832,68 @@ void Device36::generateData(float* in_buff, float* out_buff, long num_frames, lo
                 actual = processTrigger(tg, framesToProcess, framesRemaining, buffFrame);
             }
 
-            if(enabled->getBoolValue() == false || muteCount < DECLICK_COUNT)
+            if (in_buff != NULL)
             {
-                if (in_buff != NULL)
+                if(enabled->getBoolValue())
                 {
                     processDSP(&in_buff[buffFrame*2], &outBuff[buffFrame*2], framesToProcess);
+
+                    // Copy output back to input for the next effect to process
+
+                    if(muteCount > 0)
+                    {
+                        // Exiting muted state, gradually add processed data to input data
+
+                        long tc = buffFrame;
+                        float aa;
+
+                        while(tc < framesToProcess)
+                        {
+                            // aa from 0 up to 1
+
+                            aa = float(DECLICK_COUNT - muteCount)/DECLICK_COUNT;
+
+                            outBuff[tc*2] = in_buff[tc*2]*(1.f - aa) + outBuff[tc*2]*aa;
+                            outBuff[tc*2 + 1] = in_buff[tc*2 + 1]*(1.f - aa) + outBuff[tc*2 + 1]*aa;
+
+                            tc++;
+
+                            if(muteCount > 0)
+                            {
+                                muteCount--;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if(muteCount < DECLICK_COUNT)
+                    {
+                        // Entering muted state, gradually remove processed data from input data
+
+                        processDSP(&in_buff[buffFrame*2], &outBuff[buffFrame*2], framesToProcess);
+
+                        long tc = buffFrame;
+                        float aa;
+
+                        while(tc < framesToProcess && muteCount < DECLICK_COUNT)
+                        {
+                            // aa from 1 down to 0
+
+                            aa = float(DECLICK_COUNT - muteCount)/DECLICK_COUNT;
+
+                            outBuff[tc*2] = in_buff[tc*2]*(1.f - aa) + outBuff[tc*2]*aa;
+                            outBuff[tc*2 + 1] = in_buff[tc*2 + 1]*(1.f - aa) + outBuff[tc*2 + 1]*aa;
+
+                            tc++;
+
+                            muteCount++;
+                        }
+                    }
+                    else
+                    {
+                        memcpy(&outBuff[buffFrame*2], &in_buff[buffFrame*2], sizeof(float) * framesToProcess * 2);
+                    }
                 }
             }
 

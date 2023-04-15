@@ -89,23 +89,27 @@ public:
             void                setLastParams(float last_length,float last_vol,float last_pan, int last_val);
             void                setVU(ChanVU* v) { vu = v; }
 
+            float               outBuff[MAX_BUFF_SIZE * 2];      // Data for whole session
+            float               tempBuff[MAX_BUFF_SIZE * 2];     // Data for single trigger
 
 private:
+            std::list<Trigger*> activeTriggers;
+            float               cfsV;
+            Gobj*               container;
+            int                 devIdx;
+            Parameter*          enabled;
+            long                endFrame;  // last frame to fill
+            Envelope*           envVol;
+            std::string         filePath;
+            SubWindow*          guiWindow;
+            bool                isLoading;
+            int                 lastParamIdx;
             float               lastNoteLength;
             float               lastNoteVol;
             float               lastNotePan;
             int                 lastNoteVal;
             int                 muteCount;
             std::list<Note*>    notes;
-
-            std::list<Trigger*> activeTriggers;
-            float               cfsV;
-            int                 devIdx;
-            long                endFrame;  // last frame to fill
-            Envelope*           envVol;
-            SubWindow*          guiWindow;
-
-            float               outBuff[MAX_BUFF_SIZE*2];      // Data for whole session
             Parameter*          pan;
             std::vector<std::string>    presets;
             float               pan0, pan1, pan2, pan3;
@@ -113,13 +117,6 @@ private:
             float               rampCounterV;
             Pattern*            selfPattern;
             Note*               selfNote;
-
-            Gobj*               container;
-            Parameter*          enabled;
-            std::string         filePath;
-            bool                isLoading;
-            int                 lastParamIdx;
-            float               tempBuff[MAX_BUFF_SIZE*2];     // Data for single trigger
             InstrType           type;
             long                uniqueId;
             ChanVU*             vu;

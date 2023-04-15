@@ -417,12 +417,14 @@ void InstrPanel::generateAll(long num_frames, long mixbuffframe)
 
         if (instr->getDevice())
         {
-            instr->device->generateData(NULL, mchan->inbuff, num_frames, mixbuffframe);
+            instr->device->generateData(NULL, mchan->tempBuff, num_frames, mixbuffframe);
         }
     }
 
     if (prevSample)
-        prevSample->generateData(NULL, MMixer->getMasterChannel()->inbuff, num_frames, mixbuffframe);
+    {
+        prevSample->generateData(NULL, MMixer->getMasterChannel()->tempBuff, num_frames, mixbuffframe);
+    }
 }
 
 bool InstrPanel::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)

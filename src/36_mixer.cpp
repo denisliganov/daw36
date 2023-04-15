@@ -44,7 +44,7 @@ void Mixer::cleanBuffers(int num_frames)
 {
     for(Instrument* instr : MInstrPanel->getInstrs())
     {
-        memset(instr->getMixChannel()->inbuff, 0, sizeof(float)*num_frames*2);
+        memset(instr->getMixChannel()->tempBuff, 0, sizeof(float)*num_frames*2);
     }
 
     //memset(masterChannel->inbuff, 0, sizeof(float)*num_frames*2);

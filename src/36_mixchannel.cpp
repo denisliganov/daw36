@@ -307,7 +307,6 @@ void MixChannel::init(Instrument* ins)
 {
     objId = "mixchan";
 
-    muteCount = 0;
     mixCount = 0;
 
     instr = ins;
@@ -320,11 +319,14 @@ void MixChannel::init(Instrument* ins)
     vu = NULL;
     outTg = NULL;
 
-    addParam(volParam = new Parameter("Volume", Param_Vol, 0.f, DAW_VOL_RANGE, 1.f, Units_Percent));
-    addParam(panParam = new Parameter("Panning", Param_Pan));
+    //addParam(volParam = new Parameter("Volume", Param_Vol, 0.f, DAW_VOL_RANGE, 1.f, Units_Percent));
+    //addParam(panParam = new Parameter("Panning", Param_Pan));
 
-    addObject(volKnob = new Knob(volParam));
-    addObject(panKnob = new Knob(panParam));
+    addBasicParamSet();
+
+    addObject(volKnob = new Knob(vol));
+    addObject(panKnob = new Knob(pan));
+
     addObject(vu = new ChanVU(false), ObjGroup_VU);
     addObject(vscr = new Scroller(true));
 }
@@ -539,8 +541,8 @@ void MixChannel::save(XmlElement * xmlChanNode)
 {
     //xmlChanNode->setAttribute(T("Index"), instr->instrAlias);
 
-    xmlChanNode->addChildElement(volParam->save());
-    xmlChanNode->addChildElement(panParam->save());
+    //xmlChanNode->addChildElement(volParam->save());
+    //xmlChanNode->addChildElement(panParam->save());
 
     //xmlChanNode->addChildElement(amount1->save());
 
@@ -583,10 +585,10 @@ void MixChannel::load(XmlElement * xmlNode)
     {
         String sname = xmlParam->getStringAttribute(T("devName"));
 
-        if(sname == T("Vol"))
-            volParam->load(xmlParam);
-        else if(sname == T("Pan"))
-            panParam->load(xmlParam);
+        //if(sname == T("Vol"))
+        //    volParam->load(xmlParam);
+        //else if(sname == T("Pan"))
+        //    panParam->load(xmlParam);
 
         /*
         else if(sname == T("send1.amount"))
@@ -1005,40 +1007,37 @@ void MixChannel::prepareForMixing()
 
 void MixChannel::doSend(float* sendbuff, float amount, int num_frames)
 {
-    if (sendbuff != NULL)
+    float outL, outR;
+
+    int i = 0;
+    int fc = 0;
+
+    while (i < num_frames)
     {
-        float outL, outR;
+        outL = outBuff[fc];
+        outR = outBuff[fc + 1];
 
-        int i = 0;
-        int fc = 0;
+        sendbuff[fc++] += outL * amount;
+        sendbuff[fc++] += outR * amount;
 
-        while (i < num_frames)
-        {
-            outL = outbuff[fc];
-            outR = outbuff[fc + 1];
-
-            sendbuff[fc++] += outL * amount;
-            sendbuff[fc++] += outR * amount;
-
-            i++;
-        }
+        i++;
     }
 }
 
 void MixChannel::processChannel(int num_frames)
 {
-    process(num_frames, NULL);
+    process(num_frames);
 
     for (SendKnob* sk : sendsActive)
     {
-        doSend(sk->getOutChannel()->inbuff, sk->getValue(), num_frames);
+        doSend(sk->getOutChannel()->tempBuff, sk->getValue(), num_frames);
 
         sk->getOutChannel()->decreaseMixCounter();
     }
 
     if (outTg)
     {
-        doSend(outTg->getOutChannel()->inbuff, 1, num_frames);
+        doSend(outTg->getOutChannel()->tempBuff, 1, num_frames);
 
         outTg->getOutChannel()->decreaseMixCounter();
     }
@@ -1046,76 +1045,25 @@ void MixChannel::processChannel(int num_frames)
     processed = true;
 }
 
-void MixChannel::process(int num_frames, float* out_buff)
+void MixChannel::process(int num_frames)
 {
     if(effs.size() > 0)
     {
         for(Eff* eff : effs)
         {
-            if(eff->isEnabled())
-            {
-                eff->getDevice()->generateData(inbuff, outbuff, num_frames);
+            eff->getDevice()->generateData(tempBuff, outBuff, num_frames);
 
-                // Copy output back to input for the next effect to process
-
-                if(eff->getDevice()->muteCount > 0)
-                {
-                    long tc = 0;
-                    float aa;
-
-                    while(tc < num_frames)
-                    {
-                        aa = float(DECLICK_COUNT - eff->getDevice()->muteCount)/DECLICK_COUNT;
-
-                        inbuff[tc*2] = inbuff[tc*2]*(1.f - aa) + outbuff[tc*2]*aa;
-                        inbuff[tc*2 + 1] = inbuff[tc*2 + 1]*(1.f - aa) + outbuff[tc*2 + 1]*aa;
-
-                        tc++;
-
-                        if(eff->getDevice()->muteCount > 0)
-                        {
-                            eff->getDevice()->muteCount--;
-                        }
-                    }
-                }
-                else
-                {
-                    memcpy(inbuff, outbuff, sizeof(float)*num_frames*2);
-                }
-            }
-            else
-            {
-                memcpy(outbuff, inbuff, sizeof(float) * num_frames * 2);
-
-                if(eff->getDevice()->muteCount < DECLICK_COUNT)
-                {
-                    long tc = 0;
-                    float aa;
-
-                    while(tc < num_frames && eff->getDevice()->muteCount < DECLICK_COUNT)
-                    {
-                        aa = float(DECLICK_COUNT - eff->getDevice()->muteCount)/DECLICK_COUNT;
-
-                        inbuff[tc*2] = inbuff[tc*2]*(1.f - aa) + outbuff[tc*2]*aa;
-                        inbuff[tc*2 + 1] = inbuff[tc*2 + 1]*(1.f - aa) + outbuff[tc*2 + 1]*aa;
-
-                        tc++;
-
-                        eff->getDevice()->muteCount++;
-                    }
-                }
-                else
-                {
-                    //memcpy(inbuff, outbuff, sizeof(float)*num_frames*2);
-                }
-            }
+            memcpy(tempBuff, outBuff, sizeof(float)*num_frames*2);
         }
     }
     else
     {
-        memcpy(outbuff, inbuff, sizeof(float)*num_frames*2);
+        memcpy(outBuff, tempBuff, sizeof(float)*num_frames*2);
     }
 
+    fillOutputBuffer(outBuff, num_frames, 0, 0);
+
+#if 0
     {
         float panv, volv, volL, volR;
 
@@ -1160,6 +1108,11 @@ void MixChannel::process(int num_frames, float* out_buff)
                 }*/
 
                 volv = volParam->getOutVal();
+
+                if (volv < 1)
+                {
+                    int a = 1;
+                }
 
                 if(volParam->lastValue == -1)
                 {
@@ -1263,7 +1216,7 @@ void MixChannel::process(int num_frames, float* out_buff)
 
                 if(volL > volR)
                 {
-                    mR = (volL - volR)*inbuff[tc + 1];
+                    mR = (volL - volR)*outbuff[tc + 1];
                 }
                 else
                 {
@@ -1272,15 +1225,15 @@ void MixChannel::process(int num_frames, float* out_buff)
 
                 if(volR > volL)
                 {
-                    mL = (volR - volL)*inbuff[tc];
+                    mL = (volR - volL)*outbuff[tc];
                 }
                 else
                 {
                     mL = 0;
                 }
 
-                outL = inbuff[tc]*volL + mR;
-                outR = inbuff[tc + 1]*volR + mL;
+                outL = outbuff[tc]*volL + mR;
+                outR = outbuff[tc + 1]*volR + mL;
 
                 outL *= volv*aa;
                 outR *= volv*aa;
@@ -1302,8 +1255,8 @@ void MixChannel::process(int num_frames, float* out_buff)
                 }
                 else // master
                 {
-                    inbuff[tc++] = outL;
-                    inbuff[tc++] = outR;
+                    outbuff[tc++] = outL;
+                    outbuff[tc++] = outR;
                 }
             }
 
@@ -1315,6 +1268,7 @@ void MixChannel::process(int num_frames, float* out_buff)
             //memset(out_buff, 0, num_frames*sizeof(float)*2);
         }
     }
+#endif
 }
 
 void MixChannel::removeEffect(Eff* eff)

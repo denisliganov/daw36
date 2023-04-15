@@ -186,6 +186,7 @@ void Audio36::handleMetronome(long framesPerBuffer, bool pre)
     }
 }
 
+/*
 void Audio36::mixMaster(const void* inputBuffer, void* outputBuffer, long totalFrames)
 {
     // Cast data passed through stream to our structure.
@@ -254,8 +255,8 @@ void Audio36::mixMaster(const void* inputBuffer, void* outputBuffer, long totalF
                 if(MasterVol->declickCount == 0)  MasterVol->setLastVal(MasterVol->getOutVal());
             }
 
-            outL = MMixer->getMasterChannel()->inbuff[bc++]*vol;
-            outR = MMixer->getMasterChannel()->inbuff[bc++]*vol;
+            outL = MMixer->getMasterChannel()->outBuff[bc++]*vol;
+            outR = MMixer->getMasterChannel()->outBuff[bc++]*vol;
 
             if(outL > lMax)  lMax = outL;
             if(outR > rMax)  rMax = outR;
@@ -270,6 +271,7 @@ void Audio36::mixMaster(const void* inputBuffer, void* outputBuffer, long totalF
         //    _MMixer->masterchan->chanvu->setValues(lMax, rMax);
     }
 }
+*/
 
 //
 // This callback does three things:
@@ -437,7 +439,17 @@ void Audio36::generalCallBack(const void* inputBuffer, void* outputBuffer, long 
         mutemixing = true;
     }
 
-    mixMaster(inputBuffer, outputBuffer, totalFrames);
+    //mixMaster(inputBuffer, outputBuffer, totalFrames);
+    //memcpy(outputBuffer, MMixer->getMasterChannel()->outBuff, totalFrames*2);
+
+    float      *out = (float*)outputBuffer;
+    float      *in = MMixer->getMasterChannel()->outBuff;
+
+    for(long c = 0; c < totalFrames; c++)
+    {
+       *out++ = *in++;
+       *out++ = *in++;
+    }
 
     if(mutemixing)
     {
