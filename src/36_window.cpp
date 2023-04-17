@@ -1490,8 +1490,6 @@ void WinObject::handleMouseDrag(InputEvent& ev)
     {
         Gobj* dropObj = getLastTouchedObject(ev.mouseX, ev.mouseY);
 
-        //drag->drag(dropObj, ev.mouseX, ev.mouseY);
-
         MDragDrop->drag(dropObj, ev.mouseX, ev.mouseY);
     }
     else if(activeObj)

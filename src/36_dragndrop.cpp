@@ -88,7 +88,9 @@ void DragAndDrop::reset()
     setCoords2(0, 0, -1, -1);
 
     dropHighlight->setVis(false);
-};
+
+    //MDragDrop->getWindow()
+}
 
 bool DragAndDrop::canDrag()
 {
@@ -143,24 +145,23 @@ void DragAndDrop::start(Gobj * drag_obj,int mx,int my)
 
 void DragAndDrop::drag(Gobj* target_object, int mx, int my)
 {
-    sw->setBounds(mx - getW()/2, my + getH(), getW(), getH());
+    targetObj = target_object;
 
-    return;
+    sw->setBounds(mx - getW()/2, my + getH(), getW(), getH());
 
     dropHighlight->setCoords1(-1,-1, 1, 1);   // disable by default
 
     bool result = target_object->handleObjDrag(*this, dragObj, mx, my);
 
+    return;
+
     if(!result)
     {
-        int tw = gGetTextWidth(FontSmall, dragObj->getObjName());
-        int th = gGetTextHeight(FontSmall);
-
+        //int tw = gGetTextWidth(FontSmall, dragObj->getObjName());
+        //int th = gGetTextHeight(FontSmall);
         //setCoords1(mx - tw/2, my - th/2, tw, th);
         //setCoordsAbs(mx - tw/2, my - th/2, mx - tw/2 + tw, my - th/2 + th);
     }
-
-    targetObj = target_object;
 }
 
 void DragAndDrop::drop(int mx,int my,unsigned int flags)
@@ -170,7 +171,7 @@ void DragAndDrop::drop(int mx,int my,unsigned int flags)
         targetObj->handleObjDrop((Gobj*)dragObj, mx, my, flags);
     }
 
-    dragObj->getWindow()->removeObject(this);
+    //dragObj->getWindow()->removeObject(this);
 
     reset();
 }
