@@ -47,6 +47,9 @@ Device36::Device36()
     lastNotePan = 0;
     lastNoteVal = BaseNote;
 
+    memset(outBuff, 0, MAX_BUFF_SIZE * 2);
+    memset(tempBuff, 0, MAX_BUFF_SIZE * 2);
+
     addParam(enabled = new Parameter("ENABLED", true));
 
     enabled->setAutoPlaced(false);
@@ -97,6 +100,10 @@ restart:
             goto restart;
         }
     }
+
+    delete selfNote;
+    
+    delete selfPattern;
 }
 
 // Create self-pattern + note, for previewing

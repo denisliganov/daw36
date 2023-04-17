@@ -54,14 +54,25 @@ Note::~Note()
 {
     deleteAllTriggers();
 
-    patt->removeElement(this);
+    if (patt == this)
+    {
+        int a = 1;
+    }
+    else
+    {
+        patt->removeElement(this);
+    }
 
     MGrid->removeElement(this);
 
-    device->removeNote(this);
+    if (device)
+        device->removeNote(this);
 
-    delete vol;
-    delete pan;
+    if (vol)
+        delete vol;
+    
+    if (pan)
+        delete pan;
 }
 
 Note* Note::clone(Device36* new_instr)

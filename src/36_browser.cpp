@@ -94,7 +94,7 @@ void Browser::remap()
     int cw = 200;
     float lstHeight = (float)(height - cy - 1);
 
-    int lw = width/7;
+    int lw = width/5;
 
     int xLists = cx;
 
@@ -108,8 +108,8 @@ void Browser::remap()
     putRight(sampleList1, lw, lstHeight);
     putRight(plugList, lw, lstHeight);
     putRight(vstList1, lw, lstHeight);
-    putRight(vstList2, lw, lstHeight);
-    putRight(projectsList1, lw, lstHeight);
+    //putRight(vstList2, lw, lstHeight);
+    //putRight(projectsList1, lw, lstHeight);
 
 
     //for (ListBoxx* lb : listBoxes)

@@ -411,20 +411,27 @@ void ControlPanel::handleChildEvent(Gobj* obj, InputEvent& ev)
             }
             else if (obj == btBrowser)
             {
+/*
                 static SubWindow* bw = NULL;
-
                 if (bw == NULL)
                 {
-                    //MBrowser->setEnable(true);
-
                     BrwWinObject* bo = new BrwWinObject(MBrowser);
-
                     bo->setInvokeButton(btBrowser);
-
                     bw = MObject->addWindow((WinObject*)bo);
                 }
-
                 bw->setOpen(!bw->isOpen());
+*/
+
+                if (!MBrowser->isShown())
+                {
+                    AuxCtrlWidth = 820;
+                }
+                else
+                {
+                    AuxCtrlWidth = 0;
+                }
+
+                MObject->setMainX2(MObject->getW() - AuxCtrlWidth - 1);
 
                 /*
                 if (MBrowser->isON())

@@ -217,12 +217,17 @@ void MainWinObject::remap()
 
     if(AuxCtrlWidth > 0)
     {
-        MHelperPanel->setEnable(true);
-        MHelperPanel->setCoords1(mainX2 + PanelGap + 1, 0, AuxCtrlWidth, height - 1);
+        //MHelperPanel->setEnable(true);
+        //MHelperPanel->setCoords1(mainX2 + PanelGap + 1, 0, AuxCtrlWidth, height - 1);
+
+        MBrowser->setEnable(true);
+        MBrowser->setVis(true);
+        MBrowser->setCoords1(mainX2 + PanelGap + 1, 0, AuxCtrlWidth, height - 1);
     }
     else
     {
-        MHelperPanel->setEnable(false);
+        MBrowser->setEnable(false);
+        //MHelperPanel->setEnable(false);
     }
 
     if(!MProject.isLoading() && MGrid != NULL && MWindow != NULL)
@@ -370,7 +375,7 @@ void MainWinObject::handleMouseDrag(InputEvent& ev)
         }
         else if(getMode() == DragMode_DragX2)
         {
-            if(abs(ev.mouseX) > width - 300)
+            if(abs(ev.mouseX) > width - 820)
             {
                 setMainX2(ev.mouseX);
 
@@ -378,9 +383,9 @@ void MainWinObject::handleMouseDrag(InputEvent& ev)
             }
             else
             {
-                AuxCtrlWidth = 300;
+                AuxCtrlWidth = 820;
 
-                setMainX2(width - AuxCtrlWidth);
+                setMainX2(width - AuxCtrlWidth - 1);
             }
         }
         else if(getMode() == DragMode_DragY1)
