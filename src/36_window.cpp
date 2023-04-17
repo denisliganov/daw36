@@ -1454,10 +1454,9 @@ void WinObject::handleMouseWheel(InputEvent& ev)
 
 void WinObject::handleMouseUp(InputEvent& ev)
 {
-    if (MDragDrop && MDragDrop->getWindow() == this && MDragDrop->isActive())
+    if (MDragDrop && MDragDrop->isActive())
     {
-        //dragDrop(ev.mouseX, ev.mouseY, ev.keyFlags);
-        //MDragDrop->drop(ev.mouseX, ev.mouseY, ev.keyFlags);
+        MDragDrop->drop(ev.mouseX, ev.mouseY, ev.keyFlags);
     }
     else if (activeObj != NULL)
     {
@@ -1472,11 +1471,6 @@ void WinObject::handleMouseUp(InputEvent& ev)
                 showMenu(m, ev.mouseX + 1, ev.mouseY + 1);
             }
         }
-    }
-
-    if (MDragDrop)
-    {
-        //MDragDrop->reset();
     }
 
     lastEvent = ev;

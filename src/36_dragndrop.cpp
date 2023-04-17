@@ -76,20 +76,9 @@ DragAndDrop::DragAndDrop()
 
     addHighlight(dropHighlight = new DropHighlight());
 
-    reset();
-}
-
-void DragAndDrop::reset()
-{
     count = 0;
 
     dragObj = targetObj = NULL;
-
-    setCoords2(0, 0, -1, -1);
-
-    dropHighlight->setVis(false);
-
-    //MDragDrop->getWindow()
 }
 
 bool DragAndDrop::canDrag()
@@ -149,7 +138,7 @@ void DragAndDrop::drag(Gobj* target_object, int mx, int my)
 
     sw->setBounds(mx - getW()/2, my + getH(), getW(), getH());
 
-    dropHighlight->setCoords1(-1,-1, 1, 1);   // disable by default
+    //dropHighlight->setCoords1(-1,-1, 1, 1);   // disable by default
 
     bool result = target_object->handleObjDrag(*this, dragObj, mx, my);
 
@@ -171,9 +160,8 @@ void DragAndDrop::drop(int mx,int my,unsigned int flags)
         targetObj->handleObjDrop((Gobj*)dragObj, mx, my, flags);
     }
 
-    //dragObj->getWindow()->removeObject(this);
-
-    reset();
+    if (sw)
+        sw->setOpen(false);
 }
 
 void DragAndDrop::drawSelf(Graphics & g)
@@ -206,7 +194,7 @@ void DragAndDrop::drawSelf(Graphics & g)
 
 void DragAndDrop::setDropCoords(int x,int y,int w,int h,bool rect)
 {
-    dropHighlight->setCoordsNoCrop(x, y, x+w-1, y+h-1);
-    dropHighlight->setRectType(rect);
+    //dropHighlight->setCoordsNoCrop(x, y, x+w-1, y+h-1);
+    //dropHighlight->setRectType(rect);
 }
 

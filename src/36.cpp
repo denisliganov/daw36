@@ -110,13 +110,13 @@ MainWinObject::MainWinObject()
     AuxCtrlWidth =          0;
     AuxHeight =             40;
     CtrlPanelHeight =       50;
+    FxPanelMaxWidth =       380;
+    FxPanelScrollerWidth =  10;
+    FxPanelBottomHeight =   100;
     GridScrollWidth =       16;
     InstrControlWidth =     220;
     InstrScrollerWidth =    16;
     InstrHeight =           33;
-    FxPanelMaxWidth =       380;
-    FxPanelScrollerWidth =  10;
-    FxPanelBottomHeight =   100;
     LeftGap =               26;
     LineNumWidth =          18;
     MixerHeight =           500;
@@ -124,14 +124,16 @@ MainWinObject::MainWinObject()
     MixChanWidth =          70;
     MixChannelPadHeight =   80;
     MainLineHeight =        30;
-    PanelGap =              1;
     MenuButtonsSpacing =    3;
     MenuGroupsSpacing =     20;
+    PanelGap =              1;
 
     mainX1 = InstrControlWidth;
     mainX2 = width - 1;
     mainY1 = MainLineHeight + CtrlPanelHeight + 1;    // _MGrid upper coordinate
     mainY2 = height - AuxHeight;
+
+    // Main GUI panels
 
     addObject(MCtrllPanel = new ControlPanel);
     addObject(MEdit = new MainEdit);

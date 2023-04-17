@@ -93,8 +93,8 @@ protected:
         Instrument*     instr;
 };
 
-Device36*   devDummy;
-extern Sample* prevSample;
+Device36*       devDummy;
+extern Sample*  prevSample;
 
 InstrPanel::InstrPanel(Mixer* mixer)
 {
@@ -456,8 +456,7 @@ bool InstrPanel::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
 
         int tw = gGetTextWidth(FontSmall, obj->getObjName());
         int th = gGetTextHeight(FontSmall);
-
-        drag.setCoords1(mx - tw/2, my - th/2, tw, th);
+        //drag.setCoords1(mx - tw/2, my - th/2, tw, th);
 
         return true;
     }

@@ -39,7 +39,6 @@ public:
         void                drag(Gobj* targetObj, int mx, int my);
         void                drop(int mx, int my, unsigned int flags);
         bool                isActive();
-        void                reset();
         void                start(Gobj * drag_obj, int mx, int my);
         void                setDropCoords(int x, int y, int w, int h, bool rect = false);
 };
