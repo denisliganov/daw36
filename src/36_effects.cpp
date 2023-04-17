@@ -22,8 +22,7 @@
 #include "36_text.h"
 #include "36_utils.h"
 #include "36_parambox.h"
-
-
+#include "36_dragndrop.h"
 
 
 
@@ -329,9 +328,9 @@ void Eff::handleMouseUp(InputEvent& ev)
 
 void Eff::handleMouseDrag(InputEvent& ev)
 {
-    if(MObject->canDrag(this))
+    if(MDragDrop->canDrag())
     {
-        MObject->dragAdd(this, ev.mouseX, ev.mouseY);
+        MDragDrop->start(this, ev.mouseX, ev.mouseY);
     }
 }
 

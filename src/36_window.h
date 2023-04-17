@@ -246,14 +246,11 @@ public:
             ~WinObject();
             SubWindow*          addWindow(WinObject* comp);
             SubWindow*          addLegacyWindow(Component* comp);
-            bool                canDrag(Gobj* obj);
             Image*              createSnapshot(int x, int y, int width, int height);
-            void                dragDrop(int mouse_x, int mouse_y, unsigned int flags);
             void                deleteWindow(SubWindow* sw);
-            void                dragAdd(Gobj* drag_obj, int mx, int my);
             Gobj*               getActiveObj() { return activeObj; }
             InputEvent&         getLastEvent() { return lastEvent; }
-            const MouseEvent*         getLastEvent1() { return listen->lastMouseEvent; }
+            const MouseEvent*   getLastEvent1() { return listen->lastMouseEvent; }
     virtual void                handleClose() {}
             void                handleMouseEnter(InputEvent& ev);
             void                handleMouseLeave(InputEvent& ev);

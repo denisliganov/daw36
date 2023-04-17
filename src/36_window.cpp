@@ -1298,28 +1298,6 @@ void WinObject::setCursor(CursorType cur_type)
     JuceComponent::setCursor(cur_type);
 }
 
-bool WinObject::canDrag(Gobj* obj)
-{
-    if (drag)
-    {
-        return drag->canDrag();
-    }
-    else
-    {
-        return false;
-    }
-}
-
-void WinObject::dragAdd(Gobj * drag_obj, int mx, int my)
-{
-    drag->start(drag_obj, mx, my);
-}
-
-void WinObject::dragDrop(int mx, int my, unsigned int flags)
-{
-    drag->drop(mx, my, flags);
-}
-
 void WinObject::updateHint(InputEvent& ev)
 {
     if (hintBox == NULL || getParentComponent() == NULL)
@@ -1483,6 +1461,9 @@ void WinObject::handleMouseDrag(InputEvent& ev)
     if (MDragDrop && MDragDrop->isActive())
     {
         Gobj* dropObj = getLastTouchedObject(ev.mouseX, ev.mouseY);
+
+        //int x, y;
+        //Desktop::getMousePosition(x, y);
 
         MDragDrop->drag(dropObj, ev.mouseX, ev.mouseY);
     }

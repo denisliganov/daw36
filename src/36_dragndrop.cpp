@@ -79,6 +79,8 @@ DragAndDrop::DragAndDrop()
     count = 0;
 
     dragObj = targetObj = NULL;
+
+    sw = NULL;
 }
 
 bool DragAndDrop::canDrag()
@@ -113,15 +115,15 @@ void DragAndDrop::start(Gobj * drag_obj,int mx,int my)
 
     setWidthHeight(gGetTextWidth(FontSmall, dragObj->getObjName()), gGetTextHeight(FontSmall));
 
-    sw = MWindow->createChildWindowFromWinObject(this, mx, my, false);
+    if (sw == NULL)
+    {
+        sw = MWindow->createChildWindowFromWinObject(this, mx, my, false);
+        sw->setResizable(false, false);
+    }
 
     sw->setBounds(mx, my, getW() + 4, getH() + 4);
 
-    sw->setResizable(false, false);
-
     sw->setOpen(true);
-
-    sw->grabKeyboardFocus();
 
     //sw->mouseDown(*(window->getLastEvent1()));
 
@@ -129,7 +131,7 @@ void DragAndDrop::start(Gobj * drag_obj,int mx,int my)
 
     //window->setOpen(true);
 
-    dropHighlight->setCoords2(-1,-1, 1, 1);
+    //dropHighlight->setCoords2(-1,-1, 1, 1);
 }
 
 void DragAndDrop::drag(Gobj* target_object, int mx, int my)
@@ -159,6 +161,8 @@ void DragAndDrop::drop(int mx,int my,unsigned int flags)
     {
         targetObj->handleObjDrop((Gobj*)dragObj, mx, my, flags);
     }
+
+    dragObj = NULL;
 
     if (sw)
         sw->setOpen(false);

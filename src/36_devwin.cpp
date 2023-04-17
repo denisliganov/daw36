@@ -83,10 +83,8 @@ void DevParamObject::placeControls()
             {
 /*
                 ParamBox* box = new ParamBox(prm);
-
                 box->setCoords1(0, 0, boxWidth, boxHeight);
                 box->setSliderOnly(false);
-
                 obj = box;
 */
                 obj = new Knob(prm);
