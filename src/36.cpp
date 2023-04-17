@@ -329,7 +329,7 @@ void MainWinObject::handleMouseDrag(InputEvent& ev)
 {
     WinObject::handleMouseDrag(ev);
 
-    if(!drag->isActive())
+    if(MDragDrop && !MDragDrop->isActive())
     {
         if(getMode() == DragMode_DragX0)
         {

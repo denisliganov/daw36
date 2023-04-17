@@ -77,8 +77,6 @@ DragAndDrop::DragAndDrop()
     addHighlight(dropHighlight = new DropHighlight());
 
     reset();
-
-    dragObj = targetObj = NULL;
 }
 
 void DragAndDrop::reset()
@@ -117,13 +115,38 @@ void DragAndDrop::start(Gobj * drag_obj,int mx,int my)
 {
     dragObj = drag_obj;
 
-    dragObj->getWindow()->addHighlight(this);
+    //dragObj->getWindow()->addHighlight(this);
+
+    //window->setTitleBarHeight(0);
+    //window->setBounds(200, 200, getW(), getH());
+
+    setWidthHeight(gGetTextWidth(FontSmall, dragObj->getObjName()), gGetTextHeight(FontSmall));
+
+    sw = MWindow->createChildWindowFromWinObject(this, mx, my, false);
+
+    sw->setBounds(mx, my, getW() + 4, getH() + 4);
+
+    sw->setResizable(false, false);
+
+    sw->setOpen(true);
+
+    sw->grabKeyboardFocus();
+
+    //sw->mouseDown(*(window->getLastEvent1()));
+
+    sw->setAlwaysOnTop(true);
+
+    //window->setOpen(true);
 
     dropHighlight->setCoords2(-1,-1, 1, 1);
 }
 
 void DragAndDrop::drag(Gobj* target_object, int mx, int my)
 {
+    sw->setBounds(mx - getW()/2, my + getH(), getW(), getH());
+
+    return;
+
     dropHighlight->setCoords1(-1,-1, 1, 1);   // disable by default
 
     bool result = target_object->handleObjDrag(*this, dragObj, mx, my);
@@ -134,7 +157,7 @@ void DragAndDrop::drag(Gobj* target_object, int mx, int my)
         int th = gGetTextHeight(FontSmall);
 
         //setCoords1(mx - tw/2, my - th/2, tw, th);
-        setCoordsAbs(mx - tw/2, my - th/2, mx - tw/2 + tw, my - th/2 + th);
+        //setCoordsAbs(mx - tw/2, my - th/2, mx - tw/2 + tw, my - th/2 + th);
     }
 
     targetObj = target_object;
@@ -154,6 +177,14 @@ void DragAndDrop::drop(int mx,int my,unsigned int flags)
 
 void DragAndDrop::drawSelf(Graphics & g)
 {
+    fill(g, 0.4f);
+
+    setc(g, 1.f);
+
+    gText(g, FontSmall, dragObj->getObjName(), 2, height - 2);
+
+    return;
+
     if(targetObj)
     {
         bool drawn = targetObj->drawDraggedObject(g,(Gobj*)dragObj);

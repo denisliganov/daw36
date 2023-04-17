@@ -89,7 +89,7 @@ private:
             Knob*               panKnob;
     std::list<SendKnob*>        sendsActive;
     std::list<MixChannel*>      sends;
-            ChanVU*             vu;
+            //ChanVU*             vu;
             Knob*               volKnob;
             Scroller*           vscr;
 

@@ -412,10 +412,14 @@ void MixChannel::remap()
         }
 
         vscr->setVis(false);
-
         volKnob->setVis(false);
         panKnob->setVis(false);
         vu->setVis(false);
+
+        for (Gobj* o : objs)
+        {
+            o->setVis(false);
+        }
     }
 }
 
@@ -950,7 +954,7 @@ void MixChannel::handleParamUpdate(Parameter * param)
             {
                 if (s->getOutChannel() == t->getOutChannel())
                 {
-                    s->setNormalizedValue(0);
+                    s->getParam()->setNormalizedValue(0);
                     sendsActive.remove(s);
                     break;
                 }

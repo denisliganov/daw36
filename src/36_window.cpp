@@ -389,9 +389,9 @@ SubWindow* MainWindow::createChildWindowFromComponent(Component* comp, int x, in
     return sw;
 }
 
-SubWindow* MainWindow::createChildWindowFromWinObject(WinObject* wobj, int x, int y)
+SubWindow* MainWindow::createChildWindowFromWinObject(WinObject* wobj, int x, int y, bool title_bar)
 {
-    SubWindow* sw = new SubWindow(wobj);
+    SubWindow* sw = new SubWindow(wobj, title_bar);
 
     sw->parentWindow = this;
 
@@ -405,8 +405,6 @@ SubWindow* MainWindow::createChildWindowFromWinObject(WinObject* wobj, int x, in
     {
         sw->setBounds(x, y, wobj->getWidth(), wobj->getHeight());
     }
-
-    //sw->setAlwaysOnTop(true);
 
     return sw;
 }
@@ -625,6 +623,8 @@ void SubWindow::closeButtonPressed()
 
 void SubWindow::paint(Graphics& g)
 {
+    int titleHeight = getTitleBarHeight();
+
     gSetMonoColor(g, 0.25f);
     g.fillRect(0, 0, getWidth(), getHeight());
 
@@ -872,6 +872,8 @@ void JuceListener::mouseDrag(const MouseEvent &e)
 
 void JuceListener::mouseDown(const MouseEvent& e)
 {
+    lastMouseEvent = &e;
+
     InputEvent inputEvent = {};
     inputEvent.mouseX = e.getMouseDownX();
     inputEvent.mouseY = e.getMouseDownY();
@@ -977,8 +979,6 @@ JuceComponent::~JuceComponent()
     listen->stopTimer();
 
     deleteAndZero(listen);
-
-    int a = 1;
 }
 
 void JuceComponent::paint(Graphics& g)
@@ -1236,7 +1236,7 @@ WinObject::WinObject() : JuceComponent(this)
 
     setEnable(true);
 
-    addHighlight(drag = new DragAndDrop());
+    //addHighlight(drag = new DragAndDrop());
 
     guiMutex = CreateMutex(NULL, FALSE, NULL);
 }
@@ -1400,9 +1400,9 @@ void WinObject::refreshActiveObject()
 
 void WinObject::handleMouseEnter(InputEvent& ev)
 {
-    if (MDragDrop->isActive())
+    if (MDragDrop && MDragDrop->isActive())
     {
-        addHighlight(MDragDrop);
+       // addHighlight(MDragDrop);
     }
 
     updActiveObject(ev);
@@ -1412,9 +1412,9 @@ void WinObject::handleMouseEnter(InputEvent& ev)
 
 void WinObject::handleMouseLeave(InputEvent& ev)
 {
-    if (MDragDrop->getWindow() == this && MDragDrop->isActive())
+    if (MDragDrop && MDragDrop->getWindow() == this && MDragDrop->isActive())
     {
-        removeObject(MDragDrop);
+        //removeObject(MDragDrop);
     }
 
     updActiveObject(ev);
@@ -1454,10 +1454,10 @@ void WinObject::handleMouseWheel(InputEvent& ev)
 
 void WinObject::handleMouseUp(InputEvent& ev)
 {
-    if (MDragDrop->getWindow() == this && MDragDrop->isActive())
+    if (MDragDrop && MDragDrop->getWindow() == this && MDragDrop->isActive())
     {
         //dragDrop(ev.mouseX, ev.mouseY, ev.keyFlags);
-        MDragDrop->drop(ev.mouseX, ev.mouseY, ev.keyFlags);
+        //MDragDrop->drop(ev.mouseX, ev.mouseY, ev.keyFlags);
     }
     else if (activeObj != NULL)
     {
@@ -1476,7 +1476,7 @@ void WinObject::handleMouseUp(InputEvent& ev)
 
     if (MDragDrop)
     {
-        MDragDrop->reset();
+        //MDragDrop->reset();
     }
 
     lastEvent = ev;
@@ -1486,9 +1486,10 @@ void WinObject::handleMouseUp(InputEvent& ev)
 
 void WinObject::handleMouseDrag(InputEvent& ev)
 {
-    if (MDragDrop->getWindow() == this && MDragDrop->isActive())
+    if (MDragDrop && MDragDrop->isActive())
     {
         Gobj* dropObj = getLastTouchedObject(ev.mouseX, ev.mouseY);
+
         //drag->drag(dropObj, ev.mouseX, ev.mouseY);
 
         MDragDrop->drag(dropObj, ev.mouseX, ev.mouseY);

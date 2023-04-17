@@ -43,7 +43,7 @@ public:
             void                activeWindowStatusChanged();
             void                broughtToFront();
             SubWindow*          createChildWindowFromComponent(Component* comp, int x = -1, int y = -1);
-            SubWindow*          createChildWindowFromWinObject(WinObject* comp, int x = -1, int y = -1);
+            SubWindow*          createChildWindowFromWinObject(WinObject* comp, int x = -1, int y = -1, bool title_bar = true);
             void                deleteChildWindow(SubWindow* cw);
             void                deleteContextMenu();
             void                minimizeChilds();
@@ -102,6 +102,7 @@ public:
             void                setOpen(bool vis);
             void                setColor(uint32 clr) { color = clr; }
             void                closeButtonPressed();
+            void                mouseDown(const MouseEvent& e);
 
 protected:
 
@@ -117,7 +118,6 @@ protected:
             void                broughtToFront();
             int                 getDesktopWindowStyleFlags() const;
             void                lookAndFeelChanged();
-            void                mouseDown(const MouseEvent& e);
             void                parentHierarchyChanged();
             void                paint(Graphics& g);
             void                resized();
@@ -142,11 +142,19 @@ typedef enum CursorType
 class JuceListener : public Component, public Timer
 {
 friend  JuceComponent;
+friend  WinObject;
+
+public:
+
+            JuceListener(JuceComponent* main_comp);
+
+            //bool keyPressed(const KeyPress &key);
 
 protected:
 
             JuceComponent*      mainComp;
             WinObject*          winObject;
+            const MouseEvent*         lastMouseEvent;
 
             unsigned            getFlags(const MouseEvent& e);
             bool                iamOnMenu();
@@ -157,16 +165,10 @@ protected:
             void                mouseExit(const MouseEvent& e);
             void                mouseEnter(const MouseEvent& e);
             void                mouseWheelMove(const MouseEvent& e, float wheelIncrementX, float wheelIncrementY);
-    virtual void                modifierKeysChanged (const ModifierKeys& modifiers);
+            virtual void        modifierKeysChanged(const ModifierKeys& modifiers);
             void                paint(Graphics& g);
             void                redrawPerAction();
             void                timerCallback();
-
-public:
-
-            JuceListener(JuceComponent* main_comp);
-
-            //bool keyPressed(const KeyPress &key);
 };
 
 class JuceComponent : public Component
@@ -251,6 +253,7 @@ public:
             void                dragAdd(Gobj* drag_obj, int mx, int my);
             Gobj*               getActiveObj() { return activeObj; }
             InputEvent&         getLastEvent() { return lastEvent; }
+            const MouseEvent*         getLastEvent1() { return listen->lastMouseEvent; }
     virtual void                handleClose() {}
             void                handleMouseEnter(InputEvent& ev);
             void                handleMouseLeave(InputEvent& ev);

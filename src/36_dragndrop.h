@@ -4,8 +4,7 @@
 
 #include "36_globals.h"
 #include "36_objects.h"
-#include "36_draw.h"
-
+#include "36_window.h"
 
 
 
@@ -23,7 +22,7 @@ protected:
 
 
 
-class DragAndDrop  : public Gobj
+class DragAndDrop  : public WinObject
 {
 public:
 
@@ -33,6 +32,7 @@ public:
         Gobj*               dragObj;
         DropHighlight*      dropHighlight;
         Gobj*               targetObj;
+        SubWindow*          sw;
 
         bool                canDrag();
         void                drawSelf(Graphics & g);
