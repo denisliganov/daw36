@@ -180,8 +180,6 @@ void Instrument::setDevice(Device36* dev)
         //    device->setContainer(NULL);
         }
 
-        removeObject(device);
-
         setObjName("");
     }
 
@@ -330,9 +328,12 @@ void Instrument::drawOverChildren(Graphics & g)
 
 void Instrument::deleteDevice()
 {
+    removeObject(device);
+ 
     if (device != NULL && device != devDummy)
     {
         delete device;
+        device = NULL;
     }
 }
 

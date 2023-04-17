@@ -608,6 +608,7 @@ void InstrPanel::setInstrFromNewBrowser(BrwListEntry* ble, Instrument* instr)
         dev->createSelfPattern();
 
         instr->deleteDevice();
+        
         instr->setDevice(dev);
 
         remapAndRedraw();

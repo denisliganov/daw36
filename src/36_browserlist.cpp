@@ -119,20 +119,20 @@ void BrowserList::composeList()
 
 void BrowserList::drawSelf(Graphics& g)
 {
-    setc(g, .25f);
+    setc(g, .2f);
     fillx(g, 0, headerHeight, width, height - headerHeight);
 
-    setc(g, 0.05f);
+    setc(g, 0.12f);
     rectx(g, 0, headerHeight, width, height - headerHeight);
 
-    setc(g, 0.3f);
+    setc(g, 0.26f);
     fillx(g, 0, 0, width, headerHeight);
 
     setc(g, 1.f);
     txtfit(g, FontBold, getObjName(), 6, headerHeight - 7, width);
 
     g.saveState();
-    g.reduceClipRegion(x1 + 1, y1 + headerHeight + 2, width - 2, height - (headerHeight + 2));
+    g.reduceClipRegion(x1, y1 + headerHeight + 2, width, height - (headerHeight + 2));
 
     int w = vscr->isActive() ? width : width - scrWidth;
     int y = headerHeight;
@@ -166,7 +166,7 @@ void BrowserList::drawSelf(Graphics& g)
             //setc(g, 0.2f);
             //lineH(g, yoffs + y, 0, w);
 
-            int xc = 5;
+            int xc = 4;
 
             if (type == BrwList_Files)
             {
@@ -361,7 +361,7 @@ void BrowserList::handleChildEvent(Gobj * obj,InputEvent & ev)
 
     if (ble)
     {
-        if (ev.doubleClick)
+        if (ev.clickDown && ev.doubleClick)
         {
             MInstrPanel->setInstrFromNewBrowser(ble, MInstrPanel->getCurrInstr());
         }

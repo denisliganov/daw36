@@ -1142,15 +1142,16 @@ void Grid::drawSelf(Graphics& g)
     drawElements(g);
 
 // Testing text output:
+/*
     setc(g, 0xdfFFFFFF);
     gDString(g, "01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ", 550, 297, 8, 8);
     gZxString(g, "0123456ABCDEFGHIJKLMNOPQRSTUVWXYZ", 550, 320);
-
     gText(g, FontFix, "01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ", 550, 340);
     gText(g, FontRox, "01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ", 550, 360);
     gText(g, FontArial, "01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ", 550, 380);
     gText(g, FontProject, "01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ", 550, 400);
     gText(g, FontDix, "01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ", 550, 440);
+    */
 }
 
 void Grid::drawIntermittentHighlight(Graphics& g, int x, int y, int w, int h, int numBars)
