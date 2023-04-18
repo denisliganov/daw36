@@ -54,7 +54,7 @@ public:
 
     void    drawSelf(Graphics& g)
     {
-        if (0)
+        if (1)
         {
             uint32 color = 0xffFF9930;
 
@@ -193,6 +193,7 @@ InstrPanel::InstrPanel(Mixer* mixer)
     masterVolume->addControl(masterVolKnob);
 
     addHighlight(instrHighlight = new InstrHighlight());
+    addHighlight(dropHighlight = new DropHighlight());
 }
 
 InstrPanel::~InstrPanel()
@@ -512,7 +513,9 @@ bool InstrPanel::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
 
         if (dropObj)
         {
-            drag.setDropCoords(dropObj->getX1(), dropObj->getY1(), dropObj->getW(), dropObj->getH(), true);
+            //drag.setDropCoords(dropObj->getX1(), dropObj->getY1(), dropObj->getW(), dropObj->getH(), true);
+
+            dropHighlight->setCoords1(dropObj->getX(), dropObj->getY(), dropObj->getW(), dropObj->getH());
         }
 
 /*
@@ -542,6 +545,8 @@ bool InstrPanel::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
 
 bool InstrPanel::handleObjDrop(Gobj * obj, int mx, int my, unsigned int flags)
 {
+    dropHighlight->setVis(false);
+
     Instrument* iTo = dynamic_cast<Instrument*>(dropObj);
 
     if (dropObj && ! iTo->isMaster())

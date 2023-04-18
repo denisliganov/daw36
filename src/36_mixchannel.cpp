@@ -98,6 +98,64 @@ Eff* CreateEffect(std::string effalias)
 
 
 
+class DropHighlight : public Gobj
+{
+public:
+
+    DropHighlight()
+    {
+
+    }
+
+    void    drawSelf(Graphics& g)
+    {
+        uint8 a = 128;
+
+        Rect36 drwRect = { (float)(x1), (float)y1, (float)width, (float)height };
+
+        bool vert = drwRect.w < drwRect.h;
+
+        int count = vert ? width / 2 : height / 2;
+
+        for (int c = 0; c < count; c++)
+        {
+            float m = (float)c / count;
+
+            m *= m;
+
+            gSetColor(g, 255, 153, 48, uint8(m * 255));
+
+            //gDrawRect(g, x1, y1, width, height);
+            //gFillRectWH(g, drwRect.x, drwRect.y, drwRect.w, drwRect.h);
+
+            if (vert)
+            {
+                gFillRectWH(g, drwRect.x, drwRect.y, 1, drwRect.h);
+                gFillRectWH(g, drwRect.x + drwRect.w - 1, drwRect.y, 1, drwRect.h);
+
+                drwRect.x++;
+                drwRect.w -= 2;
+            }
+            else
+            {
+                gFillRectWH(g, drwRect.x, drwRect.y, drwRect.w, 1);
+                gFillRectWH(g, drwRect.x, drwRect.y + drwRect.h - 1, drwRect.w, 1);
+
+                drwRect.y++;
+                drwRect.h -= 2;
+            }
+
+            if (drwRect.h < 1 || drwRect.w < 1)
+            {
+                break;
+            }
+
+            a /= 2;
+        }
+    }
+};
+
+
 class ChanOutToggle : public ToggleBox
 {
 public:
@@ -331,6 +389,8 @@ void MixChannel::init(Instrument* ins)
 
     addObject(vu = new ChanVU(false), ObjGroup_VU);
     addObject(vscr = new Scroller(true));
+
+    addHighlight(dropHighlight = new DropHighlight());
 }
 
 void MixChannel::remap()
@@ -802,11 +862,11 @@ bool MixChannel::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
 
         if(left != NULL)
         {
-            drag.setDropCoords(left->getX2() - 3, left->getY1(), 8, left->getH());
+            dropHighlight->setCoords1(left->getX() + left->getW() - 3, left->getY(), 8, left->getH());
         }
         else
         {
-            drag.setDropCoords(x1 - 3, y1, 8, height);
+            dropHighlight->setCoords1(getX() - 3, getY(), 8, height);
         }
 
         redraw();

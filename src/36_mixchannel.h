@@ -15,6 +15,7 @@
 
 class ChanOutToggle;
 class SendKnob;
+class DropHighlight;
 
 Eff* CreateEffect(std::string effname);
 
@@ -80,6 +81,7 @@ private:
             bool                processed;
             std::string         chanTitle;
             Gobj*               dropObj;
+            DropHighlight*      dropHighlight;
             std::list<Eff*>     effs;
             Instrument*         instr;
             MixChannel*         mchanout;
