@@ -23,6 +23,11 @@ DragAndDrop::DragAndDrop()
     sw = NULL;
 }
 
+DragAndDrop::~DragAndDrop()
+{
+    sw = NULL;
+}
+
 bool DragAndDrop::canDrag()
 {
     if(count < 2)
@@ -48,11 +53,6 @@ void DragAndDrop::start(Gobj * drag_obj,int mx,int my)
 {
     dragObj = drag_obj;
 
-    //dragObj->getWindow()->addHighlight(this);
-
-    //window->setTitleBarHeight(0);
-    //window->setBounds(200, 200, getW(), getH());
-
     setWidthHeight(gGetTextWidth(FontSmall, dragObj->getObjName()), gGetTextHeight(FontSmall));
 
     if (sw == NULL)
@@ -62,9 +62,7 @@ void DragAndDrop::start(Gobj * drag_obj,int mx,int my)
     }
 
     sw->setBounds(mx, my, getW() + 4, getH() + 4);
-
     sw->setOpen(true);
-
     sw->setAlwaysOnTop(true);
 }
 

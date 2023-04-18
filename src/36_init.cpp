@@ -16,6 +16,7 @@
 #include "36_configwin.h"
 #include "36_renderer.h"
 #include "36_grid.h"
+#include "36_dragndrop.h"
 
 
 MainWindow*         MWindow = NULL;
@@ -51,13 +52,13 @@ void        LoadDefaultInstruments();
 
 void ExitProgram()
 {
-    //_MProject.SaveSettings();
-
     MProject.releaseAllOnExit();
 
     delete MAudio;
 
-    // delete _MainObject;        // Not needed, Juce will delete content component
+    // delete MDragDrop;
+
+    // delete MObject;        // Not needed, Juce will delete content component
 
     if (MWindow != NULL)
     {
@@ -65,6 +66,45 @@ void ExitProgram()
     }
 
     JUCEApplication::quit();
+}
+
+void InitializeAndStartProgram()
+{
+    //Splash_Create();
+
+    GetCurrentDir();
+
+    gInitGraphics();
+
+    LoadCursorImages();
+
+    InitWavetables();
+
+    MKeys = new KeyHandler();
+
+    MTransp = new Transport(80, 4, 4);
+
+    MAudio = new Audio36(DEFAULT_SAMPLE_RATE);
+
+    MObject = new MainWinObject();
+
+    MWindow = new MainWindow(MObject);
+
+    WinHWND = (HWND)MWindow->getWindowHandle();
+
+    VstHost = new Vst2Host(WinHWND);
+
+    MTransp->propagateChanges();
+
+    InitComplete = true;
+
+    MObject->resized();
+
+    MDragDrop = new DragAndDrop();
+
+    // Splash_Delete();
+
+    StartEditor();
 }
 
 void HandleCommandLine(const String& arg_str)
@@ -109,43 +149,6 @@ void HandleSystremQuitRequest()
 {
     MProject.askAndSave();
     MProject.saveSettings();
-}
-
-void InitializeAndStartProgram()
-{
-    //Splash_Create();
-
-    GetCurrentDir();
-
-    gInitGraphics();
-
-    LoadCursorImages();
-
-    InitWavetables();
-
-    MKeys = new KeyHandler();
-
-    MTransp = new Transport(80, 4, 4);
-
-    MAudio = new Audio36(DEFAULT_SAMPLE_RATE);
-
-    MObject = new MainWinObject();
-
-    MWindow = new MainWindow(MObject);
-
-    WinHWND = (HWND)MWindow->getWindowHandle();
-
-    VstHost = new Vst2Host(WinHWND);
-
-    MTransp->propagateChanges();
-
-    InitComplete = true;
-
-    MObject->resized();
-
-    // Splash_Delete();
-
-    StartEditor();
 }
 
 void StartEditor()
@@ -267,13 +270,11 @@ void GetStartupDir()
 
 void LoadDefaultInstruments()
 {
-
     MInstrPanel->addVst("Plugins\\mda Piano.dll", NULL);
-
     MInstrPanel->addVst("Plugins\\mda DX10.dll", NULL);
-
     MInstrPanel->addSample("Samples\\Kicked.wav");
 
+    /*
     MInstrPanel->addSample("Samples\\808.wav");
     MInstrPanel->addSample("Samples\\Kik 2.wav");
     MInstrPanel->addSample("Samples\\Clave.wav");
@@ -311,7 +312,9 @@ void LoadDefaultInstruments()
     MInstrPanel->addInstrument(NULL, NULL);
     MInstrPanel->addInstrument(NULL, NULL);
 
+    /*
     MInstrPanel->addInstrument(NULL, NULL);
+
 
 
 /*

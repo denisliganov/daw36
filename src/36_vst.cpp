@@ -590,6 +590,13 @@ Vst2Plugin::~Vst2Plugin()
 {
     WaitForSingleObject(vstMutex,INFINITE);
 
+    if (guiWindow)
+    {
+        guiWindow->setOpen(false);
+        guiWindow->closeButtonPressed();
+        window->deleteWindow(guiWindow);
+    }
+
     int i;
 
     if (inBuffs != NULL)

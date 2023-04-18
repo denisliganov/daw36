@@ -66,13 +66,6 @@ Device36::~Device36()
         delete param;
     }
 
-    if(guiWindow)
-    {
-        guiWindow->setOpen(false);
-        guiWindow->closeButtonPressed();
-        window->deleteWindow(guiWindow);
-    }
-
     removeElements();
 }
 
@@ -87,23 +80,30 @@ void Device36::addBasicParamSet()
 
 void Device36::removeElements()
 {
-    // If some envelopes were extracted, disable them
-
 restart:
 
+    for (Note* note : notes)
+    {
+        notes.remove(note);
+        delete note;
+        goto restart;
+    }
+
+    /*
     for(Element* el : MPattern->getElems())
     {
         if(el->getDevice() == this)
         {
             delete el;
-
             goto restart;
         }
     }
 
-    delete selfNote;
+    if (selfNote)
+        delete selfNote;
     
-    delete selfPattern;
+    if (selfPattern)
+        delete selfPattern;*/
 }
 
 // Create self-pattern + note, for previewing

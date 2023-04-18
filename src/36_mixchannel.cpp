@@ -369,7 +369,6 @@ void MixChannel::init(Instrument* ins)
     mutetoggle = NULL;
     volKnob = NULL;
     panKnob = NULL;
-
     vu = NULL;
     outTg = NULL;
 

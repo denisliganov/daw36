@@ -566,10 +566,14 @@ SubWindow::~SubWindow()
     //removeChildComponent(cc);
     //removeChildComponent(closeButton);
 
-    if(winObject)
+    if (winObject)
+    {
         delete winObject;
-    else if(cc)
+    }
+    else if (cc)
+    {
         delete cc;
+    }
 }
 
 void SubWindow::broughtToFront()
@@ -1225,7 +1229,6 @@ int Hintbox::getDesktopWindowStyleFlags() const
 WinObject::WinObject() : JuceComponent(this)
 {
     activeObj = NULL;
-    //lastActiveObj = NULL;
     holderWindow = NULL;
     hintObj = NULL;
     dragDistance = 0;
@@ -1235,8 +1238,6 @@ WinObject::WinObject() : JuceComponent(this)
     Gobj::window = this; 
 
     setEnable(true);
-
-    //addHighlight(drag = new DragAndDrop());
 
     guiMutex = CreateMutex(NULL, FALSE, NULL);
 }

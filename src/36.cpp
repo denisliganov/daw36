@@ -28,7 +28,6 @@
 #include "36_auxkeys.h"
 #include "36_audio_dev.h"
 #include "36_macros.h"
-#include "36_dragndrop.h"
 
 
 #include <list>
@@ -141,8 +140,6 @@ MainWinObject::MainWinObject()
     addObject(MLanePanel = new LanePanel(MEdit->grid));
     addObject(MInstrPanel = new InstrPanel(MMixer = new Mixer));
     addObject(MBrowser = new Browser(WorkDirectory));
-
-    MDragDrop = new DragAndDrop();
 
     MMixer->setEnable(false);
     MHelperPanel->setEnable(true);
@@ -336,7 +333,7 @@ void MainWinObject::handleMouseDrag(InputEvent& ev)
 {
     WinObject::handleMouseDrag(ev);
 
-    if(MDragDrop && !MDragDrop->isActive())
+    //if(MDragDrop && !MDragDrop->isActive())
     {
         if(getMode() == DragMode_DragX0)
         {

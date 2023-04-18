@@ -63,10 +63,10 @@ Note::~Note()
         patt->removeElement(this);
     }
 
-    MGrid->removeElement(this);
+    //MGrid->removeElement(this);
 
-    if (device)
-        device->removeNote(this);
+    //if (device)
+    //    device->removeNote(this);
 
     if (vol)
         delete vol;

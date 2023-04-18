@@ -160,9 +160,7 @@ Eff::Eff(Device36* dev)
     int devWidth = FxPanelMaxWidth - 80 - FxPanelScrollerWidth - 1;
 
     device->placeControls1(devWidth);
-
     device->setWH(devWidth, device->getH());
-
     device->setContainer(this);
 
     setObjName(dev->getObjName());

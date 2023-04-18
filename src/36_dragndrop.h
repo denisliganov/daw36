@@ -7,7 +7,6 @@
 #include "36_window.h"
 
 
-class DropHighlight;
 
 
 
@@ -17,10 +16,10 @@ class DragAndDrop  : public WinObject
 public:
 
         DragAndDrop();
+        ~DragAndDrop();
 
         int                 count;
         Gobj*               dragObj;
-        DropHighlight*      dropHighlight;
         Gobj*               targetObj;
         SubWindow*          sw;
 
