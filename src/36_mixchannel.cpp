@@ -98,14 +98,11 @@ Eff* CreateEffect(std::string effalias)
 
 
 
-class DropHighlight : public Gobj
+class MixDropHighlight : public Gobj
 {
 public:
 
-    DropHighlight()
-    {
-
-    }
+    MixDropHighlight() { }
 
     void    drawSelf(Graphics& g)
     {
@@ -124,9 +121,6 @@ public:
             m *= m;
 
             gSetColor(g, 255, 153, 48, uint8(m * 255));
-
-            //gDrawRect(g, x1, y1, width, height);
-            //gFillRectWH(g, drwRect.x, drwRect.y, drwRect.w, drwRect.h);
 
             if (vert)
             {
@@ -390,7 +384,7 @@ void MixChannel::init(Instrument* ins)
     addObject(vu = new ChanVU(false), ObjGroup_VU);
     addObject(vscr = new Scroller(true));
 
-    addHighlight(dropHighlight = new DropHighlight());
+    addHighlight(dropHighlight = new MixDropHighlight());
 }
 
 void MixChannel::remap()
@@ -840,18 +834,19 @@ bool MixChannel::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
     {
         Gobj* uper = NULL;
         Gobj* lower = NULL;
-    
+
         dropObj = CheckNeighborObjectsY(objs, "eff", my, (Gobj**)&uper, (Gobj**)&lower);
 
-        /*
+        int hW = FxPanelMaxWidth - 80 - FxPanelScrollerWidth - 1;
+
         if(uper != NULL)
         {
-            drag.setDropCoords(uper->getX1(), uper->getY2() - 3, FxPanelMaxWidth - FxPanelScrollerWidth - 5, 8);
-        }
+            dropHighlight->setCoords1(uper->getX(), uper->getY() + uper->getH() - 3, hW, 8);
+;       }
         else
         {
-            drag.setDropCoords(x1 + 1, y1 - 3, FxPanelMaxWidth - FxPanelScrollerWidth - 5, 8);
-        }*/
+            dropHighlight->setCoords1(getX() + 1, getY() - 3, hW, 8);
+        }
     }
     else
     {
@@ -872,18 +867,14 @@ bool MixChannel::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
         redraw();
     }
 
-    int tw = gGetTextWidth(FontSmall, obj->getObjName());
-    int th = gGetTextHeight(FontSmall);
-
-    drag.setCoords1(mx - tw/2, my - th/2, tw, th);
-
     return true;
 }
 
 bool MixChannel::handleObjDrop(Gobj * obj,int mx,int my,unsigned flags)
 {
-    Eff* eff = NULL;
+    dropHighlight->setVis(false);
 
+    Eff* eff = NULL;
     BrwListEntry* ble = dynamic_cast<BrwListEntry*>(obj);
 
     if(ble)

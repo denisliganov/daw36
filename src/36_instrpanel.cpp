@@ -513,27 +513,8 @@ bool InstrPanel::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
 
         if (dropObj)
         {
-            //drag.setDropCoords(dropObj->getX1(), dropObj->getY1(), dropObj->getW(), dropObj->getH(), true);
-
             dropHighlight->setCoords1(dropObj->getX(), dropObj->getY(), dropObj->getW(), dropObj->getH());
         }
-
-/*
-        dropObj = CheckNeighborObjectsY(objs, "instr", my, (Gobj**)&o1, (Gobj**)&o2);
-
-        if(o2 != NULL)
-        {
-            drag.dropHighlightHorizontal->setCoordsUn(o2->getX1(), o2->getY1() - 2 - 4, o2->getX2() + 1, o2->getY1() - 2 + 4);
-        }
-        else if(o1 != NULL)
-        {
-            drag.dropHighlightHorizontal->setCoordsUn(o1->getX1(), o1->getY2() + 2 - 4, o1->getX2() + 1, o1->getY2() + 2 + 4);
-        }
-*/
-
-        int tw = gGetTextWidth(FontSmall, obj->getObjName());
-        int th = gGetTextHeight(FontSmall);
-        //drag.setCoords1(mx - tw/2, my - th/2, tw, th);
 
         return true;
     }
