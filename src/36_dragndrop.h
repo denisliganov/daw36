@@ -7,18 +7,8 @@
 #include "36_window.h"
 
 
+class DropHighlight;
 
-class DropHighlight  : public Gobj
-{
-public:
-        DropHighlight()  { rect = false; }
-
-        void                drawSelf(Graphics& g);
-        void                setRectType(bool r) { rect = r; }
-
-protected:
-        bool                rect;
-};
 
 
 

@@ -14,6 +14,9 @@
 
 
 
+
+class DropHighlight;
+
 class InstrPanel : public ParamObject
 {
 friend Audio36;
@@ -63,6 +66,7 @@ private:
 
             Gobj*               dropObj;
             InstrHighlight*     instrHighlight;
+            DropHighlight*      dropHighlight;
             bool                fxShowing;
             Mixer*              mixr;
             Slider36*           masterVolSlider;

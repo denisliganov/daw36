@@ -152,8 +152,8 @@ void ChanVU::drawSelf(Graphics & g)
         }
         else
         {
-            //gSetMonoColor(g, .99f);
-            gSetColor2(g, 0xffFFB040, 1);
+            gSetMonoColor(g, .8f);
+            //gSetColor2(g, 0xffFFB040, 1);
         }
 
         x = 0;
