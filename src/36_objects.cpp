@@ -692,7 +692,7 @@ void Gobj::setMyColor(Graphics & g, float brightness, float saturation, float al
 {
     if(colorHue > 0)
     {
-        g.setColour(Colour(colorHue, saturation > 0 ? saturation : colorSat, brightness > 0 ? brightness : 1, alpha));
+        g.setColour(Colour(colorHue, saturation >= 0 ? saturation : colorSat, brightness >= 0 ? brightness : 1, alpha));
     }
     else if(brightness > 0)
     {

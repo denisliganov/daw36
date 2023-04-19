@@ -208,7 +208,7 @@ void Note::drawOnGrid(Graphics& g, Grid* grid)
     {
         FontId fnt = FontSmall;
 
-        device->getParent()->setMyColor(g, .6f);
+        device->getParent()->setMyColor(g, .6f, -1, .5f);
         gFillRect(g, x1, y1, x2, y2);
 
         device->getParent()->setMyColor(g, 1.f);

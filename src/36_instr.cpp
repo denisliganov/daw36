@@ -279,7 +279,7 @@ void Instrument::drawSelf(Graphics& g)
 
         if(device != devDummy)
         {
-            Gobj::setMyColor(g, .6f + incr);
+            Gobj::setMyColor(g, .64f + incr);
             //setc(g, 1.f);
             fillx(g, 0, 0, width, h);
 

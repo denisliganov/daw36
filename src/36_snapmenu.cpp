@@ -24,7 +24,7 @@ SnapMenu::SnapMenu()
 
     width = 50;
 
-    currentItem = 1;
+    currentItem = 2;
 
     updateSnapSize();
 }

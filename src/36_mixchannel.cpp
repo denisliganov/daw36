@@ -180,7 +180,7 @@ private:
 
     void drawSelf(Graphics& g)
     {
-        if (active)
+        if (true)
         {
             Instrument* instr = outChannel->getInstr();
 
@@ -253,7 +253,7 @@ public:
 
     void drawKnob(Graphics & g)
     {
-        if (active)
+        if (1)
         {
             Knob::drawKnob(g);
         }
@@ -876,58 +876,52 @@ bool MixChannel::handleObjDrop(Gobj * obj,int mx,int my,unsigned flags)
 {
     dropHighlight->setVis(false);
 
-    Eff* eff = NULL;
     BrwListEntry* ble = dynamic_cast<BrwListEntry*>(obj);
-
+    Eff* eff = dynamic_cast<Eff*>(obj);
+    
     if(ble)
     {
-        eff = addEffectFromBrowser((BrwListEntry*)obj);
-        
-        if(eff != NULL)
+        if (ble->getType() == Entry_Native || ble->getType() == Entry_DLL)
         {
-            placeEffectBefore(eff, (Eff*)dropObj);
-        }
-        else
-        {
-            MWindow->showAlertBox("Can't load effect");
-        }
+            eff = addEffectFromBrowser((BrwListEntry*)obj);
 
-        return true;
-    }
-    else
-    {
-        eff = dynamic_cast<Eff*>(obj);
-
-        if(eff)
-        {
-            WaitForSingleObject(MixerMutex, INFINITE);
-            //std::unique_lock<std::mutex> lock(MixMutex);
-
-            if(flags & kbd_ctrl)
+            if (eff != NULL)
             {
-                eff = eff->clone();
-            }
-            else if(eff != dropObj)
-            {
-                eff->getMixChannel()->removeEffect(eff);
-            }
-
-            if(eff != dropObj)
-            {
-                addEffect(eff);
-
                 placeEffectBefore(eff, (Eff*)dropObj);
             }
+            else
+            {
+                MWindow->showAlertBox("Can't load effect");
+            }
+        }
+    }
+    else if (eff)
+    {
+        WaitForSingleObject(MixerMutex, INFINITE);
+        //std::unique_lock<std::mutex> lock(MixMutex);
 
-            remapAndRedraw();
-
-            ReleaseMutex(MixerMutex);
+        if(flags & kbd_ctrl)
+        {
+            eff = eff->clone();
+        }
+        else if(eff != dropObj)
+        {
+            eff->getMixChannel()->removeEffect(eff);
         }
 
-        return true;
+        if(eff != dropObj)
+        {
+            addEffect(eff);
+
+            placeEffectBefore(eff, (Eff*)dropObj);
+        }
+
+        remapAndRedraw();
+
+        ReleaseMutex(MixerMutex);
     }
 
-    return false;
+    return true;
 }
 
 void MixChannel::handleParamUpdate(Parameter * param)

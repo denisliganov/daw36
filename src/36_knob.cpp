@@ -196,7 +196,7 @@ void Knob::remap()
 
             if (mchan)
             {
-                instr = mchan->getInstr();
+                //instr = mchan->getInstr();
             }
         }
     }
@@ -268,14 +268,14 @@ void Knob::drawSlider(Graphics& g)
     if (instr)
         instr->setMyColor(g, .2f);
     else
-        setc(g, 0.2f);
+        setc(g, 0.1f);
 
-    fillx(g, xstart, ysl, w, sh);
+    rectx(g, xstart, ysl, w, sh);
 
     if (instr)
         instr->setMyColor(g, .3f);
     else
-        setc(g, .36f);
+        setc(g, .3f);
 
     fillx(g, xstart, ysl+1, w, sh-2);
 
@@ -323,7 +323,7 @@ void Knob::drawKnob(Graphics& g)
     }
     else
     {
-        Colour clr = Colour(1.f, 0.f, dim ? .32 : .82f, 1.f);
+        Colour clr = Colour(1.f, 0.f, dim ? .32 : .52f, 1.f);
 
         if (objId.find("snd") != std::string::npos)
         {

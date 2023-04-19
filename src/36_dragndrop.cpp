@@ -80,16 +80,18 @@ void DragAndDrop::drag(Gobj* target_object, int mx, int my)
     {
         target_object->handleObjDrag(*this, dragObj, mx, my);
     }
+
+    redraw();
 }
 
 void DragAndDrop::drop(int mx,int my,unsigned int flags)
 {
     if(targetObj)
     {
-        targetObj->handleObjDrop((Gobj*)dragObj, mx, my, flags);
+        Gobj* obj = (Gobj*)dragObj;
+        dragObj = NULL;
+        targetObj->handleObjDrop(obj, mx, my, flags);
     }
-
-    dragObj = NULL;
 
     if (sw)
         sw->setOpen(false);
