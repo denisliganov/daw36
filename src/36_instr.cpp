@@ -273,15 +273,12 @@ void Instrument::drawSelf(Graphics& g)
     }
     else
     {
+        float incr = 0.f;
+        if (this == MInstrPanel->getCurrInstr())
+            incr = 0.2f;
+
         if(device != devDummy)
         {
-            float incr = 0.f;
-
-            if (this == MInstrPanel->getCurrInstr())
-            {
-                incr = 0.2f;
-            }
-
             Gobj::setMyColor(g, .6f + incr);
             //setc(g, 1.f);
             fillx(g, 0, 0, width, h);
@@ -291,18 +288,18 @@ void Instrument::drawSelf(Graphics& g)
         }
         else
         {
-            Gobj::setMyColor(g, .4f);
+            Gobj::setMyColor(g, .4f + incr);
 
             fillx(g, 0, 0, width, h);
         }
 
         //setc(g, .0f);
         Gobj::setMyColor(g, .5f);
-        txtfit(g, FontSmall, getObjName(), guiButton->getW() + 4, 10, width - (h+4));
+        txtfit(g, FontSmall, getObjName(), guiButton->getW() + 6, 14, width - (h+4));
 
         //setc(g, 1.f);
         Gobj::setMyColor(g, 1.f);
-        txtfit(g, FontSmall, getObjName(), guiButton->getW() + 4, 9, width - (h+4));
+        txtfit(g, FontSmall, getObjName(), guiButton->getW() + 6, 13, width - (h+4));
 
 
         //Colour clr = Colour(100, 110, 110);
@@ -484,13 +481,13 @@ void Instrument::remap()
 
     if (!isMaster())
     {
-        guiButton->setCoords1(0, 0, h/1.5f, h);
+        //guiButton->setCoords1(0, 0, h/1.5f, h);
 
         int bw = 12;
 
         if (device != devDummy)
         {
-            guiButton->setTouchable(true);
+            //guiButton->setTouchable(true);
 
             int slH = 4;
 
@@ -519,7 +516,7 @@ void Instrument::remap()
         }
         else
         {
-            guiButton->setTouchable(false);
+            //guiButton->setTouchable(false);
 
             //volBox->setVis(false);
             //panBox->setVis(false);

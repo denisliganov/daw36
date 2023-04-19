@@ -30,7 +30,7 @@ DragAndDrop::~DragAndDrop()
 
 bool DragAndDrop::canDrag()
 {
-    if(count < 2)
+    if(count < 3)
     {
         count++;
 
@@ -53,7 +53,7 @@ void DragAndDrop::start(Gobj * drag_obj,int mx,int my)
 {
     dragObj = drag_obj;
 
-    setWidthHeight(gGetTextWidth(FontSmall, dragObj->getObjName()) + 4, gGetTextHeight(FontSmall) + 4);
+    setWidthHeight(gGetTextWidth(FontSmall, dragObj->getObjName()) + 8, gGetTextHeight(FontSmall) + 8);
 
     if (sw == NULL)
     {
@@ -62,9 +62,11 @@ void DragAndDrop::start(Gobj * drag_obj,int mx,int my)
     }
 
     //sw->setBounds(mx, my, getW() + 4, getH() + 4);
-    sw->setBounds(mx - getW() / 2 - 2, my + getH() - 2, getW() + 4, getH() + 4);
+    //sw->setBounds(mx - getW() / 2 - 2, my + getH() - 2, getW() + 4, getH() + 4);
     sw->setOpen(true);
     sw->setAlwaysOnTop(true);
+
+    drag(NULL, mx, my);
 }
 
 void DragAndDrop::drag(Gobj* target_object, int mx, int my)
@@ -72,9 +74,12 @@ void DragAndDrop::drag(Gobj* target_object, int mx, int my)
     targetObj = target_object;
 
     //sw->setBounds(mx - getW()/2, my + getH(), getW(), getH());
-    sw->setBounds(mx - getW() / 2 - 2, my + getH() - 2, getW() + 4, getH() + 4);
+    sw->setBounds(mx - getW(), my + getH()/2, getW(), getH());
 
-    bool result = target_object->handleObjDrag(*this, dragObj, mx, my);
+    if (targetObj)
+    {
+        target_object->handleObjDrag(*this, dragObj, mx, my);
+    }
 }
 
 void DragAndDrop::drop(int mx,int my,unsigned int flags)
@@ -96,6 +101,6 @@ void DragAndDrop::drawSelf(Graphics & g)
 
     setc(g, 1.f);
 
-    gText(g, FontSmall, dragObj->getObjName(), 2, height - 4);
+    gText(g, FontSmall, dragObj->getObjName(), 0, gGetTextHeight(FontSmall));
 }
 

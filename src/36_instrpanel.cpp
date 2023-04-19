@@ -530,9 +530,10 @@ bool InstrPanel::handleObjDrop(Gobj * obj, int mx, int my, unsigned int flags)
 
     Instrument* iTo = dynamic_cast<Instrument*>(dropObj);
 
-    if (dropObj && ! iTo->isMaster())
+    if (iTo && !iTo->isMaster())
     {
         BrwListEntry* ble = dynamic_cast<BrwListEntry*>(obj);
+        Instrument* iFrom = dynamic_cast<Instrument*>(obj);
 
         if (ble)
         {
@@ -540,7 +541,7 @@ bool InstrPanel::handleObjDrop(Gobj * obj, int mx, int my, unsigned int flags)
 
             setInstrFromNewBrowser(ble, iTo);
         }
-        else
+        else if (iFrom)
         {
             // move from other instr
 
@@ -548,8 +549,6 @@ bool InstrPanel::handleObjDrop(Gobj * obj, int mx, int my, unsigned int flags)
             {
 //                i = getCurrInstr()->clone();
             }
-
-            Instrument* iFrom = dynamic_cast<Instrument*>(obj);
 
             Device36* devTo = iTo->getDevice();
             Device36* devFrom = iFrom->getDevice();

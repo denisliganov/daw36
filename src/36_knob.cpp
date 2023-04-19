@@ -217,7 +217,7 @@ void Knob::drawText(Graphics& g)
     int unitstrLen = gGetTextWidth(fontId, param->getUnitString());
     int valstrLen = gGetTextWidth(fontId, param->getValString());
 
-    setc(g, .6f);
+    setc(g, .8f);
     if (unitstrLen > 0)
         //txt(g, fontId, param->getName() + "." + param->getUnitString(), textX, textY);
         txt(g, fontId, param->getName(), textX, textY);
@@ -228,7 +228,7 @@ void Knob::drawText(Graphics& g)
     if (instr)
         instr->setMyColor(g, 1.f);
     else
-        setc(g, .76f);
+        setc(g, .9f);
     //txt(g, fontId, param->getValString(), textX + namestrLen + 6, 12);
     //txt(g, fontId, param->getValString(), textX + 60, 12);
     txt(g, fontId, param->getValString(), width - valstrLen - 2, textY);
@@ -323,7 +323,7 @@ void Knob::drawKnob(Graphics& g)
     }
     else
     {
-        Colour clr = Colour(1.f, 0.f, dim ? .22 : .82f, 1.f);
+        Colour clr = Colour(1.f, 0.f, dim ? .32 : .82f, 1.f);
 
         if (objId.find("snd") != std::string::npos)
         {

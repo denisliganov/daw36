@@ -611,6 +611,8 @@ void SubWindow::setOpen(bool vis)
     open = vis;
 
     setVisible(vis);
+
+    broughtToFront();
 }
 
 void SubWindow::closeButtonPressed()

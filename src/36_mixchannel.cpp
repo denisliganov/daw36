@@ -195,7 +195,7 @@ private:
             if (param->getBoolValue())
                 drawGlassRound(g, x1+1, y1+1, width-2, clr, 1);
             else
-                drawGlassRound(g, x1+1, y1+1, width-2, clr.withBrightness(.2f), 1);
+                drawGlassRound(g, x1+1, y1+1, width-2, clr.withBrightness(.32f), 1);
         }
         else
         {
@@ -937,6 +937,8 @@ void MixChannel::handleParamUpdate(Parameter * param)
         WaitForSingleObject(MixerMutex, INFINITE);
 
         SendKnob* sk = dynamic_cast<SendKnob*>(param->getControl());
+
+        sk->delSnap();
 
         if (sk)
         {

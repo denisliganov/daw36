@@ -147,7 +147,7 @@ public:
                     //rect(g, .9f);
 
                     currNote->getInstr()->setMyColor(g, 1.f);
-                    gDrawRect(g, x1, y1, x2, y2);
+                    //gDrawRect(g, x1, y1, x2, y2);
 
                     //gSetMonoColor(g, 1, .1f);
                     //gTriangle(g, x1, y2 - height, x2, y2, x1, y2);
