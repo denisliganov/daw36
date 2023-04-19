@@ -513,7 +513,7 @@ bool InstrPanel::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
 
         if (dropObj)
         {
-            dropHighlight->setCoords1(dropObj->getX(), dropObj->getY(), dropObj->getW(), dropObj->getH());
+            //dropHighlight->setCoords1(dropObj->getX(), dropObj->getY(), dropObj->getW(), dropObj->getH());
         }
 
         return true;
@@ -564,6 +564,8 @@ bool InstrPanel::handleObjDrop(Gobj * obj, int mx, int my, unsigned int flags)
 
             remapAndRedraw();
         }
+
+        dropObj = NULL;
 
         return true;
     }
@@ -823,7 +825,7 @@ void InstrPanel::remap()
 
     confine(0, instrListY-1, width, instrListY + instrListHeight - 1);
 
-    instrHighlight->updPos();
+    //instrHighlight->updPos();
 }
 
 void InstrPanel::setSampleRate(float sampleRate)
@@ -844,11 +846,13 @@ void InstrPanel::setBufferSize(unsigned bufferSize)
 
 void InstrPanel::setCurrInstr(Instrument* instr)
 {
+    if (curr) curr->remapAndRedraw();
     curr = instr;
+    if (curr) curr->remapAndRedraw();
 
     redraw();
 
-    instrHighlight->updPos();
+    //instrHighlight->updPos();
 
     if (fxShowing)
     {

@@ -275,11 +275,18 @@ void Instrument::drawSelf(Graphics& g)
     {
         if(device != devDummy)
         {
-            Gobj::setMyColor(g, .7f);
+            float incr = 0.f;
+
+            if (this == MInstrPanel->getCurrInstr())
+            {
+                incr = 0.2f;
+            }
+
+            Gobj::setMyColor(g, .6f + incr);
             //setc(g, 1.f);
             fillx(g, 0, 0, width, h);
 
-            Gobj::setMyColor(g, .5f);
+            Gobj::setMyColor(g, .5f + incr);
             fillx(g, 0, 0, width, h/2);
         }
         else

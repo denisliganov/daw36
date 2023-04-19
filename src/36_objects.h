@@ -69,6 +69,7 @@ public:
     virtual void                confine(int bxNew = -1, int byNew = -1, int bx1New = -1, int by1New = -1);
     virtual bool                checkMouseTouching(int mx, int my);
             void                createSnap();
+            void                delSnap();
             void                drawSnap(Graphics& g);
             void                deactivateDropBoxById(int dropbox_id);
             void                deleteObject(Gobj* o);

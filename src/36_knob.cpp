@@ -205,6 +205,8 @@ void Knob::remap()
     //instr = NULL;
 
     defPos = int(float(width-1)*param->getDefaultValueNormalized());
+
+    delSnap();
 }
 
 void Knob::drawText(Graphics& g)
@@ -313,7 +315,7 @@ void Knob::drawKnob(Graphics& g)
         savedHeight = h;
     }
 
-    if (bgSaved && savedHeight == h)
+    if (snap != NULL)
     {
         g.setColour(Colours::white);
 

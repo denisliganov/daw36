@@ -179,6 +179,16 @@ void Gobj::createSnap()
     }
 }
 
+void Gobj::delSnap()
+{
+    if (snap)
+    {
+        delete snap;
+    }
+
+    snap = NULL;
+}
+
 void Gobj::drawSnap(Graphics& g)
 {
     if (snap)
