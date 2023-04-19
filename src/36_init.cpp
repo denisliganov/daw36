@@ -274,7 +274,6 @@ void LoadDefaultInstruments()
     MInstrPanel->addVst("Plugins\\mda DX10.dll", NULL);
     MInstrPanel->addSample("Samples\\Kicked.wav");
 
-    /*
     MInstrPanel->addSample("Samples\\808.wav");
     MInstrPanel->addSample("Samples\\Kik 2.wav");
     MInstrPanel->addSample("Samples\\Clave.wav");
@@ -312,7 +311,6 @@ void LoadDefaultInstruments()
     MInstrPanel->addInstrument(NULL, NULL);
     MInstrPanel->addInstrument(NULL, NULL);
 
-    /*
     MInstrPanel->addInstrument(NULL, NULL);
 
 

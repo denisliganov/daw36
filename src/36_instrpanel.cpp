@@ -49,7 +49,7 @@ public:
 
     DropHighlight()
     {
-
+        setTouchable(false);
     }
 
     void    drawSelf(Graphics& g)
@@ -611,6 +611,10 @@ void InstrPanel::handleMouseWheel(InputEvent& ev)
     //
 }
 
+void InstrPanel::handleMouseLeave(InputEvent& ev)
+{
+    dropHighlight->setVis(false);
+}
 void InstrPanel::hideFX()
 {
     MObject->setMainX1(InstrControlWidth);

@@ -44,6 +44,7 @@ public:
             bool                handleObjDrop(Gobj * obj,int mx,int my, unsigned int flags);
             void                handleChildEvent(Gobj* obj, InputEvent& ev);
             void                handleMouseWheel(InputEvent& ev);
+            void                handleMouseLeave(InputEvent& ev);
             void                hideFX();
             bool                isFxShowing()   { return fxShowing; }
             Vst2Plugin*         loadVst(const char* path, Vst2Plugin* otherVst);

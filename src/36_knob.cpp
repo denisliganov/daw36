@@ -240,10 +240,12 @@ void Knob::drawSlider(Graphics& g)
     float offs = param->getOffset();
     float range = param->getRange();
     float val = param->getValue();
+    float def = param->getDefaultValue();
     float baseVal = (offs <= 0 ? 0 : offs);
 
     int xoffs = int(float(width-1)*((baseVal - offs)/range));
     int xval = int(float(width-1)*((val - offs)/range));
+    int xdef = int(float(width-1)*((def - offs)/range));
     int xstart = xoffs;
     int xend = xval;
 
@@ -280,9 +282,15 @@ void Knob::drawSlider(Graphics& g)
     if (instr)
         instr->setMyColor(g, .34f);
     else
-        setc(g, .1f);
+        setc(g, .48f);
 
-    fillx(g, xoffs, ysl, 1, sh);
+    fillx(g, xoffs, ysl+1, 1, sh-2);
+
+    if (xdef != xoffs)
+    {
+        setc(g, .0f);
+        fillx(g, xdef, ysl+1, 1, sh-2);
+    }
 
     setc(g, 1.f);
     //fillx(g, xval, height - sh + 1, 1, sh - 2);

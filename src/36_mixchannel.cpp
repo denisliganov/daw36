@@ -102,7 +102,10 @@ class MixDropHighlight : public Gobj
 {
 public:
 
-    MixDropHighlight() { }
+    MixDropHighlight() 
+    {
+        setTouchable(false);
+    }
 
     void    drawSelf(Graphics& g)
     {
