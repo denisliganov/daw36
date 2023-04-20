@@ -270,7 +270,6 @@ public:
 protected:
 
             Gobj*               activeObj;
-            DragAndDrop*        drag;
             int                 dragDistance;
             CommonWindow*       holderWindow;
             Hintbox*            hintBox;

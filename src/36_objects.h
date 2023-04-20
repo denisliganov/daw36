@@ -114,7 +114,7 @@ public:
     virtual void                handleChildEvent(Gobj* obj, InputEvent& ev) {};
     virtual void                handleMouseEnter(InputEvent& ev) {};
     virtual void                handleMouseLeave(InputEvent& ev) {};
-    virtual bool                handleObjDrag(DragAndDrop& drag, Gobj* obj, int mx, int my);
+    virtual void                handleObjDrag(bool reset, Gobj* obj, int mx, int my);
     virtual bool                handleObjDrop(Gobj* obj, int mx, int my, unsigned int flags);
 
             bool                isChanged()         { return changed; }

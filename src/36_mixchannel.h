@@ -54,7 +54,7 @@ public:
             void                handleMouseWheel(InputEvent& ev);
             void                handleMouseDown(InputEvent& ev);
             void                handleMouseUp(InputEvent& ev);
-            bool                handleObjDrag(DragAndDrop& drag, Gobj * obj, int mx, int my);
+            void                handleObjDrag(bool reset, Gobj * obj, int mx, int my);
             bool                handleObjDrop(Gobj * obj, int mx, int my, unsigned flags);
             void                handleParamUpdate(Parameter * param);
             void                init(Instrument* i);

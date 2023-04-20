@@ -1690,7 +1690,7 @@ void Grid::handleChildEvent(Gobj * obj, InputEvent& ev)
     }
 }
 
-bool Grid::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
+void Grid::handleObjDrag(bool reset, Gobj * obj,int mx,int my)
 {
     Instrument* i = dynamic_cast<Instrument*>(obj);
 
@@ -1715,12 +1715,8 @@ bool Grid::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
 
         n->calcForGrid(this);
 
-        drag.setCoords1(n->x1, n->y1, n->width, n->height);
-
-        return true;
+        //drag.setCoords1(n->x1, n->y1, n->width, n->height);
     }
-
-    return false;
 }
 
 bool Grid::handleObjDrop(Gobj * obj,int mx,int my, unsigned flags)

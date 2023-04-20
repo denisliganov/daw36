@@ -340,7 +340,7 @@ void Knob::drawKnob(Graphics& g)
     }
     else
     {
-        Colour clr = Colour(1.f, 0.f, dim ? .32 : .52f, 1.f);
+        Colour clr = Colour(1.f, 0.f, dim ? .32 : .82f, 1.f);
 
         if (objId.find("snd") != std::string::npos)
         {
@@ -349,7 +349,7 @@ void Knob::drawKnob(Graphics& g)
         else if (instr)
         {
             float s = .4f;
-            float b = dim ? .22 : .72;
+            float b = dim ? .22 : .82;
             float a = 1;
 
             clr = Colour(instr->getColorHue(), s, b, a);

@@ -43,7 +43,6 @@ protected:
             void                handleMouseDrag(InputEvent& ev);
             void                handleMouseWheel(InputEvent & ev);
 
-            EffFoldButton*      foldButt;
             EffGuiButton*       guiButt;
             EffEnableButton*    enableButt;
 

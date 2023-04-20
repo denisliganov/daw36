@@ -186,7 +186,7 @@ protected:
             void                handleMouseEnter(InputEvent & ev);
             void                handleMouseLeave(InputEvent & ev);
             void                handleChildEvent(Gobj * obj, InputEvent& ev);
-            bool                handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my);
+            void                handleObjDrag(bool reset, Gobj * obj,int mx,int my);
             bool                handleObjDrop(Gobj * obj,int mx,int my, unsigned int flags);
             void                updatePosition(InputEvent & ev);
             void                updcursor(InputEvent & ev);

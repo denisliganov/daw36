@@ -122,17 +122,16 @@ void ParamObject::placeControls1(int maxW, int maxH)
     int rowNum = 0;
     int maxWidth = maxW;
     int numPut = 0;
+    int defaultWidth = 24;
 
     setObjSpacing(4);
-    setBorder(10);
+    setBorder(12);
 
     putStart(border, border);
 
     for(Parameter* prm : params)
     {
         Gobj* obj = NULL;
-
-        int defaultWidth = 24;
 
         if (prm && prm->getAutoPlaced())
         {
@@ -193,7 +192,7 @@ void ParamObject::placeControls1(int maxW, int maxH)
     }
     else
     {
-        //setWH(0, 0);
+        setWH(wndW + border, border*2);
     }
 }
 

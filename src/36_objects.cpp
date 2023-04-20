@@ -569,15 +569,11 @@ bool Gobj::checkMouseTouching(int mx, int my)
     }
 }
 
-bool Gobj::handleObjDrag(DragAndDrop& drag, Gobj* obj, int mx, int my)
+void Gobj::handleObjDrag(bool reset, Gobj* obj, int mx, int my)
 {
     if(parent != NULL)
     {
-        return parent->handleObjDrag(drag, obj, mx, my);
-    }
-    else
-    {
-        return false;
+        parent->handleObjDrag(reset, obj, mx, my);
     }
 }
 

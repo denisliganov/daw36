@@ -830,8 +830,15 @@ void MixChannel::handleMouseUp(InputEvent& ev)
     }
 }
 
-bool MixChannel::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
+void MixChannel::handleObjDrag(bool reset, Gobj * obj,int mx,int my)
 {
+    if (reset)
+    {
+        dropHighlight->setVis(false);
+        dropObj = NULL;
+        return;
+    }
+
     if (MixViewSingle)
     {
         Gobj* uper = NULL;
@@ -868,8 +875,6 @@ bool MixChannel::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
 
         redraw();
     }
-
-    return true;
 }
 
 bool MixChannel::handleObjDrop(Gobj * obj,int mx,int my,unsigned flags)

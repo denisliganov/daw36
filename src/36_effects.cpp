@@ -27,34 +27,9 @@
 
 
 
-class EffFoldButton : public Button36
-{
-public:
 
-        EffFoldButton() : Button36(false) 
-        {
-            ///
-        }
 
-protected:
 
-        void drawSelf(Graphics& g)
-        {
-            setc(g, .8f);
-
-            if (isPressed())
-            {
-                gDrawTriangle(g, x1, y1, x2, y1, x1 + (width / 2), y1 + height);
-            }
-            else
-            {
-                gDrawTriangle(g, x1, y2, x2, y2, x1 + (width / 2), y1);
-            }
-        }
-
-        void handleMouseDrag(InputEvent & ev)   { parent->handleMouseDrag(ev); }
-        void handleMouseWheel(InputEvent & ev)   { parent->handleMouseWheel(ev); }
-};
 
 
 class EffEnableButton : public ToggleBox
@@ -153,7 +128,6 @@ Eff::Eff(Device36* dev)
 
     addObject(guiButt = new EffGuiButton());
     addObject(enableButt = new EffEnableButton(device->enabled));
-    addObject(foldButt = new EffFoldButton());
 
     addObject(device);
 
@@ -185,7 +159,7 @@ void Eff::showDevice(bool show)
         device->setEnable(true);
         device->setVis(true);
 
-        setWH(device->getW(), device->getH());
+        setWH(device->getW(), device->getH() + 10);
     }
     else
     {
@@ -239,10 +213,10 @@ void Eff::drawSelf(Graphics& g)
         }
     }
 
-    setc(g, .1f);
+    setc(g, .6f);
 
     if (MixViewSingle)
-        txtfit(g, FontBold, device->getObjName(), width - gGetTextWidth(FontBold, device->getObjName()) - 3, height - 5, width - 4);
+        txt(g, FontBold, device->getObjName(), width - gGetTextWidth(FontBold, device->getObjName()) - 17, 10);
     else
         txtfit(g, FontBold, device->getObjName().substr(0, 4) + ".", 0, gGetTextHeight(FontBold) + 1, width);
 }
@@ -735,7 +709,7 @@ void EQ3::drawCurve(Graphics& g, int x, int y, int w, int h)
 
 void EQ3::drawOverChildren(Graphics & g)
 {
-    drawCurve(g, x2 - 90, y1 + 10, 88, height - 20);
+    //drawCurve(g, x2 - 90, y1 + 10, 88, height - 20);
 }
 
 void EQ3::handleParamUpdate(Parameter* param)

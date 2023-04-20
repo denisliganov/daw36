@@ -176,6 +176,7 @@ InstrPanel::InstrPanel(Mixer* mixer)
     fxShowing = false;
 
     curr = NULL;
+    dropObj = NULL;
 
     devDummy = new Device36();
     devDummy->setTouchable(false);
@@ -505,8 +506,15 @@ void InstrPanel::generateAll(long num_frames, long mixbuffframe)
     }
 }
 
-bool InstrPanel::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
+void InstrPanel::handleObjDrag(bool reset, Gobj * obj,int mx,int my)
 {
+    if (reset)
+    {
+        dropHighlight->setVis(false);
+        dropObj = NULL;
+        return;
+    }
+
     if(!fxShowing || fxShowing && mx > FxPanelMaxWidth)
     {
         Gobj* o1 = NULL;
@@ -518,12 +526,6 @@ bool InstrPanel::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
         {
             dropHighlight->setCoords1(dropObj->getX(), dropObj->getY(), dropObj->getW(), dropObj->getH());
         }
-
-        return true;
-    }
-    else
-    {
-        return false;
     }
 }
 

@@ -40,7 +40,7 @@ public:
             Instrument*         getInstrFromLine(int trkLine);
             Instrument*         getCurrInstr();
         std::vector<Instrument*>& getInstrs() { return instrs; }
-            bool                handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my);
+            void                handleObjDrag(bool reset, Gobj * obj,int mx,int my);
             bool                handleObjDrop(Gobj * obj,int mx,int my, unsigned int flags);
             void                handleChildEvent(Gobj* obj, InputEvent& ev);
             void                handleMouseWheel(InputEvent& ev);

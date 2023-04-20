@@ -71,6 +71,11 @@ void DragAndDrop::start(Gobj * drag_obj,int mx,int my)
 
 void DragAndDrop::drag(Gobj* target_object, int mx, int my)
 {
+    if (targetObj != NULL && targetObj != target_object)
+    {
+        targetObj->handleObjDrag(true, dragObj, mx, my);
+    }
+
     targetObj = target_object;
 
     //sw->setBounds(mx - getW()/2, my + getH(), getW(), getH());
@@ -78,7 +83,7 @@ void DragAndDrop::drag(Gobj* target_object, int mx, int my)
 
     if (targetObj)
     {
-        target_object->handleObjDrag(*this, dragObj, mx, my);
+        target_object->handleObjDrag(false, dragObj, mx, my);
     }
 
     redraw();
@@ -103,6 +108,6 @@ void DragAndDrop::drawSelf(Graphics & g)
 
     setc(g, 1.f);
 
-    gText(g, FontSmall, dragObj->getObjName(), 0, gGetTextHeight(FontSmall));
+    gText(g, FontSmall, dragObj->getObjName(), 4, gGetTextHeight(FontSmall));
 }
 
