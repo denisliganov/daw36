@@ -26,7 +26,7 @@ public:
             ~InstrPanel();
 
             void                addInstrFromNewBrowser(BrwListEntry* ble);
-            Instrument*         addInstrument(Device36* dev, Instrument* objAfter = NULL);
+            Instrument*         addInstrument(Device36* dev, Instrument* objAfter = NULL, bool master = false);
             Instrument*         addVst(const char* path, Vst2Plugin* vst);
             Sample*             addSample(const char* path, bool temporaryForPreview = false);
             void                cloneInstrument(Instrument* i);

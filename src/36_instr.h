@@ -54,6 +54,7 @@ virtual Instrument*             clone();
             void                setSampleRate(float sampleRate);
             void                setIndex(int idx);
     virtual void                save(XmlElement* instrNode);
+            void                setAlias(std::string alias);
 
 private:
             Device36*           device;

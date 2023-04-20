@@ -279,7 +279,7 @@ void Instrument::drawSelf(Graphics& g)
 
         if(device != devDummy)
         {
-            Gobj::setMyColor(g, .64f + incr);
+            Gobj::setMyColor(g, .54f + incr);
             //setc(g, 1.f);
             fillx(g, 0, 0, width, h);
 
@@ -420,7 +420,7 @@ void Instrument::handleMouseUp(InputEvent& ev)
 
 void Instrument::handleMouseDrag(InputEvent& ev)
 {
-    if(MDragDrop->canDrag())
+    if(device != devDummy && MDragDrop->canDrag())
     {
         MDragDrop->start(this, ev.mouseX, ev.mouseY);
 
@@ -540,6 +540,11 @@ void Instrument::remap()
             setHint("");
         }
     }
+}
+
+void Instrument::setAlias(std::string alias)
+{
+    instrAlias = alias;
 }
 
 void Instrument::setIndex(int idx)

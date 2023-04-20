@@ -56,11 +56,14 @@ public:
     {
         if (1)
         {
+            /*
             uint32 color = 0xffFF9930;
-
             setc(g, color);
-
             rectx(g, 0, 0, width, height);
+            */
+
+            setc(g, 1.f,.3f);
+            fillx(g,  0, 0, width, height);
         }
         else
         {
@@ -131,7 +134,7 @@ public:
 
             if (instr && instr->isShown())
             {
-                setCoordsAbs(instr->getX1()-2, instr->getY1() - 1, instr->getX2() + 2, instr->getY2() + 1);
+                setCoordsAbs(instr->getX1(), instr->getY1(), instr->getX2(), instr->getY2());
                 //setCoords2(0, instr->getY1() - 1, instr->getX2() + 5, instr->getY2() + 1);
             }
             else
@@ -139,8 +142,6 @@ public:
                 setVis(false);
             }
         }
-
-protected:
 
         void drawSelf(Graphics& g)
         {
@@ -159,9 +160,9 @@ protected:
             if (instr != NULL)
                 instr->setMyColor(g, 1.f);
             else
-                setc(g, 0xe0FF9930);
+                setc(g, 1.f,.32f);
 
-            gDrawRect(g,  x1, y1, x2, y2);
+            gFillRect(g,  x1, y1, x2, y2);
         }
 
         Instrument*     instr;
@@ -186,11 +187,9 @@ InstrPanel::InstrPanel(Mixer* mixer)
 
     addObject(mixr = mixer);
 
-    masterVolume = new Parameter("Master", Param_Vol);
-
-    addObject(masterVolKnob = new Knob(masterVolume));
-
-    masterVolume->addControl(masterVolKnob);
+    //masterVolume = new Parameter("Master", Param_Vol);
+    addObject(masterVolKnob = new Knob(NULL));
+    //masterVolume->addControl(masterVolKnob);
 
     addHighlight(instrHighlight = new InstrHighlight());
     addHighlight(dropHighlight = new DropHighlight());
@@ -240,7 +239,7 @@ Sample* InstrPanel::addSample(const char* path, bool temporaryForPreview)
     return smp;
 }
 
-Instrument* InstrPanel::addInstrument(Device36 * dev, Instrument * objAfter)
+Instrument* InstrPanel::addInstrument(Device36 * dev, Instrument * objAfter, bool master)
 {
     WaitForSingleObject(AudioMutex, INFINITE);
 
@@ -252,23 +251,27 @@ Instrument* InstrPanel::addInstrument(Device36 * dev, Instrument * objAfter)
 
     updateInstrIndexes();
 
+    if (master)
+    {
+        i->setAlias("[");
+
+        masterVolKnob->setParam(i->getMixChannel()->vol);
+    }
+
     i->addMixChannel();
 
     addObject(i, "instr");
 
     for (Instrument* instr : instrs)
     {
-        //if (instr != i)
+        if (!i->isMaster())
         {
-            if (!i->isMaster())
-            {
-                i->getMixChannel()->addSend(instr->getMixChannel());
-            }
+            i->getMixChannel()->addSend(instr->getMixChannel());
+        }
 
-            if (instr != i)
-            {
-                instr->getMixChannel()->addSend(i->getMixChannel());
-            }
+        if (instr != i)
+        {
+            instr->getMixChannel()->addSend(i->getMixChannel());
         }
     }
 
@@ -513,7 +516,7 @@ bool InstrPanel::handleObjDrag(DragAndDrop& drag, Gobj * obj,int mx,int my)
 
         if (dropObj)
         {
-            //dropHighlight->setCoords1(dropObj->getX(), dropObj->getY(), dropObj->getW(), dropObj->getH());
+            dropHighlight->setCoords1(dropObj->getX(), dropObj->getY(), dropObj->getW(), dropObj->getH());
         }
 
         return true;
@@ -616,6 +619,7 @@ void InstrPanel::handleMouseLeave(InputEvent& ev)
 {
     dropHighlight->setVis(false);
 }
+
 void InstrPanel::hideFX()
 {
     MObject->setMainX1(InstrControlWidth);

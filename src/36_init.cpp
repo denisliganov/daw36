@@ -297,6 +297,11 @@ void LoadDefaultInstruments()
     MInstrPanel->addInstrument(NULL, NULL);
     MInstrPanel->addInstrument(NULL, NULL);
     MInstrPanel->addInstrument(NULL, NULL);
+    MInstrPanel->addInstrument(NULL, NULL, true);
+
+    /*
+    MInstrPanel->addInstrument(NULL, NULL);
+    MInstrPanel->addInstrument(NULL, NULL);
     MInstrPanel->addInstrument(NULL, NULL);
     MInstrPanel->addInstrument(NULL, NULL);
     MInstrPanel->addInstrument(NULL, NULL);
@@ -311,7 +316,7 @@ void LoadDefaultInstruments()
     MInstrPanel->addInstrument(NULL, NULL);
     MInstrPanel->addInstrument(NULL, NULL);
 
-    MInstrPanel->addInstrument(NULL, NULL);
+    MInstrPanel->addInstrument(NULL, NULL);*/
 
 
 

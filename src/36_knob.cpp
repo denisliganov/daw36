@@ -204,7 +204,10 @@ void Knob::remap()
     // Temp w/a
     //instr = NULL;
 
-    defPos = int(float(width-1)*param->getDefaultValueNormalized());
+    if (param)
+    {
+        defPos = int(float(width-1)*param->getDefaultValueNormalized());
+    }
 
     delSnap();
 }
