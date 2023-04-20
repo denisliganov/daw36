@@ -19,6 +19,7 @@ public:
             void                remap();
             void                setVis(bool vis);
             void                setDimOnZero(bool dim) { dimOnZero = dim; }
+            void                setText(bool txt)       { hasText = txt; }
             void                updValue();
             void                updPosition();
 
@@ -32,6 +33,7 @@ protected:
 protected:
 
             bool                dimOnZero;
+            bool                hasText;
             float               angleRange;       // in radians too
             float               angleOffset;      // in radians too
             float               positionAngle;    // in radians

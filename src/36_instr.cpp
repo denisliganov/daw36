@@ -136,8 +136,11 @@ Instrument::Instrument(Device36* dev)
     //panBox->setSliderOnly(true);
     panBox = volBox = NULL;
 
-    addObject(volKnob = new Knob(device->vol, true));
+    addObject(volKnob = new Knob(device->vol, false));
+    volKnob->setText(false);
+
     addObject(panKnob = new Knob(device->pan, true));
+    panKnob->setEnable(false);
 
     addObject(muteButt = new EnableButton(device->enabled));
 
@@ -262,21 +265,21 @@ Instrument* Instrument::clone()
 void Instrument::drawSelf(Graphics& g)
 {
     int h = height - 1;
+    float incr = 0.f;
+
+    if (this == MInstrPanel->getCurrInstr())
+        incr = 0.2f;
 
     if (isMaster())
     {
-        fill(g, .2f);
-        rect(g, .3f);
+        fill(g, .2f + incr);
+        rect(g, .3f + incr);
 
-        setc(g, .98f);
-        txt(g, FontInst, "LE MASTER", 18, height/2 + 3);
+        setc(g, .7f + incr);
+        txt(g, FontInst, "Master", 18, height/2 + 3);
     }
     else
     {
-        float incr = 0.f;
-        if (this == MInstrPanel->getCurrInstr())
-            incr = 0.2f;
-
         if(device != devDummy)
         {
             Gobj::setMyColor(g, .54f + incr);
@@ -295,11 +298,11 @@ void Instrument::drawSelf(Graphics& g)
 
         //setc(g, .0f);
         Gobj::setMyColor(g, .5f);
-        txtfit(g, FontSmall, getObjName(), guiButton->getW() + 6, 14, width - (h+4));
+        txtfit(g, FontSmall, "[" + instrAlias + "] " + getObjName(), guiButton->getW() + 6, 14, width - (h+4));
 
         //setc(g, 1.f);
         Gobj::setMyColor(g, 1.f);
-        txtfit(g, FontSmall, getObjName(), guiButton->getW() + 6, 13, width - (h+4));
+        txtfit(g, FontSmall, "[" + instrAlias + "] " + getObjName(), guiButton->getW() + 6, 13, width - (h+4));
 
 
         //Colour clr = Colour(100, 110, 110);
@@ -503,14 +506,14 @@ void Instrument::remap()
                 volBox->setVis(false);
             }
 
-            int kH = h;
+            int kH = h/1.5f;
             if (kH % 2)
             {
                 kH--;
             }
 
-            volKnob->setCoords1(width - 80, 0, int(kH), int(kH));
-            panKnob->setCoords1(width - 57, 0, int(kH-2), int(kH-2));
+            volKnob->setCoords1(width - 80 - bw - bw - 2, (h - kH)/2, 80, int(kH));
+            //panKnob->setCoords1(width - 57, 0, int(kH-2), int(kH-2));
 
             muteButt->setCoords1(width - bw - bw, 0, bw, h);
         }
@@ -522,7 +525,7 @@ void Instrument::remap()
             //panBox->setVis(false);
 
             volKnob->setVis(false);
-            panKnob->setVis(false);
+            //panKnob->setVis(false);
 
             //soloButt->setVis(false);
 
@@ -552,10 +555,10 @@ void Instrument::setIndex(int idx)
     index = idx;
     device->setIndex(idx);
 
-    int num = idx;
+    int num = idx + 1;
 
-    //if(num == 10)
-    //    num = 0;
+    if(num == 10)
+        num = 0;
 
     instrAlias = "a";
 

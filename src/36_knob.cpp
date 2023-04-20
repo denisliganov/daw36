@@ -29,6 +29,7 @@ Knob::Knob(Parameter* par, bool knob)
     savedHeight = 0;
     dim = false;
     dimOnZero = false;
+    hasText = true;
 
     instr = NULL;
 
@@ -178,7 +179,7 @@ void Knob::remap()
     }
     else if (mchan)
     {
-        instr = mchan->getInstr();
+        //instr = mchan->getInstr();
     }
     else if (dev)
     {
@@ -269,18 +270,31 @@ void Knob::drawSlider(Graphics& g)
     //fillx(g, defPos, height - sh, 1, sh);
 
     if (instr)
-        instr->setMyColor(g, .2f);
+        instr->setMyColor(g, .1f);
     else
-        setc(g, 0.1f);
+        setc(g, .0f);
 
-    rectx(g, xstart, ysl, w, sh);
+    rectx(g, 0, 0, width, height);
 
     if (instr)
         instr->setMyColor(g, .3f);
     else
-        setc(g, .3f);
+        setc(g, .2f);
+
+    fillx(g, 0, 0, width, height);
+
+    if (instr)
+        instr->setMyColor(g, .6f);
+    else
+        setc(g, .5f);
 
     fillx(g, xstart, ysl+1, w, sh-2);
+
+    //if (instr)
+    //    instr->setMyColor(g, .1f);
+    //else
+    //    setc(g, 0.1f);
+    //rectx(g, xstart, ysl, w, sh);
 
     //drawGlassRect(g, x1 + (float)xstart, y1 + (float)(height - sh+1), w, sh-1, Colour(180, 120, 120), 0, 0, true, true, true, true);
 
@@ -392,13 +406,14 @@ void Knob::drawSelf(Graphics& g)
 
     if (!knobMode)
     {
-        fill(g, .18f);
-
-        instr = NULL;
+        //fill(g, .18f);
 
         drawSlider(g);
 
-        drawText(g);
+        if (hasText)
+        {
+            drawText(g);
+        }
     }
 
     // Knob
