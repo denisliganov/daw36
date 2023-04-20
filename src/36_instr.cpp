@@ -298,11 +298,11 @@ void Instrument::drawSelf(Graphics& g)
 
         //setc(g, .0f);
         Gobj::setMyColor(g, .5f);
-        txtfit(g, FontSmall, "[" + instrAlias + "] " + getObjName(), guiButton->getW() + 6, 14, width - (h+4));
+        txtfit(g, FontSmall, instrAlias + ": " + getObjName(), guiButton->getW() + 4, 14, width - (h+4));
 
         //setc(g, 1.f);
         Gobj::setMyColor(g, 1.f);
-        txtfit(g, FontSmall, "[" + instrAlias + "] " + getObjName(), guiButton->getW() + 6, 13, width - (h+4));
+        txtfit(g, FontSmall, instrAlias + ": " + getObjName(), guiButton->getW() + 4, 13, width - (h+4));
 
 
         //Colour clr = Colour(100, 110, 110);
@@ -486,7 +486,7 @@ void Instrument::remap()
     {
         //guiButton->setCoords1(0, 0, h/1.5f, h);
 
-        int bw = 12;
+        int bw = 16;
 
         if (device != devDummy)
         {

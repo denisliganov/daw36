@@ -284,7 +284,7 @@ void Knob::drawSlider(Graphics& g)
     fillx(g, 0, 0, width, height);
 
     if (instr)
-        instr->setMyColor(g, .6f);
+        instr->setMyColor(g, .66f, .42f);
     else
         setc(g, .5f);
 
@@ -323,7 +323,7 @@ void Knob::drawKnob(Graphics& g)
     int y = y1 + 2;
 
     bool old = dim;
-    
+
     dim = (dimOnZero && param->getNormalizedValue() == 0);
 
     if (dim != old)
@@ -340,16 +340,20 @@ void Knob::drawKnob(Graphics& g)
     }
     else
     {
-        Colour clr = Colour(1.f, 0.f, dim ? .32 : .82f, 1.f);
+        Colour clr;
 
         if (objId.find("snd") != std::string::npos)
         {
-            ///
+            clr = Colour(1.f, 0.f, dim ? .32 : .8f, 1.f);
+        }
+        else if (objId == "fx")
+        {
+            clr = Colour(1.f, 0.f, .36f, 1.f);
         }
         else if (instr)
         {
             float s = .4f;
-            float b = dim ? .22 : .82;
+            float b = dim ? .22 : .82f;
             float a = 1;
 
             clr = Colour(instr->getColorHue(), s, b, a);
@@ -369,7 +373,7 @@ void Knob::drawKnob(Graphics& g)
     }
 
 
-    setc(g, .18f, 1.f);
+    setc(g, .0f, 1.f);
 
     float xadv0, xadv1, yadv0, yadv1;
 

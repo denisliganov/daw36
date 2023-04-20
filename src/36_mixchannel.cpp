@@ -237,7 +237,6 @@ public:
 
     SendKnob(MixChannel* chan, MixChannel* out_chan, std::string nm) : Knob(new Parameter(nm, Param_Default), true)
     {
-        //setHint("Send");
         channel = chan;
         outChannel = out_chan;
 
@@ -251,7 +250,7 @@ public:
         return outChannel;
     }
 
-    void drawKnob(Graphics & g)
+    void drawKnob(Graphics & g, float b1, float b2)
     {
         if (1)
         {

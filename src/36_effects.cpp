@@ -134,6 +134,7 @@ Eff::Eff(Device36* dev)
     int devWidth = FxPanelMaxWidth - 80 - FxPanelScrollerWidth - 1;
 
     device->placeControls1(devWidth);
+
     device->setWH(devWidth, device->getH());
     device->setContainer(this);
 
@@ -216,7 +217,7 @@ void Eff::drawSelf(Graphics& g)
     setc(g, .6f);
 
     if (MixViewSingle)
-        txt(g, FontBold, device->getObjName(), width - gGetTextWidth(FontBold, device->getObjName()) - 17, 10);
+        txt(g, FontBold, device->getObjName(), width - gGetTextWidth(FontBold, device->getObjName()) - 17, 8);
     else
         txtfit(g, FontBold, device->getObjName().substr(0, 4) + ".", 0, gGetTextHeight(FontBold) + 1, width);
 }
@@ -506,7 +507,7 @@ void EQ1::handleParamUpdate(Parameter* param)
 
 void EQ1::reset()
 {
-	dspCoreEq1.reset();
+    dspCoreEq1.reset();
 }
 
 void EQ1::processDSP(float* in_buff, float* out_buff, int num_frames)

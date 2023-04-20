@@ -162,6 +162,7 @@ void ParamObject::placeControls1(int maxW, int maxH)
                 */
                 obj = new Knob(prm, true);
                 obj->setWH(24, 24);
+                obj->setObjId("fx");
                 //obj->setWH(defaultWidth, 24);
             }
 

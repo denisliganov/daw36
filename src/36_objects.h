@@ -142,6 +142,7 @@ public:
             void                setWH(int w, int h);
     virtual void                setMyColor(Graphics& g, float brightness=-1.f, float saturation = -1.f, float alpha=1.f);
             void                setUnderMouse(bool hover);
+            void                setObjId(std::string id)  { objId = id; }
 
 
             void                fill(Graphics& g, float clr, float alpha=1);
@@ -166,52 +167,44 @@ public:
 
 protected:
 
-            ObjectGroup         objGroup;
-
-            std::string         objId;
-            std::string         objName;
-            std::string         hint;
-
-            float               monoLevel;
+            bool                autoMapped;
+            int                 bx1;
+            int                 by1;
+            int                 bx2;
+            int                 by2;
             float               colorHue;
             float               colorSat;
-
-            Gobj*               parent;
-            WinObject*          window;
-            bool                visible;
-            bool                enabled;
             bool                changed;
-            bool                relativeToParent;
-            bool                autoMapped;
-            bool                undermouse;
-            bool                touchable;
-            Image*              snap;
-
-            // Relative coords, width, height
-            int                 xRel;
-            int                 yRel;
-            int                 width;
-            int                 height;
-
-            // Absolute coords
-            int                 x1;
-            int                 y1;
-            int                 x2;
-            int                 y2;
-
-            // Absolute drawing coords, width, height
             int                 dx1;
             int                 dy1;
             int                 dx2;
             int                 dy2;
             int                 dwidth;
             int                 dheight;
+            bool                enabled;
+            std::string         hint;
+            float               monoLevel;
+            ObjectGroup         objGroup;
+            std::string         objId;
+            std::string         objName;
+            Gobj*               parent;
+            bool                relativeToParent;
+            Image*              snap;
+            bool                touchable;
+            bool                undermouse;
+            bool                visible;
+            WinObject*          window;
+            int                 width;
+            int                 height;
+            int                 xRel;
+            int                 x1;
+            int                 x2;
+            int                 yRel;
+            int                 y1;
+            int                 y2;
 
-            // Confinement rectangle coords within object
-            int                 bx1;
-            int                 by1;
-            int                 bx2;
-            int                 by2;
+
+
 
             // Graphic context
             Graphics*           gr;
