@@ -148,7 +148,7 @@ void ParamObject::placeControls1(int maxW, int maxH)
             else if (prm->getType() == Param_Toggle)
             {
                 obj = new ToggleBox(prm);
-                obj->setWH(defaultWidth, obj->getH());
+                obj->setWH(defaultWidth, defaultWidth);
             }
             else 
             {

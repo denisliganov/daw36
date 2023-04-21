@@ -342,13 +342,13 @@ void Knob::drawKnob(Graphics& g)
     {
         Colour clr;
 
-        if (objId.find("snd") != std::string::npos)
+        if (objId == "snd")
         {
             clr = Colour(1.f, 0.f, dim ? .32 : .8f, 1.f);
         }
         else if (objId == "fx")
         {
-            clr = Colour(1.f, 0.f, .36f, 1.f);
+            clr = Colour(1.f, 0.f, .28f, 1.f);
         }
         else if (instr)
         {
@@ -372,8 +372,18 @@ void Knob::drawKnob(Graphics& g)
         savedHeight = h;
     }
 
-
-    setc(g, .0f, 1.f);
+    if (objId == "snd")
+    {
+        setc(g, .14f, 1.f);
+    }
+    else if (objId == "fx")
+    {
+        setc(g, .42f, 1.f);
+    }
+    else if (instr)
+    {
+        setc(g, .14f, 1.f);
+    }
 
     float xadv0, xadv1, yadv0, yadv1;
 
