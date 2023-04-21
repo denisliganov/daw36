@@ -121,7 +121,7 @@ std::string Slider36::getHint()
 
 void Slider36::drawSelf(Graphics& g)
 {
-    Instrument* instr = dynamic_cast<Instrument*>(parent);
+    Instr* instr = dynamic_cast<Instr*>(parent);
 
     fill(g, .4f);
 

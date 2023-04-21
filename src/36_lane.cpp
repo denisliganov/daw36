@@ -105,7 +105,7 @@ void Lane::drawBar(Graphics& g, Element* el, int cx, bool sel, int divHgt)
     }
     else
     {
-        Instrument* instr = (Instrument*)el->getDevice();
+        Instr* instr = (Instr*)el->getDevice();
 
         instr->setMyColor(g, 1, 1, .3f);
     }

@@ -41,7 +41,7 @@ public:
 
 private:
 
-            Instrument*         ipreview;
+            Instr*         ipreview;
 
             BrowserList*        fileBox;
             BrowserList*        internalList1;

@@ -137,7 +137,7 @@ void Sample::activateTrigger(Trigger* tg)
     }
 }
 
-void Sample::copyDataToClonedInstrument(Instrument * instr)
+void Sample::copyDataToClonedInstrument(Instr * instr)
 {
     //Instrument::makeClone(instr);
     

@@ -17,7 +17,7 @@ public:
             Mixer();
             ~Mixer();
 
-            MixChannel*         addMixChannel(Instrument* instr);
+            MixChannel*         addMixChannel(Instr* instr);
             void                cleanBuffers(int num_frames);
             MixChannel*         getMasterChannel()          { return masterChannel; }
             void                handleChildEvent(Gobj * obj, InputEvent& ev);
@@ -25,7 +25,7 @@ public:
             void                mixAll(int num_frames);
             void                remap();
             void                resetAll();
-            void                removeMixChannel(Instrument * instr);
+            void                removeMixChannel(Instr * instr);
             void                updateMixingQueue();
 
 private:

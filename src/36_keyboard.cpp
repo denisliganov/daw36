@@ -588,7 +588,7 @@ void TextCursor::handleChar(char c)
 
     currentChar[0] = newChar[0];
 
-    Instrument* i = MInstrPanel->getInstrByAlias(currentChar);
+    Instr* i = MInstrPanel->getInstrByAlias(currentChar);
 
     if (i != NULL)
     {

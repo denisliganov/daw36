@@ -91,7 +91,7 @@ void ChanVU::tick()
 
 void ChanVU::drawSelf(Graphics & g)
 {
-    Instrument* i = dynamic_cast<Instrument*>(parent);
+    Instr* i = dynamic_cast<Instr*>(parent);
 
     if(vertical)
     {
@@ -196,7 +196,7 @@ void InstrVU::drawSelf(Graphics & g)
 
     val *= (1 - 0.45f);
 
-    Instrument* i = dynamic_cast<Instrument*>(parent);
+    Instr* i = dynamic_cast<Instr*>(parent);
 
     int left = (int)(height*getL());
     int right = (int)(height*getR());

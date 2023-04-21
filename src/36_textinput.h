@@ -25,7 +25,7 @@ public:
             bool        space_allowed;
 
             TextString(const char* name, bool spc_allowed, Element* ow);
-            TextString(const char* name, bool spc_allowed, Instrument* inst);
+            TextString(const char* name, bool spc_allowed, Instr* inst);
             TextString(const char* name, bool spc_allowed);
             ~TextString();
 

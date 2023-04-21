@@ -165,7 +165,7 @@ public:
             gFillRect(g,  x1, y1, x2, y2);
         }
 
-        Instrument*     instr;
+        Instr*     instr;
 };
 
 Device36*       devDummy;
@@ -201,60 +201,62 @@ InstrPanel::~InstrPanel()
     //delete devDummy;
 }
 
-Instrument* InstrPanel::addVst(const char* path, Vst2Plugin* otherVst)
+Vst2Plugin* InstrPanel::addVst(const char* path, Vst2Plugin* otherVst)
 {
     Vst2Plugin* vst = loadVst(path, otherVst);
 
     vst->addBasicParamSet();
     vst->createSelfPattern();
 
-    Instrument* i = NULL;
+    addInstrument(vst);
 
-    if(vst != NULL)
-    {
-        i = addInstrument(vst);
-    }
-    else
-    {
-       // show error box
-    }
-
-    return i;
+    return vst;
 }
 
-Sample* InstrPanel::addSample(const char* path, bool temporaryForPreview)
+Sample* InstrPanel::addSample(const char* path)
 {
     Sample* smp = loadSample(path);
 
     smp->addBasicParamSet();
     smp->createSelfPattern();
 
-    if (smp != NULL)
-    {
-        if (!temporaryForPreview)
-        {
-            addInstrument(smp);
-        }
-    }
+    addInstrument(smp);
 
     return smp;
 }
 
-Instrument* InstrPanel::addInstrument(Device36 * dev, Instrument * objAfter, bool master)
+Instr* InstrPanel::addInstrument(Device36 * dev, bool master)
 {
     WaitForSingleObject(AudioMutex, INFINITE);
 
     Device36* device = dev != NULL ? dev : devDummy;
 
-    Instrument* i = new Instrument(device);
+    Instr* i = new Instr(device);
 
-    instrs.push_back(i);
+    //instrs.push_back(i);
+
+    auto it = instrs.end();
+
+    //if (instrs.size() > 0 && ((Instrument*)*it)->isMaster())
+    //    it--;
+
+    if (instrs.size() > 0)
+    {
+        Instr* last = instrs.back();
+
+        if (last != NULL && last->isMaster())
+        {
+            it--;
+        }
+    }
+
+    instrs.insert(it, i);
 
     updateInstrIndexes();
 
     if (master)
     {
-        i->setAlias("[");
+        i->master = true;
 
         masterVolKnob->setParam(i->getMixChannel()->vol);
     }
@@ -263,14 +265,15 @@ Instrument* InstrPanel::addInstrument(Device36 * dev, Instrument * objAfter, boo
 
     addObject(i, "instr");
 
-    for (Instrument* instr : instrs)
+    // Propagate sends
+    for (Instr* instr : instrs)
     {
-        if (!i->isMaster())
+        if (!master)
         {
             i->getMixChannel()->addSend(instr->getMixChannel());
         }
 
-        if (instr != i)
+        if (!instr->isMaster() && instr != i)
         {
             instr->getMixChannel()->addSend(i->getMixChannel());
         }
@@ -301,11 +304,11 @@ Instrument* InstrPanel::addInstrument(Device36 * dev, Instrument * objAfter, boo
     return i;
 }
 
-void InstrPanel::cloneInstrument(Instrument* i)
+void InstrPanel::cloneInstrument(Instr* i)
 {
     WaitForSingleObject(AudioMutex, INFINITE);
 
-    Instrument* ni = i->clone();
+    Instr* ni = i->clone();
 
     // Place right after current instrument
     //instrs.remove(ni);
@@ -349,7 +352,7 @@ void InstrPanel::colorizeInstruments()
     float   hueOffset = 0.6f;
     float   hueSpan = .9f;
 
-    for(Instrument* instr : instrs)
+    for(Instr* instr : instrs)
     {
         float angle = periodAngle*(idx%num);
 
@@ -373,7 +376,7 @@ void InstrPanel::colorizeInstruments()
     MGrid->redraw(false, false);
 }
 
-void InstrPanel::deleteInstrument(Instrument* i)
+void InstrPanel::deleteInstrument(Instr* i)
 {
     WaitForSingleObject(AudioMutex, INFINITE);
 
@@ -388,7 +391,7 @@ void InstrPanel::deleteInstrument(Instrument* i)
         setCurrInstr(instrs[idx]);
     }
 
-    for (Instrument* ins : instrs)
+    for (Instr* ins : instrs)
     {
         if (ins == i || ins->isMaster()) 
             continue;
@@ -414,9 +417,9 @@ void InstrPanel::drawSelf(Graphics& g)
     fillx(g, 0, 0, width, MainLineHeight);
 }
 
-Instrument* InstrPanel::getInstrByIndex(int index)
+Instr* InstrPanel::getInstrByIndex(int index)
 {
-    for(Instrument* instr : instrs)
+    for(Instr* instr : instrs)
     {
         if(instr->getIndex() == index)
         {
@@ -427,12 +430,12 @@ Instrument* InstrPanel::getInstrByIndex(int index)
     return NULL;
 }
 
-Instrument* InstrPanel::getCurrInstr()
+Instr* InstrPanel::getCurrInstr()
 {
     return curr;
 }
 
-Instrument* InstrPanel::getInstrByAlias(std::string alstr)
+Instr* InstrPanel::getInstrByAlias(std::string alstr)
 {
     std::string str = alstr;
 
@@ -453,7 +456,7 @@ int InstrPanel::getNumInstrs()
 {
     int num = 0;
 
-    for(Instrument* instr : instrs)
+    for(Instr* instr : instrs)
     {
         num++;
     }
@@ -461,7 +464,7 @@ int InstrPanel::getNumInstrs()
     return num;
 }
 
-Instrument* InstrPanel::getInstrFromLine(int trkLine)
+Instr* InstrPanel::getInstrFromLine(int trkLine)
 {
     if (trkLine < 0)
     {
@@ -474,7 +477,7 @@ Instrument* InstrPanel::getInstrFromLine(int trkLine)
 
     int line = 0;
 
-    for(Instrument* instr : instrs)
+    for(Instr* instr : instrs)
     {
         if (line == trkLine)
         {
@@ -490,7 +493,7 @@ Instrument* InstrPanel::getInstrFromLine(int trkLine)
 
 void InstrPanel::generateAll(long num_frames, long mixbuffframe)
 {
-    for(Instrument* instr : instrs)
+    for(Instr* instr : instrs)
     {
         MixChannel* mchan = instr->getMixChannel();
 
@@ -533,12 +536,12 @@ bool InstrPanel::handleObjDrop(Gobj * obj, int mx, int my, unsigned int flags)
 {
     dropHighlight->setVis(false);
 
-    Instrument* iTo = dynamic_cast<Instrument*>(dropObj);
+    Instr* iTo = dynamic_cast<Instr*>(dropObj);
 
     if (iTo && !iTo->isMaster())
     {
         BrwListEntry* ble = dynamic_cast<BrwListEntry*>(obj);
-        Instrument* iFrom = dynamic_cast<Instrument*>(obj);
+        Instr* iFrom = dynamic_cast<Instr*>(obj);
 
         if (ble)
         {
@@ -635,7 +638,7 @@ void InstrPanel::updateInstrIndexes()
 {
     int idx = 0;
 
-    for(Instrument* instr : instrs)
+    for(Instr* instr : instrs)
     {
         instr->setIndex(idx++);
     }
@@ -660,7 +663,7 @@ void InstrPanel::addInstrFromNewBrowser(BrwListEntry* ble)
     }
 }
 
-void InstrPanel::setInstrFromNewBrowser(BrwListEntry* ble, Instrument* instr)
+void InstrPanel::setInstrFromNewBrowser(BrwListEntry* ble, Instr* instr)
 {
     Device36* dev = NULL;
 
@@ -679,7 +682,6 @@ void InstrPanel::setInstrFromNewBrowser(BrwListEntry* ble, Instrument* instr)
         dev->createSelfPattern();
 
         instr->deleteDevice();
-        
         instr->setDevice(dev);
 
         remapAndRedraw();
@@ -761,7 +763,7 @@ void Add_SoundFont(const char* path, const char* name, const char* alias)
 
 void InstrPanel::resetAll()
 {
-    for(Instrument* instr : instrs)
+    for(Instr* instr : instrs)
     {
         instr->device->reset();
     }
@@ -791,7 +793,7 @@ void InstrPanel::remap()
 
     int yoffs =0;
 
-    for (Instrument* i : instrs)
+    for (Instr* i : instrs)
     {
         if((yoffs + i->getH()) >= 0 && yoffs <= instrListHeight)
         {
@@ -835,7 +837,7 @@ void InstrPanel::remap()
 
 void InstrPanel::setSampleRate(float sampleRate)
 {
-    for(Instrument* instr : instrs)
+    for(Instr* instr : instrs)
     {
         instr->setSampleRate(sampleRate);
     }
@@ -843,13 +845,13 @@ void InstrPanel::setSampleRate(float sampleRate)
 
 void InstrPanel::setBufferSize(unsigned bufferSize)
 {
-    for(Instrument* instr : instrs)
+    for(Instr* instr : instrs)
     {
         instr->setBufferSize(bufferSize);
     }
 }
 
-void InstrPanel::setCurrInstr(Instrument* instr)
+void InstrPanel::setCurrInstr(Instr* instr)
 {
     if (curr) curr->remapAndRedraw();
     curr = instr;
@@ -876,7 +878,7 @@ void InstrPanel::showFX()
 
 void InstrPanel::updateWaves()
 {
-    for(Instrument* instr : instrs)
+    for(Instr* instr : instrs)
     {
         Sample* smp = dynamic_cast<Sample*>(instr);
 

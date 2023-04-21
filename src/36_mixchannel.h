@@ -31,7 +31,7 @@ friend  InstrPanel;
 
 public:
             MixChannel();
-            MixChannel(Instrument* i);
+            MixChannel(Instr* i);
             ~MixChannel();
 
             void                activateEffectMenuItem(Eff* eff, std::string mi);
@@ -48,7 +48,7 @@ public:
             void                drawOverChildren(Graphics & g);
             void                doSend(float * sendbuff, float amount, int num_frames);
             void                deleteEffect(Eff* eff);
-            Instrument*         getInstr()  { return instr; }
+            Instr*         getInstr()  { return instr; }
             int                 getMixCounter()       { return mixCount; }
             void                handleChildEvent(Gobj * obj,InputEvent & ev);
             void                handleMouseWheel(InputEvent& ev);
@@ -57,7 +57,7 @@ public:
             void                handleObjDrag(bool reset, Gobj * obj, int mx, int my);
             bool                handleObjDrop(Gobj * obj, int mx, int my, unsigned flags);
             void                handleParamUpdate(Parameter * param);
-            void                init(Instrument* i);
+            void                init(Instr* i);
             bool                isProcessed()           { return processed; }
             void                increaseMixCounter()      { mixCount++; }
             void                load(XmlElement* xmlChanNode);
@@ -71,7 +71,7 @@ public:
             void                save(XmlElement* xmlChanNode);
             void                setBufferSize(unsigned int bufferSize);
             void                setSampleRate(float sampleRate);
-            void                setInstrument(Instrument* i);
+            void                setInstrument(Instr* i);
             void                setOutChannel(MixChannel* mc);
             void                updateSends();
 
@@ -83,7 +83,7 @@ private:
             Gobj*               dropObj;
             MixDropHighlight*  dropHighlight;
             std::list<Eff*>     effs;
-            Instrument*         instr;
+            Instr*         instr;
             MixChannel*         mchanout;
             int                 mixCount;
             Button36*           mutetoggle;

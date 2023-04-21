@@ -42,7 +42,7 @@ void Mixer::init()
 
 void Mixer::cleanBuffers(int num_frames)
 {
-    for(Instrument* instr : MInstrPanel->getInstrs())
+    for(Instr* instr : MInstrPanel->getInstrs())
     {
         memset(instr->getMixChannel()->tempBuff, 0, sizeof(float)*num_frames*2);
     }
@@ -52,7 +52,7 @@ void Mixer::mixAll(int num_frames)
 {
     WaitForSingleObject(MixerMutex, INFINITE);
 
-    for(Instrument* instr : MInstrPanel->getInstrs())
+    for(Instr* instr : MInstrPanel->getInstrs())
     {
         instr->getMixChannel()->prepareForMixing();
     }
@@ -63,7 +63,7 @@ void Mixer::mixAll(int num_frames)
     {
         incomplete = false;
 
-        for(Instrument* instr : MInstrPanel->getInstrs())
+        for(Instr* instr : MInstrPanel->getInstrs())
         {
             MixChannel* mc = instr->getMixChannel();
 
@@ -83,7 +83,7 @@ void Mixer::mixAll(int num_frames)
 
 void Mixer::resetAll()
 {
-    for(Instrument* instr : MInstrPanel->getInstrs())
+    for(Instr* instr : MInstrPanel->getInstrs())
     {
         instr->getMixChannel()->reset();
     }
@@ -98,7 +98,7 @@ void Mixer::remap()
 {
     if (MixViewSingle)
     {
-        for (Instrument* instr : MInstrPanel->getInstrs())
+        for (Instr* instr : MInstrPanel->getInstrs())
         {
             if (instr != MInstrPanel->getCurrInstr())
             {
@@ -114,7 +114,7 @@ void Mixer::remap()
     {
         int yCh = 0;
 
-        for(Instrument* instr : MInstrPanel->getInstrs())
+        for(Instr* instr : MInstrPanel->getInstrs())
         {
             if((yCh + InstrHeight > 0) && yCh < getH())
             {
@@ -146,7 +146,7 @@ void Mixer::drawSelf(Graphics& g)
 */
 }
 
-MixChannel* Mixer::addMixChannel(Instrument * instr)
+MixChannel* Mixer::addMixChannel(Instr * instr)
 {
     WaitForSingleObject(MixerMutex, INFINITE);
 
@@ -170,7 +170,7 @@ MixChannel* Mixer::addMixChannel(Instrument * instr)
     return mixChannel;
 }
 
-void Mixer::removeMixChannel(Instrument * instr)
+void Mixer::removeMixChannel(Instr * instr)
 {
     WaitForSingleObject(MixerMutex, INFINITE);
 
@@ -186,7 +186,7 @@ void Mixer::removeMixChannel(Instrument * instr)
 
 void Mixer::updateMixingQueue()
 {
-    for (Instrument* instr : MInstrPanel->getInstrs())
+    for (Instr* instr : MInstrPanel->getInstrs())
     {
         MixChannel* mc = instr->getMixChannel();
 

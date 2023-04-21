@@ -182,7 +182,7 @@ private:
     {
         if (true)
         {
-            Instrument* instr = outChannel->getInstr();
+            Instr* instr = outChannel->getInstr();
 
             float hue = instr->isMaster() ? 1.f : instr->getColorHue();
 
@@ -297,7 +297,7 @@ MixChannel::MixChannel()
     init(NULL);
 }
 
-MixChannel::MixChannel(Instrument* i)
+MixChannel::MixChannel(Instr* i)
 {
     init(i);
 }
@@ -359,7 +359,7 @@ void MixChannel::delSend(MixChannel* mchan)
         deleteObject(c);
 }
 
-void MixChannel::init(Instrument* ins)
+void MixChannel::init(Instr* ins)
 {
     objId = "mixchan";
 
@@ -430,24 +430,24 @@ void MixChannel::remap()
 
         vu->setCoords1(FxPanelScrollerWidth, height - 22, 150, 20);
 
-        int yKnob = 0;
-
         for (Gobj* o : objs)
         {
             if (o->getObjId() == "snd")
             {
                 SendKnob* k = dynamic_cast<SendKnob*>(o);
 
-                k->setCoords1(width - 40, yKnob + 1, 20, 20);
+                Instr* ins = k->getOutChannel()->getInstr();
+
+                k->setCoords1(width - 40, ins->getY1() - parent->getY1() + 2, 20, 20);
             }
 
             if (o->getObjId() == "out")
             {
                 ChanOutToggle* t = dynamic_cast<ChanOutToggle*>(o);
 
-                t->setCoords1(width - 17, yKnob + 5, 12, 12);
+                Instr* ins = t->getOutChannel()->getInstr();
 
-                yKnob += InstrHeight;
+                t->setCoords1(width - 17, ins->getY1() - parent->getY1() + 5, 12, 12);
             }
         }
     }
@@ -1380,7 +1380,7 @@ void MixChannel::reset()
     }
 }
 
-void MixChannel::setInstrument(Instrument* i)
+void MixChannel::setInstrument(Instr* i)
 {
     instr = i;
 }

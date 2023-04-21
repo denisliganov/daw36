@@ -37,7 +37,7 @@ public:
             Sample(float* data, char* pth, SF_INFO sfinfo);
             virtual ~Sample();
             virtual bool        checkBounds(SampleNote* samplent, Trigger* tg, long num_frames);
-            void                copyDataToClonedInstrument(Instrument * instr);
+            void                copyDataToClonedInstrument(Instr * instr);
             SubWindow*          createWindow();
             float               calcSampleFreqIncrement(int semitones);
             void                dumpData();

@@ -294,10 +294,11 @@ void LoadDefaultInstruments()
 
     // todo: dummy instrument
 
-    MInstrPanel->addInstrument(NULL, NULL);
-    MInstrPanel->addInstrument(NULL, NULL);
-    MInstrPanel->addInstrument(NULL, NULL);
-    MInstrPanel->addInstrument(NULL, NULL, true);
+    MInstrPanel->addInstrument(NULL);
+    MInstrPanel->addInstrument(NULL);
+    MInstrPanel->addInstrument(NULL);
+
+    MInstrPanel->addInstrument(NULL, true);
 
     /*
     MInstrPanel->addInstrument(NULL, NULL);

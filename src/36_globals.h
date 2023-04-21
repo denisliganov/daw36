@@ -37,7 +37,7 @@ class Gobj;
 class HelperPanel;
 class HistoryAction;
 class InfoWin;
-class Instrument;
+class Instr;
 class InstrHighlight;
 class InstrPanel;
 class InstrVU;
@@ -159,7 +159,7 @@ extern DragAndDrop*     MDragDrop;
 extern JuceAudioDeviceManager*     JAudManager;
 
 extern MixChannel*      SoloMixChannel;
-extern Instrument*      SoloInstr;
+extern Instr*      SoloInstr;
 extern bool             GPlaying;
 extern bool             GRecOn;
 extern bool             MixViewSingle;

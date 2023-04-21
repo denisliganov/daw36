@@ -35,7 +35,7 @@ public:
     void GetData(double wt_pos, float freq, long frame_phase, float* od1, float* od2);
 };
 
-class Generator : public Instrument
+class Generator : public Instr
 {
 public:
 

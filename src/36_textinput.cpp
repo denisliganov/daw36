@@ -33,7 +33,7 @@ TextString::TextString(const char* name, bool spc_allowed, Element* ow)
     //element = ow;
 }
 
-TextString::TextString(const char* name, bool spc_allowed, Instrument* inst)
+TextString::TextString(const char* name, bool spc_allowed, Instr* inst)
 {
     memset(string, 0, MAX_NAME_LENGTH);
 

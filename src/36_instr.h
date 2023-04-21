@@ -18,20 +18,20 @@ class GuiButt;
 
 
 
-class Instrument : public Gobj
+class Instr : public Gobj
 {
 friend MixChannel;
 friend InstrPanel;
 friend Grid;
 
 public:
-            Instrument(Device36* dev);
-            ~Instrument();
+            Instr(Device36* dev);
+            ~Instr();
 
             void                addMixChannel();
             void                activateMenuItem(std::string item);
             ContextMenu*        createContextMenu();
-virtual Instrument*             clone();
+virtual Instr*             clone();
             void                drawSelf(Graphics& g);
             void                drawOverChildren(Graphics & g);
             std::string         getAlias()      {return instrAlias;};
@@ -46,7 +46,7 @@ virtual Instrument*             clone();
             void                handleMouseDrag(InputEvent& ev);
             void                handleChildEvent(Gobj * obj, InputEvent& ev);
     virtual void                load(XmlElement* instrNode);
-            bool                isMaster()  { return (instrAlias == "["); }
+            bool                isMaster()  { return master; }
             void                preview(int note = BaseNote);
             void                remap();
             void                setDevice(Device36* dev);
@@ -63,6 +63,7 @@ private:
             InstrVU*            ivu;
             MixChannel*         mixChannel;
             EnableButton*       muteButt;
+            bool                master;
             ParamBox*           panBox;
             ParamBox*           volBox;
             Knob*               volKnob;

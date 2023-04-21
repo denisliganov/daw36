@@ -30,7 +30,7 @@ typedef enum InstrType
 class Device36 : public ParamObject
 {
 friend  InstrPanel;
-friend  Instrument;
+friend  Instr;
 friend  Eff;
 friend  Grid;
 friend  MixChannel;

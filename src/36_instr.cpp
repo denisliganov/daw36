@@ -35,7 +35,7 @@ protected:
 
         void drawSelf(Graphics& g)
         {
-            Instrument* instr = (Instrument*)parent;
+            Instr* instr = (Instr*)parent;
 
             instr->setMyColor(g, .4f);
             fillx(g, 0, 0, width, height);
@@ -76,7 +76,7 @@ protected:
 
         void drawSelf(Graphics& g)
         {
-            Instrument* instr = (Instrument*)parent;
+            Instr* instr = (Instr*)parent;
 
             if (instr->getDevice() != devDummy)
             {
@@ -120,9 +120,10 @@ protected:
 };
 
 
-Instrument::Instrument(Device36* dev)
+Instr::Instr(Device36* dev)
 {
     index = -1;
+    master = false;
 
     device = devDummy;
 
@@ -149,7 +150,7 @@ Instrument::Instrument(Device36* dev)
     setDevice(dev);
 }
 
-Instrument::~Instrument()
+Instr::~Instr()
 {
     WaitForSingleObject(MixerMutex, INFINITE);
 
@@ -170,7 +171,7 @@ Instrument::~Instrument()
     ReleaseMutex(MixerMutex);
 }
 
-void Instrument::setDevice(Device36* dev)
+void Instr::setDevice(Device36* dev)
 {
     if (device != NULL)
     {
@@ -211,7 +212,7 @@ void Instrument::setDevice(Device36* dev)
     redraw();
 }
 
-void Instrument::activateMenuItem(std::string item)
+void Instr::activateMenuItem(std::string item)
 {
     if(item == "Clone")
     {
@@ -223,12 +224,12 @@ void Instrument::activateMenuItem(std::string item)
     }
 }
 
-void Instrument::addMixChannel()
+void Instr::addMixChannel()
 {
     mixChannel = MMixer->addMixChannel(this);
 }
 
-ContextMenu* Instrument::createContextMenu()
+ContextMenu* Instr::createContextMenu()
 {
     MInstrPanel->setCurrInstr(this);
 
@@ -243,9 +244,9 @@ ContextMenu* Instrument::createContextMenu()
     return menu;
 }
 
-Instrument* Instrument::clone()
+Instr* Instr::clone()
 {
-    Instrument* instr = NULL;
+    Instr* instr = NULL;
 /*
     switch(type)
     {
@@ -262,7 +263,7 @@ Instrument* Instrument::clone()
     return instr;
 }
 
-void Instrument::drawSelf(Graphics& g)
+void Instr::drawSelf(Graphics& g)
 {
     int h = height - 1;
     float incr = 0.f;
@@ -327,13 +328,13 @@ void Instrument::drawSelf(Graphics& g)
     }
 }
 
-void Instrument::drawOverChildren(Graphics & g)
+void Instr::drawOverChildren(Graphics & g)
 {
     //setMonoColor(.9f);
     //gTextFit(g, FontSmall, instrAlias, x1 + 6, y2 - 3, width - (width/2));
 }
 
-void Instrument::deleteDevice()
+void Instr::deleteDevice()
 {
     removeObject(device);
  
@@ -344,7 +345,7 @@ void Instrument::deleteDevice()
     }
 }
 
-std::list <Element*> Instrument::getNotesFromRange(float offset, float lastVisibleTick)
+std::list <Element*> Instr::getNotesFromRange(float offset, float lastVisibleTick)
 {
     std::list <Element*> noteList;
 
@@ -367,7 +368,7 @@ std::list <Element*> Instrument::getNotesFromRange(float offset, float lastVisib
     return noteList;
 }
 
-void Instrument::handleChildEvent(Gobj * obj, InputEvent& ev)
+void Instr::handleChildEvent(Gobj * obj, InputEvent& ev)
 {
     if(obj == ivu)
     {
@@ -394,7 +395,7 @@ void Instrument::handleChildEvent(Gobj * obj, InputEvent& ev)
     redraw();
 }
 
-void Instrument::handleMouseDown(InputEvent& ev)
+void Instr::handleMouseDown(InputEvent& ev)
 {
     if(ev.leftClick)
     {
@@ -414,14 +415,14 @@ void Instrument::handleMouseDown(InputEvent& ev)
     }
 }
 
-void Instrument::handleMouseUp(InputEvent& ev)
+void Instr::handleMouseUp(InputEvent& ev)
 {
     MAudio->releaseAllPreviews();
 
     MInstrPanel->setCurrInstr(this);
 }
 
-void Instrument::handleMouseDrag(InputEvent& ev)
+void Instr::handleMouseDrag(InputEvent& ev)
 {
     if(device != devDummy && MDragDrop->canDrag())
     {
@@ -431,12 +432,12 @@ void Instrument::handleMouseDrag(InputEvent& ev)
     }
 }
 
-void Instrument::handleMouseWheel(InputEvent& ev)
+void Instr::handleMouseWheel(InputEvent& ev)
 {
     parent->handleMouseWheel(ev);
 }
 
-void Instrument::load(XmlElement * instrNode)
+void Instr::load(XmlElement * instrNode)
 {
     /*
     devIdx = instrNode->getIntAttribute(T("InstrIndex"), -1);
@@ -468,7 +469,7 @@ void Instrument::load(XmlElement * instrNode)
     */
 }
 
-void Instrument::preview(int note)
+void Instr::preview(int note)
 {
     if (device && device->selfNote)
     {
@@ -478,7 +479,7 @@ void Instrument::preview(int note)
     }
 }
 
-void Instrument::remap()
+void Instr::remap()
 {
     int h = height - 1;
 
@@ -545,12 +546,12 @@ void Instrument::remap()
     }
 }
 
-void Instrument::setAlias(std::string alias)
+void Instr::setAlias(std::string alias)
 {
     instrAlias = alias;
 }
 
-void Instrument::setIndex(int idx)
+void Instr::setIndex(int idx)
 {
     index = idx;
     device->setIndex(idx);
@@ -577,14 +578,14 @@ void Instrument::setIndex(int idx)
     instrAlias = c;
 }
 
-void Instrument::setBufferSize(unsigned bufferSize)
+void Instr::setBufferSize(unsigned bufferSize)
 {
     device->setBufferSize(bufferSize);
 
     mixChannel->setBufferSize(bufferSize);
 }
 
-void Instrument::save(XmlElement * instrNode)
+void Instr::save(XmlElement * instrNode)
 {
     /*
     instrNode->setAttribute(T("InstrIndex"), devIdx);
@@ -601,7 +602,7 @@ void Instrument::save(XmlElement * instrNode)
     */
 }
 
-void Instrument::setSampleRate(float sampleRate)
+void Instr::setSampleRate(float sampleRate)
 {
     mixChannel->setSampleRate(sampleRate);
 }

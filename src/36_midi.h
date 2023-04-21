@@ -64,10 +64,10 @@ public:
     void Initialize();
 
     /* This method is to add instrument to listening loop and map it to particular midi IN device */
-    unsigned char Attach(Instrument* instr, unsigned char juce_index);
+    unsigned char Attach(Instr* instr, unsigned char juce_index);
 
     /* Remove an instrument from instr array and stop route MIDI events to this instr */
-    void Detach(Instrument* instr);
+    void Detach(Instr* instr);
 
     /* How many Midi input sources exist in a system (num of records in m_DevList) */
     unsigned char GetDeviceCount() const;
@@ -94,7 +94,7 @@ private:
        So, in theory we can manipulate several instruments by one MIDI source. It means, you can
        preview or record several instruments simultaneusly. Let's say you press a key on Midi keybd
        and it causes few instruments to produce the same note. */
-    Instrument* m_InstrSlots[MAX_NUM_MIDI_IN_SRC][MAX_NUM_INSTR_PER_MIDI_IN_SRC];
+    Instr* m_InstrSlots[MAX_NUM_MIDI_IN_SRC][MAX_NUM_INSTR_PER_MIDI_IN_SRC];
     unsigned char m_InstrCount[MAX_NUM_MIDI_IN_SRC];
 
     /* Holds the list of strings representing all available Midi In devices. This array is filled 

@@ -83,6 +83,15 @@ void DragAndDrop::drag(Gobj* target_object, int mx, int my)
 
     if (targetObj)
     {
+        if (targetObj == (Gobj*)MGrid)
+        {
+            sw->setVisible(false);
+        }
+        else
+        {
+            sw->setVisible(true);
+        }
+
         target_object->handleObjDrag(false, dragObj, mx, my);
     }
 

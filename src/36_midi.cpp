@@ -17,7 +17,7 @@ JuceMidiWrapper   *midiHost;
 
 
 
-void MidiToHost_AddNoteOn(Instrument* instr, int note, int vol)
+void MidiToHost_AddNoteOn(Instr* instr, int note, int vol)
 {
     float notevol;
 
@@ -82,7 +82,7 @@ void MidiToHost_AddNoteOn(Instrument* instr, int note, int vol)
     //}
 }
 
-void MidiToHost_AddNoteOff(Instrument* instr, int note)
+void MidiToHost_AddNoteOff(Instr* instr, int note)
 {
     // Preview_Release(instr, note);
 }
@@ -312,7 +312,7 @@ const MIDEVICE_DESCR_T* JuceMidiWrapper::GetDeviceDescr(unsigned char index) con
     return &(m_DevList[index]);
 }
 
-unsigned char JuceMidiWrapper::Attach(Instrument* instr, unsigned char juce_index)
+unsigned char JuceMidiWrapper::Attach(Instr* instr, unsigned char juce_index)
 {
     unsigned int ret_val = -1;
     char         i = 0, j = 0, pos = -1, index = -1;
@@ -395,7 +395,7 @@ unsigned char JuceMidiWrapper::Attach(Instrument* instr, unsigned char juce_inde
     return pos;
 }
 
-void JuceMidiWrapper::Detach(Instrument* instr)
+void JuceMidiWrapper::Detach(Instr* instr)
 {
     unsigned char i,j;
 

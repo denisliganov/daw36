@@ -40,7 +40,7 @@ protected:
             int                 ys;
             int                 defPos;
             int                 savedHeight;
-            Instrument*         instr;
+            Instr*         instr;
             bool                knobMode;
             bool                dim;
 };

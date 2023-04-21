@@ -386,7 +386,10 @@ void BrowserList::previewSample(BrwListEntry* ble, bool down)
     {
         if(ble->getType() == Entry_Wave)
         {
-            prevSample = MInstrPanel->addSample((char*)ble->getPath().data(), true);
+            prevSample = MInstrPanel->loadSample((char*)ble->getPath().data());
+
+            prevSample->addBasicParamSet();
+            prevSample->createSelfPattern();
 
             if(prevSample != NULL)
             {

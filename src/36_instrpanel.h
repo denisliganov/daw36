@@ -26,20 +26,20 @@ public:
             ~InstrPanel();
 
             void                addInstrFromNewBrowser(BrwListEntry* ble);
-            Instrument*         addInstrument(Device36* dev, Instrument* objAfter = NULL, bool master = false);
-            Instrument*         addVst(const char* path, Vst2Plugin* vst);
-            Sample*             addSample(const char* path, bool temporaryForPreview = false);
-            void                cloneInstrument(Instrument* i);
+            Instr*         addInstrument(Device36* dev, bool master = false);
+            Vst2Plugin*         addVst(const char* path, Vst2Plugin* vst);
+            Sample*             addSample(const char* path);
+            void                cloneInstrument(Instr* i);
             void                colorizeInstruments();
-            void                deleteInstrument(Instrument* i);
+            void                deleteInstrument(Instr* i);
             void                drawSelf(Graphics& g);
-            Instrument*         getInstrByIndex(int index);
+            Instr*         getInstrByIndex(int index);
             int                 getNumInstrs();
-            Instrument*         getInstrByAlias(std::string alstr);
+            Instr*         getInstrByAlias(std::string alstr);
             void                generateAll(long num_frames, long mixbuffframe);
-            Instrument*         getInstrFromLine(int trkLine);
-            Instrument*         getCurrInstr();
-        std::vector<Instrument*>& getInstrs() { return instrs; }
+            Instr*         getInstrFromLine(int trkLine);
+            Instr*         getCurrInstr();
+        std::vector<Instr*>& getInstrs() { return instrs; }
             void                handleObjDrag(bool reset, Gobj * obj,int mx,int my);
             bool                handleObjDrop(Gobj * obj,int mx,int my, unsigned int flags);
             void                handleChildEvent(Gobj* obj, InputEvent& ev);
@@ -53,9 +53,9 @@ public:
             void                remap();
             void                setSampleRate(float sampleRate);
             void                setBufferSize(unsigned bufferSize);
-            void                setCurrInstr(Instrument* instr);
+            void                setCurrInstr(Instr* instr);
             void                showFX();
-            void                setInstrFromNewBrowser(BrwListEntry* ble, Instrument* instr);
+            void                setInstrFromNewBrowser(BrwListEntry* ble, Instr* instr);
             void                updateWaves();
             void                updateInstrIndexes();
 
@@ -75,8 +75,8 @@ private:
             Knob*               masterVolKnob;
             Parameter*          masterVolume;
 
-    std::vector<Instrument*>    instrs;
-            Instrument*         curr;
+    std::vector<Instr*>    instrs;
+            Instr*         curr;
 };
 
 

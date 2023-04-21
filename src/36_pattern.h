@@ -72,7 +72,7 @@ protected:
             tframe              currFrame;
             tframe              endFrame;
             tframe              frameCount;
-            Instrument*         instr;
+            Instr*         instr;
             bool                muted;
             bool                looped;
             Pattern*            ptBase;

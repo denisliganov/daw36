@@ -166,7 +166,7 @@ void Knob::remap()
 {
     MixChannel* mchan = dynamic_cast<MixChannel*>(parent);
     Eff* eff = dynamic_cast<Eff*>(parent);
-    Instrument* i = dynamic_cast<Instrument*>(parent);
+    Instr* i = dynamic_cast<Instr*>(parent);
     Device36* dev = dynamic_cast<Device36*>(parent);
 
     if (i)
@@ -185,7 +185,7 @@ void Knob::remap()
     {
         eff = dynamic_cast<Eff*>(dev->getContainer());
 
-        i = dynamic_cast<Instrument*>(dev->getContainer());
+        i = dynamic_cast<Instr*>(dev->getContainer());
 
         if (i)
         {
@@ -348,7 +348,7 @@ void Knob::drawKnob(Graphics& g)
         }
         else if (objId == "fx")
         {
-            clr = Colour(1.f, 0.f, .28f, 1.f);
+            clr = Colour(1.f, 0.f, .3f, 1.f);
         }
         else if (instr)
         {
@@ -378,7 +378,7 @@ void Knob::drawKnob(Graphics& g)
     }
     else if (objId == "fx")
     {
-        setc(g, .42f, 1.f);
+        setc(g, .58f, 1.f);
     }
     else if (instr)
     {

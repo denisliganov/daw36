@@ -963,7 +963,7 @@ void Grid::changeBars(InputEvent& ev)
         processSelectedOnly = true;
     }
 
-    Instrument* instr = MInstrPanel->getInstrFromLine(actionLine);
+    Instr* instr = MInstrPanel->getInstrFromLine(actionLine);
 
     for(Note* note : instr->getDevice()->notes)
     {
@@ -1107,7 +1107,7 @@ void Grid::drawElements(Graphics& g)
 
 bool Grid::drawDraggedObject(Graphics & g,Gobj * obj)
 {
-    Instrument* i = dynamic_cast<Instrument*> (obj);
+    Instr* i = dynamic_cast<Instr*> (obj);
 
     if(i != NULL && i->getDevice())
     {
@@ -1692,7 +1692,7 @@ void Grid::handleChildEvent(Gobj * obj, InputEvent& ev)
 
 void Grid::handleObjDrag(bool reset, Gobj * obj,int mx,int my)
 {
-    Instrument* i = dynamic_cast<Instrument*>(obj);
+    Instr* i = dynamic_cast<Instr*>(obj);
 
     if(i != NULL && i->getDevice() != NULL)
     {
@@ -1721,7 +1721,7 @@ void Grid::handleObjDrag(bool reset, Gobj * obj,int mx,int my)
 
 bool Grid::handleObjDrop(Gobj * obj,int mx,int my, unsigned flags)
 {
-    Instrument* i = dynamic_cast<Instrument*> (obj);
+    Instr* i = dynamic_cast<Instr*> (obj);
 
     if(i != NULL)
     {
@@ -1768,7 +1768,7 @@ bool Grid::isElementSelected(Element* el)
 
 Note* Grid::putNote(float tick, int line, int noteVal)
 {
-    Instrument* instr = MInstrPanel->getCurrInstr();
+    Instr* instr = MInstrPanel->getCurrInstr();
 
     if(instr != NULL)
     {

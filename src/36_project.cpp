@@ -333,7 +333,7 @@ bool Project36::loadProjectData(File chosenFile, LoadThread* thread)
             }*/
 
             // Load all instruments
-            forEachXmlChildElementWithTagName(*xmlMainNode, xmlChild, T("Instrument"))
+            forEachXmlChildElementWithTagName(*xmlMainNode, xmlChild, T("Instr"))
             {
                 InstrType itype = (InstrType)xmlChild->getIntAttribute(T("InstrType"));
 
@@ -347,7 +347,7 @@ bool Project36::loadProjectData(File chosenFile, LoadThread* thread)
                     thread->setStatusMessage(T("Loading instrument: ") + iname);
                 }
 
-                Instrument* instr = NULL;
+                Instr* instr = NULL;
 /*
                 if(itype == Instr_Sample)
                 {
@@ -437,7 +437,7 @@ bool Project36::loadProjectData(File chosenFile, LoadThread* thread)
 
                 if(isauto)
                 {
-                    Instrument* instr = MInstrPanel->getInstrByIndex(xmlChild->getIntAttribute(T("InstrOwnerIndex"), -1));
+                    Instr* instr = MInstrPanel->getInstrByIndex(xmlChild->getIntAttribute(T("InstrOwnerIndex"), -1));
 
                     ///
                 }
