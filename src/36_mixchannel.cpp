@@ -876,7 +876,7 @@ void MixChannel::handleObjDrag(bool reset, Gobj * obj,int mx,int my)
     }
 }
 
-bool MixChannel::handleObjDrop(Gobj * obj,int mx,int my,unsigned flags)
+void MixChannel::handleObjDrop(Gobj * obj,int mx,int my,unsigned flags)
 {
     dropHighlight->setVis(false);
 
@@ -924,8 +924,6 @@ bool MixChannel::handleObjDrop(Gobj * obj,int mx,int my,unsigned flags)
 
         ReleaseMutex(MixerMutex);
     }
-
-    return true;
 }
 
 void MixChannel::handleParamUpdate(Parameter * param)

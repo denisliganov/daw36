@@ -277,6 +277,7 @@ protected:
             InputEvent          lastEvent;
 
             std::list<Gobj*>    changedObjects;
+            std::list<Gobj*>    touchedObjs;        // List of child objects covered by mouse
             HANDLE              guiMutex;
             std::list<Gobj*>    highlights;
             std::list<Rect*>    repaints;

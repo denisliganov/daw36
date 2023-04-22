@@ -348,7 +348,7 @@ void Knob::drawKnob(Graphics& g)
         }
         else if (objId == "fx")
         {
-            clr = Colour(1.f, 0.f, .3f, 1.f);
+            clr = Colour(1.f, 0.f, .4f, 1.f);
         }
         else if (instr)
         {
@@ -378,7 +378,7 @@ void Knob::drawKnob(Graphics& g)
     }
     else if (objId == "fx")
     {
-        setc(g, .58f, 1.f);
+        setc(g, .8f, 1.f);
     }
     else if (instr)
     {

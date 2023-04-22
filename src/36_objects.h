@@ -53,8 +53,6 @@ public:
 class Gobj
 {
 public:
-            // List of child objects
-            std::list<Gobj*>    objs;
 
             Gobj();
     virtual ~Gobj();
@@ -67,7 +65,7 @@ public:
     virtual void                activateMenuItem(std::string item) {};
     virtual ContextMenu*        createContextMenu() {return NULL;};
     virtual void                confine(int bxNew = -1, int byNew = -1, int bx1New = -1, int by1New = -1);
-    virtual bool                checkMouseTouching(int mx, int my);
+    virtual bool                checkMouseTouching(InputEvent& ev);
             void                createSnap();
             void                delSnap();
             void                drawSnap(Graphics& g);
@@ -103,8 +101,9 @@ public:
             int                 getDrawY2()         { return dy2; };
             int                 getDrawWidth()      { return dwidth; };
             int                 getDrawHeight()     { return dheight; };
-            Gobj*               getLastTouchedObject(int mx, int my);
+            Gobj*               getLastTouchedObject(InputEvent& ev);
             Image*              getSnap()           { return snap; }
+            std::list<Gobj*>    getObjs()           { return objs; }
 
     virtual void                handleMouseMove(InputEvent& ev) {}
     virtual void                handleMouseWheel(InputEvent& ev) {};
@@ -115,7 +114,7 @@ public:
     virtual void                handleMouseEnter(InputEvent& ev) {};
     virtual void                handleMouseLeave(InputEvent& ev) {};
     virtual void                handleObjDrag(bool reset, Gobj* obj, int mx, int my);
-    virtual bool                handleObjDrop(Gobj* obj, int mx, int my, unsigned int flags);
+    virtual void                handleObjDrop(Gobj* obj, int mx, int my, unsigned int flags);
 
             bool                isChanged()         { return changed; }
             bool                isON()              {  return enabled; }
@@ -187,6 +186,8 @@ protected:
             ObjectGroup         objGroup;
             std::string         objId;
             std::string         objName;
+
+            std::list<Gobj*>    objs;               // List of child objects
             Gobj*               parent;
             bool                relativeToParent;
             Image*              snap;

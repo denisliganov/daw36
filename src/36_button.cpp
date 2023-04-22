@@ -14,7 +14,7 @@
 
 Button36* GetButton(Gobj* parent, std::string id)
 {
-    for (auto obj : parent->objs)
+    for (auto obj : parent->getObjs())
     {
         if (obj->getObjId() == id)
         {
@@ -200,7 +200,7 @@ void GroupButton::handleMouseDown(InputEvent & ev)
 {
     process(true);
 
-    for(Gobj* co : parent->objs)
+    for(Gobj* co : parent->getObjs())
     {
         if (co != this)
         {

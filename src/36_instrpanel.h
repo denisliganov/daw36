@@ -41,7 +41,7 @@ public:
             Instr*         getCurrInstr();
         std::vector<Instr*>& getInstrs() { return instrs; }
             void                handleObjDrag(bool reset, Gobj * obj,int mx,int my);
-            bool                handleObjDrop(Gobj * obj,int mx,int my, unsigned int flags);
+            void                handleObjDrop(Gobj * obj,int mx,int my, unsigned int flags);
             void                handleChildEvent(Gobj* obj, InputEvent& ev);
             void                handleMouseWheel(InputEvent& ev);
             void                handleMouseLeave(InputEvent& ev);

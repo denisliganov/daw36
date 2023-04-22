@@ -58,6 +58,58 @@ protected:
 };
 
 
+class NoteHighlight : public Gobj
+{
+public:
+
+    NoteHighlight(Grid* gr) 
+    {
+        setTouchable(false);
+        grid = gr;
+    }
+
+    void  drawSelf(Graphics& g)
+    {
+        if (note != NULL)
+        {
+            note->drawOnGrid(g, grid);
+        }
+    }
+
+    void update(float newTick, int newLine, Instr* i)
+    {
+        tick = newTick;
+        line = newLine;
+        instr = i;
+        note = i->getDevice()->getSelfNote();
+
+        note->setPos(tick, line);
+        note->setPos(tick, line);
+        note->calcForGrid(grid);
+
+        int x = note->getX1() - grid->getX1();
+        int y = note->getY1() - grid->getY1();
+        
+        setCoords1(x, y, note->getW(), note->getH());
+        
+        setVis(true);
+    }
+
+    void disable()
+    {
+        setVis(false);
+    }
+
+protected:
+
+    Instr*      instr;
+    Note*       note;
+    Grid*       grid;
+
+    float       tick;
+    int         line;
+};
+
 class PlaceHighlight : public Gobj
 {
 friend  Grid;
@@ -190,6 +242,7 @@ Grid::Grid(float step_width, int line_height, Pattern* pt, Timeline* tl)
 
     addHighlight(sel = new Selection(this));
     addHighlight(place = new PlaceHighlight(this));
+    addHighlight(noteHihglight = new NoteHighlight(this));
 
     selReset();
 
@@ -1105,20 +1158,6 @@ void Grid::drawElements(Graphics& g)
     }
 }
 
-bool Grid::drawDraggedObject(Graphics & g,Gobj * obj)
-{
-    Instr* i = dynamic_cast<Instr*> (obj);
-
-    if(i != NULL && i->getDevice())
-    {
-        i->getDevice()->getSelfNote()->drawOnGrid(g, this);
-
-        return true;
-    }
-
-    return false;
-}
-
 void Grid::drawSelf(Graphics& g)
 {
     if(mainimg != NULL)
@@ -1316,8 +1355,9 @@ void Grid::handleModifierKeys(unsigned flags)
 
 void Grid::handleMouseLeave(InputEvent & ev)
 {
-   // if (activeElem != NULL )
-    //    activeElem->highlightOff();
+    //noteHihglight->disable();
+
+    int a = 1;
 
     //place->update();
 }
@@ -1692,6 +1732,12 @@ void Grid::handleChildEvent(Gobj * obj, InputEvent& ev)
 
 void Grid::handleObjDrag(bool reset, Gobj * obj,int mx,int my)
 {
+    if (reset)
+    {
+        noteHihglight->disable();
+        return;
+    }
+
     Instr* i = dynamic_cast<Instr*>(obj);
 
     if(i != NULL && i->getDevice() != NULL)
@@ -1701,6 +1747,7 @@ void Grid::handleObjDrag(bool reset, Gobj * obj,int mx,int my)
 
         getPosFromCoords(mx, my, &tick, &line);
 
+        noteHihglight->update(tick, line, i);
 /*
         if((tick - tickOffset)/visibleTickSpan > 0.9f)
         {
@@ -1709,17 +1756,11 @@ void Grid::handleObjDrag(bool reset, Gobj * obj,int mx,int my)
             setTickOffset(tickOffset + offs, false);
         }*/
 
-        Note* n = i->getDevice()->selfNote;
-
-        n->setPos(tick, line);
-
-        n->calcForGrid(this);
-
         //drag.setCoords1(n->x1, n->y1, n->width, n->height);
     }
 }
 
-bool Grid::handleObjDrop(Gobj * obj,int mx,int my, unsigned flags)
+void Grid::handleObjDrop(Gobj * obj,int mx,int my, unsigned flags)
 {
     Instr* i = dynamic_cast<Instr*> (obj);
 
@@ -1734,11 +1775,9 @@ bool Grid::handleObjDrop(Gobj * obj,int mx,int my, unsigned flags)
         action(GridAction_Release);
 
         MAudio->releaseAllPreviews();
-
-        return true;
     }
 
-    return false;
+    noteHihglight->disable();
 }
 
 bool Grid::isElementSelected(Element* el)

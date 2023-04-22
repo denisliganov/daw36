@@ -193,7 +193,7 @@ void Eff::drawSelf(Graphics& g)
     else
         fill(g, .3f);
 
-    rect(g, .22f);
+    rect(g, .38f);
 
     //setc(g, .2f);
     //fillx(g, 0, height-1, width-1, 1);

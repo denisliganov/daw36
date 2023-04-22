@@ -55,7 +55,7 @@ public:
             void                handleMouseDown(InputEvent& ev);
             void                handleMouseUp(InputEvent& ev);
             void                handleObjDrag(bool reset, Gobj * obj, int mx, int my);
-            bool                handleObjDrop(Gobj * obj, int mx, int my, unsigned flags);
+            void                handleObjDrop(Gobj * obj, int mx, int my, unsigned flags);
             void                handleParamUpdate(Parameter * param);
             void                init(Instr* i);
             bool                isProcessed()           { return processed; }

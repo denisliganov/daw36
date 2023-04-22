@@ -313,7 +313,7 @@ void Gobj::updCoords()
     
         if(relativeToParent && parent != NULL)
         {
-            // Override bounds with those of parent's, if they overlap
+            // Override bounds with parent's bounds, if they overlap
     
             if (parent->bx1 && parent->bx1 > cx1)
             {
@@ -515,32 +515,31 @@ void Gobj::setTouchable(bool t)
 
 // Recusively look for the top object touched by mouse
 //
-Gobj* Gobj::getLastTouchedObject(int mx, int my)
+Gobj* Gobj::getLastTouchedObject(InputEvent& ev)
 {
     for(Gobj* obj : objs)
     {
-        if(obj->checkMouseTouching(mx, my))
+        if(obj->checkMouseTouching(ev))
         {
-            return obj->getLastTouchedObject(mx, my);
+            return obj->getLastTouchedObject(ev);
         }
     }
 
     return this;
 }
 
-bool Gobj::checkMouseTouching(int mx, int my)
+bool Gobj::checkMouseTouching(InputEvent& ev)
 {
     if (touchable)
     {
-        if (isShown() && mx >= dx1 && mx <= dx2 && my >= dy1 && my <= dy2)
+        if (isShown() && 
+                    ev.mouseX >= dx1 && 
+                    ev.mouseX <= dx2 && 
+                    ev.mouseY >= dy1 && 
+                    ev.mouseY <= dy2)
         {
             if(!undermouse)
             {
-                InputEvent ev = {};
-
-                ev.mouseX = mx;
-                ev.mouseY = my;
-
                 handleMouseEnter(ev);
             }
 
@@ -550,11 +549,6 @@ bool Gobj::checkMouseTouching(int mx, int my)
         {
             if(undermouse)
             {
-                InputEvent ev = {};
-
-                ev.mouseX = mx;
-                ev.mouseY = my;
-
                 handleMouseLeave(ev);
             }
 
@@ -577,15 +571,11 @@ void Gobj::handleObjDrag(bool reset, Gobj* obj, int mx, int my)
     }
 }
 
-bool Gobj::handleObjDrop(Gobj* obj, int mx, int my, unsigned flags)
+void Gobj::handleObjDrop(Gobj* obj, int mx, int my, unsigned flags)
 {
     if(parent != NULL) 
     {
-        return parent->handleObjDrop(obj, mx, my, flags);
-    }
-    else
-    {
-        return false;
+        parent->handleObjDrop(obj, mx, my, flags);
     }
 }
 

@@ -532,7 +532,7 @@ void InstrPanel::handleObjDrag(bool reset, Gobj * obj,int mx,int my)
     }
 }
 
-bool InstrPanel::handleObjDrop(Gobj * obj, int mx, int my, unsigned int flags)
+void InstrPanel::handleObjDrop(Gobj * obj, int mx, int my, unsigned int flags)
 {
     dropHighlight->setVis(false);
 
@@ -573,11 +573,7 @@ bool InstrPanel::handleObjDrop(Gobj * obj, int mx, int my, unsigned int flags)
         }
 
         dropObj = NULL;
-
-        return true;
     }
-
-    return false;
 }
 
 void InstrPanel::handleChildEvent(Gobj* obj, InputEvent& ev)

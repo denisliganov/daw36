@@ -624,7 +624,7 @@ void Envelope::check(int mouse_x, int mouse_y)
 
     envAction = ENVUSUAL;
 
-    if(checkMouseTouching(mouse_x, mouse_y))
+    //if(checkMouseTouching(mouse_x, mouse_y))
     {
         envAction = ENVUSUAL;
 

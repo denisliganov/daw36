@@ -63,6 +63,7 @@ typedef enum GridAction
 
 class Selection;
 class PlaceHighlight;
+class NoteHighlight;
 
 class Grid : public Scrolled
 {
@@ -144,6 +145,7 @@ protected:
             Image*              mainimg;
             GridActionMode      mode;
             InputEvent          newEvent;
+            NoteHighlight*      noteHihglight;
             Pattern*            patt;
             int                 prevX;
             int                 prevY;
@@ -173,7 +175,6 @@ protected:
             void                clickScroll(InputEvent& ev);
             ContextMenu*        createContextMenu();
             void                drawIntermittentHighlight(Graphics& g, int xh, int yh, int wh, int hh, int numBars);
-            bool                drawDraggedObject(Graphics& g, Gobj* obj);
             void                drawSelf(Graphics & g);
             void                drawElements(Graphics& g);
             float               getSnap(float val);
@@ -187,7 +188,7 @@ protected:
             void                handleMouseLeave(InputEvent & ev);
             void                handleChildEvent(Gobj * obj, InputEvent& ev);
             void                handleObjDrag(bool reset, Gobj * obj,int mx,int my);
-            bool                handleObjDrop(Gobj * obj,int mx,int my, unsigned int flags);
+            void                handleObjDrop(Gobj * obj,int mx,int my, unsigned int flags);
             void                updatePosition(InputEvent & ev);
             void                updcursor(InputEvent & ev);
             void                updFillerImage();

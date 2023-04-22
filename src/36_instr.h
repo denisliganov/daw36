@@ -31,7 +31,7 @@ public:
             void                addMixChannel();
             void                activateMenuItem(std::string item);
             ContextMenu*        createContextMenu();
-virtual Instr*             clone();
+    virtual Instr*              clone();
             void                drawSelf(Graphics& g);
             void                drawOverChildren(Graphics & g);
             std::string         getAlias()      {return instrAlias;};

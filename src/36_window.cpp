@@ -1354,7 +1354,7 @@ void WinObject::updActiveObject(InputEvent& ev)
 {
     Gobj* lastActiveObj = activeObj;
 
-    activeObj = getLastTouchedObject(ev.mouseX, ev.mouseY);
+    activeObj = getLastTouchedObject(ev);
 
     if (activeObj != lastActiveObj)
     {
@@ -1364,8 +1364,6 @@ void WinObject::updActiveObject(InputEvent& ev)
 
             lastActiveObj->handleMouseLeave(ev);
         }
-
-        //lastActiveObj = activeObj;
     }
 
     if (activeObj == this)
@@ -1463,7 +1461,7 @@ void WinObject::handleMouseDrag(InputEvent& ev)
 {
     if (MDragDrop && MDragDrop->isActive())
     {
-        Gobj* dropObj = getLastTouchedObject(ev.mouseX, ev.mouseY);
+        Gobj* dropObj = getLastTouchedObject(ev);
 
         //int x, y;
         //Desktop::getMousePosition(x, y);
