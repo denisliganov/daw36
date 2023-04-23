@@ -398,7 +398,7 @@ void MixChannel::remap()
         int yeff = 0;
         int totalHeight = 0;
         int visibleHeight = height - FxPanelBottomHeight - 2;
-        int gap = 5;
+        int gap = 3;
 
         confine(xeff, 1, width - 80, visibleHeight);
 

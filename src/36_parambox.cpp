@@ -200,14 +200,15 @@ ToggleBox::ToggleBox(Parameter* param_tg)
 
 void ToggleBox::drawSelf(Graphics& g)
 {
-    //fill(g, 0.3f);
+    int d = height/4;
+    
     setc(g, 0.18f);
-    fillx(g, 0, 0, height, height);
+    fillx(g, d, d, height-d*2, height-d*2);
 
     if (param->getBoolValue())
     {
         setc(g, 0.6f);
-        fillx(g, 1, 1, height-2, height-2);
+        fillx(g, d+1, d+1, height-d*2 - 2, height-d*2 - 2);
     }
 
 //    setc(g, 0.4f);
@@ -229,74 +230,73 @@ void ToggleBox::handleMouseUp(InputEvent & ev)
 }
 
 
-RadioBox::RadioBox(Parameter* param_radio)
+
+
+RadioBox::RadioBox(Parameter* param_radio, int initHeight)
 {
     param = param_radio;
 
     setFontId(FontSmall);
 
-    height = (textHeight + 4)*param->getNumOptions(); // + headerHeight
+    hLine = initHeight/param->getNumOptions() - 1;
+
+    if (hLine < 1)
+    {
+        hLine = 1;
+    }
+
+    height = (hLine + 1)*param->getNumOptions();
 }
 
 void RadioBox::drawSelf(Graphics& g)
 {
-    //fill(g, 0.3f);
-
-    //setc(g, .1f);
-    //fillx(g, 0, headerHeight, width, height - headerHeight);
-
-    //setc(g, 0.35f);
-    //fillx(g, 0, 0, width, headerHeight - 1);
-
-    //setc(g, 0.8f);
-    //txtfit(g, FontBold, param->getName(), 3, headerHeight - 4, width - 3);
-
-    int y = 0; // headerHeight;
+    int y = 0;
     int opt = 0;
 
     for (std::string str : param->getAllOptions())
     {
-        setc(g, 0.2f);
-        fillx(g, 1, y + 1, textHeight + 3, textHeight + 3);
-
         if (param->getCurrentOption() == opt)
         {
             setc(g, 0.6f);
-            fillx(g, 2, y + 2, textHeight + 1, textHeight + 1);
+        }
+        else
+        {
+            setc(g, 0.2f);
         }
 
-        setc(g, .74f);
-        txtfit(g, fontId, str, (textHeight + 4) + 6, y + textHeight - 1, width - (textHeight + 4));
+        fillx(g, 0, y, width, hLine);
 
-        y += textHeight + 4;
+        y += hLine + 1;
+
         opt++;
     }
 }
 
 void RadioBox::handleMouseDown(InputEvent & ev)
 {
-    //if ((ev.mouseY - y1) > headerHeight)
-    {
-        param->setCurrentOption((ev.mouseY - y1 /* - headerHeight*/) / (textHeight + 4));
-    }
+    param->setCurrentOption((ev.mouseY - y1) / (hLine + 1));
 
     redraw();
 }
 
-SelectorBox::SelectorBox(Parameter* param_sel)
+SelectorBox::SelectorBox(Parameter* param_sel, int initHeight)
 {
     param = param_sel;
 
     setFontId(FontSmall);
 
-    height = (textHeight + 4)*param->getNumOptions();
+    hLine = initHeight/param->getNumOptions() - 1;
+
+    if (hLine < 1)
+    {
+        hLine = 1;
+    }
+
+    height = (hLine + 1)*param->getNumOptions();
 }
 
 void SelectorBox::drawSelf(Graphics& g)
 {
-    fill(g, 0.3f);
-
-    int h1 = (textHeight + 4);
     int y = 0;
     int opt = 0;
 
@@ -304,26 +304,24 @@ void SelectorBox::drawSelf(Graphics& g)
     {
         if (param->getOptionVal(opt))
         {
-            setc(g, 0.8f);
-            fillx(g, 2, y + 2, textHeight, textHeight);
+            setc(g, 0.6f);
         }
         else
         {
-            setc(g, 0.4f);
-            fillx(g, 2, y + 2, textHeight, textHeight);
+            setc(g, 0.2f);
         }
 
-        setc(g, .74f);
-        txtfit(g, fontId, str, (textHeight + 4) + 6, y + textHeight - 1, width - h1);
+        fillx(g, 0, y, width, hLine);
 
-        y += textHeight + 4;
+        y += hLine + 1;
+
         opt++;
     }
 }
 
 void SelectorBox::handleMouseDown(InputEvent & ev)
 {
-    param->toggleOption((ev.mouseY - y1) / (textHeight + 4));
+    param->toggleOption((ev.mouseY - y1) / (hLine + 1));
 
     redraw();
 }

@@ -55,24 +55,28 @@ private:
 class RadioBox : public Control
 {
 public:
-            RadioBox(Parameter* param_radio);
+            RadioBox(Parameter* param_radio, int initHeight=0);
 
 protected:
 
             void                drawSelf(Graphics& g);
             void                handleMouseDown(InputEvent & ev);
+
+            int                 hLine;
 };
 
 
 class SelectorBox : public Control
 {
 public:
-            SelectorBox(Parameter* param_sel);
+            SelectorBox(Parameter* param_sel, int initHeight=0);
 
 protected:
 
             void                drawSelf(Graphics& g);
             void                handleMouseDown(InputEvent & ev);
+
+            int                 hLine;
 };
 
 

@@ -131,11 +131,11 @@ Eff::Eff(Device36* dev)
 
     addObject(device);
 
-    int devWidth = FxPanelMaxWidth - 80 - FxPanelScrollerWidth - 1;
+    int maxDevWidth = FxPanelMaxWidth - FxPanelScrollerWidth - 100;
 
-    device->placeControls1(devWidth);
+    device->placeControls1(maxDevWidth);
 
-    device->setWH(devWidth, device->getH());
+    device->setWH(maxDevWidth, device->getH());
     device->setContainer(this);
 
     setObjName(dev->getObjName());
@@ -188,12 +188,9 @@ void Eff::remap()
 
 void Eff::drawSelf(Graphics& g)
 {
-    if (MixViewSingle)
-        fill(g, .3f);
-    else
-        fill(g, .3f);
+    fill(g, .3f);
 
-    rect(g, .38f);
+    //rect(g, .38f);
 
     //setc(g, .2f);
     //fillx(g, 0, height-1, width-1, 1);
@@ -217,7 +214,8 @@ void Eff::drawSelf(Graphics& g)
     setc(g, .6f);
 
     if (MixViewSingle)
-        txt(g, FontBold, device->getObjName(), width - gGetTextWidth(FontBold, device->getObjName()) - 17, 8);
+        txt(g, FontBold, device->getObjName(), width - gGetTextWidth(FontBold, device->getObjName()) - 4, height/2 );
+        //txt(g, FontInst, device->getObjName(), 0, 8);
     else
         txtfit(g, FontBold, device->getObjName().substr(0, 4) + ".", 0, gGetTextHeight(FontBold) + 1, width);
 }
@@ -352,6 +350,11 @@ Filter1::Filter1()
     filterType->addOption("LowPass");
     filterType->addOption("HighPass");
     filterType->addOption("BandPass");
+    filterType->addOption("1");
+    filterType->addOption("2");
+    filterType->addOption("3");
+    filterType->addOption("4");
+    filterType->addOption("5");
     filterType->setCurrentOption(0);
 
     addParam(x2toggle = new Parameter("X2", false));
@@ -930,7 +933,7 @@ void Compressor::processDSP(float* in_buff, float* out_buff, int num_frames)
 CWahWah::CWahWah()
 {
     objId = "eff.wah";
-    objName = "WahWahWah";
+    objName = "WahWah";
     //uniqueId = MAKE_FOURCC('W','A','H','W');
 
     addParam(modfreq = new Parameter("MODFREQ", 0.1f, 5.f, 1.25f, Units_Hz1));

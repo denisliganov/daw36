@@ -131,10 +131,6 @@ Instr::Instr(Device36* dev)
 
     mixChannel = MMixer->getMasterChannel();       // Default to master channel
 
-    //addObject(volBox = new ParamBox(device->vol));
-    //volBox->setSliderOnly(true);
-    //addObject(panBox = new ParamBox(device->pan));
-    //panBox->setSliderOnly(true);
     panBox = volBox = NULL;
 
     addObject(volKnob = new Knob(device->vol, false));

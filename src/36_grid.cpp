@@ -5,7 +5,6 @@
 #include "36_pattern.h"
 #include "36_utils.h"
 #include "36_keyboard.h"
-#include "36_scroller.h"
 #include "36_edit.h"
 #include "36_ctrlpanel.h"
 #include "36_instrpanel.h"
@@ -21,10 +20,16 @@
 #include "36_transport.h"
 #include "36_timeline.h"
 #include "36_snapmenu.h"
+#include "36_scroller.h"
+#include "36_sampleinstr.h"
 #include "36_dragndrop.h"
 #include "36_macros.h"
 #include "36_events_triggers.h"
 #include "36_params.h"
+#include "36_browserlist.h"
+
+
+
 
 
 class Selection : public Gobj
@@ -60,12 +65,16 @@ protected:
 
 class NoteHighlight : public Gobj
 {
+friend  Grid;
+
 public:
 
     NoteHighlight(Grid* gr) 
     {
         setTouchable(false);
         grid = gr;
+        note = NULL;
+        device = NULL;
     }
 
     void  drawSelf(Graphics& g)
@@ -76,36 +85,51 @@ public:
         }
     }
 
-    void update(float newTick, int newLine, Instr* i)
+    Device36* getDev()
+    {
+        return device;
+    }
+
+    void setDev(Device36* dev, bool temp)
+    {
+        device = dev;
+        note = device->getSelfNote();
+        deleteOnReset = temp;
+    }
+
+    void setPos(float newTick, int newLine)
     {
         tick = newTick;
         line = newLine;
-        instr = i;
-        note = i->getDevice()->getSelfNote();
-
-        note->setPos(tick, line);
         note->setPos(tick, line);
         note->calcForGrid(grid);
 
-        int x = note->getX1() - grid->getX1();
-        int y = note->getY1() - grid->getY1();
-        
-        setCoords1(x, y, note->getW(), note->getH());
-        
+        setCoords1(note->getX1() - grid->getX1(), note->getY1() - grid->getY1(), note->getW(), note->getH());
+
         setVis(true);
     }
 
     void disable()
     {
         setVis(false);
+        note = NULL;
+
+        if (deleteOnReset)
+        {
+            deleteOnReset = false;
+
+            delete device;
+        }
+
+        device = NULL;
     }
 
-protected:
+private:
 
-    Instr*      instr;
+    Device36*   device;
+    bool        deleteOnReset;
     Note*       note;
     Grid*       grid;
-
     float       tick;
     int         line;
 };
@@ -1738,44 +1762,67 @@ void Grid::handleObjDrag(bool reset, Gobj * obj,int mx,int my)
         return;
     }
 
+    float tick;
+    int line;
+
+    getPosFromCoords(mx, my, &tick, &line);
+
     Instr* i = dynamic_cast<Instr*>(obj);
+    BrwListEntry* ble = dynamic_cast<BrwListEntry*>(obj);
 
     if(i != NULL && i->getDevice() != NULL)
     {
-        float tick;
-        int line;
+        noteHihglight->setDev(i->getDevice(), false);
 
-        getPosFromCoords(mx, my, &tick, &line);
-
-        noteHihglight->update(tick, line, i);
-/*
-        if((tick - tickOffset)/visibleTickSpan > 0.9f)
-        {
-            float offs = (tick - tickOffset) - visibleTickSpan*0.9f;
-
-            setTickOffset(tickOffset + offs, false);
-        }*/
-
-        //drag.setCoords1(n->x1, n->y1, n->width, n->height);
+        noteHihglight->setPos(tick, line);
     }
+    else if (ble != NULL)
+    {
+        if (ble->getType() == Entry_Wave)
+        {
+            if (noteHihglight->getDev() == NULL)
+            {
+                Sample* smp = MInstrPanel->loadSample(ble->getPath().data());
+
+                smp->createSelfPattern();
+
+                noteHihglight->setDev(smp, true);
+            }
+            else
+            {
+                noteHihglight->setPos(tick, line);
+            }
+        }
+    }
+
+    /*
+    if((tick - tickOffset)/visibleTickSpan > 0.9f)
+    {
+        float offs = (tick - tickOffset) - visibleTickSpan*0.9f;
+
+        setTickOffset(tickOffset + offs, false);
+    }*/
 }
 
 void Grid::handleObjDrop(Gobj * obj,int mx,int my, unsigned flags)
 {
     Instr* i = dynamic_cast<Instr*> (obj);
+    BrwListEntry* ble = dynamic_cast<BrwListEntry*>(obj);
 
-    if(i != NULL)
+    if (i != NULL)
     {
-        float tick;
-        int line;
-
-        getPosFromCoords(mx, my, &tick, &line);
-
-        action(GridAction_PutNote, tick, line);
+        action(GridAction_PutNote, noteHihglight->tick, noteHihglight->line);
         action(GridAction_Release);
-
-        MAudio->releaseAllPreviews();
     }
+    else if (ble != NULL)
+    {
+        MInstrPanel->addSample(ble->getPath().data());
+
+        action(GridAction_PutNote, noteHihglight->tick, noteHihglight->line);
+        action(GridAction_Release);
+    }
+
+    MAudio->releaseAllPreviews();
 
     noteHihglight->disable();
 }

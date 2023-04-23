@@ -378,7 +378,7 @@ void Knob::drawKnob(Graphics& g)
     }
     else if (objId == "fx")
     {
-        setc(g, .8f, 1.f);
+        setc(g, .1f, 1.f);
     }
     else if (instr)
     {

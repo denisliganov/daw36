@@ -292,7 +292,7 @@ Instr* InstrPanel::addInstrument(Device36 * dev, bool master)
 
     MEdit->remapAndRedraw();
 
-    if (curr == NULL)
+    //if (curr == NULL)
     {
         setCurrInstr(i);
     }

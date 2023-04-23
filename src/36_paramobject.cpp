@@ -115,17 +115,16 @@ void ParamObject::handleClose()
     }
 }
 
-void ParamObject::placeControls1(int maxW, int maxH)
+void ParamObject::placeControls1(int maxWidth, int maxH)
 {
     int boxWidth = 130;
     int boxHeight = 22;
     int rowNum = 0;
-    int maxWidth = maxW;
     int numPut = 0;
     int defaultWidth = 24;
 
     setObjSpacing(4);
-    setBorder(12);
+    setBorder(8);
 
     putStart(border, border);
 
@@ -137,12 +136,12 @@ void ParamObject::placeControls1(int maxW, int maxH)
         {
             if (prm->getType() == Param_Radio)
             {
-                obj = new RadioBox(prm);
+                obj = new RadioBox(prm, defaultWidth);
                 obj->setWH(defaultWidth, obj->getH());
             }
             else if (prm->getType() == Param_Selector)
             {
-                obj = new SelectorBox(prm);
+                obj = new SelectorBox(prm, defaultWidth);
                 obj->setWH(defaultWidth, obj->getH());
             }
             else if (prm->getType() == Param_Toggle)
