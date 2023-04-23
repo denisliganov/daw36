@@ -15,13 +15,13 @@ public:
 
 protected:
 
-        Parameter*         format;
-        Parameter*         quality;
-        Parameter*         interpolation;
+        Parameter*          format;
+        Parameter*          quality;
+        Parameter*          interpolation;
 
-        RadioBox*           formatBox;
-        RadioBox*           qualityBox;
-        RadioBox*           interpolationBox;
+        SelectorBox*        formatBox;
+        SelectorBox*        qualityBox;
+        SelectorBox*        interpolationBox;
 
         Button36*           startRender;
         Button36*           openFolder;

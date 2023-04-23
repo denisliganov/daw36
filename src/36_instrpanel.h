@@ -26,20 +26,20 @@ public:
             ~InstrPanel();
 
             void                addInstrFromNewBrowser(BrwListEntry* ble);
-            Instr*         addInstrument(Device36* dev, bool master = false);
+            Instr*              addInstrument(Device36* dev, bool master = false);
             Vst2Plugin*         addVst(const char* path, Vst2Plugin* vst);
             Sample*             addSample(const char* path);
             void                cloneInstrument(Instr* i);
             void                colorizeInstruments();
             void                deleteInstrument(Instr* i);
             void                drawSelf(Graphics& g);
-            Instr*         getInstrByIndex(int index);
+            Instr*              getInstrByIndex(int index);
             int                 getNumInstrs();
-            Instr*         getInstrByAlias(std::string alstr);
+            Instr*              getInstrByAlias(std::string alstr);
             void                generateAll(long num_frames, long mixbuffframe);
-            Instr*         getInstrFromLine(int trkLine);
-            Instr*         getCurrInstr();
-        std::vector<Instr*>& getInstrs() { return instrs; }
+            Instr*              getInstrFromLine(int trkLine);
+            Instr*              getCurrInstr();
+        std::vector<Instr*>&    getInstrs() { return instrs; }
             void                handleObjDrag(bool reset, Gobj * obj,int mx,int my);
             void                handleObjDrop(Gobj * obj,int mx,int my, unsigned int flags);
             void                handleChildEvent(Gobj* obj, InputEvent& ev);
@@ -75,8 +75,8 @@ private:
             Knob*               masterVolKnob;
             Parameter*          masterVolume;
 
-    std::vector<Instr*>    instrs;
-            Instr*         curr;
+    std::vector<Instr*>         instrs;
+            Instr*              curr;
 };
 
 

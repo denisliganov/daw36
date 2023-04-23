@@ -17,7 +17,6 @@ public:
             void                handleMouseUp(InputEvent & ev);
             void                handleSliding(InputEvent& ev);
             void                remap();
-            void                setVis(bool vis);
             void                setDimOnZero(bool dim) { dimOnZero = dim; }
             void                setText(bool txt)       { hasText = txt; }
             void                updValue();

@@ -71,17 +71,16 @@ public:
             void                addControl(Control* ct);
             void                adjustFromControl(Control* ctrl, int step, float nval = -1, float min_step = 0.1f);
     virtual float               adjustForEditor(float val);
-            std::string         getName()           { return prmName; };
-            int                 getIndex()          { return index; }
-            bool                getEnvDirect();
-            ParamType           getType()       { return type; }
-            Control*            getControl();
-
             void                blockEnvAffect() { envaffect = false; }
     virtual std::string         calcValStr(float uv);
             void                dequeueEnvelopeTrigger(Trigger* tg);
             void                enqueueEnvelopeTrigger(Trigger* tg);
             void                finishRecording();
+            std::string         getName()           { return prmName; };
+            int                 getIndex()          { return index; }
+            bool                getEnvDirect();
+            ParamType           getType()       { return type; }
+            Control*            getControl();
             std::string         getValString();
             std::string         getMaxValString();
             std::string         getUnitString();

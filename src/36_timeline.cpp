@@ -42,7 +42,7 @@ void Timeline::set(int mouse_x)
 
     LIMIT(newX, 0, getW());
 
-    float currPosPix = (float(newX) + (float)(grid->getHoffs()*grid->getPixelsPerTick()));
+    float currPosPix = (float(newX) + (float)(grid->hscr->getOffset()*grid->getPixelsPerTick()));
 
     grid->getPattern()->setFrame((long)(currPosPix*grid->getFramesPerPixel()));
 
@@ -62,7 +62,7 @@ void Timeline::handleMouseWheel(InputEvent & ev)
 {
     float ofsDelta = ev.wheelDelta*((float)grid->getW()/grid->getPixelsPerTick()*0.03f);
 
-    MGrid->setHoffs(MGrid->getHoffs() - ofsDelta);
+    MGrid->hscr->setOffset(MGrid->hscr->getOffset() - ofsDelta);
 }
 
 
@@ -71,9 +71,9 @@ void Timeline::drawIntermittentHighlight(Graphics& g, int x, int y, int w, int h
     int tickLen = numBars*MTransp->getTicksPerBar();
     int pixLen = int(grid->getPixelsPerTick() * tickLen);
 
-    int xoffs = RoundFloat((grid->getHoffs() / tickLen - (int)grid->getHoffs() / tickLen) * grid->getPixelsPerTick() * tickLen);
+    int xoffs = RoundFloat((grid->hscr->getOffset() / tickLen - (int)grid->hscr->getOffset() / tickLen) * grid->getPixelsPerTick() * tickLen);
 
-    int num = int(grid->getHoffs() / tickLen);
+    int num = int(grid->hscr->getOffset() / tickLen);
     int flag = num % 2;
     int xCoordinate = -xoffs + pixLen * flag + x;
 
@@ -114,7 +114,7 @@ void Timeline::drawSelf(Graphics & g)
         step++;   // 40 pixels min. spacing
     }
 
-    int currentBar = int(grid->getHoffs()/barLenTicks);
+    int currentBar = int(grid->hscr->getOffset()/barLenTicks);
 
     int stepcnt = (step - currentBar%step)%step;
 
@@ -125,7 +125,7 @@ void Timeline::drawSelf(Graphics & g)
 
     gSetMonoColor(g, .8f);
 
-    float xCoord = x1 - ((grid->getHoffs() / barLenTicks - int(grid->getHoffs()) / barLenTicks) * barLenPixels);
+    float xCoord = x1 - ((grid->hscr->getOffset() / barLenTicks - int(grid->hscr->getOffset()) / barLenTicks) * barLenPixels);
 
     while(xCoord <= x2)
     {

@@ -61,9 +61,10 @@ void DevParamObject::placeControls()
                 obj = new Knob(prm);
                 obj->setWH(15, 15);
             }*/
+
             if (prm->getType() == Param_Radio)
             {
-                obj = new RadioBox(prm);
+                obj = new SelectorBox(prm);
 
                 obj->setWH(100, obj->getH());
             }

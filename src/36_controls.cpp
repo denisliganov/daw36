@@ -51,3 +51,14 @@ void Control::setFontId(FontId fId)
     headerHeight = textHeight + 3;
 }
 
+void Control::handleMouseEnter(InputEvent& ev)
+{
+    //param->getModule();
+}
+
+void Control::handleMouseLeave(InputEvent& ev)
+{
+    //param->getModule();
+}
+
+

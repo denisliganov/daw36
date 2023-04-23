@@ -264,6 +264,8 @@ Grid::Grid(float step_width, int line_height, Pattern* pt, Timeline* tl)
 
     dispmode = GridDisplayMode_Bars;
 
+    addObject(vscr = new Scroller(true));
+    addObject(hscr = new Scroller(false));
     addHighlight(sel = new Selection(this));
     addHighlight(place = new PlaceHighlight(this));
     addHighlight(noteHihglight = new NoteHighlight(this));
@@ -1221,8 +1223,8 @@ void Grid::drawIntermittentHighlight(Graphics& g, int x, int y, int w, int h, in
 {
     int tickLen = numBars*MTransp->getTicksPerBar();
     int pixLen = int(getPixelsPerTick() * tickLen);
-    int xoffs = RoundFloat((getHoffs() / tickLen - (int)getHoffs() / tickLen) * getPixelsPerTick() * tickLen);
-    int num = int(getHoffs() / tickLen);
+    int xoffs = RoundFloat((hscr->getOffset() / tickLen - (int)hscr->getOffset() / tickLen) * getPixelsPerTick() * tickLen);
+    int num = int(hscr->getOffset() / tickLen);
     int flag = num % 2;
     int xCoordinate = -xoffs + pixLen * flag + x;
 
@@ -2094,12 +2096,12 @@ void Grid::setPixelsPerTick(float ppt, int mouseRefX)
 
     if(mouseRefX >= 0)
     {
-        setHoffs(currTick - float(mouseRefX - getX1())/(float)pixpertick);
+        hscr->setOffset(currTick - float(mouseRefX - getX1())/(float)pixpertick);
     }
     else
     {
         //setHoffs(patt->getPlayTick() - visibleTickSpan/2);
-        setHoffs(getHoffs());
+        hscr->setOffset(hscr->getOffset());
     }
 }
 
@@ -2187,7 +2189,7 @@ void Grid::updBounds()
             full = (1.1f*width)/getPixelsPerTick();
         }
 
-        hscr->updBounds(full, visiblepart, getHoffs());
+        hscr->updBounds(full, visiblepart, hscr->getOffset());
     }
 
     if(vscr)
@@ -2199,7 +2201,7 @@ void Grid::updBounds()
             full = 1.1f*height;
         }
 
-        vscr->updBounds(full, height, getVoffs());
+        vscr->updBounds(full, height, vscr->getOffset());
     }
 }
 
@@ -2390,7 +2392,7 @@ void Grid::updBufferImage()
 
         int tickPerBar = MTransp->getTicksPerBar();
 
-        int xoffs = RoundFloat((getHoffs() / tickPerBar - (int)getHoffs() / tickPerBar) * getPixelsPerTick() * tickPerBar);
+        int xoffs = RoundFloat((hscr->getOffset() / tickPerBar - (int)hscr->getOffset() / tickPerBar) * getPixelsPerTick() * tickPerBar);
 
         int yoffs = int(vscr->getOffset()) % lheight;
 

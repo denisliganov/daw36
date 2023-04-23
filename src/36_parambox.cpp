@@ -232,67 +232,26 @@ void ToggleBox::handleMouseUp(InputEvent & ev)
 
 
 
-RadioBox::RadioBox(Parameter* param_radio, int initHeight)
-{
-    param = param_radio;
 
-    setFontId(FontSmall);
-
-    hLine = initHeight/param->getNumOptions() - 1;
-
-    if (hLine < 1)
-    {
-        hLine = 1;
-    }
-
-    height = (hLine + 1)*param->getNumOptions();
-}
-
-void RadioBox::drawSelf(Graphics& g)
-{
-    int y = 0;
-    int opt = 0;
-
-    for (std::string str : param->getAllOptions())
-    {
-        if (param->getCurrentOption() == opt)
-        {
-            setc(g, 0.6f);
-        }
-        else
-        {
-            setc(g, 0.2f);
-        }
-
-        fillx(g, 0, y, width, hLine);
-
-        y += hLine + 1;
-
-        opt++;
-    }
-}
-
-void RadioBox::handleMouseDown(InputEvent & ev)
-{
-    param->setCurrentOption((ev.mouseY - y1) / (hLine + 1));
-
-    redraw();
-}
-
-SelectorBox::SelectorBox(Parameter* param_sel, int initHeight)
+SelectorBox::SelectorBox(Parameter* param_sel, int initHeight, bool radio)
 {
     param = param_sel;
 
+    radioMode = radio;
+
     setFontId(FontSmall);
 
-    hLine = initHeight/param->getNumOptions() - 1;
-
-    if (hLine < 1)
+    if (initHeight > 0)
     {
-        hLine = 1;
-    }
+        hLine = initHeight/param->getNumOptions() - 1;
 
-    height = (hLine + 1)*param->getNumOptions();
+        if (hLine < 1)
+        {
+            hLine = 1;
+        }
+
+        height = (hLine + 1)*param->getNumOptions();
+    }
 }
 
 void SelectorBox::drawSelf(Graphics& g)
@@ -302,7 +261,8 @@ void SelectorBox::drawSelf(Graphics& g)
 
     for (std::string str : param->getAllOptions())
     {
-        if (param->getOptionVal(opt))
+        if (radioMode && param->getCurrentOption() == opt ||
+            !radioMode && param->getOptionVal(opt))
         {
             setc(g, 0.6f);
         }
@@ -321,7 +281,14 @@ void SelectorBox::drawSelf(Graphics& g)
 
 void SelectorBox::handleMouseDown(InputEvent & ev)
 {
-    param->toggleOption((ev.mouseY - y1) / (hLine + 1));
+    if (radioMode)
+    {
+        param->setCurrentOption((ev.mouseY - y1) / (hLine + 1));
+    }
+    else
+    {
+        param->toggleOption((ev.mouseY - y1) / (hLine + 1));
+    }
 
     redraw();
 }

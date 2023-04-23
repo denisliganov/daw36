@@ -90,7 +90,7 @@ void Transport::goToHome()
 {
     MPattern->setFrame(0);
 
-    MGrid->setHoffs(0);
+    MGrid->hscr->setOffset(0);
 
     MEdit->playHead->updatePosFromFrame();
 
@@ -254,7 +254,7 @@ void Transport::stopPlayback(bool force_mixreset)
 
     MPattern->setFrame(0);
 
-    MGrid->setHoffs(0);
+    MGrid->hscr->setOffset(0);
 
     updTimeFromFrame();
 

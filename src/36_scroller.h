@@ -27,7 +27,6 @@ protected:
             void                drawSelf(Graphics & g);
             int                 getPos(InputEvent& ev, int& offset_on_bar);
             void                handleMouseDown(InputEvent& ev);
-
             void                handleMouseDrag(InputEvent& ev);
             void                handleMouseUp(InputEvent & ev);
 
@@ -46,19 +45,5 @@ protected:
             float               visiblepart;
 };
 
-
-class Scrolled : public Control
-{
-public:
-
-            Scroller*           vscr;
-            Scroller*           hscr;
-
-            Scrolled();
-            void                setHoffs(float offs);
-            float               getHoffs();
-            void                setVoffs(float offs);
-            float               getVoffs();
-};
 
 

@@ -17,8 +17,8 @@ RenderWinObject::RenderWinObject()
 
     quality = new Parameter("Quality", Param_Radio);
 
-    formatBox = new RadioBox(format);
-    qualityBox = new RadioBox(quality);
+    formatBox = new SelectorBox(format);
+    qualityBox = new SelectorBox(quality);
     startRender = new Button36(false, "Render");
 
     // Position all controls

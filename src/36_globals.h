@@ -64,7 +64,7 @@ class Pattern;
 class Parameter;
 class Renderer;
 class Renderer;
-class RadioBox;
+class SelectorBox;
 class Scroller;
 class Selection;
 class SnapMenu;

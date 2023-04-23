@@ -136,7 +136,7 @@ void ParamObject::placeControls1(int maxWidth, int maxH)
         {
             if (prm->getType() == Param_Radio)
             {
-                obj = new RadioBox(prm, defaultWidth);
+                obj = new SelectorBox(prm, defaultWidth, true);
                 obj->setWH(defaultWidth, obj->getH());
             }
             else if (prm->getType() == Param_Selector)
@@ -160,7 +160,7 @@ void ParamObject::placeControls1(int maxWidth, int maxH)
                                 obj = box;
                 */
                 obj = new Knob(prm, true);
-                obj->setWH(24, 24);
+                obj->setWH(defaultWidth, defaultWidth);
                 obj->setObjId("fx");
                 //obj->setWH(defaultWidth, 24);
             }
@@ -175,7 +175,7 @@ void ParamObject::placeControls1(int maxWidth, int maxH)
 
             rowNum++;
 
-            if (xstart1 + (defaultWidth + objSpacing) > maxWidth)
+            if (xstart1 + 4*(defaultWidth + objSpacing) > maxWidth)
             {
                 rowNum = 0;
 

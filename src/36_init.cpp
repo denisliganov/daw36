@@ -300,6 +300,8 @@ void LoadDefaultInstruments()
 
     MInstrPanel->addInstrument(NULL, true);
 
+    MInstrPanel->setCurrInstr(MInstrPanel->getInstrs()[0]);
+
     /*
     MInstrPanel->addInstrument(NULL, NULL);
     MInstrPanel->addInstrument(NULL, NULL);

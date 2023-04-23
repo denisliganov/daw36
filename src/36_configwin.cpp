@@ -48,7 +48,7 @@ ConfigWinObject::ConfigWinObject()
     interpolationSelect->addOption("Sinc depth 64");
     interpolationSelect->setCurrentOption(0);
 
-    WinObject::addObject(chooserBox = new RadioBox(interpolationSelect));
+    WinObject::addObject(chooserBox = new SelectorBox(interpolationSelect));
 
     WinObject::addObject(outputDevices = new ListBoxx("Output devices"));
 //                outputDevices->addEntry("Output Device 1");

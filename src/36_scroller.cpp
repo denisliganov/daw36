@@ -31,9 +31,6 @@ void Scroller::drawSelf(Graphics & g)
 {
     fill(g, .22f);
 
-    //setc(g, .12f);
-    //rectx(g, 0, 0, width, height);
-
     if(active)
     {
         setc(g, 0.45f);
@@ -202,30 +199,4 @@ void Scroller::updBounds(float full_span, float visible_span, float offs)
 }
 
 
-
-Scrolled::Scrolled()
-{
-    addObject(vscr = new Scroller(true));
-    addObject(hscr = new Scroller(false));
-}
-
-float Scrolled::getHoffs()
-{
-    return hscr->getOffset();
-}
-
-void Scrolled::setHoffs(float offs)
-{
-    hscr->setOffset(offs);
-}
-
-float Scrolled::getVoffs()
-{
-    return vscr->getOffset();
-}
-
-void Scrolled::setVoffs(float offs)
-{
-    vscr->setOffset(offs);
-}
 

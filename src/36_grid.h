@@ -65,7 +65,7 @@ class Selection;
 class PlaceHighlight;
 class NoteHighlight;
 
-class Grid : public Scrolled
+class Grid : public Gobj
 {
 friend  Selection;
 friend  Lane;
@@ -121,6 +121,8 @@ public:
             void                updBounds();
             void                updTransport();
 
+            Scroller*           hscr;
+            Scroller*           vscr;
 protected:
 
             Element*            activeElem;

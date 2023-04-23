@@ -44,8 +44,8 @@ private:
         Knob*               knob3;
         Knob*               knob4;
 
-        RadioBox*           chooserBox;
-        RadioBox*           rb2;
+        SelectorBox*           chooserBox;
+        SelectorBox*           rb2;
 
         Button36*           showASIOPanel;
 

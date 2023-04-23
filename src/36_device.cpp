@@ -30,7 +30,6 @@ Device36::Device36()
     rampCounterV = 0;
     cfsV = 0;
     rampCount = 512;
-
     vol = NULL;
     pan = NULL;
     enabled = NULL;
@@ -41,7 +40,6 @@ Device36::Device36()
     selfPattern = NULL;
     selfNote = NULL;
     vu = NULL;
-
     lastNoteLength = 4;
     lastNoteVol = 1;
     lastNotePan = 0;

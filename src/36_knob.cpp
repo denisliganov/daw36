@@ -17,20 +17,16 @@
 Knob::Knob(Parameter* par, bool knob)
 {
     setFontId(FontSmall);
-
     setParam(par);
 
+    knobMode = knob;
     angleRange = PI * 1.5f;
     angleOffset = float(2*PI - angleRange)*.5f;
-
-    knobMode = knob;
-
     defPos = 0;
     savedHeight = 0;
     dim = false;
     dimOnZero = false;
     hasText = true;
-
     instr = NULL;
 
     updPosition();
@@ -150,16 +146,6 @@ void Knob::handleMouseDown(InputEvent & ev)
 
 void Knob::handleMouseUp(InputEvent & ev)
 {
-}
-
-void Knob::setVis(bool vis)
-{
-    if (vis == false)
-    {
-        int a = 1;
-    }
-
-    Gobj::setVis(vis);
 }
 
 void Knob::remap()
@@ -317,14 +303,16 @@ void Knob::drawSlider(Graphics& g)
 
 void Knob::drawKnob(Graphics& g)
 {
-    int w = height - 4;// *0.8f;
-    int h = height - 4;// *0.8f;
-    int x = x1 + 2;
-    int y = y1 + 2;
+    int     brd = 1;
 
-    bool old = dim;
+    int     w = height - brd*2;// *0.8f;
+    int     h = height - brd*2;// *0.8f;
+    int     x = x1 + brd;
+    int     y = y1 + brd;
+    float   val = param->getNormalizedValue();
+    bool    old = dim;
 
-    dim = (dimOnZero && param->getNormalizedValue() == 0);
+    dim = (dimOnZero && val == 0);
 
     if (dim != old)
     {
@@ -348,7 +336,15 @@ void Knob::drawKnob(Graphics& g)
         }
         else if (objId == "fx")
         {
-            clr = Colour(1.f, 0.f, .4f, 1.f);
+            float br = .5f;
+
+            /*
+            if (val == 1.f)
+                br = .8f;
+            else if (val == 0.f)
+                br = .3f;*/
+
+            clr = Colour(1.f, 0.f, br, 1.f);
         }
         else if (instr)
         {
@@ -367,7 +363,6 @@ void Knob::drawKnob(Graphics& g)
         //gEllipseFill(g, x1, y1, width, height);
 
         createSnap();
-
         bgSaved = true;
         savedHeight = h;
     }

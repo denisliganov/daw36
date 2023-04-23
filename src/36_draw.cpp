@@ -726,7 +726,7 @@ void drawGlassRound (Graphics& g,
         */
 
         cg.addColour (0.7, Colours::transparentBlack);
-        cg.addColour (0.8, Colours::black.withAlpha (0.1f * outlineThickness));
+        cg.addColour (0.8, Colours::white.withAlpha (0.1f * outlineThickness));
 
         //cg.addColour (0.7, Colours::transparentBlack);
         //cg.addColour (0.8, Colours::black.withAlpha (0.1f * outlineThickness));

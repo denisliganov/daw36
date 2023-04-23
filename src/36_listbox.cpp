@@ -12,6 +12,9 @@ ListBoxx::ListBoxx(std::string name)
     scrWidth = 12;
 
     entryHeight = textHeight + 5;
+
+    addObject(vscr = new Scroller(true));
+    addObject(hscr = new Scroller(false));
 }
 
 void ListBoxx::drawSelf(Graphics& g)

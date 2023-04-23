@@ -8,7 +8,7 @@
 
 
 
-class ListBoxx : public Scrolled
+class ListBoxx : public Control
 {
 public:
             ListBoxx(std::string name);
@@ -30,7 +30,8 @@ protected:
     virtual void                handleMouseWheel(InputEvent& ev);
     virtual void                remap();
 
-//private:
+            Scroller*           vscr;
+            Scroller*           hscr;
 
             int                 currentEntry;
             int                 scrWidth;

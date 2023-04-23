@@ -139,8 +139,6 @@ Eff::Eff(Device36* dev)
     device->setContainer(this);
 
     setObjName(dev->getObjName());
-
-    //setWH(device->getW(), device->getH() + 22);
 }
 
 Eff::~Eff()
@@ -353,8 +351,6 @@ Filter1::Filter1()
     filterType->addOption("1");
     filterType->addOption("2");
     filterType->addOption("3");
-    filterType->addOption("4");
-    filterType->addOption("5");
     filterType->setCurrentOption(0);
 
     addParam(x2toggle = new Parameter("X2", false));
@@ -613,9 +609,6 @@ void GraphicEQ::processDSP(float* in_buff, float* out_buff, int num_frames)
     }
 }
 
-//
-// EQ3 Class Implementation
-//
 
 EQ3::EQ3()
 {
