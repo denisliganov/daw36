@@ -35,14 +35,4 @@ protected:
 
 };
 
-class InstrVU : public ChanVU
-{
-protected:
-
-            void                drawSelf(Graphics & g);
-            void                handleMouseDown(InputEvent& ev);
-public:
-
-        InstrVU();
-};
 

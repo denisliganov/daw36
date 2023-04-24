@@ -11,6 +11,7 @@ Control::Control()
     parentImage = NULL;
     headerOn = true;
     bgSaved = false;
+    active = true;
 
     setHint("");
 }

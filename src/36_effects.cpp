@@ -52,7 +52,7 @@ protected:
         {
             if (param->getBoolValue())
             {
-                setc(g, 1.f);
+                setc(g, .8f);
                 //setc(g, 0xffFFFF40);
                 //fillx(g, 1, 1, height-2, height-2);
             }
@@ -75,8 +75,15 @@ protected:
             //    drawGlassRound(g, x1+1, y1+1, width-2, Colour(55, 55, 55), 1);
         }
 
-        void handleMouseDrag(InputEvent & ev)   { parent->handleMouseDrag(ev); }
+        void handleMouseDrag(InputEvent & ev)   
+        { 
+            parent->handleMouseDrag(ev); 
+        }
         void handleMouseWheel(InputEvent & ev)   { parent->handleMouseWheel(ev); }
+
+        void handleMouseDown(InputEvent & ev)   { 
+                                                        ToggleBox::handleMouseDown(ev); 
+                                                   }
 };
 
 
@@ -135,10 +142,8 @@ Eff::Eff(Device36* dev)
     mixChannel = NULL;
 
     device = dev;
-
     addObject(guiButt = new EffGuiButton());
-    addObject(enableButt = new EffEnableButton(device->enabled));
-
+    //addObject(enableButt = new EffEnableButton(device->enabled));
     addObject(device);
 
     device->placeControls2(FxMaxEffWidth);
@@ -179,12 +184,12 @@ void Eff::remap()
 {
     if (MixViewSingle && device->isON())
     {
-        enableButt->setCoords1(width - 24, 0, 24, 12);
+        //enableButt->setCoords1(width - 24, 0, 24, 12);
         device->setCoords1(0, 0, device->getW(), device->getH());
     }
     else
     {
-        enableButt->setVis(false);
+        //enableButt->setVis(false);
     }
 
     //guiButt->setCoords1(width - 60, 0, 15, 15);
@@ -219,11 +224,12 @@ void Eff::drawSelf(Graphics& g)
 //    setc(g, .2f);
 //    fillx(g, 0, height - 10, width, 10);
 
-    setc(g, .7f);
+    setc(g, .8f);
 
     if (MixViewSingle)
-        txt(g, FontBold, device->getObjName(), width - gGetTextWidth(FontBold, device->getObjName()) - 4, height/2 + gGetTextHeight(FontBold)/2);
+        //txt(g, FontBold, device->getObjName(), width - gGetTextWidth(FontBold, device->getObjName()) - 4, height/2 + gGetTextHeight(FontBold)/2);
         //txt(g, FontInst, device->getObjName(), 0, 8);
+        txt(g, FontBold, device->getObjName(), width - gGetTextWidth(FontBold, device->getObjName()) - 4, 12);
     else
         txtfit(g, FontBold, device->getObjName().substr(0, 4) + ".", 0, gGetTextHeight(FontBold) + 1, width);
 }
@@ -1097,7 +1103,7 @@ void CBitCrusher::processDSP(float* in_buff, float* out_buff, int num_frames)
 CStereo::CStereo()
 {
     objId = "eff.stereo";
-    objName = "Stereo Expander";
+    objName = "Stereo X";
     //uniqueId = MAKE_FOURCC('S','T','E','R');
 
     addParam(offset = new Parameter("OFFSET", 1.0f, 100.f, 10.0f, Units_Integer));

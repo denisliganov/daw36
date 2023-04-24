@@ -125,7 +125,7 @@ void ParamObject::placeControls2(int maxWidth, int maxH)
     int defaultH = 12;
 
     setObjSpacing(1);
-    setBorder(4);
+    setBorder(6);
 
     putStart(0, border);
 

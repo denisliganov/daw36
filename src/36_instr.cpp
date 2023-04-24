@@ -29,6 +29,73 @@
 extern Device36* devDummy;
 
 
+
+
+
+class InstrVU : public ChanVU
+{
+public:
+
+    InstrVU::InstrVU() : ChanVU(true)
+    {
+        
+    }
+
+protected:
+
+    void    drawSelf(Graphics & g)
+    {
+        float val = (getL() + getR())/2.f;
+        val = pow(val, 0.3f);
+        val *= (1 - 0.45f);
+
+        Instr* i = dynamic_cast<Instr*>(parent);
+
+        int left = (int)(height*getL());
+        int right = (int)(height*getR());
+
+        fill(g, .2f);
+
+        //setc(g, 0xffFFB040);
+        setc(g, .4f);
+
+        int yc = 0;
+
+        while (yc < height)
+        {
+            fillx(g, 1, yc, width - 2, 1);
+            yc += 2;
+        }
+
+        yc = 0;
+        setc(g, .8f);
+
+        while(yc < height)
+        {
+            if(yc < left)
+            {
+                fillx(g, 1, height - yc - 1, width - 2, 1);
+            }
+            if(yc < right)
+            {
+                fillx(g, 1, height - yc - 1, width - 2, 1);
+            }
+            yc += 2;
+        }
+    }
+
+    void handleMouseDown(InputEvent& ev)
+    {
+        if (parent)
+        {
+            parent->handleChildEvent(this, ev);
+        }
+    }
+
+    void handleMouseDrag(InputEvent & ev)   { parent->handleMouseDrag(ev); }
+};
+
+
 class EnableButton : public ToggleBox
 {
 protected:
@@ -294,12 +361,12 @@ void Instr::drawSelf(Graphics& g)
         }
 
         //setc(g, .0f);
-        Gobj::setMyColor(g, .5f);
-        txtfit(g, FontSmall, instrAlias + ": " + getObjName(), guiButton->getW() + 4, 14, width - (h+4));
+        //Gobj::setMyColor(g, 1.f, 1.f);
+        //txt(g, FontVis, instrAlias, 2, height - 3);
 
         //setc(g, 1.f);
-        Gobj::setMyColor(g, 1.f);
-        txtfit(g, FontSmall, instrAlias + ": " + getObjName(), guiButton->getW() + 4, 13, width - (h+4));
+        Gobj::setMyColor(g, 1.f, .4f);
+        txtfit(g, FontSmall, getObjName(), guiButton->getW() + 4, 10, width - 4);
 
 
         //Colour clr = Colour(100, 110, 110);
@@ -509,7 +576,9 @@ void Instr::remap()
                 kH--;
             }
 
-            volKnob->setCoords1(width - 80 - bw - bw - 2, (h - kH)/2, 80, int(kH));
+            //volKnob->setCoords1(width - 80 - bw - bw - 2, (h - kH)/2, 80, int(kH));
+            volKnob->setCoords1(width - 80 - bw - bw - 1, h - h/2+1, 80, h/2);
+
             //panKnob->setCoords1(width - 57, 0, int(kH-2), int(kH-2));
 
             muteButt->setCoords1(width - bw - bw, 0, bw, h);

@@ -35,7 +35,7 @@ Knob::Knob(Parameter* par, bool knob)
 
 std::string Knob::getClickHint()
 {
-    return param->getName() + ":  " + param->getValString() + " " + param->getUnitString();
+    return ""; //param->getName() + ":  " + param->getValString() + " " + param->getUnitString();
 }
 
 void Knob::updValue()
@@ -216,9 +216,9 @@ void Knob::remap()
 
 void Knob::drawText(Graphics& g)
 {
-    int w = width/2 - 3;
+    int w = width/2 - 6;
     int x = width - width/2;
-    int textX = x + 3;  // height + 2
+    int textX = x + 6;  // height + 2
     int textY = 10;
     int namestrLen = gGetTextWidth(fontId, param->getName());
     int unitstrLen = gGetTextWidth(fontId, param->getUnitString());
@@ -327,7 +327,6 @@ void Knob::drawSlider(Graphics& g)
 void Knob::drawKnob(Graphics& g)
 {
     int     brd = 1;
-
     int     w = height - brd*2;// *0.8f;
     int     h = height - brd*2;// *0.8f;
     int     x = x1 + brd;

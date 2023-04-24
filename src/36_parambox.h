@@ -45,11 +45,11 @@ public:
             ToggleBox(Parameter* param_tg);
             bool                getBoolValue() { return param->getBoolValue(); }
 
-private:
+protected:
 
             void                drawSelf(Graphics& g);
-            void                handleMouseDown(InputEvent & ev);
-            void                handleMouseUp(InputEvent& ev);
+    virtual void                handleMouseDown(InputEvent & ev);
+    virtual void                handleMouseUp(InputEvent& ev);
 };
 
 
@@ -61,7 +61,7 @@ public:
 protected:
 
             void                drawSelf(Graphics& g);
-            void                handleMouseDown(InputEvent & ev);
+    virtual void                handleMouseDown(InputEvent & ev);
 
             int                 hLine;
             bool                radioMode;

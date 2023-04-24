@@ -397,7 +397,7 @@ void MixChannel::remap()
         int yeff = 0;
         int totalHeight = 0;
         int visibleHeight = height - FxPanelBottomHeight - 2;
-        int gap = 3;
+        int gap = 4;
 
         confine(xeff, 1, FxMaxEffWidth + xeff, visibleHeight);
 
@@ -424,10 +424,10 @@ void MixChannel::remap()
         int ySendControls = height - FxPanelBottomHeight;
         int yControls = height - FxPanelBottomHeight + sendPanelHeight;
 
-        volKnob->setCoords1(FxPanelScrollerWidth, yControls + 5, 150, 22);
-        panKnob->setCoords1(FxPanelScrollerWidth, yControls + 32, 150, 22);
+        volKnob->setCoords1(xeff, yControls + 5, 150, 22);
+        panKnob->setCoords1(xeff, yControls + 32, 150, 22);
 
-        vu->setCoords1(FxPanelScrollerWidth, height - 22, 150, 20);
+        vu->setCoords1(xeff, height - 22, 150, 20);
 
         for (Gobj* o : objs)
         {
@@ -437,7 +437,7 @@ void MixChannel::remap()
 
                 Instr* ins = k->getOutChannel()->getInstr();
 
-                k->setCoords1(width - 40, ins->getY1() - parent->getY1() + 2, 20, 20);
+                k->setCoords1(width - 30, ins->getY1() - parent->getY1() + 2, 20, 20);
             }
 
             /**
@@ -483,19 +483,20 @@ void MixChannel::drawSelf(Graphics& g)
     fill(g, .1f);
 
     int w = width - 80; //width - 64;
+    int xeff = FxPanelScrollerWidth + 1;
 
     if (MixViewSingle)
     {
         int sendPanelHeight = 0;
 
         setc(g, .4f);
-        fillx(g, 0, height - FxPanelBottomHeight, w, FxPanelBottomHeight - InstrHeight);
+        fillx(g, xeff , height - FxPanelBottomHeight, w, FxPanelBottomHeight - InstrHeight);
 
         setc(g, .36f);
-        fillx(g, 0, height - FxPanelBottomHeight, w, sendPanelHeight);
+        fillx(g, xeff, height - FxPanelBottomHeight, w, sendPanelHeight);
 
         setc(g, .46f);
-        rectx(g, 0, height - FxPanelBottomHeight, w, FxPanelBottomHeight - InstrHeight);
+        rectx(g, xeff, height - FxPanelBottomHeight, w, FxPanelBottomHeight - InstrHeight);
     }
     else
     {
@@ -1106,9 +1107,7 @@ void MixChannel::processChannel(int num_frames)
 
     if (outTg)
     {
-
         doSend(outTg->getOutChannel()->tempBuff, 1, num_frames);
-
         outTg->getOutChannel()->decreaseMixCounter();
     }
 
