@@ -115,6 +115,78 @@ void ParamObject::handleClose()
     }
 }
 
+void ParamObject::placeControls2(int maxWidth, int maxH)
+{
+    int boxWidth = 130;
+    int boxHeight = 22;
+    int rowNum = 0;
+    int numPut = 0;
+    int defaultWidth = 224;
+    int defaultH = 12;
+
+    setObjSpacing(1);
+    setBorder(0);
+
+    putStart(border, border);
+
+    for(Parameter* prm : params)
+    {
+        Gobj* obj = NULL;
+
+        if (prm && prm->getAutoPlaced())
+        {
+            if (prm->getType() == Param_Radio)
+            {
+                obj = new SelectorBox(prm, defaultWidth, true);
+                obj->setWH(defaultWidth, defaultH);
+            }
+            else if (prm->getType() == Param_Selector)
+            {
+                obj = new SelectorBox(prm, defaultWidth);
+                obj->setWH(defaultWidth, defaultH);
+            }
+            else if (prm->getType() == Param_Toggle)
+            {
+                obj = new ToggleBox(prm);
+                obj->setWH(defaultWidth, defaultH);
+            }
+            else 
+            {
+                /*
+                                ParamBox* box = new ParamBox(prm);
+
+                                box->setCoords1(0, 0, boxWidth, boxHeight);
+                                box->setSliderOnly(false);
+
+                                obj = box;
+                */
+                obj = new Knob(prm, false);
+                obj->setWH(defaultWidth, defaultH);
+                obj->setObjId("fx");
+            }
+
+        }
+
+        if (obj)
+        {
+            addObject(obj);
+
+            putBelow(obj, obj->getW(), obj->getH());
+
+            numPut++;
+        }
+    }
+
+    if (numPut)
+    {
+        setWH(wndW + border, wndH + border);
+    }
+    else
+    {
+        setWH(wndW + border, border*2);
+    }
+}
+
 void ParamObject::placeControls1(int maxWidth, int maxH)
 {
     int boxWidth = 130;

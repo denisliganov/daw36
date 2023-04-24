@@ -121,6 +121,7 @@ extern int              CtrlPanelHeight;
 extern int              FxPanelMaxWidth;
 extern int              FxPanelScrollerWidth;
 extern int              FxPanelBottomHeight;
+extern int              FxMaxEffWidth;
 extern int              GridScrollWidth;
 extern int              InstrHeight;
 extern int              InstrWidth;

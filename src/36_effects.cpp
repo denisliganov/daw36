@@ -52,8 +52,8 @@ protected:
         {
             if (param->getBoolValue())
             {
-                //setc(g, 0.8f);
-                setc(g, 0xffFFFF40);
+                setc(g, 1.f);
+                //setc(g, 0xffFFFF40);
                 //fillx(g, 1, 1, height-2, height-2);
             }
             else
@@ -141,11 +141,8 @@ Eff::Eff(Device36* dev)
 
     addObject(device);
 
-    int maxDevWidth = FxPanelMaxWidth - FxPanelScrollerWidth - 100;
-
-    device->placeControls1(maxDevWidth);
-
-    device->setWH(maxDevWidth, device->getH());
+    device->placeControls2(FxMaxEffWidth);
+    device->setWH(FxMaxEffWidth, device->getH());
     device->setContainer(this);
 
     setObjName(dev->getObjName());
@@ -168,7 +165,7 @@ void Eff::showDevice(bool show)
         device->setEnable(true);
         device->setVis(true);
 
-        setWH(device->getW(), device->getH() + 10);
+        setWH(device->getW(), device->getH());
     }
     else
     {
@@ -182,7 +179,7 @@ void Eff::remap()
 {
     if (MixViewSingle && device->isON())
     {
-        enableButt->setCoords1(width - 12, 0, 12, 12);
+        enableButt->setCoords1(width - 24, 0, 24, 12);
         device->setCoords1(0, 0, device->getW(), device->getH());
     }
     else
@@ -219,8 +216,8 @@ void Eff::drawSelf(Graphics& g)
         }
     }
 
-    setc(g, .2f);
-    fillx(g, 0, height - 10, width 10);
+//    setc(g, .2f);
+//    fillx(g, 0, height - 10, width, 10);
 
     setc(g, .7f);
 
@@ -1141,7 +1138,7 @@ void CStereo::processDSP(float* in_buff, float* out_buff, int num_frames)
 XDelay::XDelay() : dspCorePingPongDelay()
 {
     objId = "eff.delay";
-    objName = "Ping-Pong Delay";
+    objName = "Delay";
     //uniqueId = MAKE_FOURCC('P','P','D','L');
 
     dspCorePingPongDelay.setTrueStereoMode(true);

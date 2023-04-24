@@ -58,6 +58,7 @@ int                 CtrlPanelHeight;
 int                 FxPanelMaxWidth;
 int                 FxPanelScrollerWidth;
 int                 FxPanelBottomHeight;
+int                 FxMaxEffWidth;
 int                 GridScrollWidth;
 int                 InstrScrollerWidth;
 int                 InstrWidth;
@@ -112,6 +113,7 @@ MainWinObject::MainWinObject()
     FxPanelMaxWidth =       380;
     FxPanelScrollerWidth =  10;
     FxPanelBottomHeight =   100;
+    FxMaxEffWidth =         FxPanelMaxWidth - FxPanelScrollerWidth - 60;
     GridScrollWidth =       16;
     InstrControlWidth =     220;
     InstrScrollerWidth =    16;

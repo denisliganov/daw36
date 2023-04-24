@@ -40,8 +40,9 @@ protected:
             int                 ys;
             int                 defPos;
             int                 savedHeight;
-            Instr*         instr;
+            Instr*              instr;
             bool                knobMode;
             bool                dim;
+            bool                sliding;
 };
 

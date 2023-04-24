@@ -393,14 +393,13 @@ void MixChannel::remap()
     if (MixViewSingle)
     {
         int sendPanelHeight = 0;
-
         int xeff = FxPanelScrollerWidth + 1;
         int yeff = 0;
         int totalHeight = 0;
         int visibleHeight = height - FxPanelBottomHeight - 2;
         int gap = 3;
 
-        confine(xeff, 1, width - 80, visibleHeight);
+        confine(xeff, 1, FxMaxEffWidth + xeff, visibleHeight);
 
         for (Eff* eff : effs)
         {

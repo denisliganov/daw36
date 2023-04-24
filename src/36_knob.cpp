@@ -28,6 +28,7 @@ Knob::Knob(Parameter* par, bool knob)
     dimOnZero = false;
     hasText = true;
     instr = NULL;
+    sliding = false;
 
     updPosition();
 }
@@ -97,7 +98,15 @@ void Knob::handleSliding(InputEvent& ev)
     }
     else
     {
-        param->adjustFromControl(this, 0, float(ev.mouseX - x1)/width);
+        if (ev.clickDown && !hasText || (ev.mouseX - x1 <= width/2))
+        {
+            sliding = true;
+        }
+
+        if (sliding)
+        {
+            param->adjustFromControl(this, 0, float(ev.mouseX - x1)/(hasText ? width/2 : width));
+        }
     }
 
     redraw();
@@ -151,6 +160,7 @@ void Knob::handleMouseDown(InputEvent & ev)
 
 void Knob::handleMouseUp(InputEvent & ev)
 {
+    sliding = false;
 }
 
 void Knob::remap()
@@ -206,11 +216,16 @@ void Knob::remap()
 
 void Knob::drawText(Graphics& g)
 {
-    int textX = 3;  // height + 2
+    int w = width/2 - 3;
+    int x = width - width/2;
+    int textX = x + 3;  // height + 2
     int textY = 10;
     int namestrLen = gGetTextWidth(fontId, param->getName());
     int unitstrLen = gGetTextWidth(fontId, param->getUnitString());
     int valstrLen = gGetTextWidth(fontId, param->getValString());
+
+    setc(g, .3f);
+    fillx(g, x, 0, w, height);
 
     setc(g, .8f);
     if (unitstrLen > 0)
@@ -219,30 +234,33 @@ void Knob::drawText(Graphics& g)
     else
         txt(g, fontId, param->getName(), textX, textY);
 
-    //setc(g, .9f);
+    setc(g, 1.f);
+    txt(g, fontId, param->getValString() + " " + param->getUnitString(), textX + w - valstrLen - unitstrLen - 4, textY);
+
+    /*
     if (instr)
         instr->setMyColor(g, 1.f);
     else
         setc(g, .9f);
-    //txt(g, fontId, param->getValString(), textX + namestrLen + 6, 12);
-    //txt(g, fontId, param->getValString(), textX + 60, 12);
-    txt(g, fontId, param->getValString(), width - valstrLen - 2, textY);
+    txt(g, fontId, param->getValString(), textX + w - valstrLen - 2, textY);
 
     setc(g, .52f);
-    txt(g, fontId, param->getUnitString(), width - unitstrLen - 2, height - 3);
+    txt(g, fontId, param->getUnitString(), textX + w - unitstrLen - 2, height - 3);
+    */
 }
 
 void Knob::drawSlider(Graphics& g)
 {
+    int w = hasText ? width - width/2 : width;
     float offs = param->getOffset();
     float range = param->getRange();
     float val = param->getValue();
     float def = param->getDefaultValue();
     float baseVal = (offs <= 0 ? 0 : offs);
 
-    int xoffs = int(float(width-1)*((baseVal - offs)/range));
-    int xval = int(float(width-1)*((val - offs)/range));
-    int xdef = int(float(width-1)*((def - offs)/range));
+    int xoffs = int(float(w-1)*((baseVal - offs)/range));
+    int xval = int(float(w-1)*((val - offs)/range));
+    int xdef = int(float(w-1)*((def - offs)/range));
     int xstart = xoffs;
     int xend = xval;
 
@@ -252,7 +270,7 @@ void Knob::drawSlider(Graphics& g)
         xend = xoffs;
     }
 
-    int w = xend - xstart;
+    int wsl = xend - xstart;
     int sh = height;     //height - (textHeight + 1);
     int ysl = height - sh;
 
@@ -265,21 +283,21 @@ void Knob::drawSlider(Graphics& g)
     else
         setc(g, .0f);
 
-    rectx(g, 0, 0, width, height);
+    rectx(g, 0, 0, w, height);
 
     if (instr)
         instr->setMyColor(g, .3f);
     else
         setc(g, .2f);
 
-    fillx(g, 0, 0, width, height);
+    fillx(g, 0, 0, w, height);
 
     if (instr)
         instr->setMyColor(g, .66f, .42f);
     else
         setc(g, .5f);
 
-    fillx(g, xstart, ysl+1, w, sh-2);
+    fillx(g, xstart, ysl+1, wsl, sh-2);
 
     //if (instr)
     //    instr->setMyColor(g, .1f);

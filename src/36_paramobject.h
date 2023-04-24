@@ -27,6 +27,7 @@ public:
     virtual void                handleParamUpdate(Parameter* param = NULL) {};
     virtual void                handleClose();
             void                placeControls1(int maxW = -1, int maxH=-1);
+            void                placeControls2(int maxW = -1, int maxH=-1);
             void                putStart(int x,int y);
             void                putRight(Gobj* obj, int ow=-1, int oh=-1);
             void                putBelow(Gobj* obj, int ow=-1, int oh=-1);
