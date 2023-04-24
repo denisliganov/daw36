@@ -32,6 +32,11 @@ Knob::Knob(Parameter* par, bool knob)
     updPosition();
 }
 
+std::string Knob::getClickHint()
+{
+    return param->getName() + ":  " + param->getValString() + " " + param->getUnitString();
+}
+
 void Knob::updValue()
 {
     if (param != NULL)
@@ -412,6 +417,8 @@ void Knob::drawKnob(Graphics& g)
 void Knob::drawSelf(Graphics& g)
 {
     //fill(g, .32f);
+    setc(g, .1f);
+    txt(g, fontId, param->getName(), 0, 12);
 
     if (!knobMode)
     {

@@ -11,6 +11,7 @@ public:
 
             Knob(Parameter* par, bool knob = false);
             float               getMinStep()    { return 1.f / width; }
+            std::string         getClickHint();
             void                handleMouseWheel(InputEvent& ev);
             void                handleMouseDrag(InputEvent& ev);
             void                handleMouseDown(InputEvent & ev);

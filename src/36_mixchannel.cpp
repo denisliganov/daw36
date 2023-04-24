@@ -441,14 +441,13 @@ void MixChannel::remap()
                 k->setCoords1(width - 40, ins->getY1() - parent->getY1() + 2, 20, 20);
             }
 
+            /**
             if (o->getObjId() == "out")
             {
                 ChanOutToggle* t = dynamic_cast<ChanOutToggle*>(o);
-
                 Instr* ins = t->getOutChannel()->getInstr();
-
                 t->setCoords1(width - 17, ins->getY1() - parent->getY1() + 5, 12, 12);
-            }
+            }*/
         }
     }
     else

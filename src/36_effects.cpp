@@ -50,13 +50,23 @@ protected:
 
         void drawSelf(Graphics& g)
         {
-            setc(g, 0.18f);
-            fillx(g, 0, 0, height, height);
-
             if (param->getBoolValue())
             {
-                setc(g, 0.8f);
-                fillx(g, 1, 1, height-2, height-2);
+                //setc(g, 0.8f);
+                setc(g, 0xffFFFF40);
+                //fillx(g, 1, 1, height-2, height-2);
+            }
+            else
+            {
+                setc(g, 0.18f);
+                //fillx(g, 0, 0, height, height);
+            }
+
+            int y = 0;
+            while (y < height)
+            {
+                fillx(g, 0, y, width, 1);
+                y += 2;
             }
 
             //if (param->getBoolValue())
@@ -209,10 +219,13 @@ void Eff::drawSelf(Graphics& g)
         }
     }
 
-    setc(g, .6f);
+    setc(g, .2f);
+    fillx(g, 0, height - 10, width 10);
+
+    setc(g, .7f);
 
     if (MixViewSingle)
-        txt(g, FontBold, device->getObjName(), width - gGetTextWidth(FontBold, device->getObjName()) - 4, height/2 );
+        txt(g, FontBold, device->getObjName(), width - gGetTextWidth(FontBold, device->getObjName()) - 4, height/2 + gGetTextHeight(FontBold)/2);
         //txt(g, FontInst, device->getObjName(), 0, 8);
     else
         txtfit(g, FontBold, device->getObjName().substr(0, 4) + ".", 0, gGetTextHeight(FontBold) + 1, width);
@@ -477,7 +490,7 @@ void Filter1::processDSP(float* in_buff, float* out_buff, int num_frames)
 EQ1::EQ1()
 {
     objId = "eff.eq1";
-    objName = "1-Band Equalizer";
+    objName = "1-Band EQ";
     //uniqueId = MAKE_FOURCC('E','Q','0','1');
 
     //frequency = new Parameter(1000.0f, 20.0f, 19980.0f, Param_Default);
@@ -533,7 +546,7 @@ void EQ1::processDSP(float* in_buff, float* out_buff, int num_frames)
 GraphicEQ::GraphicEQ()
 {
     objId = "eff.grapheq";
-    objName = "Graphic Equalizer";
+    objName = "Graphic EQ";
     //uniqueId = MAKE_FOURCC('G','R','E','Q');
 
     f1 = dspCoreEqualizer.addBand(rosic::TwoPoleFilter::HIGH_SHELF, 8000, 0, 1);
@@ -613,7 +626,7 @@ void GraphicEQ::processDSP(float* in_buff, float* out_buff, int num_frames)
 EQ3::EQ3()
 {
     objId = "eff.eq3";
-    objName = "3-Band Equalizer";
+    objName = "3-Band EQ";
     //uniqueId = MAKE_FOURCC('E','Q','0','3');
 
     f1 = dspCoreEqualizer.addBand(rosic::TwoPoleFilter::HIGH_SHELF, 4000, 0);
@@ -1234,7 +1247,7 @@ void XDelay::processDSP(float* in_buff, float* out_buff, int num_frames)
 CReverb::CReverb() : dspCoreReverb()
 {
     objId = "eff.reverb";
-    objName = "Reverberation";
+    objName = "Reverb";
     //uniqueId = MAKE_FOURCC('R','E','V','R');
 
     addParam(preDelay  = new Parameter("PREDELAY", 0.0f, 200.0f, 0.0f, Units_ms));
