@@ -836,7 +836,7 @@ void MixChannel::handleObjDrag(bool reset, Gobj * obj,int mx,int my)
 ;       }
         else
         {
-            dropHighlight->setCoords1(getX() + 1, getY() - 3, FxMaxEffWidth, 8);
+            dropHighlight->setCoords1(getX() + FxPanelScrollerWidth, getY() - 3, FxMaxEffWidth, 8);
         }
     }
     else

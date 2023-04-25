@@ -316,7 +316,7 @@ void Knob::drawSlider(Graphics& g)
     fillx(g, 0, 0, w, height);
 
     if (instr)
-        instr->setMyColor(g, .32f, .42f);
+        instr->setMyColor(g, .52f, .42f);
     else
         setc(g, .32f);
 
