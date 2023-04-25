@@ -19,7 +19,7 @@ public:
             void                handleSliding(InputEvent& ev);
             void                remap();
             void                setDimOnZero(bool dim) { dimOnZero = dim; }
-            void                setText(bool txt)       { hasText = txt; }
+            void                setHasText(bool txt, bool inside=false);
             void                updValue();
             void                updPosition();
 
@@ -32,11 +32,10 @@ protected:
 
 protected:
 
-            bool                dimOnZero;
-            bool                hasText;
             float               angleRange;       // in radians too
             float               angleOffset;      // in radians too
             float               positionAngle;    // in radians
+            float               widthDiv;
             int                 ys;
             int                 defPos;
             int                 savedHeight;
@@ -44,5 +43,8 @@ protected:
             bool                knobMode;
             bool                dim;
             bool                sliding;
+            bool                dimOnZero;
+            bool                hasText;
+            bool                textInside;
 };
 

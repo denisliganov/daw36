@@ -201,7 +201,7 @@ Instr::Instr(Device36* dev)
     panBox = volBox = NULL;
 
     addObject(volKnob = new Knob(device->vol, false));
-    volKnob->setText(false);
+    volKnob->setHasText(false);
 
     addObject(panKnob = new Knob(device->pan, true));
     panKnob->setEnable(false);

@@ -88,8 +88,10 @@ void DevParamObject::placeControls()
                 box->setSliderOnly(false);
                 obj = box;
 */
-                obj = new Knob(prm);
 
+                Knob* k = new Knob(prm);
+                k->setHasText(true, true);
+                obj = k;
                 obj->setWH(100, 30);
             }
 

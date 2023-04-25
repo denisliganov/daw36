@@ -63,7 +63,6 @@ class Playhead;
 class Pattern;
 class Parameter;
 class Renderer;
-class Renderer;
 class SelectorBox;
 class Scroller;
 class Selection;

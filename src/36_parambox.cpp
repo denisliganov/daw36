@@ -230,9 +230,6 @@ void ToggleBox::handleMouseUp(InputEvent & ev)
 }
 
 
-
-
-
 SelectorBox::SelectorBox(Parameter* param_sel, int initHeight, bool radio)
 {
     param = param_sel;
