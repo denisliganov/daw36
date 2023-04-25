@@ -11,7 +11,7 @@
 
 
 
-class DragAndDrop  : public WinObject
+class DragAndDrop  : public Gobj
 {
 public:
 

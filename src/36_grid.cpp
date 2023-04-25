@@ -1816,7 +1816,7 @@ void Grid::handleObjDrop(Gobj * obj,int mx,int my, unsigned flags)
         action(GridAction_PutNote, noteHihglight->tick, noteHihglight->line);
         action(GridAction_Release);
     }
-    else if (ble != NULL)
+    else if (ble != NULL && ble->getType() == Entry_Wave)
     {
         MInstrPanel->addSample(ble->getPath().data());
 

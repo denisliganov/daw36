@@ -201,7 +201,6 @@ void Eff::drawSelf(Graphics& g)
     fill(g, .3f);
 
     //rect(g, .38f);
-
     //setc(g, .2f);
     //fillx(g, 0, height-1, width-1, 1);
 
@@ -221,15 +220,12 @@ void Eff::drawSelf(Graphics& g)
         }
     }
 
-//    setc(g, .2f);
-//    fillx(g, 0, height - 10, width, 10);
-
     setc(g, .8f);
 
     if (MixViewSingle)
-        //txt(g, FontBold, device->getObjName(), width - gGetTextWidth(FontBold, device->getObjName()) - 4, height/2 + gGetTextHeight(FontBold)/2);
+        txt(g, FontBold, device->getObjName(), width - gGetTextWidth(FontBold, device->getObjName()) - 8, height/2 + gGetTextHeight(FontBold)/2);
         //txt(g, FontInst, device->getObjName(), 0, 8);
-        txt(g, FontBold, device->getObjName(), width - gGetTextWidth(FontBold, device->getObjName()) - 4, 12);
+        //txt(g, FontBold, device->getObjName(), width - gGetTextWidth(FontBold, device->getObjName()) - 4, 12);
     else
         txtfit(g, FontBold, device->getObjName().substr(0, 4) + ".", 0, gGetTextHeight(FontBold) + 1, width);
 }

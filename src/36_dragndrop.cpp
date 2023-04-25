@@ -53,6 +53,9 @@ void DragAndDrop::start(Gobj * drag_obj,int mx,int my)
 {
     dragObj = drag_obj;
 
+    setWH(gGetTextWidth(FontSmall, dragObj->getObjName()) + 8, gGetTextHeight(FontSmall) + 8);
+
+    /*
     setWidthHeight(gGetTextWidth(FontSmall, dragObj->getObjName()) + 8, gGetTextHeight(FontSmall) + 8);
 
     if (sw == NULL)
@@ -61,10 +64,13 @@ void DragAndDrop::start(Gobj * drag_obj,int mx,int my)
         sw->setResizable(false, false);
     }
 
-    //sw->setBounds(mx, my, getW() + 4, getH() + 4);
-    //sw->setBounds(mx - getW() / 2 - 2, my + getH() - 2, getW() + 4, getH() + 4);
     sw->setOpen(true);
     sw->setAlwaysOnTop(true);
+    */
+    
+    ////sw->setBounds(mx, my, getW() + 4, getH() + 4);
+    ////sw->setBounds(mx - getW() / 2 - 2, my + getH() - 2, getW() + 4, getH() + 4);
+
 
     drag(NULL, mx, my);
 }
@@ -78,18 +84,22 @@ void DragAndDrop::drag(Gobj* target_object, int mx, int my)
 
     targetObj = target_object;
 
-    //sw->setBounds(mx - getW()/2, my + getH(), getW(), getH());
-    sw->setBounds(mx - getW(), my + getH()/2, getW(), getH());
+    //sw->setBounds(mx - getW(), my + getH()/2, getW(), getH());
+
+    setCoords1(mx - getW(), my - getH()/2, getW(), getH());
+
+    if (height < 5)
+        int a = 1;
 
     if (targetObj)
     {
         if (targetObj == (Gobj*)MGrid)
         {
-            sw->setVisible(false);
+            setVis(false);
         }
         else
         {
-            sw->setVisible(true);
+            setVis(true);
         }
 
         target_object->handleObjDrag(false, dragObj, mx, my);
@@ -107,14 +117,18 @@ void DragAndDrop::drop(int mx,int my,unsigned int flags)
         targetObj->handleObjDrop(obj, mx, my, flags);
     }
 
-    if (sw)
-        sw->setOpen(false);
+    setVis(false);
+
+    targetObj = NULL;
+
+    //if (sw)
+    //    sw->setOpen(false);
 }
 
 void DragAndDrop::drawSelf(Graphics & g)
 {
     fill(g, 0.4f);
     setc(g, 1.f);
-    gText(g, FontSmall, dragObj->getObjName(), 4, gGetTextHeight(FontSmall));
+    gText(g, FontSmall, dragObj->getObjName(), x1 + 4, y1 + gGetTextHeight(FontSmall));
 }
 

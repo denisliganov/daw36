@@ -100,7 +100,7 @@ void InitializeAndStartProgram()
 
     MObject->resized();
 
-    MDragDrop = new DragAndDrop();
+    MObject->addHighlight(MDragDrop = new DragAndDrop());
 
     // Splash_Delete();
 

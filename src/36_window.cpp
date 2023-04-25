@@ -1391,7 +1391,7 @@ void WinObject::handleMouseEnter(InputEvent& ev)
 
 void WinObject::handleMouseLeave(InputEvent& ev)
 {
-    if (MDragDrop && MDragDrop->getWindow() == this && MDragDrop->isActive())
+    if (MDragDrop && MDragDrop->isActive())
     {
         //removeObject(MDragDrop);
     }

@@ -109,43 +109,27 @@ public:
 
     void    drawSelf(Graphics& g)
     {
-        uint8 a = 128;
-
-        Rect36 drwRect = { (float)(x1), (float)y1, (float)width, (float)height };
-
-        bool vert = drwRect.w < drwRect.h;
-
+        bool vert = width < height;
         int count = vert ? width / 2 : height / 2;
-
+        uint8 a = 255;
+        int y = 0;
         for (int c = 0; c < count; c++)
         {
-            float m = (float)c / count;
-
-            m *= m;
-
-            gSetColor(g, 255, 153, 48, uint8(m * 255));
+            gSetColor(g, 255, 200, 48, a);
 
             if (vert)
             {
-                gFillRectWH(g, drwRect.x, drwRect.y, 1, drwRect.h);
-                gFillRectWH(g, drwRect.x + drwRect.w - 1, drwRect.y, 1, drwRect.h);
-
-                drwRect.x++;
-                drwRect.w -= 2;
+                fillx(g, width/2 + y, 0, 1, height);
+                fillx(g, width/2 - y, 0, 1, height);
             }
             else
             {
-                gFillRectWH(g, drwRect.x, drwRect.y, drwRect.w, 1);
-                gFillRectWH(g, drwRect.x, drwRect.y + drwRect.h - 1, drwRect.w, 1);
+                fillx(g, 0, height/2 + y, width, 1);
+                fillx(g, 0, height/2 - y, width, 1);
 
-                drwRect.y++;
-                drwRect.h -= 2;
             }
 
-            if (drwRect.h < 1 || drwRect.w < 1)
-            {
-                break;
-            }
+            y++;
 
             a /= 2;
         }
@@ -846,15 +830,13 @@ void MixChannel::handleObjDrag(bool reset, Gobj * obj,int mx,int my)
 
         dropObj = CheckNeighborObjectsY(objs, "eff", my, (Gobj**)&uper, (Gobj**)&lower);
 
-        int hW = FxPanelMaxWidth - 80 - FxPanelScrollerWidth - 1;
-
         if(uper != NULL)
         {
-            dropHighlight->setCoords1(uper->getX(), uper->getY() + uper->getH() - 3, hW, 8);
+            dropHighlight->setCoords1(uper->getX(), uper->getY() + uper->getH() - 3, FxMaxEffWidth, 8);
 ;       }
         else
         {
-            dropHighlight->setCoords1(getX() + 1, getY() - 3, hW, 8);
+            dropHighlight->setCoords1(getX() + 1, getY() - 3, FxMaxEffWidth, 8);
         }
     }
     else
