@@ -37,7 +37,7 @@ protected:
             float               positionAngle;    // in radians
             float               widthDiv;
             int                 ys;
-            int                 defPos;
+            int                 defaultPos;
             int                 savedHeight;
             Instr*              instr;
             bool                knobMode;

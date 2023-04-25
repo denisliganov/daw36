@@ -190,6 +190,7 @@ InstrPanel::InstrPanel(Mixer* mixer)
 
     //masterVolume = new Parameter("Master", Param_Vol);
     addObject(masterVolKnob = new Knob(NULL));
+    masterVolKnob->setHasText(true, true);
     //masterVolume->addControl(masterVolKnob);
 
     addHighlight(instrHighlight = new InstrHighlight());
