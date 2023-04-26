@@ -362,9 +362,6 @@ Filter1::Filter1()
     filterType->addOption("LowPass");
     filterType->addOption("HighPass");
     filterType->addOption("BandPass");
-    filterType->addOption("1");
-    filterType->addOption("2");
-    filterType->addOption("3");
     filterType->setCurrentOption(0);
 
     addParam(x2toggle = new Parameter("X2", false));

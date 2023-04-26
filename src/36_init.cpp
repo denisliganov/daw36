@@ -102,6 +102,8 @@ void InitializeAndStartProgram()
 
     MObject->addHighlight(MDragDrop = new DragAndDrop());
 
+    MInstrPanel->showFX();
+
     // Splash_Delete();
 
     StartEditor();

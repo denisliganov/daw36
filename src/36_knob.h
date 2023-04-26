@@ -12,9 +12,13 @@
 class ParamBox : public Control
 {
 public:
-            ParamBox() {}
-
+            ParamBox();
             void                setHasText(bool txt, bool inside=false);
+
+protected:
+
+            void                drawText(Graphics& g);
+
             bool                hasText;
             bool                textInside;
             float               widthDiv;
@@ -42,7 +46,6 @@ protected:
     virtual void                drawKnob(Graphics& g);
             void                drawSelf(Graphics& g);
             void                drawSlider(Graphics& g);
-            void                drawText(Graphics& g);
 
 protected:
 
@@ -77,14 +80,15 @@ protected:
 class SelectorBox : public ParamBox
 {
 public:
-            SelectorBox(Parameter* param_sel, int initHeight=0, bool radio = false);
+            SelectorBox(Parameter* param_sel, bool radio = false);
 
 protected:
 
             void                drawSelf(Graphics& g);
     virtual void                handleMouseDown(InputEvent & ev);
+            void                remap();
 
-            int                 hLine;
+            int                 itemWidth;
             bool                radioMode;
 };
 

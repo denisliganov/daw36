@@ -137,12 +137,12 @@ void ParamObject::placeControls2(int maxWidth, int maxH)
         {
             if (prm->getType() == Param_Radio)
             {
-                obj = new SelectorBox(prm, defaultWidth, true);
+                obj = new SelectorBox(prm, true);
                 obj->setWH(defaultWidth, defaultH);
             }
             else if (prm->getType() == Param_Selector)
             {
-                obj = new SelectorBox(prm, defaultWidth);
+                obj = new SelectorBox(prm);
                 obj->setWH(defaultWidth, defaultH);
             }
             else if (prm->getType() == Param_Toggle)
@@ -152,14 +152,6 @@ void ParamObject::placeControls2(int maxWidth, int maxH)
             }
             else 
             {
-                /*
-                                ParamBox* box = new ParamBox(prm);
-
-                                box->setCoords1(0, 0, boxWidth, boxHeight);
-                                box->setSliderOnly(false);
-
-                                obj = box;
-                */
                 obj = new Knob(prm, false);
                 obj->setWH(defaultWidth, defaultH);
                 obj->setObjId("fx");
@@ -208,12 +200,12 @@ void ParamObject::placeControls1(int maxWidth, int maxH)
         {
             if (prm->getType() == Param_Radio)
             {
-                obj = new SelectorBox(prm, defaultWidth, true);
+                obj = new SelectorBox(prm, true);
                 obj->setWH(defaultWidth, obj->getH());
             }
             else if (prm->getType() == Param_Selector)
             {
-                obj = new SelectorBox(prm, defaultWidth);
+                obj = new SelectorBox(prm);
                 obj->setWH(defaultWidth, obj->getH());
             }
             else if (prm->getType() == Param_Toggle)
@@ -223,18 +215,8 @@ void ParamObject::placeControls1(int maxWidth, int maxH)
             }
             else 
             {
-                /*
-                                ParamBox* box = new ParamBox(prm);
-
-                                box->setCoords1(0, 0, boxWidth, boxHeight);
-                                box->setSliderOnly(false);
-
-                                obj = box;
-                */
-                obj = new Knob(prm, true);
                 obj->setWH(defaultWidth, defaultWidth);
                 obj->setObjId("fx");
-                //obj->setWH(defaultWidth, 24);
             }
 
         }

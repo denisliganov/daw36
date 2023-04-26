@@ -13,9 +13,13 @@
 
 
 
+ParamBox::ParamBox()
+{
+    
+}
 
 void ParamBox::setHasText(bool txt, bool inside)
-{ 
+{
     hasText = txt;
     textInside = inside;
 
@@ -24,6 +28,44 @@ void ParamBox::setHasText(bool txt, bool inside)
     remap();
 }
 
+void ParamBox::drawText(Graphics& g)
+{
+    int w = width/widthDiv - 6;
+    int x = width - width/widthDiv;
+    int textX = x + 6;  // height + 2
+    int textY = 10;
+    int namestrLen = gGetTextWidth(fontId, param->getName());
+    int unitstrLen = gGetTextWidth(fontId, param->getUnitString());
+    int valstrLen = gGetTextWidth(fontId, param->getValString());
+
+    if (hasText && !textInside)
+    {
+        setc(g, .3f);
+        fillx(g, x, 0, width - x, height);
+    }
+
+    setc(g, .6f);
+    if (unitstrLen > 0)
+        //txt(g, fontId, param->getName() + "." + param->getUnitString(), textX, textY);
+        txt(g, fontId, param->getName(), textX, textY);
+    else
+        txt(g, fontId, param->getName(), textX, textY);
+
+    if (!textInside)
+    {
+        //std::string str = param->getValString() + " " + param->getUnitString();
+        //txt(g, fontId, str, textX + w - valstrLen - unitstrLen - 4, textY);
+    }
+    else
+    {
+        setc(g, .9f);
+
+        txt(g, fontId, param->getValString(), textX + w - valstrLen - 2, textY);
+
+        setc(g, .52f);
+        txt(g, fontId, param->getUnitString(), textX + w - unitstrLen - 2, height - 3);
+    }
+}
 
 Knob::Knob(Parameter* par, bool knob)
 {
@@ -37,11 +79,10 @@ Knob::Knob(Parameter* par, bool knob)
     savedHeight = 0;
     dim = false;
     dimOnZero = false;
-    hasText = true;
-    textInside = false;
-    widthDiv = (hasText && !textInside ? 2 : 1);
     instr = NULL;
     sliding = false;
+
+    setHasText(true, false);
 
     updPosition();
 }
@@ -227,48 +268,6 @@ void Knob::remap()
     }
 
     delSnap();
-}
-
-void Knob::drawText(Graphics& g)
-{
-    int w = width/widthDiv - 6;
-    int x = width - width/widthDiv;
-    int textX = x + 6;  // height + 2
-    int textY = 10;
-    int namestrLen = gGetTextWidth(fontId, param->getName());
-    int unitstrLen = gGetTextWidth(fontId, param->getUnitString());
-    int valstrLen = gGetTextWidth(fontId, param->getValString());
-
-    if (hasText && !textInside)
-    {
-        setc(g, .3f);
-        fillx(g, x, 0, width - x, height);
-    }
-
-    setc(g, .6f);
-    if (unitstrLen > 0)
-        //txt(g, fontId, param->getName() + "." + param->getUnitString(), textX, textY);
-        txt(g, fontId, param->getName(), textX, textY);
-    else
-        txt(g, fontId, param->getName(), textX, textY);
-
-    if (!textInside)
-    {
-        //std::string str = param->getValString() + " " + param->getUnitString();
-        //txt(g, fontId, str, textX + w - valstrLen - unitstrLen - 4, textY);
-    }
-    else
-    {
-        if (instr)
-            instr->setMyColor(g, 1.f);
-        else
-            setc(g, .9f);
-
-        txt(g, fontId, param->getValString(), textX + w - valstrLen - 2, textY);
-
-        setc(g, .52f);
-        txt(g, fontId, param->getUnitString(), textX + w - unitstrLen - 2, height - 3);
-    }
 }
 
 void Knob::drawSlider(Graphics& g)
@@ -522,7 +521,7 @@ void ToggleBox::handleMouseUp(InputEvent & ev)
 }
 
 
-SelectorBox::SelectorBox(Parameter* param_sel, int initHeight, bool radio)
+SelectorBox::SelectorBox(Parameter* param_sel, bool radio)
 {
     param = param_sel;
 
@@ -530,53 +529,52 @@ SelectorBox::SelectorBox(Parameter* param_sel, int initHeight, bool radio)
 
     setFontId(FontSmall);
 
-    if (initHeight > 0)
-    {
-        hLine = initHeight/param->getNumOptions() - 1;
-
-        if (hLine < 1)
-        {
-            hLine = 1;
-        }
-
-        height = (hLine + 1)*param->getNumOptions();
-    }
+    setHasText(true, false);
 }
 
 void SelectorBox::drawSelf(Graphics& g)
 {
-    int y = 0;
+    int x = 0;
     int opt = 0;
 
     for (std::string str : param->getAllOptions())
     {
+        setc(g, 0.2f);
+        fillx(g, x, 0, itemWidth-1, height);
+
         if (radioMode && param->getCurrentOption() == opt ||
             !radioMode && param->getOptionVal(opt))
         {
             setc(g, 0.6f);
         }
-        else
-        {
-            setc(g, 0.2f);
-        }
 
-        fillx(g, 0, y, width, hLine);
+        fillx(g, x + 1, 1, itemWidth - 3, height - 2);
 
-        y += hLine + 1;
+        x += itemWidth + 1;
 
         opt++;
     }
+
+    if (hasText)
+    {
+        drawText(g);
+    }
+}
+
+void SelectorBox::remap()
+{
+    itemWidth = width/widthDiv/param->getNumOptions();
 }
 
 void SelectorBox::handleMouseDown(InputEvent & ev)
 {
     if (radioMode)
     {
-        param->setCurrentOption((ev.mouseY - y1) / (hLine + 1));
+        param->setCurrentOption((ev.mouseX - x1) / (itemWidth + 1));
     }
     else
     {
-        param->toggleOption((ev.mouseY - y1) / (hLine + 1));
+        param->toggleOption((ev.mouseX - x1) / (itemWidth + 1));
     }
 
     redraw();

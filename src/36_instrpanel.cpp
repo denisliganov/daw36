@@ -195,6 +195,8 @@ InstrPanel::InstrPanel(Mixer* mixer)
 
     addHighlight(instrHighlight = new InstrHighlight());
     addHighlight(dropHighlight = new DropHighlight());
+
+    //showFX();
 }
 
 InstrPanel::~InstrPanel()
@@ -810,7 +812,7 @@ void InstrPanel::remap()
 
     if (fxShowing)
     {
-        btHideFX->setCoords1(width - btW - 1, 0, btW, btW);
+        //btHideFX->setCoords1(width - btW - 1, 0, btW, btW);
 
         allChannelsView->setCoords1(2, 0, btW, btW);
 
@@ -820,7 +822,7 @@ void InstrPanel::remap()
     }
     else
     {
-        btShowFX->setCoords1(width - btW - 1, 0, btW, btW);
+        //btShowFX->setCoords1(width - btW - 1, 0, btW, btW);
 
         allChannelsView->setVis(false);
 
