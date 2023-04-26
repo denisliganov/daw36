@@ -164,7 +164,7 @@ void MainEdit::drawSelf(Graphics& g)
 
 void MainEdit::remap()
 {
-    int kH = 100;;
+    int kH = 0;;
 
     confine();
 
@@ -176,7 +176,8 @@ void MainEdit::remap()
 
     grid->setCoords2(0, MainLineHeight + 1, width - GridScrollWidth - 1, height - kH - 1);
 
-    keys->setCoords2(0, height - kH, width - GridScrollWidth - 1, height - 1);
+    if (kH)
+        keys->setCoords2(0, height - kH, width - GridScrollWidth - 1, height - 1);
 
     confine(0, 0, width - GridScrollWidth - 1, height - 1);
 

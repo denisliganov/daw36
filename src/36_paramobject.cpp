@@ -121,7 +121,7 @@ void ParamObject::placeControls2(int maxWidth, int maxH)
     int boxHeight = 22;
     int rowNum = 0;
     int numPut = 0;
-    int defaultWidth = 224;
+    int defaultWidth = maxWidth - 4;
     int defaultH = 12;
 
     setObjSpacing(1);

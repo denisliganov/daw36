@@ -8,7 +8,7 @@
 #include "36.h"
 #include "36_grid.h"
 #include "36_listbox.h"
-#include "36_parambox.h"
+#include "36_knob.h"
 #include "36_params.h"
 
 
@@ -39,7 +39,7 @@ ConfigWinObject::ConfigWinObject()
     WinObject::addObject(knob2 = new Knob(saturation));
     WinObject::addObject(knob3 = new Knob(brightness));
 
-    WinObject::addObject(buffSizeBox = new ParamBox(bufferSize));
+    //WinObject::addObject(buffSizeBox = new ParamBox(bufferSize));
 
     interpolationSelect = new Parameter("Interpolation (sample playback)", Param_Radio);
     interpolationSelect->addOption("Linear");

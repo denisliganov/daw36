@@ -14,6 +14,17 @@
 
 
 
+void ParamBox::setHasText(bool txt, bool inside)
+{ 
+    hasText = txt;
+    textInside = inside;
+
+    widthDiv = (hasText && !textInside ? 2 : 1);
+
+    remap();
+}
+
+
 Knob::Knob(Parameter* par, bool knob)
 {
     setFontId(FontSmall);
@@ -34,17 +45,6 @@ Knob::Knob(Parameter* par, bool knob)
 
     updPosition();
 }
-
-void Knob::setHasText(bool txt, bool inside)
-{ 
-    hasText = txt;
-    textInside = inside;
-
-    widthDiv = (hasText && !textInside ? 2 : 1);
-
-    remap();
-}
-
 
 std::string Knob::getClickHint()
 {
@@ -254,9 +254,8 @@ void Knob::drawText(Graphics& g)
 
     if (!textInside)
     {
-        //setc(g, 1.f);
-        std::string str = param->getValString() + " " + param->getUnitString();
-        txt(g, fontId, str, textX + w - valstrLen - unitstrLen - 4, textY);
+        //std::string str = param->getValString() + " " + param->getUnitString();
+        //txt(g, fontId, str, textX + w - valstrLen - unitstrLen - 4, textY);
     }
     else
     {
@@ -480,5 +479,107 @@ void Knob::drawSelf(Graphics& g)
     }
 }
 
+
+
+ToggleBox::ToggleBox(Parameter* param_tg)
+{
+    setParam(param_tg);
+
+    setFontId(FontSmall);
+
+    //height = textHeight + 4;
+}
+
+void ToggleBox::drawSelf(Graphics& g)
+{
+    int d = 0; // height / 4;
+    
+    setc(g, 0.18f);
+    fillx(g, d, d, height-d*2, height-d*2);
+
+    if (param->getBoolValue())
+    {
+        setc(g, 0.6f);
+        fillx(g, d+1, d+1, height-d*2 - 2, height-d*2 - 2);
+    }
+
+//    setc(g, 0.4f);
+//    rectx(g, width - width/4, 0, height, height);
+
+    //setc(g, .74f);
+    //txt(g, FontSmall, param->getName(), height + 6 /*(width - width/4)/2 - gGetTextWidth(fontId, prmToggle->getName())/2*/, height/2 + 4);
+}
+
+void ToggleBox::handleMouseDown(InputEvent & ev)
+{
+    param->toggleValue();
+
+    redraw();
+}
+
+void ToggleBox::handleMouseUp(InputEvent & ev)
+{
+}
+
+
+SelectorBox::SelectorBox(Parameter* param_sel, int initHeight, bool radio)
+{
+    param = param_sel;
+
+    radioMode = radio;
+
+    setFontId(FontSmall);
+
+    if (initHeight > 0)
+    {
+        hLine = initHeight/param->getNumOptions() - 1;
+
+        if (hLine < 1)
+        {
+            hLine = 1;
+        }
+
+        height = (hLine + 1)*param->getNumOptions();
+    }
+}
+
+void SelectorBox::drawSelf(Graphics& g)
+{
+    int y = 0;
+    int opt = 0;
+
+    for (std::string str : param->getAllOptions())
+    {
+        if (radioMode && param->getCurrentOption() == opt ||
+            !radioMode && param->getOptionVal(opt))
+        {
+            setc(g, 0.6f);
+        }
+        else
+        {
+            setc(g, 0.2f);
+        }
+
+        fillx(g, 0, y, width, hLine);
+
+        y += hLine + 1;
+
+        opt++;
+    }
+}
+
+void SelectorBox::handleMouseDown(InputEvent & ev)
+{
+    if (radioMode)
+    {
+        param->setCurrentOption((ev.mouseY - y1) / (hLine + 1));
+    }
+    else
+    {
+        param->toggleOption((ev.mouseY - y1) / (hLine + 1));
+    }
+
+    redraw();
+}
 
 

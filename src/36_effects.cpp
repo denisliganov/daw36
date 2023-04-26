@@ -21,7 +21,7 @@
 #include "36_transport.h"
 #include "36_text.h"
 #include "36_utils.h"
-#include "36_parambox.h"
+#include "36_knob.h"
 #include "36_dragndrop.h"
 
 
@@ -222,12 +222,14 @@ void Eff::drawSelf(Graphics& g)
 
     setc(g, .8f);
 
+/*
     if (MixViewSingle)
         txt(g, FontBold, device->getObjName(), width - gGetTextWidth(FontBold, device->getObjName()) - 8, height/2 + gGetTextHeight(FontBold)/2);
         //txt(g, FontInst, device->getObjName(), 0, 8);
         //txt(g, FontBold, device->getObjName(), width - gGetTextWidth(FontBold, device->getObjName()) - 4, 12);
     else
         txtfit(g, FontBold, device->getObjName().substr(0, 4) + ".", 0, gGetTextHeight(FontBold) + 1, width);
+        */
 }
 
 Eff* Eff::clone()

@@ -110,12 +110,12 @@ MainWinObject::MainWinObject()
     AuxCtrlWidth =          0;
     AuxHeight =             40;
     CtrlPanelHeight =       50;
-    FxPanelMaxWidth =       380;
+    FxPanelMaxWidth =       250;
     FxPanelScrollerWidth =  10;
     FxPanelBottomHeight =   100;
-    FxMaxEffWidth =         FxPanelMaxWidth - FxPanelScrollerWidth - 60;
+    FxMaxEffWidth =         FxPanelMaxWidth - FxPanelScrollerWidth - 40;
     GridScrollWidth =       16;
-    InstrControlWidth =     220;
+    InstrControlWidth =     160;
     InstrScrollerWidth =    16;
     InstrHeight =           33;
     LeftGap =               26;
