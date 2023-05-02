@@ -1147,10 +1147,8 @@ void Hintbox::timerCallback()
             setText(text, x, y);
 
             // Block redraw for 100 ms, to w/a occasional glitch
-
-            blocked = true;
-
-            startTimer(100);
+            //blocked = true;
+            //startTimer(100);
         }
     }
     else
@@ -1188,7 +1186,7 @@ void Hintbox::restart(Gobj* obj, int xc, int yc)
     x = xc;
     y = yc;
 
-    startTimer(555);
+    startTimer(3000);
 }
 
 void Hintbox::stop()
@@ -1325,7 +1323,7 @@ void WinObject::updateHint(InputEvent& ev)
     {
         if (ev.leftClick || ev.wheelDelta != 0)
         {
-            hintBox->setText(activeObj->getClickHint(), hintX, hintY);
+            hintBox->setText(activeObj->getClickHint(), activeObj->getX2(), activeObj->getY1() + getBounds().getY());
         }
 
         return;
@@ -1338,9 +1336,9 @@ void WinObject::updateHint(InputEvent& ev)
         return;
     }
 
-    if(!hintBox->isBlocked())
+    if(!hintBox->isBlocked() && !hintBox->isVisible())
     {
-        hintBox->setVisible(false);
+        //hintBox->setVisible(false);
         hintBox->stopTimer();
 
         if(activeObj)

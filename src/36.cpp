@@ -76,7 +76,7 @@ int                 MixChannelPadHeight;
 int                 PanelGap;
 
 
-Instr*         SoloInstr;
+Instr*              SoloInstr;
 MixChannel*         SoloMixChannel;
 
 Pattern*            MPattern;

@@ -8,6 +8,7 @@
 #include "36_macros.h"
 #include "36_window.h"
 #include "36_instr.h"
+#include "36_instrpanel.h"
 #include "36_mixchannel.h"
 #include "36_effects.h"
 
@@ -89,7 +90,8 @@ Knob::Knob(Parameter* par, bool knob)
 
 std::string Knob::getClickHint()
 {
-    return ""; //param->getName() + ":  " + param->getValString() + " " + param->getUnitString();
+    //return param->getName() + ":  " + param->getValString() + " " + param->getUnitString();
+    return param->getValString() + " " + param->getUnitString();
 }
 
 void Knob::updValue()
@@ -193,9 +195,13 @@ void Knob::handleMouseDrag(InputEvent& ev)
 
         ys = ev.mouseY;
     }
-    else
+    else if (ev.mouseX <= x1 + width/widthDiv)
     {
         handleSliding(ev);
+    }
+    else
+    {
+        parent->handleMouseDrag(ev);
     }
 }
 
@@ -307,14 +313,19 @@ void Knob::drawSlider(Graphics& g)
     rectx(g, 0, 0, w, height);
 
     if (instr)
+    {
         instr->setMyColor(g, .3f);
+    }
     else
         setc(g, .18f);
 
     fillx(g, 0, 0, w, height);
 
     if (instr)
-        instr->setMyColor(g, .52f, .42f);
+        if (MInstrPanel->getCurrInstr() == instr)
+            instr->setMyColor(g, .72f, .42f);
+        else
+            instr->setMyColor(g, .52f, .42f);
     else
         setc(g, .32f);
 
