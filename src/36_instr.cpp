@@ -116,7 +116,8 @@ protected:
                 instr->setMyColor(g, .6f);
             }
 
-            txt(g, FontVis, "#", width/2 - 2, height/2 + gGetTextHeight(FontVis)/2 - 1);
+            //txt(g, FontVis, "#", width/2 - 2, height/2 + gGetTextHeight(FontVis)/2 - 1);
+            txt(g, FontVis, instr->getAlias(), width / 2 - 2, height / 2 + gGetTextHeight(FontVis) / 2 - 1);
         }
 
         void handleMouseDrag(InputEvent & ev)   { parent->handleMouseDrag(ev); }
@@ -626,8 +627,6 @@ void Instr::setIndex(int idx)
     if(num == 10)
         num = 0;
 
-    instrAlias = "a";
-
     char c;
 
     if(num < 10)
@@ -636,7 +635,7 @@ void Instr::setIndex(int idx)
     }
     else
     {
-        c = num + 0x37; // ASCII offset for uppercase letters minus 0xB
+        c = num + 0x36; // ASCII offset for uppercase letters minus 0xB
         //c = num + 0x56; // ASCII offset for lowercase letters minus 0xB
     }
 
