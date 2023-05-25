@@ -830,8 +830,10 @@ void InstrPanel::remap()
     }
 
     confine(0, instrListY-1, width, instrListY + instrListHeight - 1);
+    instrHighlight->updPos();
 
-    //instrHighlight->updPos();
+    if (MGrid)
+        MGrid->setLineHeight(InstrHeight);
 }
 
 void InstrPanel::setSampleRate(float sampleRate)

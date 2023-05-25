@@ -98,9 +98,9 @@ void InitializeAndStartProgram()
 
     InitComplete = true;
 
-    MObject->resized();
+    //MObject->resized();
 
-    MObject->addHighlight(MDragDrop = new DragAndDrop());
+    //MObject->addHighlight(MDragDrop = new DragAndDrop());
 
     MInstrPanel->showFX();
 

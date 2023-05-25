@@ -886,6 +886,8 @@ void Grid::adjustScale(int delta, int mouseRefX)
 
 ContextMenu* Grid::createContextMenu()
 {
+    return NULL;
+
     if(wasSelecting)
     {
         wasSelecting = false;
@@ -1459,14 +1461,21 @@ void Grid::handleMouseDown(InputEvent& ev)
                 {
                     if(actnote == NULL)
                     {
-                        grabTextCursor(alignTick, alignLine);
+                        //grabTextCursor(alignTick, alignLine);
 
                         selReset(true);
 
-                        //actnote = putNote(alignTick, alignLine, -1);
-                        //actnote->recalculate();
-                        //actnote->preview(-1, true);
-                        //setActivElement(actnote);
+                        if (MInstrPanel)
+                        {
+                            MInstrPanel->setCurrInstr(MInstrPanel->getInstrFromLine(alignLine));
+                        }
+
+                        actnote = putNote(alignTick, alignLine, -1);
+                        actnote->recalc();
+                        actnote->preview(-1, true);
+
+                        setActivElement(actnote);
+
                         //place->update();
 
                         //setActionMode(GridMode_Moving);
@@ -1526,6 +1535,8 @@ void Grid::handleMouseDown(InputEvent& ev)
         }
         else
         {
+            grabTextCursor(alignTick, alignLine);
+
         /*
             if (mode != GridMode_Selecting)
             {
