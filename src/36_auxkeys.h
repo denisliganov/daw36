@@ -11,7 +11,7 @@
 class AuxKeys : public Gobj
 {
 public:
-            AuxKeys(Grid* gr, int key_width, bool vert);
+            AuxKeys(Grid* gr, bool vert);
 
 protected:
             bool        isVertical;

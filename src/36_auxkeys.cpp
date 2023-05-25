@@ -263,13 +263,13 @@ void AuxKeys::drawHorizontalKeys(Graphics& g, int x, int y, int w, int h)
     g.restoreState();
 }
 
-AuxKeys::AuxKeys(Grid * gr, int key_width,bool vert)
+AuxKeys::AuxKeys(Grid * gr, bool vert)
 { 
     playNote = -1;
     prevPlayedNote = -1;
 
     grid = gr; 
-    keyWidth = key_width; 
+    keyWidth = 2; 
     isVertical = vert; 
 
     for(int n = 0; n < 120; n++)

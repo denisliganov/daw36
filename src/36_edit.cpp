@@ -96,14 +96,12 @@ Pattern* CreatePatternInstance(Pattern* ptMom, float tk1, float tk2, int tr1, in
 MainEdit::MainEdit()
 {
     MPattern = new Pattern(NULL, 0.f, -1.f, 0, 119, true);
-    MPattern->setBasePattern(MPattern);;
     MPattern->calcframes();
     MPattern->addInstance(MPattern);
 
     addObject(timeline = new Timeline(grid));
-    addObject(grid = new Grid(2, 24, MPattern, timeline));
-
-    addObject(keys = new AuxKeys(grid, 20, false));
+    addObject(grid = new Grid(4, 24, MPattern, timeline));
+    addObject(keys = new AuxKeys(grid, false));
 
     addHighlight(playHead = new Playhead(grid));
 

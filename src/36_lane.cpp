@@ -29,8 +29,7 @@ LanePanel::LanePanel(Grid* grid)
     laneType = Lane_Vol;
 
     addObject(lane = new Lane(workGrid, Lane_Vol));
-
-    addObject(keys = new AuxKeys(workGrid, 30, false));
+    addObject(keys = new AuxKeys(workGrid, false));
 }
 
 void LanePanel::drawSelf(Graphics& g)
