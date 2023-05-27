@@ -14,17 +14,14 @@
 
 ConfigWinObject::ConfigWinObject()
 {
+    //Gobj::addObject(buffSizeBox = new Slider36(false), 10, 50, 120, 20);
+    //Gobj::addObject(pbox2 = new Slider36(false), 10, 72, 120, 20);
+    //Gobj::addObject(pbox3 = new Slider36(false), 10, 94, 120, 20);
+    //Gobj::addObject(midiDevices = new ListBoxx("List1"), 200, 50, 120, 100);
 
-/*
-    Gobj::addObject(buffSizeBox = new Slider36(false), 10, 50, 120, 20);
-    Gobj::addObject(pbox2 = new Slider36(false), 10, 72, 120, 20);
-    Gobj::addObject(pbox3 = new Slider36(false), 10, 94, 120, 20);
+    //Gobj::addObject(knob1 = new Knob(new Parameter(0.5f)), 140, 190, 40, 40);
+    //Gobj::addObject(knob2 = new Knob(new Parameter(0.5f)), 180, 190, 20, 20);
 
-    Gobj::addObject(midiDevices = new ListBoxx("List1"), 200, 50, 120, 100);
-
-    Gobj::addObject(knob1 = new Knob(new Parameter(0.5f)), 140, 190, 40, 40);
-    Gobj::addObject(knob2 = new Knob(new Parameter(0.5f)), 180, 190, 20, 20);
-*/
 
     // Init params and controls
 
@@ -86,8 +83,8 @@ ConfigWinObject::ConfigWinObject()
     returnUp();
     spaceRight();
     spaceBelow();
-    putRight(buffSizeBox, 120, 30);
-    putBelow(showASIOPanel, 120, 20);
+    //putRight(buffSizeBox, 120, 30);
+    //putBelow(showASIOPanel, 120, 20);
     spaceBelow();
     putBelow(chooserBox, 120, chooserBox->getH());
     spaceRight();

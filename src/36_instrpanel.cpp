@@ -781,7 +781,7 @@ void InstrPanel::remap()
 
     int num = getNumInstrs();
 
-    int ih = 33;
+    int ih = 44;
 
     while (num*(ih) > instrListHeight)
     {

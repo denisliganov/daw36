@@ -61,6 +61,12 @@ ControlPanel::ControlPanel()
     btConfig->setLedType(true);
     addObject(btRender = new Button36(true), "bt.render");
     btConfig->setLedType(true);
+
+    addObject(btBrowser = new Button36(true), "bt.browser");
+    addObject(btBarMode = new GroupButton(2), "bt.bars");
+    addObject(btVols = new GroupButton(2), "bt.vols");
+    addObject(btPans = new GroupButton(2), "bt.pans");
+
     addObject(btPlay = new Button36(true), "bt.play");
     addObject(btStop = new Button36(false), "bt.stop");
     addObject(btRec = new Button36(false), "bt.rec");
@@ -71,12 +77,6 @@ ControlPanel::ControlPanel()
     addObject(octaveBox = new OctaveBox(5));
     addObject(snapMenu = new SnapMenu());
     addObject(timeScreen = new TimeScreen(), "pos.display");
-    //addObject(btBrowser = new GroupButton(2), "bt.browser");
-    addObject(btBrowser = new Button36(true), "bt.browser");
-
-    addObject(btBarMode = new GroupButton(2), "bt.bars"); 
-    addObject(btVols = new GroupButton(2), "bt.vols"); 
-    addObject(btPans = new GroupButton(2), "bt.pans"); 
 
     btBarMode->press();
 
@@ -84,16 +84,23 @@ ControlPanel::ControlPanel()
     int buttonHeight = 30;
 
     setBorder(4);
-    putStart(4, 4);
+    putStart(0, 0);
 
     putRight(fileMenu);
     putRight(editMenu);
     putRight(helpMenu);
+    
+    putStart(xstart1, 4);
+
     spaceRight();
     putRight(btConfig, buttonWidth, buttonHeight);
     putRight(btRender, buttonWidth, buttonHeight);
-    spaceRight(10);
-
+    spaceRight();
+    putRight(btBrowser, buttonWidth * 2, buttonHeight);
+    putRight(btBarMode, buttonWidth, buttonHeight);
+    putRight(btVols, buttonWidth, buttonHeight);
+    putRight(btPans, buttonWidth, buttonHeight);
+    spaceRight(4);
     putRight(btPlay, 52, buttonHeight);
     putRight(btStop, 34, buttonHeight);
     putRight(btRec, buttonWidth, buttonHeight);
@@ -105,11 +112,6 @@ ControlPanel::ControlPanel()
     putRight(bpmBox, 70, buttonHeight + 2);
     putRight(snapMenu, 64, buttonHeight + 2);
     putRight(octaveBox, 30, buttonHeight + 2);
-    spaceRight(8);
-    putRight(btBrowser, buttonWidth*2, buttonHeight);
-    putRight(btBarMode, buttonWidth, buttonHeight);
-    putRight(btVols, buttonWidth, buttonHeight);
-    putRight(btPans, buttonWidth, buttonHeight);
 
     xButtons = wndW + 50;
 

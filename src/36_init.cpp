@@ -316,7 +316,7 @@ void LoadDefaultInstruments()
 
     MInstrPanel->addInstrument(NULL, NULL);*/
 
-
+    /*
     MInstrPanel->addSample("Samples\\Clap.wav");
     MInstrPanel->addSample("Samples\\Rasta.wav");
     MInstrPanel->addSample("Samples\\Pipa_66.wav");
@@ -332,7 +332,7 @@ void LoadDefaultInstruments()
     MInstrPanel->addSample("Samples\\Horn Hit.wav");
     MInstrPanel->addSample("Samples\\Timbale 2.wav");
     MInstrPanel->addSample("Samples\\Closed Hat.wav");
-    MInstrPanel->addSample("Samples\\Dark Hat.wav");
+    MInstrPanel->addSample("Samples\\Dark Hat.wav");*/
 
     /*
     MInstrPanel->addInstrument(NULL);
