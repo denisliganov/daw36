@@ -1,4 +1,5 @@
 
+
 #pragma once
 
 #include "36_globals.h"
@@ -192,7 +193,7 @@ protected:
             void                handleObjDrag(bool reset, Gobj * obj,int mx,int my);
             void                handleObjDrop(Gobj * obj,int mx,int my, unsigned int flags);
             void                updatePosition(InputEvent & ev);
-            void                updcursor(InputEvent & ev);
+            void                updCursor(InputEvent & ev);
             void                updFillerImage();
             void                updBufferImage();
             void                updElementsImage();

@@ -177,9 +177,18 @@ private:
             Colour clr = Colour(hue, s, b, a);
 
             if (param->getBoolValue())
-                drawGlassRound(g, x1+1, y1+1, width-2, clr, 1);
+            {
+                //drawGlassRound(g, x1+1, y1+1, width-2, clr, 1);
+                fill(g, .8f);
+                rect(g, .6f);
+            }
             else
-                drawGlassRound(g, x1+1, y1+1, width-2, clr.withBrightness(.32f), 1);
+            {
+                fill(g, .1f);
+                rect(g, .0f);
+
+                //drawGlassRound(g, x1+1, y1+1, width-2, clr.withBrightness(.32f), 1);
+            }
         }
         else
         {
@@ -410,10 +419,9 @@ void MixChannel::remap()
         int ySendControls = height - FxPanelBottomHeight;
         int yControls = height - FxPanelBottomHeight + sendPanelHeight;
 
-        volKnob->setCoords1(xeff, yControls + 5, 112, 22);
-        panKnob->setCoords1(xeff, yControls + 32, 112, 22);
-
-        vu->setCoords1(xeff, height - 26, 112, 24);
+        volKnob->setCoords1(0, yControls + 5, 112, 22);
+        panKnob->setCoords1(0, yControls + 32, 112, 22);
+        vu->setCoords1(0, height - 26, width - 80, 20);
 
         for (Gobj* o : objs)
         {
@@ -423,16 +431,17 @@ void MixChannel::remap()
 
                 Instr* ins = k->getOutChannel()->getInstr();
 
-                k->setCoords1(width - 30, ins->getY1() - parent->getY1() + 2, 20, 20);
+                k->setCoords1(width - 30, ins->getY1() - parent->getY1() + 3, 14, 14);
             }
 
-            /**
             if (o->getObjId() == "out")
             {
                 ChanOutToggle* t = dynamic_cast<ChanOutToggle*>(o);
+
                 Instr* ins = t->getOutChannel()->getInstr();
-                t->setCoords1(width - 17, ins->getY1() - parent->getY1() + 5, 12, 12);
-            }*/
+
+                t->setCoords1(width - 12, ins->getY1() - parent->getY1() + 5, 12, 12);
+            }
         }
     }
     else
@@ -469,20 +478,17 @@ void MixChannel::drawSelf(Graphics& g)
     fill(g, .1f);
 
     int w = width - 80; //width - 64;
-    int xeff = FxPanelScrollerWidth + 1;
+    int xeff = 0; //FxPanelScrollerWidth + 1;
 
     if (MixViewSingle)
     {
         int sendPanelHeight = 0;
 
         setc(g, .4f);
-        fillx(g, xeff , height - FxPanelBottomHeight, w, FxPanelBottomHeight - InstrHeight);
-
-        setc(g, .36f);
-        fillx(g, xeff, height - FxPanelBottomHeight, w, sendPanelHeight);
+        fillx(g, xeff , height - FxPanelBottomHeight, w, FxPanelBottomHeight - 32);
 
         setc(g, .46f);
-        rectx(g, xeff, height - FxPanelBottomHeight, w, FxPanelBottomHeight - InstrHeight);
+        rectx(g, xeff, height - FxPanelBottomHeight, w, FxPanelBottomHeight - 32);
     }
     else
     {

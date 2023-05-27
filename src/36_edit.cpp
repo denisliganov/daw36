@@ -128,11 +128,12 @@ void MainEdit::drawSelf(Graphics& g)
     //fillx(g, 0, 0, LineNumWidth, height);
 
     // Gap on the right
+/*
     setc(g, 0.3f);
     fillx(g, width - GridScrollWidth, 0, width, MainLineHeight - 1);
     setc(g, 0.4f);
     rectx(g, width - GridScrollWidth, 0, width, MainLineHeight - 1);
-
+*/
 
 /*
     int lines = grid->visibleLineSpan;
@@ -166,18 +167,20 @@ void MainEdit::remap()
 
     confine();
 
-    timeline->setCoords2(0, 0, width - GridScrollWidth - 1, MainLineHeight - 1);
+    timeline->setCoords2(0, 0, width - 1, MainLineHeight - 1);
 
     //keys->setCoords1(LeftGap, MainLineHeight, 100, height - MainLineHeight - 1);
 
-    grid->vscr->setCoords2(width - GridScrollWidth, MainLineHeight, width - 1, height - 1);
+    //grid->vscr->setCoords2(width - GridScrollWidth, MainLineHeight, width - 1, height - 1);
 
-    grid->setCoords2(0, MainLineHeight + 1, width - GridScrollWidth - 1, height - kH - 1);
+    grid->setCoords2(0, MainLineHeight + 1, width - 1, height - kH - 1);
 
     if (kH)
-        keys->setCoords2(0, height - kH, width - GridScrollWidth - 1, height - 1);
+    {
+        keys->setCoords2(0, height - kH, width - 1, height - 1);
+    }
 
-    confine(0, 0, width - GridScrollWidth - 1, height - 1);
+    confine(0, 0, width - 1, height - 1);
 
     playHead->updatePosFromFrame();
 }

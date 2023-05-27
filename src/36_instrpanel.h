@@ -54,6 +54,7 @@ public:
             void                setSampleRate(float sampleRate);
             void                setBufferSize(unsigned bufferSize);
             void                setCurrInstr(Instr* instr);
+            void                setCurrInstr(int instr_index);
             void                showFX();
             void                setInstrFromNewBrowser(BrwListEntry* ble, Instr* instr);
             void                updateWaves();

@@ -340,7 +340,9 @@ void LoadDefaultInstruments()
     MInstrPanel->addInstrument(NULL);*/
     MInstrPanel->addInstrument(NULL, true);
 
-  
+    MInstrPanel->setCurrInstr(0);
+
+
    // MInstrPanel->setCurrInstr(MInstrPanel->getInstrs()[0]);
 
     //MInstrPanel->addSample("Samples\\Cymatics - Light Free Sample Pack\\Bonus Samples\\Drum Loops\\Cymatics - San Holo Free Full Drum Loop 2 - 120 BPM.wav");

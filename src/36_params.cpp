@@ -291,7 +291,7 @@ std::string Parameter::calcValStr(float val)
                 break;
             case Units_Percent:
             {
-                sprintf(str, ("%.0f"), absVal);
+                sprintf(str, ("%.0f"), absVal*100);
             } break;
             case Units_dB:
             {

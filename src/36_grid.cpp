@@ -1196,12 +1196,14 @@ void Grid::drawSelf(Graphics& g)
         //g.drawImage(mainimg, x1 + 40, y1 + 40, width - 80, height - 80, 40, 40, width - 80, height - 80);
     }
 
+/*
     if(bottomLine > 0 && (vscr->getOffset() + height)/lheight > bottomLine)
     {
         setc(g, 0.15f, .4f);
         int y = (bottomLine+1)*lheight - vscr->getOffset();
         fillx(g, 0, y, width, height - y);
     }
+    */
 
     //if(elemImage != NULL)
     //    g.drawImageAt(elemImage, x1, y1);
@@ -1378,7 +1380,7 @@ void Grid::handleModifierKeys(unsigned flags)
 
     place->update();
 
-    updcursor(lastEvent);
+    updCursor(lastEvent);
 }
 
 void Grid::handleMouseLeave(InputEvent & ev)
@@ -1416,7 +1418,7 @@ void Grid::handleMouseMove(InputEvent & ev)
 
     lastEvent = ev;
 
-    updcursor(ev);
+    updCursor(ev);
 }
 
 void Grid::handleMouseDown(InputEvent& ev)
@@ -1718,14 +1720,12 @@ void Grid::handleMouseWheel(InputEvent& ev)
             // Horizontal
             //float ofsDelta = ev.wheelDelta*(hscr->getVisiblePart()*0.03f);
             //hscr->setOffset(getHoffs() - ofsDelta);
-            
+
             // Vertical
-             vscr->setOffset(vscr->getOffset() - ev.wheelDelta * (lheight*1.5f));
-        
-            //vscr->setOffset(vscr->getOffset() - ev.wheelDelta*(lheight*.5f));
-        
+             //vscr->setOffset(vscr->getOffset() - ev.wheelDelta * (lheight*1.5f));
+
             //MInstrPanel->setOffset((int)(MInstrPanel->getOffset() - ev.wheelDelta*int(InstrHeight*1.1f)));
-        
+
             //MInstrPanel->setOffset(int(verticalGridScroller->getOffset()));
         }
         else
@@ -2233,7 +2233,7 @@ void Grid::updElementsImage()
     }
 }
 
-void Grid::updcursor(InputEvent & ev)
+void Grid::updCursor(InputEvent & ev)
 {
     if (mode == GridMode_ElemResizing)
     {
@@ -2392,12 +2392,17 @@ void Grid::updBufferImage()
 {
     if (brushImage != NULL && width > 0 && height > 0)
     {
+        int instrumentsTotalHeight = InstrHeight * (MInstrPanel->getNumInstrs() - 1);     // All instruments excluding Master
+
+        if (instrumentsTotalHeight <= 0)
+            return;
+
         if (mainimg != NULL) 
         {
             delete mainimg;
         }
 
-        mainimg = new juce::Image(Image::RGB, width, height, true);
+        mainimg = new juce::Image(Image::RGB, width, instrumentsTotalHeight, true);
 
         Graphics image(*(mainimg));
 
@@ -2405,13 +2410,13 @@ void Grid::updBufferImage()
 
         int xoffs = RoundFloat((hscr->getOffset() / tickPerBar - (int)hscr->getOffset() / tickPerBar) * getPixelsPerTick() * tickPerBar);
 
-        int yoffs = int(vscr->getOffset()) % lheight;
+        int yoffs = 0; //int(vscr->getOffset()) % lheight;
 
         ImageBrush* imgBrush = new ImageBrush(brushImage, -xoffs, -yoffs, 1);
 
         image.setBrush(imgBrush);
 
-        image.fillRect(0, 0, width, height);
+        image.fillRect(0, 0, width, instrumentsTotalHeight);
 
         //drawIntermittentHighlight(image, 0, 0, width, height, 4);
 

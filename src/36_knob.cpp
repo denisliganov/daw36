@@ -386,7 +386,7 @@ void Knob::drawKnob(Graphics& g)
 
         if (objId == "snd")
         {
-            clr = Colour(1.f, 0.f, dim ? .32 : .8f, 1.f);
+            clr = Colour(1.f, 0.f, dim ? .1 : .8f, 1.f);
         }
         else if (objId == "fx")
         {

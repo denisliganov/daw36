@@ -829,8 +829,8 @@ void InstrPanel::remap()
         mixr->setVis(false);
     }
 
-    confine(0, instrListY-1, width, instrListY + instrListHeight - 1);
-    instrHighlight->updPos();
+    //confine(0, instrListY-1, width, instrListY + instrListHeight - 1);
+    //instrHighlight->updPos();
 
     if (MGrid)
         MGrid->setLineHeight(InstrHeight);
@@ -865,6 +865,25 @@ void InstrPanel::setCurrInstr(Instr* instr)
     if (fxShowing)
     {
         MMixer->remapAndRedraw();
+    }
+}
+
+void InstrPanel::setCurrInstr(int instr_index)
+{
+    if (instrs[instr_index] != NULL)
+    {
+        if (curr) curr->remapAndRedraw();
+
+        curr = instrs[instr_index];
+
+        curr->remapAndRedraw();
+
+        redraw();
+
+        if (fxShowing)
+        {
+            MMixer->remapAndRedraw();
+        }
     }
 }
 
