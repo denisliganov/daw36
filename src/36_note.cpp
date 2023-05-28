@@ -119,7 +119,7 @@ void Note::recalc()
     {
         calcFreq();
 
-        calcframes();
+        calcFrames();
 
         calculated = true;
 
@@ -216,9 +216,9 @@ void Note::drawOnGrid(Graphics& g, Grid* grid)
         gFillRect(g, x1, y1, x2, y2);
 
         if (device->getParent())
-            device->getParent()->setMyColor(g, 1.f, -1, 1.f);
+            device->getParent()->setMyColor(g, .8f, -1, .5f);
         else
-            setc(g, 1.f);
+            setc(g, .8f, .5f);
 
         gFillRect(g, x1, y1, x1, y2);
 
@@ -426,7 +426,7 @@ bool SampleNote::initCursor(double* cursor)
        *cursor = rightmostFrame;
     }
 
-    if(patt->isBounded() && (patt != MPattern)&&((frame1 + *cursor) >= patt->getendframe()))
+    if(patt->isBounded() && (patt != MPattern)&&((frame1 + *cursor) >= patt->getEndFrame()))
     {
         return false;
     }

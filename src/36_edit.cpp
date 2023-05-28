@@ -96,7 +96,7 @@ Pattern* CreatePatternInstance(Pattern* ptMom, float tk1, float tk2, int tr1, in
 MainEdit::MainEdit()
 {
     MPattern = new Pattern(NULL, 0.f, -1.f, 0, 119, true);
-    MPattern->calcframes();
+    MPattern->calcFrames();
     MPattern->addInstance(MPattern);
 
     addObject(timeline = new Timeline(grid));

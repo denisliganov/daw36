@@ -28,20 +28,20 @@ public:
     virtual Element*            clone();
     virtual Element*            clone(Pattern* newPtBase);
     virtual void                calcForGrid(Grid* grid);
-            void                calcframes();
+            void                calcFrames();
     virtual bool                checkVisible(Grid* grid);
             void                deleteAllTriggers();
             void                deactivateAllTriggers();
     virtual void                drawOnGrid(Graphics& g, Grid* grid) {}
             Device36*           getDevice()     { return dev; }
-    virtual long                getframe();
-    virtual long                getendframe();
-    virtual long                getframes();
-    virtual float               gettick();
-    virtual float               getendtick();
+    virtual long                getFrame();
+    virtual long                getEndFrame();
+    virtual long                getFrames();
+    virtual float               getTick();
+    virtual float               getEndTick();
     virtual float               getticklen();
             Pattern*            getbasepatt();
-            int                 getline();
+            int                 getLine();
             ElemType            getType()       { return type; }
             long                getFrameLength()    {return framelen;}
         std::list<Trigger*>&    getTriggers()       { return triggers; }
@@ -62,9 +62,9 @@ public:
             void                relocateTriggers();
     virtual void                recalc();
     virtual void                save(XmlElement* xmlNode);
-    virtual void                setline(int tkl);
+    virtual void                setLine(int tkl);
     virtual void                setPos(float tk, int ln);
-    virtual void                setendtick(float et);
+    virtual void                setEndTick(float et);
     virtual void                setTickLength(float tl);
     virtual void                setTickDelta(float tick_delta);
             void                softdel();

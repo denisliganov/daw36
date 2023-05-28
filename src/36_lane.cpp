@@ -162,7 +162,7 @@ void Lane::drawBars(Graphics& g)
     {
         if (!el->isdel() && el->isNote())
         {
-            drawBar(g, el, grid->getXfromTick(el->gettick()), false, divHgt);
+            drawBar(g, el, grid->getXfromTick(el->getTick()), false, divHgt);
         }
     }
 
@@ -170,7 +170,7 @@ void Lane::drawBars(Graphics& g)
     {
         if (!el->isdel() && el->getPattern() == grid->getPattern() && el->isNote())
         {
-            drawBar(g, el, grid->getXfromTick(el->gettick()), true, divHgt);
+            drawBar(g, el, grid->getXfromTick(el->getTick()), true, divHgt);
         }
     }
 
@@ -272,7 +272,7 @@ void Lane::process(bool leftbt, int mx, int my, unsigned flags)
 
     for(Element* el : grid->getPattern()->getBasePattern()->getElems())
     {
-        int cx = grid->getXfromTick(el->gettick());
+        int cx = grid->getXfromTick(el->getTick());
 
         if (!el->isdel() && el->isNote() && (!processSelectedOnly || el->issel()) && (cx >= x1 && cx <= x2))
         {

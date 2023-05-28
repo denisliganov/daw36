@@ -24,15 +24,15 @@ void ParamBox::setHasText(bool txt, bool inside)
     hasText = txt;
     textInside = inside;
 
-    widthDiv = (hasText && !textInside ? 2 : 1);
+    widthDiv = (hasText && !textInside ? 0.45 : 1);
 
     remap();
 }
 
 void ParamBox::drawText(Graphics& g)
 {
-    int w = width/widthDiv - 6;
-    int x = width - width/widthDiv;
+    int w = width - width*widthDiv - 6;
+    int x = width*widthDiv;
     int textX = x + 6;  // height + 2
     int textY = 10;
     int namestrLen = gGetTextWidth(fontId, param->getName());
@@ -45,22 +45,25 @@ void ParamBox::drawText(Graphics& g)
         fillx(g, x, 0, width - x, height);
     }
 
-    setc(g, .6f);
+    setc(g, .8f);
+
     if (unitstrLen > 0)
         //txt(g, fontId, param->getName() + "." + param->getUnitString(), textX, textY);
         txt(g, fontId, param->getName(), textX, textY);
     else
         txt(g, fontId, param->getName(), textX, textY);
 
+    //setc(g, 1.f);
+
     if (!textInside)
     {
-        //std::string str = param->getValString() + " " + param->getUnitString();
-        //txt(g, fontId, str, textX + w - valstrLen - unitstrLen - 4, textY);
+        std::string str = param->getValString() + " " + param->getUnitString();
+
+        txt(g, fontId, str, textX + w - valstrLen - unitstrLen - 6, textY);
     }
     else
     {
         setc(g, .9f);
-
         txt(g, fontId, param->getValString(), textX + w - valstrLen - 2, textY);
 
         setc(g, .52f);
@@ -156,14 +159,14 @@ void Knob::handleSliding(InputEvent& ev)
     }
     else
     {
-        if (ev.clickDown && (delta <= width/widthDiv))
+        if (ev.clickDown && (delta <= width*widthDiv))
         {
             sliding = true;
         }
 
         if (sliding)
         {
-            param->adjustFromControl(this, 0, float(delta)/(float(width)/widthDiv));
+            param->adjustFromControl(this, 0, float(delta)/(float(width)*widthDiv));
         }
     }
 
@@ -195,7 +198,7 @@ void Knob::handleMouseDrag(InputEvent& ev)
 
         ys = ev.mouseY;
     }
-    else if (ev.mouseX <= x1 + width/widthDiv)
+    else if (ev.mouseX <= x1 + width*widthDiv)
     {
         handleSliding(ev);
     }
@@ -223,6 +226,11 @@ void Knob::handleMouseDown(InputEvent & ev)
 void Knob::handleMouseUp(InputEvent & ev)
 {
     sliding = false;
+
+    if (ev.mouseX > x1 + width*widthDiv)
+    {
+        parent->handleMouseUp(ev);
+    }
 }
 
 void Knob::remap()
@@ -270,7 +278,7 @@ void Knob::remap()
 
     if (param)
     {
-        defaultPos = int(float(width/widthDiv)*param->getDefaultValueNormalized());
+        defaultPos = int(float(width*widthDiv)*param->getDefaultValueNormalized());
     }
 
     delSnap();
@@ -278,7 +286,7 @@ void Knob::remap()
 
 void Knob::drawSlider(Graphics& g)
 {
-    int w = width/widthDiv;
+    int w = width*widthDiv;
     float offs = param->getOffset();
     float range = param->getRange();
     float val = param->getValue();
@@ -325,9 +333,9 @@ void Knob::drawSlider(Graphics& g)
         if (MInstrPanel->getCurrInstr() == instr)
             instr->setMyColor(g, .72f, .42f);
         else
-            instr->setMyColor(g, .52f, .42f);
+            instr->setMyColor(g, .6f, .42f);
     else
-        setc(g, .32f);
+        setc(g, .4f);
 
     fillx(g, xstart, ysl+1, wsl, sh-2);
 
@@ -342,7 +350,7 @@ void Knob::drawSlider(Graphics& g)
     if (instr)
         instr->setMyColor(g, .34f);
     else
-        setc(g, .48f);
+        setc(g, .6f);
 
     fillx(g, xoffs, ysl+1, 1, sh-2);
 
@@ -352,7 +360,7 @@ void Knob::drawSlider(Graphics& g)
         //fillx(g, xdef, ysl+1, 1, sh-2);
     }
 
-    setc(g, 1.f);
+    //setc(g, 1.f);
     //fillx(g, xval, height - sh + 1, 1, sh - 2);
 }
 
@@ -386,7 +394,7 @@ void Knob::drawKnob(Graphics& g)
 
         if (objId == "snd")
         {
-            clr = Colour(1.f, 0.f, dim ? .1 : .8f, 1.f);
+            clr = Colour(1.f, 0.f, dim ? .2 : .8f, 1.f);
         }
         else if (objId == "fx")
         {

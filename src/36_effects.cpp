@@ -221,6 +221,7 @@ void Eff::drawSelf(Graphics& g)
     }
 
     setc(g, .8f);
+    txt(g, FontBold, device->getObjName(), width - gGetTextWidth(FontBold, device->getObjName()) - 2, gGetTextHeight(FontBold)/2);
 
 /*
     if (MixViewSingle)

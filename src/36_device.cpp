@@ -486,12 +486,12 @@ void Device36::addNote(Note * note)
 
         Note* n = *it;
 
-        if(n->gettick() > note->gettick())
+        if(n->getTick() > note->getTick())
         {
             notes.insert(it, note);
             break;
         }
-        else if (n->gettick() == note->gettick())
+        else if (n->getTick() == note->getTick())
         {
             if(n->getNoteValue() < note->getNoteValue())
             {

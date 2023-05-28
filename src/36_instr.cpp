@@ -230,7 +230,7 @@ Instr::~Instr()
         //delete device;
     }
 
-    //MMixer->removeMixChannel(this);
+    MMixer->removeMixChannel(this);
 
     ReleaseMutex(MixerMutex);
 }
@@ -415,11 +415,11 @@ std::list <Element*> Instr::getNotesFromRange(float offset, float lastVisibleTic
 
     for(auto note : device->notes)
     {
-        if(note->getendtick() < offset || note == device->selfNote)
+        if(note->getEndTick() < offset || note == device->selfNote)
         {
             continue;
         }
-        else if (note->gettick() > lastVisibleTick)
+        else if (note->getTick() > lastVisibleTick)
         {
             break;
         }

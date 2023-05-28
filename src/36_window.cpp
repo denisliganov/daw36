@@ -1306,24 +1306,24 @@ void WinObject::updateHint(InputEvent& ev)
         return;
     }
 
-    int hintX = ev.mouseX + 20;
-    int hintY = ev.mouseY;
-
-    Rectangle r = getBounds();
-
-    hintX += r.getX();
-    hintY += r.getY();
-
-    r = getParentComponent()->getBounds();
-
-    hintX += r.getX();
-    hintY += r.getY();
+    int hintX = 0;
+    int hintY = 0;
 
     if (activeObj && activeObj->getClickHint() != "")
     {
+        //hintX = activeObj->getX2() + 60;
+        //hintY = activeObj->getY1();
+
+        //Rectangle r = getBounds();
+        //hintX += r.getX();
+        //hintY += r.getY();
+        //r = getParentComponent()->getBounds();
+        //hintX += r.getX();
+        //hintY += r.getY();
+
         if (ev.leftClick || ev.wheelDelta != 0)
         {
-            hintBox->setText(activeObj->getClickHint(), activeObj->getX2(), activeObj->getY1() + getBounds().getY());
+            hintBox->setText(activeObj->getClickHint(), hintX, hintY);
         }
 
         return;

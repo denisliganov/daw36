@@ -83,16 +83,18 @@ ControlPanel::ControlPanel()
     int buttonWidth = 30;
     int buttonHeight = 30;
 
-    setBorder(4);
+    setObjSpacing(2);
     putStart(0, 0);
 
     putRight(fileMenu);
     putRight(editMenu);
     putRight(helpMenu);
     
+    setBorder(4);
+    setObjSpacing(4);
     putStart(xstart1, 4);
 
-    spaceRight();
+    spaceRight(2);
     putRight(btConfig, buttonWidth, buttonHeight);
     putRight(btRender, buttonWidth, buttonHeight);
     spaceRight();

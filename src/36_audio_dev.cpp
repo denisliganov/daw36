@@ -87,7 +87,7 @@ Audio36::Audio36(float smpRate)
 
     prevPattern = new Pattern(NULL, 0.f, -1.f, 0, 119, true);
     prevPattern->setBasePattern(prevPattern);
-    prevPattern->calcframes();
+    prevPattern->calcFrames();
     prevPattern->addInstance(prevPattern);
 
     previewEvent = new Event(0, prevPattern);

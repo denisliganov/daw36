@@ -48,7 +48,7 @@ Element* Element::clone(Pattern* ptBase)
 
 void Element::recalc()
 {
-    calcframes();
+    calcFrames();
 
     calculated = true;
 
@@ -58,7 +58,7 @@ void Element::recalc()
     }
 }
 
-void Element::calcframes()
+void Element::calcFrames()
 {
     ticklen = tick2 - tick1;
 
@@ -88,10 +88,10 @@ bool Element::isPointed(int mx, int my, Grid* grid)
 
 bool Element::checkVisible(Grid* grid)
 {
-    int x1 = grid->getXfromTick(gettick());
-    int x2 = grid->getXfromTick(getendtick());
-    int y1 = grid->getYfromLine(getline()) - grid->getLineHeight();
-    int y2 = grid->getYfromLine(getline());
+    int x1 = grid->getXfromTick(getTick());
+    int x2 = grid->getXfromTick(getEndTick());
+    int y1 = grid->getYfromLine(getLine()) - grid->getLineHeight();
+    int y2 = grid->getYfromLine(getLine());
 
     if(CheckPlaneCrossing(x1, y1, x2, y2, grid->getX1(), grid->getY1(), grid->getX2(), grid->getY2()))
     {
@@ -167,10 +167,10 @@ bool Element::isShown()
 void Element::save(XmlElement * xmlNode)
 {
     xmlNode->setAttribute(T("Type"), int(type));
-    xmlNode->setAttribute(T("gettick"), tick1);
-    xmlNode->setAttribute(T("getendtick"), tick2);
+    xmlNode->setAttribute(T("getTick"), tick1);
+    xmlNode->setAttribute(T("getEndTick"), tick2);
     xmlNode->setAttribute(T("TickLength"), ticklen);
-    xmlNode->setAttribute(T("getline"), line);
+    xmlNode->setAttribute(T("getLine"), line);
 
     if(type != El_Pattern)
     {
@@ -180,8 +180,8 @@ void Element::save(XmlElement * xmlNode)
 
 void Element::load(XmlElement * xmlNode)
 {
-    tick1 = (float)xmlNode->getDoubleAttribute(T("gettick"));
-    tick2 = (float)xmlNode->getDoubleAttribute(T("getendtick"));
+    tick1 = (float)xmlNode->getDoubleAttribute(T("getTick"));
+    tick2 = (float)xmlNode->getDoubleAttribute(T("getEndTick"));
     ticklen = (float)xmlNode->getDoubleAttribute(T("TickLength"));
 }
 
@@ -331,31 +331,31 @@ Pattern* Element::getbasepatt()
 
 void Element::calcForGrid(Grid* grid)
 {
-    x1 = grid->getXfromTick(gettick());
-    y1 = grid->getYfromLine(getline());
+    x1 = grid->getXfromTick(getTick());
+    y1 = grid->getYfromLine(getLine());
 }
 
-float Element::gettick()
+float Element::getTick()
 {
     return tick1;
 }
 
-float Element::getendtick()
+float Element::getEndTick()
 {
     return tick2;
 }
 
-int Element::getline()
+int Element::getLine()
 {
     return line;
 }
 
-long Element::getframe()
+long Element::getFrame()
 {
     return frame1;
 }
 
-long Element::getendframe()
+long Element::getEndFrame()
 {
     if(frame2 == 0)
     {
@@ -365,17 +365,17 @@ long Element::getendframe()
     return frame2;
 }
 
-long Element::getframes()
+long Element::getFrames()
 {
-    return getendframe() - getframe();
+    return getEndFrame() - getFrame();
 }
 
-void Element::setline(int trkline)
+void Element::setLine(int trkline)
 {
     line = trkline;
 }
 
-void Element::setendtick(float endtick)
+void Element::setEndTick(float endtick)
 {
     tick2 = endtick;
 }

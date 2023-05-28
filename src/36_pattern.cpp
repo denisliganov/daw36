@@ -89,11 +89,11 @@ void Pattern::move(float dtick, int dtrack)
 
 bool Pattern::checkVisible(Grid* grid)
 {
-    int x1 = grid->getXfromTick(gettick());
-    int x2 = grid->getXfromTick(getendtick());
+    int x1 = grid->getXfromTick(getTick());
+    int x2 = grid->getXfromTick(getEndTick());
 
-    int y1 = grid->getYfromLine(getline()) - grid->getLineHeight()*2;
-    int y2 = grid->getYfromLine(getline()) - grid->getLineHeight();
+    int y1 = grid->getYfromLine(getLine()) - grid->getLineHeight()*2;
+    int y2 = grid->getYfromLine(getLine()) - grid->getLineHeight();
 
     if(CheckPlaneCrossing(x1, y1, x2, y2, grid->getX1(), grid->getY1(), grid->getX2(), grid->getY2()))
     {
@@ -119,7 +119,7 @@ Element* Pattern::checkElement(float tick, int trknum)
 {
     for(Element* el : elems)
     {
-        if(!el->isdel() && el->gettick() == tick && el->getline() == trknum)
+        if(!el->isdel() && el->getTick() == tick && el->getLine() == trknum)
         {
             return el;
         }
@@ -130,7 +130,7 @@ Element* Pattern::checkElement(float tick, int trknum)
 
 void Pattern::recalc()
 {
-    calcframes();
+    calcFrames();
 
     for(Element* el : elems)
     {
@@ -232,9 +232,9 @@ long Pattern::getLastElementFrame()
 
     for(Element* el : elems)
     {
-        if (!el->isdel() && el->getendframe() > endFrame)
+        if (!el->isdel() && el->getEndFrame() > endFrame)
         {
-            endFrame = el->getendframe();
+            endFrame = el->getEndFrame();
         }
     }
 
@@ -253,7 +253,7 @@ void Pattern::drawOnGrid(Graphics& g, Grid * grid)
     int gx1 = x1;
     int gy1 = y1;
 
-    int gx2 = grid->getXfromTick(getendtick());
+    int gx2 = grid->getXfromTick(getEndTick());
     int gy2 = grid->getYfromLine(line + numlines - 1);
 
     int pl = (int)(ticklen*grid->getPixelsPerTick());
@@ -362,22 +362,22 @@ long Pattern::getFrame()
 
 long Pattern::getGlobalFrame()
 {
-    return getframe() + getFrame();
+    return getFrame() + getFrame();
 }
 
 void Pattern::setGlobalFrame(long frame)
 {
-    setFrame(frame - getframe());
+    setFrame(frame - getFrame());
 }
 
 long Pattern::getGlobalStartFrame()
 {
-    return getframe();
+    return getFrame();
 }
 
 long Pattern::getGlobalEndFrame()
 {
-    return getframe() + getframes();
+    return getFrame() + getFrames();
 }
 
 void Pattern::getSmallestCountDown(long* count)
@@ -580,9 +580,9 @@ void Pattern::updateEvents()
 
 void Pattern::adjustBounds()
 {
-    if(getframes() > 0)
+    if(getFrames() > 0)
     {
-        setBounds(0, getframes());
+        setBounds(0, getFrames());
 
         if(currFrame < startFrame || currFrame > endFrame)
         {
@@ -593,7 +593,7 @@ void Pattern::adjustBounds()
 
 void Pattern::placeTrigger(Trigger* tg)
 {
-    float tick = tg->starter ? tg->el->gettick() : tg->el->getendtick();
+    float tick = tg->starter ? tg->el->getTick() : tg->el->getEndTick();
 
     if(events.size() == 0)
     {
@@ -720,7 +720,7 @@ void Pattern::preInitTriggers(long frame, bool activate_env, bool paraminit)
                 {
                     Note* note = (Note*)tg->el;
 
-                    if(frame > note->getframe() && frame < note->getendframe())
+                    if(frame > note->getFrame() && frame < note->getEndFrame())
                     {
                         if(tg->isActive())  tg->stop();
 
@@ -739,11 +739,11 @@ void Pattern::preInitTriggers(long frame, bool activate_env, bool paraminit)
                 {
                     Pattern* pt = (Pattern*)tg->el;
 
-                    if(frame >= pt->getframe() && frame < pt->getendframe())
+                    if(frame >= pt->getFrame() && frame < pt->getEndFrame())
                     {
                         if(tg->isActive())  tg->stop();
 
-                        tg->start(frame - pt->getframe());
+                        tg->start(frame - pt->getFrame());
                     }
                     else
                     {

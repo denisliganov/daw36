@@ -312,14 +312,14 @@ void Grid::action(GridAction act, float dTick, int dLine)
     {
         for(Element* el : clipboard)
         {
-            if(firstElemTick == -1 || el->gettick() < firstElemTick)
+            if(firstElemTick == -1 || el->getTick() < firstElemTick)
             {
-                firstElemTick = el->gettick();
+                firstElemTick = el->getTick();
             }
 
-            if(firstElemLine == -1 || el->getline() < firstElemLine)
+            if(firstElemLine == -1 || el->getLine() < firstElemLine)
             {
-                firstElemLine = el->getline();
+                firstElemLine = el->getLine();
             }
         }
     }
@@ -342,7 +342,7 @@ void Grid::action(GridAction act, float dTick, int dLine)
             if (mode == GridMode_Ctrl)
             {
                 brushStep = activeElem->getticklen();
-                xtick = activeElem->gettick();
+                xtick = activeElem->getTick();
             }
 
             if(alignTick < currTick)
@@ -485,14 +485,14 @@ void Grid::action(GridAction act, float dTick, int dLine)
             // turn off moving across instruments for now
             //dLine = 0;
 
-            if(activeElem->gettick() + dTick < 0)
+            if(activeElem->getTick() + dTick < 0)
             {
-                dTick -= activeElem->gettick() + dTick;
+                dTick -= activeElem->getTick() + dTick;
             }
 
-            if(activeElem->getline() + dLine < 0)
+            if(activeElem->getLine() + dLine < 0)
             {
-                dLine -= activeElem->getline() + dLine;
+                dLine -= activeElem->getLine() + dLine;
             }
 
             if(dTick != 0 || dLine != 0)
@@ -523,14 +523,14 @@ void Grid::action(GridAction act, float dTick, int dLine)
 
             for(Element* el : selected)
             {
-                if(el->gettick() + dTick < ct)
+                if(el->getTick() + dTick < ct)
                 {
-                    ct = el->gettick() + dTick;
+                    ct = el->getTick() + dTick;
                 }
 
-                if(el->getline() + dLine < cl)
+                if(el->getLine() + dLine < cl)
                 {
-                    cl = el->getline() + dLine;
+                    cl = el->getLine() + dLine;
                 }
             }
 
@@ -963,14 +963,14 @@ void Grid::checkElementsAtPos(InputEvent & ev)
 
             if(checkByStep)
             {
-                if (el->getline() == alignLine)
+                if (el->getLine() == alignLine)
                 {
                     if (el->issel() && el->isPointed(ev.mouseX, ev.mouseY, this))
                     {
                         newEl = el;
                         break;
                     }
-                    else if (el->gettick() == alignTick)
+                    else if (el->getTick() == alignTick)
                     {
                         newEl = el;
                         break;
@@ -979,7 +979,7 @@ void Grid::checkElementsAtPos(InputEvent & ev)
             }
             else
             {
-                if (el->getline() == alignLine)
+                if (el->getLine() == alignLine)
                 {
                     if (mode == GridMode_Alt)
                     {
@@ -1188,6 +1188,7 @@ void Grid::drawElements(Graphics& g)
 
 void Grid::drawSelf(Graphics& g)
 {
+    fill(g, 0.0f);
     if(mainimg != NULL)
     {
         g.drawImageAt(mainimg, x1, y1);
@@ -1288,7 +1289,7 @@ Note* Grid::getNoteAtPos(float tick, int line)
 
     for (Element* el : visible)
     {
-        if(el->gettick() == tick && el->getline() == line)
+        if(el->getTick() == tick && el->getLine() == line)
         {
             note = dynamic_cast<Note*>(el);
 
@@ -1423,6 +1424,11 @@ void Grid::handleMouseMove(InputEvent & ev)
 
 void Grid::handleMouseDown(InputEvent& ev)
 {
+    if (alignLine > bottomLine - 1)
+    {
+        return;
+    }
+
     mouseIsDown = true;
 
     //updatePosition(ev);
@@ -1844,9 +1850,9 @@ bool Grid::isElementSelected(Element* el)
 {
     if (dispmode == GridDisplayMode_Bars)
     {
-        float ex1 = el->gettick();
-        float ex2 = el->getendtick();
-        float ey1 = (float)el->getline();
+        float ex1 = el->getTick();
+        float ex2 = el->getEndTick();
+        float ey1 = (float)el->getLine();
         float ey2 = ey1;
 
         if ( CheckPlaneCrossing(ex1, ey1, ex2, ey2, selTickStart, (float)selLineStart, selTickEnd, (float)selLineEnd))
@@ -1856,7 +1862,7 @@ bool Grid::isElementSelected(Element* el)
     }
     else
     {
-        if (el->gettick() >= selTickStart && el->gettick() < selTickEnd && el->getline() >= selLineStart && el->getline() <= selLineEnd )
+        if (el->getTick() >= selTickStart && el->getTick() < selTickEnd && el->getLine() >= selLineStart && el->getLine() <= selLineEnd )
         {
             return true;
         }
@@ -2014,7 +2020,7 @@ void Grid::remapElements()
 
         for(Element* el : patt->getElems())
         {
-            if ( el->getendtick() < hscr->getOffset() || el->gettick() > lastVisibleTick)
+            if ( el->getEndTick() < hscr->getOffset() || el->getTick() > lastVisibleTick)
             {
                 // Skip out-of-visible-area elements
             }
@@ -2022,13 +2028,20 @@ void Grid::remapElements()
             {
                 if (el->isShown())
                 {
+                    Note* note = dynamic_cast<Note*>(el);
+
+                    if (note)
+                    {
+                        note->setLine(note->getInstr()->getIndex());
+                    }
+
                     if(visible.size() > 0)
                     {
                         // Place to the right position, so the list is sorted according to start tick
     
-                        if(el->gettick() >= (*it)->gettick())
+                        if(el->getTick() >= (*it)->getTick())
                         {
-                            while(it != visible.end() && el->gettick() >= (*it)->gettick())
+                            while(it != visible.end() && el->getTick() >= (*it)->getTick())
                             {
                                 it++;
                             }
@@ -2039,7 +2052,7 @@ void Grid::remapElements()
                             {
                                 --it;
     
-                                if(el->gettick() >= (*it)->gettick())
+                                if(el->getTick() >= (*it)->getTick())
                                 {
                                     it++;
     
@@ -2167,7 +2180,8 @@ void Grid::selReset(bool deselect)
 void Grid::updBounds()
 {
     lastElementEndTick = 0;
-    bottomLine = 0;
+
+    bottomLine = MInstrPanel? MInstrPanel->getNumInstrs() - 1 : 0;
 
     if (patt != NULL)
     {
@@ -2175,15 +2189,13 @@ void Grid::updBounds()
         {
             if (!el->isdel())
             {
-                if(el->getendtick() > lastElementEndTick)
+                if(el->getEndTick() > lastElementEndTick)
                 {
-                    lastElementEndTick = el->getendtick();
+                    lastElementEndTick = el->getEndTick();
                 }
 
-                if(el->getline() > bottomLine)
-                {
-                    bottomLine = el->getline();
-                }
+                //if(el->getline() > bottomLine)
+                //    bottomLine = el->getline();
             }
         }
     }
@@ -2203,6 +2215,7 @@ void Grid::updBounds()
         hscr->updBounds(full, visiblepart, hscr->getOffset());
     }
 
+/*
     if(vscr)
     {
         float full = (1 + bottomLine + 5)*lheight;
@@ -2214,6 +2227,7 @@ void Grid::updBounds()
 
         vscr->updBounds(full, height, vscr->getOffset());
     }
+    */
 }
 
 void Grid::updElementsImage()
@@ -2338,7 +2352,7 @@ void Grid::updFillerImage()
 
     float tick = .2f;
     float beat = .28f;
-    float bar =  .36f;
+    float bar =  .28f; //.36f;
 
     float divClr = .05f;
 

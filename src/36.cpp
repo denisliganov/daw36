@@ -110,7 +110,7 @@ MainWinObject::MainWinObject()
     AuxCtrlWidth =          0;
     AuxHeight =             40;
     CtrlPanelHeight =       50;
-    FxPanelMaxWidth =       250;
+    FxPanelMaxWidth =       290;
     FxPanelScrollerWidth =  10;
     FxPanelBottomHeight =   100;
     FxMaxEffWidth =         FxPanelMaxWidth - FxPanelScrollerWidth - 40;

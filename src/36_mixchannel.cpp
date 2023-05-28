@@ -180,12 +180,12 @@ private:
             {
                 //drawGlassRound(g, x1+1, y1+1, width-2, clr, 1);
                 fill(g, .8f);
-                rect(g, .6f);
+                rect(g, .99f);
             }
             else
             {
-                fill(g, .1f);
-                rect(g, .0f);
+                fill(g, .2f);
+                rect(g, .4f);
 
                 //drawGlassRound(g, x1+1, y1+1, width-2, clr.withBrightness(.32f), 1);
             }
@@ -419,8 +419,8 @@ void MixChannel::remap()
         int ySendControls = height - FxPanelBottomHeight;
         int yControls = height - FxPanelBottomHeight + sendPanelHeight;
 
-        volKnob->setCoords1(0, yControls + 5, 112, 22);
-        panKnob->setCoords1(0, yControls + 32, 112, 22);
+        volKnob->setCoords1(0, yControls + 5, 112, 18);
+        panKnob->setCoords1(0, yControls + 32, 112, 18);
         vu->setCoords1(0, height - 26, width - 80, 20);
 
         for (Gobj* o : objs)
@@ -431,7 +431,8 @@ void MixChannel::remap()
 
                 Instr* ins = k->getOutChannel()->getInstr();
 
-                k->setCoords1(width - 30, ins->getY1() - parent->getY1() + 3, 14, 14);
+                if (ins != instr)
+                    k->setCoords1(width - 22, ins->getY1() - parent->getY1() + ins->getH()/2 - 10, 20, 20);
             }
 
             if (o->getObjId() == "out")
@@ -440,7 +441,8 @@ void MixChannel::remap()
 
                 Instr* ins = t->getOutChannel()->getInstr();
 
-                t->setCoords1(width - 12, ins->getY1() - parent->getY1() + 5, 12, 12);
+                if (ins != instr)
+                    t->setCoords1(width - 10, ins->getY1() - parent->getY1(), 10, 10);
             }
         }
     }

@@ -387,28 +387,31 @@ void InstrPanel::deleteInstrument(Instr* i)
 
     if (i == curr)
     {
-        int idx = i->getIndex() - 1;
+        int newIdx = i->getIndex() - 1;
 
-        if (idx < 0) idx = 0;
+        if (newIdx < 0) 
+            newIdx = 0;
 
-        setCurrInstr(instrs[idx]);
+        setCurrInstr(instrs[newIdx]);
     }
 
     for (Instr* ins : instrs)
     {
-        if (ins == i || ins->isMaster()) 
-            continue;
+        //if (ins == i || ins->isMaster()) 
+        //    continue;
 
         ins->getMixChannel()->delSend(i->getMixChannel());
     }
 
     updateInstrIndexes();
 
+    colorizeInstruments();
+
     deleteObject(i);
 
     remapAndRedraw();
 
-    colorizeInstruments();
+    MGrid->redraw(true, true);
 
     ReleaseMutex(AudioMutex);
 }
@@ -788,6 +791,8 @@ void InstrPanel::remap()
         ih--;
     }
 
+    if (ih == 0) ih = 2;
+
     InstrHeight = ih;
 
     int yoffs =0;
@@ -813,20 +818,28 @@ void InstrPanel::remap()
     if (fxShowing)
     {
         //btHideFX->setCoords1(width - btW - 1, 0, btW, btW);
-
-        allChannelsView->setCoords1(2, 0, btW, btW);
+        //allChannelsView->setCoords1(2, 0, btW, btW);
 
         confine(0, instrListY, FxPanelMaxWidth-1, height);
 
         mixr->setCoords1(0, instrListY, FxPanelMaxWidth, instrListHeight);
+
+        if (curr)
+        {
+        //    curr->getMixChannel()->setCoords1(0, instrListY, FxPanelMaxWidth, instrListHeight);
+        }
     }
     else
     {
         //btShowFX->setCoords1(width - btW - 1, 0, btW, btW);
-
-        allChannelsView->setVis(false);
+        //allChannelsView->setVis(false);
 
         mixr->setVis(false);
+
+        if (curr)
+        {
+        //    curr->getMixChannel()->setVis(false);
+        }
     }
 
     //confine(0, instrListY-1, width, instrListY + instrListHeight - 1);
@@ -854,37 +867,47 @@ void InstrPanel::setBufferSize(unsigned bufferSize)
 
 void InstrPanel::setCurrInstr(Instr* instr)
 {
-    if (curr) curr->remapAndRedraw();
+    if (curr) 
+        curr->getMixChannel()->setVis(false);
+
     curr = instr;
-    if (curr) curr->remapAndRedraw();
+
+    //if (curr) curr->remapAndRedraw();
 
     redraw();
 
-    //instrHighlight->updPos();
-
     if (fxShowing)
     {
-        MMixer->remapAndRedraw();
+        //MMixer->remapAndRedraw();
     }
+
+    remapAndRedraw();
+
+    //instrHighlight->updPos();
 }
 
 void InstrPanel::setCurrInstr(int instr_index)
 {
-    if (instrs[instr_index] != NULL)
-    {
-        if (curr) curr->remapAndRedraw();
+    if (curr) 
+        curr->getMixChannel()->setVis(false);
 
+    //if (instrs[instr_index] != NULL && instrs[instr_index] != curr)
+    {
         curr = instrs[instr_index];
 
-        curr->remapAndRedraw();
+        //if (curr) curr->remapAndRedraw();
 
-        redraw();
+        remapAndRedraw();
 
         if (fxShowing)
         {
-            MMixer->remapAndRedraw();
+           // MMixer->remapAndRedraw();
         }
     }
+
+    remapAndRedraw();
+
+    //instrHighlight->updPos();
 }
 
 void InstrPanel::showFX()

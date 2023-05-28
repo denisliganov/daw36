@@ -100,13 +100,14 @@ void Mixer::remap()
     {
         for (Instr* instr : MInstrPanel->getInstrs())
         {
-            if (instr != MInstrPanel->getCurrInstr())
+            if (instr == MInstrPanel->getCurrInstr())
             {
-                instr->getMixChannel()->setVis(false);
+                instr->getMixChannel()->setCoords1(0, 0, width, height);
             }
             else
             {
-                instr->getMixChannel()->setCoords1(0, 0, width, height);
+                if (instr->getMixChannel()->isShown())
+                    instr->getMixChannel()->setVis(false);
             }
         }
     }
