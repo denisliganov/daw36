@@ -92,7 +92,7 @@ ControlPanel::ControlPanel()
     
     setBorder(4);
     setObjSpacing(4);
-    putStart(xstart1, 4);
+    putStart(xstart1, 0);
 
     spaceRight(2);
     putRight(btConfig, buttonWidth, buttonHeight);

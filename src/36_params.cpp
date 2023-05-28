@@ -62,7 +62,7 @@ Parameter::Parameter(std::string name, ParamType param_type)
     }
     else if (type == Param_Default)
     {
-        paramInit(name, Param_Default, 0.f, 1.f, 0.f, Units_Percent);
+        paramInit(name, Param_Default, 0.f, 1.f, 0.f, Units_PercentNormalized);
     }
 }
 
@@ -169,6 +169,7 @@ std::string Parameter::getUnitString()
             return "kHz";
             break;
         case Units_Percent:
+        case Units_PercentNormalized:
         {
             return "%";
         } break;
@@ -290,6 +291,10 @@ std::string Parameter::calcValStr(float val)
                 sprintf(str, "%.0f", absVal);
                 break;
             case Units_Percent:
+            {
+                sprintf(str, ("%.0f"), absVal);
+            } break;
+            case Units_PercentNormalized:
             {
                 sprintf(str, ("%.0f"), absVal*100);
             } break;

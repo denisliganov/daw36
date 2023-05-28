@@ -170,7 +170,7 @@ void Eff::showDevice(bool show)
         device->setEnable(true);
         device->setVis(true);
 
-        setWH(device->getW(), device->getH());
+        setWH(device->getW(), device->getH() + 4);
     }
     else
     {
@@ -185,7 +185,7 @@ void Eff::remap()
     if (MixViewSingle && device->isON())
     {
         //enableButt->setCoords1(width - 24, 0, 24, 12);
-        device->setCoords1(0, 0, device->getW(), device->getH());
+        device->setCoords1(0, 4, device->getW(), device->getH());
     }
     else
     {
@@ -221,7 +221,7 @@ void Eff::drawSelf(Graphics& g)
     }
 
     setc(g, .8f);
-    txt(g, FontBold, device->getObjName(), width - gGetTextWidth(FontBold, device->getObjName()) - 2, gGetTextHeight(FontBold)/2);
+    txt(g, FontVis, device->getObjName(), 0, gGetTextHeight(FontVis) - 2);
 
 /*
     if (MixViewSingle)

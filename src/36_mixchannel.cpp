@@ -305,12 +305,12 @@ void MixChannel::addSend(MixChannel* mchan)
     SendKnob* sk;
     addObject(sk = new SendKnob(this, mchan, "snd"), "snd");
 
-    sk->setHint("Send to " + mchan->getInstr()->getAlias());
+    sk->setHint("Send to this channel");
 
     ChanOutToggle* c;
     addObject(c = new ChanOutToggle(this, mchan), "out");
 
-    c->setHint("Route to " + mchan->getInstr()->getAlias());
+    c->setHint("Route to this channel");
 
     if (mchan == mchanout)
     {
@@ -432,7 +432,10 @@ void MixChannel::remap()
                 Instr* ins = k->getOutChannel()->getInstr();
 
                 if (ins != instr)
-                    k->setCoords1(width - 22, ins->getY1() - parent->getY1() + ins->getH()/2 - 10, 20, 20);
+                {
+                    int kH = 18;
+                    k->setCoords1(width - kH - 4, ins->getY1() - parent->getY1() + ins->getH() - kH - 2, kH, kH);
+                }
             }
 
             if (o->getObjId() == "out")
@@ -442,7 +445,7 @@ void MixChannel::remap()
                 Instr* ins = t->getOutChannel()->getInstr();
 
                 if (ins != instr)
-                    t->setCoords1(width - 10, ins->getY1() - parent->getY1(), 10, 10);
+                    t->setCoords1(width - 10 - 4, ins->getY1() - parent->getY1(), 10, 10);
             }
         }
     }

@@ -34,6 +34,7 @@ typedef enum UnitsType
     Units_ms2,
     Units_Seconds,
     Units_Percent,
+    Units_PercentNormalized,
     Units_Integer,
     Units_Beats,
     Units_Octave,

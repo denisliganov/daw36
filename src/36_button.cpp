@@ -139,7 +139,7 @@ void Button36::drawButtonBase(Graphics& g)
 
         //rect(g, 0.1f);
 
-        drawGlassRect1(g, (float)x1, (float)y1, width, height, Colour(70, 70, 70), 1, 0, true, true, true, true);
+        //drawGlassRect1(g, (float)x1, (float)y1, width, height, Colour(70, 70, 70), 1, 0, true, true, true, true);
     }
     else
     {

@@ -1117,7 +1117,7 @@ Hintbox::Hintbox(WinObject* wobj) : DocumentWindow(T("Hint"), Colours::white, Do
 
     blocked = false;
 
-    font = FontSmall;
+    font = FontProject;
 
     setAlwaysOnTop(true);
 }
@@ -1186,7 +1186,7 @@ void Hintbox::restart(Gobj* obj, int xc, int yc)
     x = xc;
     y = yc;
 
-    startTimer(3000);
+    startTimer(1);
 }
 
 void Hintbox::stop()
@@ -1199,7 +1199,7 @@ void Hintbox::stop()
 
 void Hintbox::paint(Graphics& g)
 {
-    gSetColor2(g, 0xffFFE080, .5f, 1);
+    gSetColor2(g, 0xffFFE080, .4f, 1);
     gFillRect(g, 0, 0, getWidth() - 1, getHeight() - 1);
 
     //gSetColor2(g, 0xffFFE080, .6f, 1);
@@ -1309,7 +1309,7 @@ void WinObject::updateHint(InputEvent& ev)
     int hintX = 0;
     int hintY = 0;
 
-    if (activeObj && activeObj->getClickHint() != "")
+    if (activeObj)
     {
         //hintX = activeObj->getX2() + 60;
         //hintY = activeObj->getY1();
@@ -1321,14 +1321,30 @@ void WinObject::updateHint(InputEvent& ev)
         //hintX += r.getX();
         //hintY += r.getY();
 
+        std::string text = "";
+
         if (ev.leftClick || ev.wheelDelta != 0)
         {
-            hintBox->setText(activeObj->getClickHint(), hintX, hintY);
+            text = activeObj->getClickHint();
+        }
+        else
+        {
+            text = activeObj->getHint();
+        }
+
+        if (text != "")
+        {
+            hintBox->setText(text, hintX, hintY);
+        }
+        else
+        {
+            hintBox->setVisible(false);
         }
 
         return;
     }
 
+    /*
     if (ev.leftClick || ev.rightClick)
     {
         hintBox->stop();
@@ -1345,7 +1361,7 @@ void WinObject::updateHint(InputEvent& ev)
         {
             hintBox->restart(activeObj, hintX, hintY);
         }
-    }
+    }*/
 }
 
 void WinObject::updActiveObject(InputEvent& ev)
