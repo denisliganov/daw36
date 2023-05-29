@@ -374,8 +374,10 @@ void MixChannel::init(Instr* ins)
 
     addObject(volKnob = new Knob(vol));
     volKnob->setHasText(false);
+    volKnob->setHint("Channel Volume");
     addObject(panKnob = new Knob(pan));
     panKnob->setHasText(false);
+    panKnob->setHint("Channel Panning");
 
     addObject(vu = new ChanVU(false), ObjGroup_VU);
     addObject(vscr = new Scroller(true));
@@ -420,7 +422,7 @@ void MixChannel::remap()
         int yControls = height - FxPanelBottomHeight + sendPanelHeight;
 
         volKnob->setCoords1(0, yControls + 5, 112, 18);
-        panKnob->setCoords1(0, yControls + 32, 112, 18);
+        panKnob->setCoords1(0, yControls + 26, 112, 18);
         vu->setCoords1(0, height - 26, width - 80, 20);
 
         for (Gobj* o : objs)

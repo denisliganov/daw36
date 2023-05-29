@@ -203,8 +203,10 @@ Instr::Instr(Device36* dev)
 
     addObject(volKnob = new Knob(device->vol, false));
     volKnob->setHasText(false);
+    volKnob->setHint("Channel Pre-Volume");
 
     addObject(panKnob = new Knob(device->pan, true));
+    panKnob->setHint("Channel Pre-Panning");
     panKnob->setEnable(false);
 
     addObject(muteButt = new EnableButton(device->enabled));

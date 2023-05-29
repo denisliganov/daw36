@@ -45,7 +45,7 @@ void ParamBox::drawText(Graphics& g)
         fillx(g, x, 0, width - x, height);
     }
 
-    setc(g, .8f);
+    setc(g, .6f);
 
     if (unitstrLen > 0)
         //txt(g, fontId, param->getName() + "." + param->getUnitString(), textX, textY);
@@ -94,7 +94,7 @@ Knob::Knob(Parameter* par, bool knob)
 std::string Knob::getClickHint()
 {
     //return param->getName() + ":  " + param->getValString() + " " + param->getUnitString();
-    return param->getValString() + " " + param->getUnitString();
+    return param->getName() + ":  " + param->getValString() + " " + param->getUnitString();
 }
 
 void Knob::updValue()

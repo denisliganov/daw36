@@ -100,7 +100,7 @@ MainEdit::MainEdit()
     MPattern->addInstance(MPattern);
 
     addObject(timeline = new Timeline(grid));
-    addObject(grid = new Grid(4, 24, MPattern, timeline));
+    addObject(grid = new Grid(16, 24, MPattern, timeline));
     addObject(keys = new AuxKeys(grid, false));
 
     addHighlight(playHead = new Playhead(grid));

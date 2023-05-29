@@ -161,6 +161,8 @@ void ParamObject::placeControls2(int maxWidth, int maxH)
 
         if (obj)
         {
+            //obj->setHint(prm->getName());
+
             addObject(obj);
 
             putBelow(obj, obj->getW(), obj->getH());

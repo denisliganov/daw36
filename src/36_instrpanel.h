@@ -58,7 +58,7 @@ public:
             void                showFX();
             void                setInstrFromNewBrowser(BrwListEntry* ble, Instr* instr);
             void                updateWaves();
-            void                updateInstrIndexes();
+            void                ReIndexInstruments();
 
             Button36*           btShowFX;
             Button36*           btHideFX;

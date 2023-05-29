@@ -255,7 +255,7 @@ Instr* InstrPanel::addInstrument(Device36 * dev, bool master)
 
     instrs.insert(it, i);
 
-    updateInstrIndexes();
+    ReIndexInstruments();
 
     if (master)
     {
@@ -318,7 +318,7 @@ void InstrPanel::cloneInstrument(Instr* i)
     //currInstr++;
     //instrs.insert(currInstr, ni);
     //currInstr--;
-    //updateInstrIndexes();
+    //ReIndexInstruments();
 
     // And set it current
     // setCurrInstr(i);
@@ -403,7 +403,7 @@ void InstrPanel::deleteInstrument(Instr* i)
         ins->getMixChannel()->delSend(i->getMixChannel());
     }
 
-    updateInstrIndexes();
+    ReIndexInstruments();
 
     colorizeInstruments();
 
@@ -579,6 +579,10 @@ void InstrPanel::handleObjDrop(Gobj * obj, int mx, int my, unsigned int flags)
         }
 
         dropObj = NULL;
+
+        ReIndexInstruments();
+
+        MGrid->redraw(true, true);
     }
 }
 
@@ -636,7 +640,7 @@ void InstrPanel::hideFX()
     remapAndRedraw();
 }
 
-void InstrPanel::updateInstrIndexes()
+void InstrPanel::ReIndexInstruments()
 {
     int idx = 0;
 
