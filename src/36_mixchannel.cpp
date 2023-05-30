@@ -1,7 +1,6 @@
 
 
 
-#include "36_mixer.h"
 #include "36_mixchannel.h"
 #include "36_params.h"
 #include "36_vu.h"
@@ -433,13 +432,20 @@ void MixChannel::remap()
 
                 Instr* ins = k->getOutChannel()->getInstr();
 
-                if (ins != instr)
+                int kH = 18;
+                k->setCoords1(width - kH - 4, ins->getY() - getY(), kH, kH);
+
+                if (ins == instr)
                 {
-                    int kH = 18;
-                    k->setCoords1(width - kH - 4, ins->getY1() - parent->getY1() + ins->getH() - kH - 2, kH, kH);
+                    k->setEnable(false);
+                }
+                else
+                {
+                    k->setEnable(true);
                 }
             }
 
+            /*
             if (o->getObjId() == "out")
             {
                 ChanOutToggle* t = dynamic_cast<ChanOutToggle*>(o);
@@ -448,7 +454,7 @@ void MixChannel::remap()
 
                 if (ins != instr)
                     t->setCoords1(width - 10 - 4, ins->getY1() - parent->getY1(), 10, 10);
-            }
+            }*/
         }
     }
     else

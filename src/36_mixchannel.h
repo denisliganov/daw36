@@ -25,7 +25,6 @@ class MixChannel : public Device36
 friend  Audio36;
 friend  ChanVU;
 friend  Eff;
-friend  Mixer;
 friend  InstrPanel;
 
 

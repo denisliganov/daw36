@@ -9,7 +9,6 @@
 #include "36_pattern.h"
 #include "36_utils.h"
 #include "36_browser.h"
-#include "36_mixer.h"
 #include "36_mixchannel.h"
 #include "36_audio_dev.h"
 #include "36_menu.h"
@@ -197,9 +196,9 @@ Instr::Instr(Device36* dev)
 
     addObject(guiButton = new GuiButt());
 
-    mixChannel = MMixer->getMasterChannel();       // Default to master channel
+    mixChannel = MInstrPanel->getMasterChannel();       // Default to master channel
 
-    panBox = volBox = NULL;
+    //panBox = volBox = NULL;
 
     addObject(volKnob = new Knob(device->vol, false));
     volKnob->setHasText(false);
@@ -232,7 +231,7 @@ Instr::~Instr()
         //delete device;
     }
 
-    MMixer->removeMixChannel(this);
+    //MInstrPanel->removeMixChannel(this);
 
     ReleaseMutex(MixerMutex);
 }
@@ -292,7 +291,7 @@ void Instr::activateMenuItem(std::string item)
 
 void Instr::addMixChannel()
 {
-    mixChannel = MMixer->addMixChannel(this);
+    mixChannel = MInstrPanel->addMixChannel(this);
 }
 
 ContextMenu* Instr::createContextMenu()
@@ -559,6 +558,7 @@ void Instr::remap()
         {
             //guiButton->setTouchable(true);
 
+            /*
             int slH = 4;
 
             if (panBox)
@@ -572,6 +572,7 @@ void Instr::remap()
                 volBox->setCoords1(width - 110, h - slH, 80, slH);
                 volBox->setVis(false);
             }
+            */
 
             int kH = h/1.5f;
             if (kH % 2)

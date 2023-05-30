@@ -32,12 +32,13 @@ private:
         ListBoxx*           outputDevices;
         ListBoxx*           inputDevices;
 
+        /*
         ParamBox*           buffSizeBox;
         ParamBox*           pbox2;
         ParamBox*           pbox3;
         ParamBox*           pbox4;
         ParamBox*           pbox5;
-        ParamBox*           pbox6;
+        ParamBox*           pbox6;*/
 
         Knob*               knob1;
         Knob*               knob2;

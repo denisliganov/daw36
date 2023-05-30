@@ -19,7 +19,6 @@
 #include "36_instrpanel.h"
 #include "36_ctrlpanel.h"
 #include "36_menu.h"
-#include "36_mixer.h"
 #include "36_audiomanager.h"
 #include "36_text.h"
 

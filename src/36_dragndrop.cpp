@@ -30,7 +30,7 @@ DragAndDrop::~DragAndDrop()
 
 bool DragAndDrop::canDrag()
 {
-    if(count < 3)
+    if(count < 6)
     {
         count++;
 

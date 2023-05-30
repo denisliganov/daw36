@@ -184,7 +184,6 @@
     <ClCompile Include="src\36_menu.cpp" />
     <ClCompile Include="src\36_midi.cpp" />
     <ClCompile Include="src\36_mixchannel.cpp" />
-    <ClCompile Include="src\36_mixer.cpp" />
     <ClCompile Include="src\36_note.cpp" />
     <ClCompile Include="src\36_numbox.cpp" />
     <ClCompile Include="src\36_objects.cpp" />
@@ -369,7 +368,6 @@
     <ClInclude Include="src\36_midi.h" />
     <ClInclude Include="src\36_midi_def.h" />
     <ClInclude Include="src\36_mixchannel.h" />
-    <ClInclude Include="src\36_mixer.h" />
     <ClInclude Include="src\36_note.h" />
     <ClInclude Include="src\36_numbox.h" />
     <ClInclude Include="src\36_objects.h" />

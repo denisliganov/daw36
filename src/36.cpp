@@ -18,7 +18,6 @@
 #include "36_grid.h"
 #include "36_browser.h"
 #include "36_history.h"
-#include "36_mixer.h"
 #include "36_transport.h"
 #include "36_lane.h"
 #include "36_keyboard.h"
@@ -140,12 +139,12 @@ MainWinObject::MainWinObject()
     addObject(MEdit = new MainEdit);
     addObject(MHelperPanel = new HelperPanel);
     addObject(MLanePanel = new LanePanel(MEdit->grid));
-    addObject(MInstrPanel = new InstrPanel(MMixer = new Mixer));
+    addObject(MInstrPanel = new InstrPanel());
     addObject(MBrowser = new Browser(WorkDirectory));
 
     addHighlight(MDragDrop = new DragAndDrop());
 
-    MMixer->setEnable(false);
+    
     MHelperPanel->setEnable(true);
     MInstrPanel->setEnable(true);
     MBrowser->setEnable(false);
@@ -155,7 +154,6 @@ MainWinObject::MainWinObject()
     MGrid->grabTextCursor(100, 10);
 
     MLanePanel->setCoords1(mainX1, height - AuxHeight, mainX2 - mainX1 + 1, AuxHeight);
-    MMixer->setCoords1(mainX1, height - MixerHeight, mainX2 - mainX1 + 1, MixerHeight);
 
     MLanePanel->setEnable(false);
 
@@ -236,7 +234,7 @@ void MainWinObject::remap()
         MWindow->setResizeLimits(MGrid->getX1() + 7, MGrid->getY1() + AuxHeight + MainLineHeight + 8, 32768, 32768);
     }
 
-    
+    /*
     if(mainX1 <= InstrControlWidth)
     {
         if (!MInstrPanel->btHideFX->isPressed())
@@ -253,6 +251,7 @@ void MainWinObject::remap()
             MInstrPanel->btHideFX->setEnable(true);
         }
     }
+    */
 
     redraw();
 }

@@ -10,7 +10,6 @@
 #include "36_instrpanel.h"
 #include "36_renderer.h"
 #include "36_params.h"
-#include "36_mixer.h"
 #include "36_mixchannel.h"
 #include "36_vu.h"
 #include "36_utils.h"
@@ -205,9 +204,9 @@ void Audio36::generalCallBack(const void* inputBuffer, void* outputBuffer, long 
 
     // Cleanup mixer buffers here
 
-    if(MMixer != NULL)
+    if(MInstrPanel != NULL)
     {
-        MMixer->cleanBuffers(totalFrames);
+        MInstrPanel->cleanBuffers(totalFrames);
     }
 
     // Pre-process metronome
@@ -343,16 +342,16 @@ void Audio36::generalCallBack(const void* inputBuffer, void* outputBuffer, long 
         globalMute = false;
     }
 
-    if(MMixer != NULL)
+    if(MInstrPanel != NULL)
     {
-        MMixer->mixAll(totalFrames);
+        MInstrPanel->mixAll(totalFrames);
     }
 
     bool mutemixing = false;
 
-    if(mixMute && MMixer != NULL)
+    if(mixMute && MInstrPanel != NULL)
     {
-        MMixer->resetAll();
+        MInstrPanel->resetAll();
 
         mutemixing = true;
     }
@@ -361,7 +360,7 @@ void Audio36::generalCallBack(const void* inputBuffer, void* outputBuffer, long 
     //memcpy(outputBuffer, MMixer->getMasterChannel()->outBuff, totalFrames*2);
 
     float      *out = (float*)outputBuffer;
-    float      *in = MMixer->getMasterChannel()->outBuff;
+    float      *in = MInstrPanel->getMasterChannel()->outBuff;
 
     for(long c = 0; c < totalFrames; c++)
     {

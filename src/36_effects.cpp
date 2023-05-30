@@ -15,7 +15,6 @@
 #include "36_menu.h"
 #include "36_macros.h"
 #include "36_mixchannel.h"
-#include "36_mixer.h"
 #include "36_project.h"
 #include "36_params.h"
 #include "36_transport.h"

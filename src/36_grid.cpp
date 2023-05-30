@@ -10,7 +10,7 @@
 #include "36_instrpanel.h"
 #include "36_history.h"
 #include "36_instr.h"
-#include "36_lane.h"
+//#include "36_lane.h"
 #include "36_audio_dev.h"
 #include "36_draw.h"
 #include "36_playhead.h"

@@ -11,7 +11,6 @@
 #include "36_sampleinstr.h"
 #include "36_scroller.h"
 #include "36_vu.h"
-#include "36_mixer.h"
 #include "36_mixchannel.h"
 #include "36_browser.h"
 #include "36_project.h"
@@ -32,7 +31,7 @@
 
 
 
-
+bool            MixViewSingle = true;
 
 
 
@@ -171,7 +170,7 @@ public:
 Device36*       devDummy;
 extern Sample*  prevSample;
 
-InstrPanel::InstrPanel(Mixer* mixer)
+InstrPanel::InstrPanel()
 {
     fxShowing = false;
 
@@ -182,11 +181,11 @@ InstrPanel::InstrPanel(Mixer* mixer)
     devDummy->setTouchable(false);
     devDummy->addBasicParamSet();
 
+    addObject(masterChannel = new MixChannel(), "mchan.master");
+
     addObject(btShowFX = new Button36(false), "bt.showbrw");
     addObject(btHideFX = new Button36(false), "bt.hidebrw");
     addObject(allChannelsView = new Button36(true), "bt.channels");
-
-    addObject(mixr = mixer);
 
     //masterVolume = new Parameter("Master", Param_Vol);
     addObject(masterVolKnob = new Knob(NULL));
@@ -203,6 +202,142 @@ InstrPanel::~InstrPanel()
 {
     //delete devDummy;
 }
+
+
+void InstrPanel::init()
+{
+    objId = "mixer";
+}
+
+void InstrPanel::cleanBuffers(int num_frames)
+{
+    for(Instr* instr : instrs)
+    {
+        memset(instr->getMixChannel()->tempBuff, 0, sizeof(float)*num_frames*2);
+    }
+}
+
+void InstrPanel::mixAll(int num_frames)
+{
+    WaitForSingleObject(MixerMutex, INFINITE);
+
+    for(Instr* instr : instrs)
+    {
+        instr->getMixChannel()->prepareForMixing();
+    }
+
+    bool incomplete;
+
+    do
+    {
+        incomplete = false;
+
+        for(Instr* instr : instrs)
+        {
+            MixChannel* mc = instr->getMixChannel();
+
+            if (mc->getMixCounter() > 0)
+            {
+                incomplete = true;
+            }
+            else if (!mc->isProcessed())
+            {
+                mc->processChannel(num_frames);
+            }
+        }
+    }while (incomplete);
+
+    ReleaseMutex(MixerMutex);
+}
+
+void InstrPanel::resetAll()
+{
+    for(Instr* instr : instrs)
+    {
+        instr->getMixChannel()->reset();
+        instr->device->reset();
+    }
+}
+
+/*
+void Mixer::remap()
+{
+    if (MixViewSingle)
+    {
+        for (Instr* instr : MInstrPanel->getInstrs())
+        {
+            if (instr == MInstrPanel->getCurrInstr())
+            {
+                instr->getMixChannel()->setCoords1(0, 0, width, height);
+            }
+            else
+            {
+                if (instr->getMixChannel()->isShown())
+                    instr->getMixChannel()->setVis(false);
+            }
+        }
+    }
+    else
+    {
+        int yCh = 0;
+
+        for(Instr* instr : MInstrPanel->getInstrs())
+        {
+            if((yCh + InstrHeight > 0) && yCh < getH())
+            {
+                instr->getMixChannel()->setCoords1(0, yCh, width, instr->getH());
+            }
+            else if(instr->getMixChannel()->isShown())
+            {
+                instr->getMixChannel()->setVis(false);
+            }
+
+            yCh += InstrHeight;
+        }
+    }
+}
+*/
+
+MixChannel* InstrPanel::addMixChannel(Instr * instr)
+{
+    WaitForSingleObject(MixerMutex, INFINITE);
+
+    MixChannel* mixChannel;
+
+    if (instr->isMaster())
+    {
+        masterChannel->setInstrument(instr);
+
+        mixChannel = masterChannel;
+    }
+    else
+    {
+        addObject(mixChannel = new MixChannel(instr), "");
+
+        mixChannel->setOutChannel(masterChannel);
+    }
+
+    ReleaseMutex(MixerMutex);
+
+    return mixChannel;
+}
+
+void InstrPanel::removeMixChannel(Instr * instr)
+{
+    WaitForSingleObject(MixerMutex, INFINITE);
+
+    MixChannel* mixChannel = instr->getMixChannel();
+
+    if (mixChannel != masterChannel)
+    {
+        deleteObject(mixChannel);
+    }
+
+    ReleaseMutex(MixerMutex);
+}
+
+
+
 
 Vst2Plugin* InstrPanel::addVst(const char* path, Vst2Plugin* otherVst)
 {
@@ -285,13 +420,6 @@ Instr* InstrPanel::addInstrument(Device36 * dev, bool master)
     remapAndRedraw();
 
     MProject.setChange();
-
-    if(MMixer->isShown())
-    {
-        i->mixChannel->setEnable(true);
-
-        MMixer->remapAndRedraw();
-    }
 
     MEdit->remapAndRedraw();
 
@@ -511,7 +639,7 @@ void InstrPanel::generateAll(long num_frames, long mixbuffframe)
 
     if (prevSample)
     {
-        prevSample->generateData(NULL, MMixer->getMasterChannel()->tempBuff, num_frames, mixbuffframe);
+        prevSample->generateData(NULL, MInstrPanel->getMasterChannel()->tempBuff, num_frames, mixbuffframe);
     }
 }
 
@@ -767,13 +895,6 @@ void Add_SoundFont(const char* path, const char* name, const char* alias)
 }
 */
 
-void InstrPanel::resetAll()
-{
-    for(Instr* instr : instrs)
-    {
-        instr->device->reset();
-    }
-}
 
 void InstrPanel::remap()
 {
@@ -826,11 +947,10 @@ void InstrPanel::remap()
 
         confine(0, instrListY, FxPanelMaxWidth-1, height);
 
-        mixr->setCoords1(0, instrListY, FxPanelMaxWidth, instrListHeight);
-
         if (curr)
         {
-        //    curr->getMixChannel()->setCoords1(0, instrListY, FxPanelMaxWidth, instrListHeight);
+            //curr->getMixChannel()->setCoords1(0, instrListY, FxPanelMaxWidth, instrListHeight);
+            curr->getMixChannel()->setCoords1(0, instrListY, FxPanelMaxWidth, instrListHeight);
         }
     }
     else
@@ -838,11 +958,9 @@ void InstrPanel::remap()
         //btShowFX->setCoords1(width - btW - 1, 0, btW, btW);
         //allChannelsView->setVis(false);
 
-        mixr->setVis(false);
-
         if (curr)
         {
-        //    curr->getMixChannel()->setVis(false);
+            curr->getMixChannel()->setVis(false);
         }
     }
 
@@ -871,18 +989,16 @@ void InstrPanel::setBufferSize(unsigned bufferSize)
 
 void InstrPanel::setCurrInstr(Instr* instr)
 {
-    if (curr) 
-        curr->getMixChannel()->setVis(false);
+    if (curr)
+    {
+        curr->getMixChannel()->setEnable(false);
+    }
 
     curr = instr;
 
-    //if (curr) curr->remapAndRedraw();
-
-    redraw();
-
-    if (fxShowing)
+    if (curr)
     {
-        //MMixer->remapAndRedraw();
+        curr->getMixChannel()->setEnable(true);
     }
 
     remapAndRedraw();
@@ -892,26 +1008,10 @@ void InstrPanel::setCurrInstr(Instr* instr)
 
 void InstrPanel::setCurrInstr(int instr_index)
 {
-    if (curr) 
-        curr->getMixChannel()->setVis(false);
-
-    //if (instrs[instr_index] != NULL && instrs[instr_index] != curr)
+    if (instrs[instr_index] != NULL && instrs[instr_index] != curr)
     {
-        curr = instrs[instr_index];
-
-        //if (curr) curr->remapAndRedraw();
-
-        remapAndRedraw();
-
-        if (fxShowing)
-        {
-           // MMixer->remapAndRedraw();
-        }
+        setCurrInstr(instrs[instr_index]);
     }
-
-    remapAndRedraw();
-
-    //instrHighlight->updPos();
 }
 
 void InstrPanel::showFX()

@@ -64,8 +64,6 @@ private:
             MixChannel*         mixChannel;
             EnableButton*       muteButt;
             bool                master;
-            ParamBox*           panBox;
-            ParamBox*           volBox;
             Knob*               volKnob;
             Knob*               panKnob;
             int                 index;

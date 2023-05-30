@@ -22,7 +22,7 @@ class InstrPanel : public ParamObject
 friend Audio36;
 
 public:
-            InstrPanel(Mixer* mixer);
+            InstrPanel();
             ~InstrPanel();
 
             void                addInstrFromNewBrowser(BrwListEntry* ble);
@@ -60,24 +60,34 @@ public:
             void                updateWaves();
             void                ReIndexInstruments();
 
+// Mix
+            MixChannel*         addMixChannel(Instr* instr);
+            void                cleanBuffers(int num_frames);
+            MixChannel*         getMasterChannel()          { return masterChannel; }
+            void                init();
+            void                mixAll(int num_frames);
+            void                removeMixChannel(Instr * instr);
+
+private:
+
             Button36*           btShowFX;
             Button36*           btHideFX;
             Button36*           allChannelsView;;
-
-private:
 
             Gobj*               dropObj;
             InstrHighlight*     instrHighlight;
             DropHighlight*      dropHighlight;
             bool                fxShowing;
-            Mixer*              mixr;
             Slider36*           masterVolSlider;
-            ParamBox*           masterVolBox;
             Knob*               masterVolKnob;
             Parameter*          masterVolume;
 
     std::vector<Instr*>         instrs;
             Instr*              curr;
+
+            MixChannel*         masterChannel;
+
+    std::list<MixChannel*>      mixQueue;
 };
 
 
