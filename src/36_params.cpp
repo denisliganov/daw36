@@ -717,12 +717,18 @@ void Parameter::setValueFromEnvelope(float envval, Envelope* env)
     }
 }
 
+// Toggle
+
 void Parameter::toggleValue()
 {
-    if (currentOption) 
-        currentOption = 0; 
-    else 
+    if (currentOption)
+    {
+        currentOption = 0;
+    }
+    else
+    {
         currentOption = 1;
+    }
 
     module->handleParamUpdate(this);
 }
@@ -734,6 +740,64 @@ void Parameter::setBoolValue(bool val)
     module->handleParamUpdate(this);
 }
 
+bool  Parameter::getBoolValue() 
+{
+    return currentOption > 0 ? true : false; 
+}
 
+// Radio/Selector
+
+void Parameter::addOption(std::string opt, bool val)    
+{ 
+    options.push_back(opt); optValues.push_back(val); 
+}
+
+void Parameter::addOption(std::string opt)              
+{ 
+    options.push_back(opt); 
+}
+
+std::vector<std::string>& Parameter::getAllOptions()                         
+{ 
+    return options; 
+}
+
+int Parameter::getNumOptions()
+{ 
+    return options.size(); 
+}
+
+int  Parameter::getCurrentOption()
+{ 
+    return currentOption; 
+}
+
+void  Parameter::setCurrentOption(int curr)
+{ 
+    currentOption = curr; setValString(options[currentOption]); 
+
+    module->handleParamUpdate(this);
+}
+
+// Selector
+
+void  Parameter::setOptionVal(int optnum, bool new_val)  
+{
+    optValues[optnum] = new_val; 
+
+    module->handleParamUpdate(this);
+}
+
+bool   Parameter::getOptionVal(int optnum)
+{ 
+    return optValues[optnum]; 
+}
+
+void  Parameter::toggleOption(int optnum)
+{ 
+    optValues[optnum] = !optValues[optnum]; 
+
+    module->handleParamUpdate(this);
+}
 
 

@@ -19,7 +19,6 @@
 #include "36_events_triggers.h"
 #include "36_knob.h"
 #include "36_keyboard.h"
-#include "36_parambox.h"
 #include "36_params.h"
 #include "36_dragndrop.h"
 

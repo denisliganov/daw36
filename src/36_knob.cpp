@@ -93,7 +93,6 @@ Knob::Knob(Parameter* par, bool knob)
 
 std::string Knob::getClickHint()
 {
-    //return param->getName() + ":  " + param->getValString() + " " + param->getUnitString();
     return param->getName() + ":  " + param->getValString() + " " + param->getUnitString();
 }
 
@@ -286,16 +285,16 @@ void Knob::remap()
 
 void Knob::drawSlider(Graphics& g)
 {
-    int w = width*widthDiv;
+    int wSl = width*widthDiv;
     float offs = param->getOffset();
     float range = param->getRange();
     float val = param->getValue();
     float def = param->getDefaultValue();
     float baseVal = (offs <= 0 ? 0 : offs);
 
-    int xoffs = int(float(w-1)*((baseVal - offs)/range));
-    int xval = int(float(w-1)*((val - offs)/range));
-    int xdef = int(float(w-1)*((def - offs)/range));
+    int xoffs = int(float(wSl-1)*((baseVal - offs)/range));
+    int xval = int(float(wSl-1)*((val - offs)/range));
+    int xdef = int(float(wSl-1)*((def - offs)/range));
     int xstart = xoffs;
     int xend = xval;
 
@@ -318,7 +317,7 @@ void Knob::drawSlider(Graphics& g)
     else
         setc(g, .0f);
 
-    rectx(g, 0, 0, w, height);
+    rectx(g, 0, 0, wSl, height);
 
     if (instr)
     {
@@ -327,7 +326,7 @@ void Knob::drawSlider(Graphics& g)
     else
         setc(g, .18f);
 
-    fillx(g, 0, 0, w, height);
+    fillx(g, 0, 0, wSl, height);
 
     if (instr)
         if (MInstrPanel->getCurrInstr() == instr)
@@ -343,9 +342,9 @@ void Knob::drawSlider(Graphics& g)
     //    instr->setMyColor(g, .1f);
     //else
     //    setc(g, 0.1f);
-    //rectx(g, xstart, ysl, w, sh);
+    //rectx(g, xstart, ysl, wSl, sh);
 
-    //drawGlassRect(g, x1 + (float)xstart, y1 + (float)(height - sh+1), w, sh-1, Colour(180, 120, 120), 0, 0, true, true, true, true);
+    //drawGlassRect(g, x1 + (float)xstart, y1 + (float)(height - sh+1), wSl, sh-1, Colour(180, 120, 120), 0, 0, true, true, true, true);
 
     if (instr)
         instr->setMyColor(g, .34f);
@@ -513,19 +512,18 @@ void ToggleBox::drawSelf(Graphics& g)
     int d = 0; // height / 4;
     
     setc(g, 0.18f);
-    fillx(g, d, d, height-d*2, height-d*2);
+    fillx(g, d, d, width-d*2, height-d*2);
 
     if (param->getBoolValue())
     {
         setc(g, 0.6f);
-        fillx(g, d+1, d+1, height-d*2 - 2, height-d*2 - 2);
+        fillx(g, d+1, d+1, width-d*2 - 2, height-d*2 - 2);
     }
 
-//    setc(g, 0.4f);
-//    rectx(g, width - width/4, 0, height, height);
-
-    //setc(g, .74f);
-    //txt(g, FontSmall, param->getName(), height + 6 /*(width - width/4)/2 - gGetTextWidth(fontId, prmToggle->getName())/2*/, height/2 + 4);
+    if (hasText)
+    {
+        //drawText(g);
+    }
 }
 
 void ToggleBox::handleMouseDown(InputEvent & ev)
@@ -537,12 +535,15 @@ void ToggleBox::handleMouseDown(InputEvent & ev)
 
 void ToggleBox::handleMouseUp(InputEvent & ev)
 {
+    
 }
+
+
 
 
 SelectorBox::SelectorBox(Parameter* param_sel, bool radio)
 {
-    param = param_sel;
+    setParam(param_sel);
 
     radioMode = radio;
 
@@ -559,15 +560,14 @@ void SelectorBox::drawSelf(Graphics& g)
     for (std::string str : param->getAllOptions())
     {
         setc(g, 0.2f);
-        fillx(g, x, 0, itemWidth-1, height);
+        fillx(g, x, 0, itemWidth, height);
 
-        if (radioMode && param->getCurrentOption() == opt ||
-            !radioMode && param->getOptionVal(opt))
+        if (radioMode && param->getCurrentOption() == opt || !radioMode && param->getOptionVal(opt))
         {
             setc(g, 0.6f);
         }
 
-        fillx(g, x + 1, 1, itemWidth - 3, height - 2);
+        fillx(g, x + 1, 1, itemWidth - 2, height - 2);
 
         x += itemWidth + 1;
 
@@ -582,21 +582,33 @@ void SelectorBox::drawSelf(Graphics& g)
 
 void SelectorBox::remap()
 {
-    itemWidth = width/widthDiv/param->getNumOptions();
+    itemWidth = RoundFloat(float(width*widthDiv)/param->getNumOptions());
 }
 
 void SelectorBox::handleMouseDown(InputEvent & ev)
 {
-    if (radioMode)
+    if (param->getNumOptions() == 1)
     {
-        param->setCurrentOption((ev.mouseX - x1) / (itemWidth + 1));
+        param->toggleValue();
     }
     else
     {
-        param->toggleOption((ev.mouseX - x1) / (itemWidth + 1));
-    }
+        int x = ev.mouseX - x1;
 
-    redraw();
+        if (x <= (width*widthDiv))
+        {
+            if (radioMode)
+            {
+                param->setCurrentOption(x / itemWidth);
+            }
+            else
+            {
+                param->toggleOption(x / itemWidth);
+            }
+
+            redraw();
+        }
+    }
 }
 
 

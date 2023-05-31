@@ -15,7 +15,6 @@
 #include "36_instrpanel.h"
 #include "36_menu.h"
 #include "36_project.h"
-#include "36_parambox.h"
 #include "36_draw.h"
 #include "36_keyboard.h"
 #include "36_audio_dev.h"

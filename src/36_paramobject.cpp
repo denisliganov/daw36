@@ -4,7 +4,7 @@
 #include "36_controls.h"
 #include "36_events_triggers.h"
 #include "36_knob.h"
-#include "36_parambox.h"
+
 
 
 
@@ -138,22 +138,18 @@ void ParamObject::placeControls2(int maxWidth, int maxH)
             if (prm->getType() == Param_Radio)
             {
                 obj = new SelectorBox(prm, true);
-                obj->setWH(defaultWidth, defaultH);
             }
             else if (prm->getType() == Param_Selector)
             {
                 obj = new SelectorBox(prm);
-                obj->setWH(defaultWidth, defaultH);
             }
             else if (prm->getType() == Param_Toggle)
             {
                 obj = new ToggleBox(prm);
-                obj->setWH(defaultWidth, defaultH);
             }
             else 
             {
                 obj = new Knob(prm, false);
-                obj->setWH(defaultWidth, defaultH);
                 obj->setObjId("fx");
             }
 
@@ -161,6 +157,8 @@ void ParamObject::placeControls2(int maxWidth, int maxH)
 
         if (obj)
         {
+            obj->setWH(defaultWidth, defaultH);
+
             //obj->setHint(prm->getName());
 
             addObject(obj);

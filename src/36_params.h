@@ -124,22 +124,22 @@ public:
  
 
 // Toggle
-            bool                getBoolValue() { return currentOption > 0 ? true : false; }
+            bool                getBoolValue();
             void                toggleValue();
             void                setBoolValue(bool val);
 
 // Radio/Selector
-            void                addOption(std::string opt, bool val)    { options.push_back(opt); optValues.push_back(val); }
-            void                addOption(std::string opt)              { options.push_back(opt); }
-    std::vector<std::string>&   getAllOptions()                     { return options; }
-            int                 getNumOptions()                         { return options.size(); }
-            int                 getCurrentOption()                      { return currentOption; }
-            void                setCurrentOption(int curr)               { currentOption = curr; }
+            void                addOption(std::string opt, bool val);
+            void                addOption(std::string opt);
+    std::vector<std::string>&   getAllOptions();
+            int                 getNumOptions();
+            int                 getCurrentOption();
+            void                setCurrentOption(int curr);
 
 // Selector
-            void                setOptionVal(int optnum, bool new_val)  { optValues[optnum] = new_val; }
-            bool                getOptionVal(int optnum)                { return optValues[optnum]; }
-            void                toggleOption(int optnum)                 { optValues[optnum] = !optValues[optnum]; }
+            void                setOptionVal(int optnum, bool new_val);
+            bool                getOptionVal(int optnum);
+            void                toggleOption(int optnum);
 
 private:
 

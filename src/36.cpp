@@ -83,7 +83,6 @@ ControlPanel*       MCtrllPanel;
 LanePanel*          MLanePanel;
 InstrPanel*         MInstrPanel;
 Browser*            MBrowser;
-Mixer*              MMixer;
 MainEdit*           MEdit;
 Audio36*            MAudio;
 EditHistory*        MHistory;

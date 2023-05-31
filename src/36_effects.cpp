@@ -357,11 +357,11 @@ Filter1::Filter1()
     //Q->AddValueString(Units_Default);
     //AddParamWithParamcell(Q);
 
-    addParam(filterType = new Parameter("Type", Param_Radio));
+    addParam(filterType = new Parameter("FLT.TYPE", Param_Radio));
 
-    filterType->addOption("LowPass");
-    filterType->addOption("HighPass");
-    filterType->addOption("BandPass");
+    filterType->addOption("LOW.PASS");
+    filterType->addOption("HIGH.PASS");
+    filterType->addOption("BAND.PASS");
     filterType->setCurrentOption(0);
 
     addParam(x2toggle = new Parameter("X2", false));
