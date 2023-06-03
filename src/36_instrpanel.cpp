@@ -40,7 +40,7 @@ SNDFILE*                    sf_open(const char *path, int mode, SF_INFO *sfinfo)
 sf_count_t                  sf_readf_float(SNDFILE *sndfile, float *ptr, sf_count_t frames);
 
 
-
+/*
 class DropHighlight : public Gobj
 {
 public:
@@ -54,11 +54,7 @@ public:
     {
         if (1)
         {
-            /*
-            uint32 color = 0xffFF9930;
-            setc(g, color);
-            rectx(g, 0, 0, width, height);
-            */
+
 
             setc(g, 1.f,.3f);
             fillx(g,  0, 0, width, height);
@@ -113,6 +109,46 @@ public:
         }
     }
 };
+*/
+
+class DropHighlight : public Gobj
+{
+public:
+
+    DropHighlight()
+    {
+        setTouchable(false);
+    }
+
+    void    drawSelf(Graphics& g)
+    {
+        bool vert = width < height;
+        int count = vert ? width / 2 : height / 2;
+        uint8 a = 255;
+        int y = 0;
+        for (int c = 0; c < count; c++)
+        {
+            gSetColor(g, 255, 200, 48, a);
+
+            if (vert)
+            {
+                fillx(g, width / 2 + y, 0, 1, height);
+                fillx(g, width / 2 - y, 0, 1, height);
+            }
+            else
+            {
+                fillx(g, 0, height / 2 + y, width, 1);
+                fillx(g, 0, height / 2 - y, width, 1);
+
+            }
+
+            y++;
+
+            a /= 2;
+        }
+    }
+};
+
 
 
 class InstrHighlight : public Gobj
@@ -651,8 +687,23 @@ void InstrPanel::handleObjDrag(bool reset, Gobj * obj,int mx,int my)
         return;
     }
 
-    if(!fxShowing || fxShowing && mx > FxPanelMaxWidth)
+    //if(!fxShowing || fxShowing && mx > FxPanelMaxWidth)
     {
+        Gobj* uper = NULL;
+        Gobj* lower = NULL;
+
+        dropObj = CheckNeighborObjectsY(objs, "instr", my, (Gobj**)&uper, (Gobj**)&lower);
+
+        if (uper != NULL)
+        {
+            dropHighlight->setCoords1(uper->getX(), uper->getY() + uper->getH() - 3, InstrControlWidth - 11, 8);
+        }
+        else
+        {
+            dropHighlight->setCoords1(getX() + FxPanelMaxWidth, getY() - 3, InstrControlWidth - 11, 8);
+        }
+
+ /*
         Gobj* o1 = NULL;
         Gobj* o2 = NULL;
 
@@ -662,11 +713,78 @@ void InstrPanel::handleObjDrag(bool reset, Gobj * obj,int mx,int my)
         {
             dropHighlight->setCoords1(dropObj->getX(), dropObj->getY(), dropObj->getW(), dropObj->getH());
         }
+ */
     }
+}
+void InstrPanel::placeBefore(Instr* before)
+{
+    WaitForSingleObject(AudioMutex, INFINITE);
+
+    auto it = instrs.end();
+
+    for (; it != instrs.end() && !(*it)->isMaster(); it--);
+
+    Instr* instr = *it;
+
+    instrs.erase(it);
+
+    if (before == NULL)      // Insert to end
+    {
+        it = instrs.end();
+    }
+    else
+    {
+        it = instrs.begin();
+
+        for (; it != instrs.end() && *it != before; it++);
+    }
+
+    instrs.insert(it, instr);
+
+    it--;
+
+    curr = *it;
+
+    ReleaseMutex(AudioMutex);
+
+    //adjustOffset();
+    //colorizeInstruments();
 }
 
 void InstrPanel::handleObjDrop(Gobj * obj, int mx, int my, unsigned int flags)
 {
+    BrwListEntry* ble = dynamic_cast<BrwListEntry*>(obj);
+    Instr* i = NULL;
+
+    if (ble)
+    {
+        addInstrFromNewBrowser(ble);
+    } 
+
+    {
+        i = getCurrInstr();
+
+        if (i == dropObj)
+        {
+            i = NULL;
+        }
+    }
+
+
+    if (i)
+    {
+        placeBefore((Instr*)dropObj);
+
+        dropObj = NULL;
+
+        ReIndexInstruments();
+
+        MGrid->redraw(true, true);
+
+        remapAndRedraw();
+    }
+
+    /*
     dropHighlight->setVis(false);
 
     Instr* iTo = dynamic_cast<Instr*>(dropObj);
@@ -711,6 +829,7 @@ void InstrPanel::handleObjDrop(Gobj * obj, int mx, int my, unsigned int flags)
 
         MGrid->redraw(true, true);
     }
+    */
 }
 
 void InstrPanel::handleChildEvent(Gobj* obj, InputEvent& ev)
