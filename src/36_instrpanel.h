@@ -49,7 +49,7 @@ public:
             bool                isFxShowing()   { return fxShowing; }
             Vst2Plugin*         loadVst(const char* path, Vst2Plugin* otherVst);
             Sample*             loadSample(const char* path);
-            void                placeBefore(Instr* before);
+            void                placeBefore(Instr* i, Instr* before);
             void                resetAll();
             void                remap();
             void                setSampleRate(float sampleRate);

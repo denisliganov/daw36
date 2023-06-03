@@ -122,12 +122,9 @@ public:
 
     void    drawSelf(Graphics& g)
     {
-        gSetColor(g, 255, 200, 48, 255);
-
-        fillx(g, 0, 0, width, height);
-
-        return;
-
+        //gSetColor(g, 255, 200, 48, 255);
+        //fillx(g, 0, 0, width, height);
+        //return;
         
         bool vert = width < height;
         int count = vert ? width / 2 : height / 2;
@@ -701,17 +698,27 @@ void InstrPanel::handleObjDrag(bool reset, Gobj * obj,int mx,int my)
 
         dropObj = CheckNeighborObjectsY(objs, "instr", my, (Gobj**)&uper, (Gobj**)&lower);
 
-        dropHighlight->setVis(true);
+        //dropHighlight->setVis(true);
 
-        if (uper != NULL)
+        Instr* i = (Instr*)uper;
+
+        if (i && i->isMaster())
         {
-           //dropHighlight->setCoords1(uper->getX(), uper->getY() + uper->getH() - 3, InstrControlWidth - 11, 8);
-
-            dropHighlight->setCoords1(0, 0, 100, 100);
+            dropObj = NULL;
         }
         else
         {
-            dropHighlight->setCoords1(getX() + FxPanelMaxWidth, getY() - 3, InstrControlWidth - 11, 8);
+            if (uper != NULL)
+            {
+                dropHighlight->setCoords1(uper->getX(), uper->getY() + uper->getH() - 3, InstrControlWidth - 11, 8);
+                //dropHighlight->setCoords1(uper->getX(), uper->getY(), InstrControlWidth - 11, uper->getH());
+
+                 //dropHighlight->setCoords1(0, 0, 100, 100);
+            }
+            else
+            {
+                dropHighlight->setCoords1(getX() + FxPanelMaxWidth, 0 + MainLineHeight - 1, InstrControlWidth - 11, 8);
+            }
         }
 
  /*
@@ -727,13 +734,15 @@ void InstrPanel::handleObjDrag(bool reset, Gobj * obj,int mx,int my)
  */
     }
 }
-void InstrPanel::placeBefore(Instr* before)
+void InstrPanel::placeBefore(Instr* i, Instr* before)
 {
     WaitForSingleObject(AudioMutex, INFINITE);
 
     auto it = instrs.end();
 
-    for (; it != instrs.end() && !(*it)->isMaster(); it--);
+    it--;
+
+    for (; (*it) != i; it--);
 
     Instr* instr = *it;
 
@@ -752,18 +761,26 @@ void InstrPanel::placeBefore(Instr* before)
 
     instrs.insert(it, instr);
 
-    it--;
+    //it--;
 
-    curr = *it;
+    curr = instr;
 
     ReleaseMutex(AudioMutex);
 
     //adjustOffset();
-    //colorizeInstruments();
+    ReIndexInstruments();
+    colorizeInstruments();
 }
 
 void InstrPanel::handleObjDrop(Gobj * obj, int mx, int my, unsigned int flags)
 {
+    dropHighlight->setVis(false);
+
+    if (dropObj == NULL)
+    {
+        return;
+    }
+
     BrwListEntry* ble = dynamic_cast<BrwListEntry*>(obj);
     Instr* i = NULL;
 
@@ -784,7 +801,7 @@ void InstrPanel::handleObjDrop(Gobj * obj, int mx, int my, unsigned int flags)
 
     if (i)
     {
-        placeBefore((Instr*)dropObj);
+        placeBefore(i, (Instr*)dropObj);
 
         dropObj = NULL;
 
@@ -1098,6 +1115,8 @@ void InstrPanel::remap()
 
     if (MGrid)
         MGrid->setLineHeight(InstrHeight);
+
+    confine();
 }
 
 void InstrPanel::setSampleRate(float sampleRate)

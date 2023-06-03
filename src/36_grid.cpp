@@ -2346,11 +2346,11 @@ void Grid::updFillerImage()
 
     Graphics imageContext(*(brushImage));
 
-    gSetMonoColor(imageContext, .2f, 1);
+    gSetMonoColor(imageContext, .24f, 1);
 
     imageContext.fillAll();
 
-    float tick = .1f;
+    float tick = .16f;
     float beat = 0.f; // .28f;
     float bar = 0.f; // .28f; //.36f;
 
