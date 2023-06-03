@@ -127,8 +127,11 @@ void DragAndDrop::drop(int mx,int my,unsigned int flags)
 
 void DragAndDrop::drawSelf(Graphics & g)
 {
-    fill(g, 0.4f);
-    setc(g, 1.f);
-    gText(g, FontSmall, dragObj->getObjName(), x1 + 4, y1 + gGetTextHeight(FontSmall));
+    if (dragObj)
+    {
+        fill(g, 0.4f);
+        setc(g, 1.f);
+        gText(g, FontSmall, dragObj->getObjName(), x1 + 4, y1 + gGetTextHeight(FontSmall));
+    }
 }
 

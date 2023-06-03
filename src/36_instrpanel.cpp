@@ -122,6 +122,13 @@ public:
 
     void    drawSelf(Graphics& g)
     {
+        gSetColor(g, 255, 200, 48, 255);
+
+        fillx(g, 0, 0, width, height);
+
+        return;
+
+        
         bool vert = width < height;
         int count = vert ? width / 2 : height / 2;
         uint8 a = 255;
@@ -694,9 +701,13 @@ void InstrPanel::handleObjDrag(bool reset, Gobj * obj,int mx,int my)
 
         dropObj = CheckNeighborObjectsY(objs, "instr", my, (Gobj**)&uper, (Gobj**)&lower);
 
+        dropHighlight->setVis(true);
+
         if (uper != NULL)
         {
-            dropHighlight->setCoords1(uper->getX(), uper->getY() + uper->getH() - 3, InstrControlWidth - 11, 8);
+           //dropHighlight->setCoords1(uper->getX(), uper->getY() + uper->getH() - 3, InstrControlWidth - 11, 8);
+
+            dropHighlight->setCoords1(0, 0, 100, 100);
         }
         else
         {

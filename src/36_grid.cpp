@@ -2346,7 +2346,7 @@ void Grid::updFillerImage()
 
     Graphics imageContext(*(brushImage));
 
-    gSetMonoColor(imageContext, .18f, 1);
+    gSetMonoColor(imageContext, .2f, 1);
 
     imageContext.fillAll();
 
