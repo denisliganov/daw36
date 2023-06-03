@@ -94,8 +94,12 @@ protected:
 };
 
 
-class EnableButton : public ToggleBox
+class EnableButton : public SelectorBox
 {
+public:
+
+        EnableButton(Parameter* ptg) : SelectorBox(ptg) {}
+
 protected:
 
         void drawSelf(Graphics& g)
@@ -120,10 +124,6 @@ protected:
 
         void handleMouseDrag(InputEvent & ev)   { parent->handleMouseDrag(ev); }
         void handleMouseWheel(InputEvent & ev)   { parent->handleMouseWheel(ev); }
-
-public:
-
-        EnableButton(Parameter* ptg) : ToggleBox(ptg) {}
 };
 
 

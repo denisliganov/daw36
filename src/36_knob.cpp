@@ -496,47 +496,18 @@ void Knob::drawSelf(Graphics& g)
     }
 }
 
-
-
-ToggleBox::ToggleBox(Parameter* param_tg)
+ContextMenu* Knob::createContextMenu()
 {
-    setParam(param_tg);
+    int x = window->getLastEvent().mouseX - x1;
 
-    setFontId(FontSmall);
-
-    //height = textHeight + 4;
+    if (x > (width*widthDiv))
+        return parent->createContextMenu();
+    else
+        return NULL;
 }
 
-void ToggleBox::drawSelf(Graphics& g)
-{
-    int d = 0; // height / 4;
-    
-    setc(g, 0.18f);
-    fillx(g, d, d, width-d*2, height-d*2);
 
-    if (param->getBoolValue())
-    {
-        setc(g, 0.6f);
-        fillx(g, d+1, d+1, width-d*2 - 2, height-d*2 - 2);
-    }
 
-    if (hasText)
-    {
-        //drawText(g);
-    }
-}
-
-void ToggleBox::handleMouseDown(InputEvent & ev)
-{
-    param->toggleValue();
-
-    redraw();
-}
-
-void ToggleBox::handleMouseUp(InputEvent & ev)
-{
-    
-}
 
 
 
@@ -587,14 +558,17 @@ void SelectorBox::remap()
 
 void SelectorBox::handleMouseDown(InputEvent & ev)
 {
+    int x = ev.mouseX - x1;
+
     if (param->getNumOptions() == 1)
     {
-        param->toggleValue();
+        if (x <= (width*widthDiv))
+            param->toggleValue();
+
+        redraw();
     }
     else
     {
-        int x = ev.mouseX - x1;
-
         if (x <= (width*widthDiv))
         {
             if (radioMode)
@@ -611,4 +585,14 @@ void SelectorBox::handleMouseDown(InputEvent & ev)
     }
 }
 
+
+ContextMenu* SelectorBox::createContextMenu()
+{
+    int x = window->getLastEvent().mouseX - x1;
+
+    if (x > (width*widthDiv))
+        return parent->createContextMenu();
+    else
+        return NULL;
+}
 

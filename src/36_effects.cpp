@@ -81,7 +81,7 @@ protected:
         void handleMouseWheel(InputEvent & ev)   { parent->handleMouseWheel(ev); }
 
         void handleMouseDown(InputEvent & ev)   { 
-                                                        ToggleBox::handleMouseDown(ev); 
+                                                        SelectorBox::handleMouseDown(ev); 
                                                    }
 };
 

@@ -46,6 +46,7 @@ protected:
     virtual void                drawKnob(Graphics& g);
             void                drawSelf(Graphics& g);
             void                drawSlider(Graphics& g);
+            ContextMenu*        createContextMenu();
 
 protected:
 
@@ -63,19 +64,6 @@ protected:
 };
 
 
-class ToggleBox : public ParamBox
-{
-public:
-            ToggleBox(Parameter* param_tg);
-            bool                getBoolValue() { return param->getBoolValue(); }
-
-protected:
-
-            void                drawSelf(Graphics& g);
-    virtual void                handleMouseDown(InputEvent & ev);
-    virtual void                handleMouseUp(InputEvent& ev);
-};
-
 
 class SelectorBox : public ParamBox
 {
@@ -87,10 +75,17 @@ protected:
             void                drawSelf(Graphics& g);
     virtual void                handleMouseDown(InputEvent & ev);
             void                remap();
+            ContextMenu*        createContextMenu();
 
             int                 itemWidth;
             bool                radioMode;
 };
 
+class ToggleBox : public SelectorBox
+{
+public:
+            ToggleBox(Parameter* prm) : SelectorBox(prm) { }
+            bool  getBoolValue() { return param->getBoolValue(); }
+};
 
 

@@ -51,6 +51,11 @@ Parameter::Parameter(std::string name, ParamType param_type)
     if (type == Param_Selector || type == Param_Toggle || type == Param_Radio)
     {
         currentOption = 0;
+
+        if (type == Param_Toggle)
+        {
+            addOption(name, false);
+        }
     }
     else if (type == Param_Vol)
     {
@@ -73,6 +78,8 @@ Parameter::Parameter(std::string param_name, bool def_val)
     autoPlaced = true;
 
     currentOption = def_val ? 1 : 0;
+
+    addOption(param_name, def_val);
 
     setName(param_name);
 }
@@ -721,35 +728,30 @@ void Parameter::setValueFromEnvelope(float envval, Envelope* env)
 
 void Parameter::toggleValue()
 {
-    if (currentOption)
-    {
-        currentOption = 0;
-    }
-    else
-    {
-        currentOption = 1;
-    }
+    optValues[0] = !optValues[0]; 
 
     module->handleParamUpdate(this);
 }
 
 void Parameter::setBoolValue(bool val)
 {
-    currentOption = val ? 1 : 0;
+    optValues[0] = val; 
 
     module->handleParamUpdate(this);
 }
 
 bool  Parameter::getBoolValue() 
 {
-    return currentOption > 0 ? true : false; 
+    return optValues[0];
 }
 
 // Radio/Selector
 
 void Parameter::addOption(std::string opt, bool val)    
 { 
-    options.push_back(opt); optValues.push_back(val); 
+    options.push_back(opt); 
+
+    optValues.push_back(val); 
 }
 
 void Parameter::addOption(std::string opt)              
@@ -774,7 +776,9 @@ int  Parameter::getCurrentOption()
 
 void  Parameter::setCurrentOption(int curr)
 { 
-    currentOption = curr; setValString(options[currentOption]); 
+    currentOption = curr; 
+
+    setValString(options[currentOption]); 
 
     module->handleParamUpdate(this);
 }

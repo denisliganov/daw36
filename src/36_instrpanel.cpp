@@ -717,7 +717,7 @@ void InstrPanel::handleObjDrag(bool reset, Gobj * obj,int mx,int my)
             }
             else
             {
-                dropHighlight->setCoords1(getX() + FxPanelMaxWidth, 0 + MainLineHeight - 1, InstrControlWidth - 11, 8);
+                dropHighlight->setCoords1(getX() + FxPanelMaxWidth, MainLineHeight - 4, InstrControlWidth - 11, 8);
             }
         }
 
