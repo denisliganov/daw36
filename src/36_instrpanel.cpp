@@ -226,10 +226,8 @@ InstrPanel::InstrPanel()
     addObject(btHideFX = new Button36(false), "bt.hidebrw");
     addObject(allChannelsView = new Button36(true), "bt.channels");
 
-    //masterVolume = new Parameter("Master", Param_Vol);
-    addObject(masterVolKnob = new Knob(NULL));
-    masterVolKnob->setHasText(true, true);
-    //masterVolume->addControl(masterVolKnob);
+    //addObject(masterVolKnob = new Knob(NULL));
+    //masterVolKnob->setHasText(true, true);
 
     addHighlight(instrHighlight = new InstrHighlight());
     addHighlight(dropHighlight = new DropHighlight());
@@ -410,12 +408,7 @@ Instr* InstrPanel::addInstrument(Device36 * dev, bool master)
 
     Instr* i = new Instr(device);
 
-    //instrs.push_back(i);
-
     auto it = instrs.end();
-
-    //if (instrs.size() > 0 && ((Instrument*)*it)->isMaster())
-    //    it--;
 
     if (instrs.size() > 0)
     {
@@ -435,7 +428,7 @@ Instr* InstrPanel::addInstrument(Device36 * dev, bool master)
     {
         i->master = true;
 
-        masterVolKnob->setParam(i->getMixChannel()->vol);
+        //masterVolKnob->setParam(i->getMixChannel()->vol);
     }
 
     i->addMixChannel();
@@ -443,16 +436,17 @@ Instr* InstrPanel::addInstrument(Device36 * dev, bool master)
     addObject(i, "instr");
 
     // Propagate sends
+
     for (Instr* instr : instrs)
     {
         if (!master)
         {
-            i->getMixChannel()->addSend(instr->getMixChannel());
+            i->getMixChannel()->addSendToChannel(instr->getMixChannel());
         }
 
         if (!instr->isMaster() && instr != i)
         {
-            instr->getMixChannel()->addSend(i->getMixChannel());
+            instr->getMixChannel()->addSendToChannel(i->getMixChannel());
         }
     }
 
@@ -462,10 +456,7 @@ Instr* InstrPanel::addInstrument(Device36 * dev, bool master)
 
     MEdit->remapAndRedraw();
 
-    //if (curr == NULL)
-    {
-        setCurrInstr(i);
-    }
+    setCurrInstr(i);
 
     colorizeInstruments();
 
@@ -549,6 +540,7 @@ void InstrPanel::colorizeInstruments()
 void InstrPanel::deleteInstrument(Instr* i)
 {
     WaitForSingleObject(AudioMutex, INFINITE);
+    WaitForSingleObject(MixerMutex, INFINITE);
 
     instrs.erase(instrs.begin() + i->getIndex());
 
@@ -580,6 +572,7 @@ void InstrPanel::deleteInstrument(Instr* i)
 
     MGrid->redraw(true, true);
 
+    ReleaseMutex(MixerMutex);
     ReleaseMutex(AudioMutex);
 }
 
@@ -1046,7 +1039,7 @@ void InstrPanel::remap()
 {
     confine();
 
-    masterVolKnob->setCoords1(width - 130, 1, 100, MainLineHeight - 2);
+    //masterVolKnob->setCoords1(width - 130, 1, 100, MainLineHeight - 2);
 
     int instrListY = MainLineHeight + 1;
     int instrListHeight = height - (instrListY + BottomPadHeight);

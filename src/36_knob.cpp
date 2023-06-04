@@ -71,6 +71,51 @@ void ParamBox::drawText(Graphics& g)
     }
 }
 
+void ParamBox::remap()
+{
+    MixChannel* mchan = dynamic_cast<MixChannel*>(parent);
+    eff = dynamic_cast<Eff*>(parent);
+    Instr* i = dynamic_cast<Instr*>(parent);
+    Device36* dev = dynamic_cast<Device36*>(parent);
+
+    if (i)
+    {
+        instr = i;
+    }
+    else if (eff)
+    {
+        instr = eff->getMixChannel()->getInstr();
+    }
+    else if (mchan)
+    {
+        //instr = mchan->getInstr();
+    }
+    else if (dev)
+    {
+        eff = dynamic_cast<Eff*>(dev->getContainer());
+
+        i = dynamic_cast<Instr*>(dev->getContainer());
+
+        if (i)
+        {
+            instr = i;
+        }
+        else if (eff)
+        {
+            mchan = eff->getMixChannel();
+
+            if (mchan)
+            {
+                //instr = mchan->getInstr();
+            }
+        }
+    }
+    
+    // Temp w/a
+    //instr = NULL;
+}
+
+
 Knob::Knob(Parameter* par, bool knob)
 {
     setFontId(FontSmall);
@@ -84,6 +129,7 @@ Knob::Knob(Parameter* par, bool knob)
     dim = false;
     dimOnZero = false;
     instr = NULL;
+    eff = NULL;
     sliding = false;
 
     setHasText(true, false);
@@ -201,7 +247,7 @@ void Knob::handleMouseDrag(InputEvent& ev)
     {
         handleSliding(ev);
     }
-    else
+    else if (eff)
     {
         parent->handleMouseDrag(ev);
     }
@@ -218,6 +264,11 @@ void Knob::handleMouseDown(InputEvent & ev)
     }
     else
     {
+        if (instr)
+        {
+            MInstrPanel->setCurrInstr(instr);
+        }
+
         handleSliding(ev);
     }
 }
@@ -234,46 +285,7 @@ void Knob::handleMouseUp(InputEvent & ev)
 
 void Knob::remap()
 {
-    MixChannel* mchan = dynamic_cast<MixChannel*>(parent);
-    Eff* eff = dynamic_cast<Eff*>(parent);
-    Instr* i = dynamic_cast<Instr*>(parent);
-    Device36* dev = dynamic_cast<Device36*>(parent);
-
-    if (i)
-    {
-        instr = i;
-    }
-    else if (eff)
-    {
-        instr = eff->getMixChannel()->getInstr();
-    }
-    else if (mchan)
-    {
-        //instr = mchan->getInstr();
-    }
-    else if (dev)
-    {
-        eff = dynamic_cast<Eff*>(dev->getContainer());
-
-        i = dynamic_cast<Instr*>(dev->getContainer());
-
-        if (i)
-        {
-            instr = i;
-        }
-        else if (eff)
-        {
-            mchan = eff->getMixChannel();
-
-            if (mchan)
-            {
-                //instr = mchan->getInstr();
-            }
-        }
-    }
-    
-    // Temp w/a
-    //instr = NULL;
+    ParamBox::remap();
 
     if (param)
     {
@@ -393,7 +405,7 @@ void Knob::drawKnob(Graphics& g)
 
         if (objId == "snd")
         {
-            clr = Colour(1.f, 0.f, dim ? .2 : .8f, 1.f);
+            clr = Colour(1.f, 0.f, dim ? .2f : .8f, 1.f);
         }
         else if (objId == "fx")
         {
@@ -553,6 +565,8 @@ void SelectorBox::drawSelf(Graphics& g)
 
 void SelectorBox::remap()
 {
+    ParamBox::remap();
+
     itemWidth = RoundFloat(float(width*widthDiv)/param->getNumOptions());
 }
 
@@ -595,4 +609,16 @@ ContextMenu* SelectorBox::createContextMenu()
     else
         return NULL;
 }
+
+void SelectorBox::handleMouseDrag(InputEvent& ev)
+{
+    if (!active)
+        return;
+
+    if (eff)
+    {
+        parent->handleMouseDrag(ev);
+    }
+}
+
 

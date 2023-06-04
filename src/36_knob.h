@@ -18,10 +18,14 @@ public:
 protected:
 
             void                drawText(Graphics& g);
+            void                remap();
 
             bool                hasText;
             bool                textInside;
             float               widthDiv;
+
+            Instr*              instr;
+            Eff*                eff;
 };
 
 class Knob : public ParamBox
@@ -56,7 +60,6 @@ protected:
             int                 ys;
             int                 defaultPos;
             int                 savedHeight;
-            Instr*              instr;
             bool                knobMode;
             bool                dim;
             bool                sliding;
@@ -74,6 +77,7 @@ protected:
 
             void                drawSelf(Graphics& g);
     virtual void                handleMouseDown(InputEvent & ev);
+            void                handleMouseDrag(InputEvent& ev);
             void                remap();
             ContextMenu*        createContextMenu();
 
@@ -85,7 +89,7 @@ class ToggleBox : public SelectorBox
 {
 public:
             ToggleBox(Parameter* prm) : SelectorBox(prm) { }
-            bool  getBoolValue() { return param->getBoolValue(); }
+            bool                getBoolValue() { return param->getBoolValue(); }
 };
 
 

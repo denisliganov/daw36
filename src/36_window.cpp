@@ -1466,6 +1466,8 @@ void WinObject::handleMouseUp(InputEvent& ev)
         }
     }
 
+    MDragDrop->resetCount();
+
     lastEvent = ev;
 
     //jassert(GPlaying == MCtrllPanel->btPlay->isPressed());

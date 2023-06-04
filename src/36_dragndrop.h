@@ -29,6 +29,7 @@ public:
         void                drop(int mx, int my, unsigned int flags);
         bool                isActive();
         void                start(Gobj * drag_obj, int mx, int my);
+        void                resetCount();
 };
 
 

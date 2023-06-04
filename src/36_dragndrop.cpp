@@ -44,6 +44,11 @@ bool DragAndDrop::canDrag()
     }
 }
 
+void DragAndDrop::resetCount()
+{
+    count = 0;
+}
+
 bool DragAndDrop::isActive()
 {
     return (dragObj != NULL);

@@ -37,7 +37,7 @@ public:
             void                activateMenuItem(std::string mi);
             void                addEffect(Eff* eff);
             Eff*                addEffectFromBrowser(BrwListEntry* de);
-            void                addSend(MixChannel* mchan);
+            void                addSendToChannel(MixChannel* mchan);
             ContextMenu*        createContextMenu();
             ContextMenu*        createContextMenuForEffect(Eff* eff);
             bool                canAcceptInputFrom(MixChannel* other_chan);
@@ -47,7 +47,7 @@ public:
             void                drawOverChildren(Graphics & g);
             void                doSend(float * sendbuff, float amount, int num_frames);
             void                deleteEffect(Eff* eff);
-            Instr*         getInstr()  { return instr; }
+            Instr*              getInstr()  { return instr; }
             int                 getMixCounter()       { return mixCount; }
             void                handleChildEvent(Gobj * obj,InputEvent & ev);
             void                handleMouseWheel(InputEvent& ev);
@@ -80,9 +80,9 @@ private:
             bool                processed;
             std::string         chanTitle;
             Gobj*               dropObj;
-            MixDropHighlight*  dropHighlight;
+            MixDropHighlight*   dropHighlight;
             std::list<Eff*>     effs;
-            Instr*         instr;
+            Instr*              instr;
             MixChannel*         mchanout;
             int                 mixCount;
             Button36*           mutetoggle;

@@ -298,23 +298,27 @@ MixChannel::~MixChannel()
     //
 }
 
-void MixChannel::addSend(MixChannel* mchan)
+void MixChannel::addSendToChannel(MixChannel* mchan)
 {
     SendKnob* sk;
     addObject(sk = new SendKnob(this, mchan, "snd"), "snd");
-
     sk->setHint("Send to this channel");
 
+    if (mchan->getInstr()->isMaster())
+    {
+        sk->getParam()->setNormalizedValue(1);
+    }
+
+    /*
     ChanOutToggle* c;
     addObject(c = new ChanOutToggle(this, mchan), "out");
-
     c->setHint("Route to this channel");
-
     if (mchan == mchanout)
     {
         outTg = c;
         outTg->setValue(true);
     }
+    */
 
     updateSends();
 }
@@ -331,23 +335,31 @@ void MixChannel::delSend(MixChannel* mchan)
             k = dynamic_cast<SendKnob*>(o);
 
             if (k && k->getOutChannel() != mchan)
+            {
                 k = NULL;
+            }
         }
 
+        /*
         if (!c && o->getObjId() == "out")
         {
             c = dynamic_cast<ChanOutToggle*>(o);
 
             if (c && c->getOutChannel() != mchan)
+            {
                 c = NULL;
-        }
+            }
+        }*/
     }
 
     if (k)
+    {
+        sendsActive.remove(k);
         deleteObject(k);
+    }
 
-    if (c)
-        deleteObject(c);
+    //if (c)
+    //    deleteObject(c);
 }
 
 void MixChannel::init(Instr* ins)
@@ -427,20 +439,30 @@ void MixChannel::remap()
         {
             if (o->getObjId() == "snd")
             {
-                SendKnob* k = dynamic_cast<SendKnob*>(o);
+                SendKnob* sk = dynamic_cast<SendKnob*>(o);
 
-                Instr* ins = k->getOutChannel()->getInstr();
+                Instr* ins = sk->getOutChannel()->getInstr();
 
-                int kH = 18;
-                k->setCoords1(width - kH - 4, ins->getY() - getY(), kH, kH);
+                if (ins->isMaster())
+                {
+                    //sk->getParam()->setNormalizedValue(1);
+                    int a = 1;
+                }
+
+                int kH = ins->getH()*0.7f;
+
+                if (kH % 2)
+                    kH--;
+
+                sk->setCoords1(width - kH - 4, ins->getY() - getY() + ins->getH()/2 - kH/2, kH, kH);
 
                 if (ins == instr)
                 {
-                    k->setEnable(false);
+                    sk->setEnable(false);
                 }
                 else
                 {
-                    k->setEnable(true);
+                    sk->setEnable(true);
                 }
             }
 
@@ -701,13 +723,14 @@ bool MixChannel::canAcceptInputFrom(MixChannel * other_chan)
         return false;
     }
 
+/*
     if (outTg)
     {
         if (!outTg->getOutChannel()->canAcceptInputFrom(other_chan))
         {
             return false;
         }
-    }
+    }*/
 
     for (SendKnob* sk : sendsActive)
     {
@@ -958,12 +981,12 @@ void MixChannel::handleParamUpdate(Parameter * param)
                 sendsActive.unique();
 
                 // Disable conflicting routing
-
+                /*
                 if (outTg && outTg->getOutChannel() == sk->getOutChannel())
                 {
                     outTg->setValue(false);
                     outTg = NULL;
-                }
+                }*/
 
                 redraw();
             }
@@ -1026,15 +1049,16 @@ void MixChannel::updateSends()
     {
         if (o->getObjId() == "snd")
         {
-            SendKnob* k = dynamic_cast<SendKnob*>(o);
-            k->setActive(k->getOutChannel()->canAcceptInputFrom(this));
+            SendKnob* sk = dynamic_cast<SendKnob*>(o);
+            sk->setActive(sk->getOutChannel()->canAcceptInputFrom(this));
         }
 
+        /*
         if (o->getObjId() == "out")
         {
             ChanOutToggle* t = dynamic_cast<ChanOutToggle*>(o);
             t->setActive(t->getOutChannel()->canAcceptInputFrom(this));
-        }
+        }*/
     }
 }
 
@@ -1064,10 +1088,11 @@ void MixChannel::placeEffectBefore(Eff* eff, Eff* before)
 
 void MixChannel::prepareForMixing()
 {
+/*
     if (outTg)
     {
         outTg->getOutChannel()->increaseMixCounter();
-    }
+    }*/
 
     for (SendKnob* sk : sendsActive)
     {
@@ -1107,11 +1132,13 @@ void MixChannel::processChannel(int num_frames)
         sk->getOutChannel()->decreaseMixCounter();
     }
 
+/*
     if (outTg)
     {
         doSend(outTg->getOutChannel()->tempBuff, 1, num_frames);
+
         outTg->getOutChannel()->decreaseMixCounter();
-    }
+    }*/
 
     processed = true;
 }
