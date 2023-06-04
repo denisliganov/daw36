@@ -57,7 +57,7 @@ protected:
             }
             else
             {
-                setc(g, 0xffFFFF40, .2f);
+                setc(g, 0xffFFFF40, .1f);
             }
 
             fillx(g, 1, 1, width-2, height-2);
@@ -68,12 +68,8 @@ protected:
             //    drawGlassRound(g, x1+1, y1+1, width-2, Colour(55, 55, 55), 1);
         }
 
-        void handleMouseDrag(InputEvent & ev)   
-        { 
-            parent->handleMouseDrag(ev); 
-        }
+        void handleMouseDrag(InputEvent & ev) { parent->handleMouseDrag(ev); }
         void handleMouseWheel(InputEvent & ev)   { parent->handleMouseWheel(ev); }
-
         void handleMouseDown(InputEvent & ev)   { SelectorBox::handleMouseDown(ev); }
 };
 

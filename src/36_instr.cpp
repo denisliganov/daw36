@@ -230,7 +230,7 @@ Instr::~Instr()
         //delete device;
     }
 
-    //MInstrPanel->removeMixChannel(this);
+    MInstrPanel->removeMixChannel(this);
 
     ReleaseMutex(MixerMutex);
 }

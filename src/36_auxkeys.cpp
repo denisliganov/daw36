@@ -57,7 +57,7 @@ void AuxKeys::drawVerticalKey(Graphics& g, bool vert, int coord1, int coord2, in
     {
         // white key
 
-        setc(g, .95f);
+        setc(g, .8f);
 
         if(pressed)
             setc(g, .8f);

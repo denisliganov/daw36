@@ -19,6 +19,7 @@
 #include "36_snapmenu.h"
 #include "36_keyboard.h"
 #include "36_params.h"
+#include "36_instrpanel.h"
 
 
 
@@ -163,20 +164,23 @@ void MainEdit::drawSelf(Graphics& g)
 
 void MainEdit::remap()
 {
-    int kH = 0;;
-
     confine();
 
     timeline->setCoords2(0, 0, width - 1, MainLineHeight - 1);
 
     //keys->setCoords1(LeftGap, MainLineHeight, 100, height - MainLineHeight - 1);
-
     //grid->vscr->setCoords2(width - GridScrollWidth, MainLineHeight, width - 1, height - 1);
 
-    grid->setCoords2(0, MainLineHeight + 1, width - 1, height - kH - 1);
+    int gridHeight = InstrHeight*(MInstrPanel->getNumInstrs() - 1);
 
-    if (kH)
+    grid->setCoords2(0, MainLineHeight + 1, width - 1, MainLineHeight + gridHeight);
+
+    if (0)
     {
+        int kH = height - (MainLineHeight + gridHeight) - 6;
+
+        if (kH > 50)
+            kH = 50;
         keys->setCoords2(0, height - kH, width - 1, height - 1);
     }
 
