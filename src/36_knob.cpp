@@ -53,13 +53,14 @@ void ParamBox::drawText(Graphics& g)
     else
         txt(g, fontId, param->getName(), textX, textY);
 
-    //setc(g, 1.f);
-
     if (!textInside)
     {
+        setc(g, .8f);
+
         std::string str = param->getValString() + " " + param->getUnitString();
 
-        txt(g, fontId, str, textX + w - valstrLen - unitstrLen - 6, textY);
+        txt(g, fontId, str, textX + w*0.6, textY);
+        //txt(g, fontId, str, textX + w - valstrLen - unitstrLen - 6, textY);
     }
     else
     {
@@ -243,14 +244,16 @@ void Knob::handleMouseDrag(InputEvent& ev)
 
         ys = ev.mouseY;
     }
-    else if (ev.mouseX <= x1 + width*widthDiv)
+    else //if (ev.mouseX <= x1 + width*widthDiv)
     {
         handleSliding(ev);
     }
+/*
     else if (eff)
     {
-        parent->handleMouseDrag(ev);
+       // parent->handleMouseDrag(ev);
     }
+    */
 }
 
 void Knob::handleMouseDown(InputEvent & ev)
@@ -576,8 +579,10 @@ void SelectorBox::handleMouseDown(InputEvent & ev)
 
     if (param->getNumOptions() == 1)
     {
-        if (x <= (width*widthDiv))
+        //if (x <= (width*widthDiv))
+        {
             param->toggleValue();
+        }
 
         redraw();
     }
@@ -617,7 +622,7 @@ void SelectorBox::handleMouseDrag(InputEvent& ev)
 
     if (eff)
     {
-        parent->handleMouseDrag(ev);
+        //parent->handleMouseDrag(ev);
     }
 }
 

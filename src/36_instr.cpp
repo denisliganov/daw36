@@ -295,17 +295,24 @@ void Instr::addMixChannel()
 
 ContextMenu* Instr::createContextMenu()
 {
-    MInstrPanel->setCurrInstr(this);
+    if (isMaster())
+    {
+        return NULL;
+    }
+    else
+    {
+        MInstrPanel->setCurrInstr(this);
 
-    //Menu* menu = new Menu(Obj_MenuPopup);
+        //Menu* menu = new Menu(Obj_MenuPopup);
 
-    ContextMenu* menu = new ContextMenu(this);
+        ContextMenu* menu = new ContextMenu(this);
 
-    menu->addMenuItem("Clone");
-    menu->addMenuItem("Delete");
-    menu->addMenuItem("Edit Self-Pattern");
+        menu->addMenuItem("Clone");
+        menu->addMenuItem("Delete");
+        menu->addMenuItem("Edit Self-Pattern");
 
-    return menu;
+        return menu;
+    }
 }
 
 Instr* Instr::clone()

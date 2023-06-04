@@ -49,24 +49,18 @@ protected:
 
         void drawSelf(Graphics& g)
         {
+            fill(g, 0xffFFFF40, .6f);
+
             if (param->getBoolValue())
             {
-                setc(g, .8f);
-                //setc(g, 0xffFFFF40);
-                //fillx(g, 1, 1, height-2, height-2);
+                setc(g, 0xffFFFF40);
             }
             else
             {
-                setc(g, 0.18f);
-                //fillx(g, 0, 0, height, height);
+                setc(g, 0xffFFFF40, .2f);
             }
 
-            int y = 0;
-            while (y < height)
-            {
-                fillx(g, 0, y, width, 1);
-                y += 2;
-            }
+            fillx(g, 1, 1, width-2, height-2);
 
             //if (param->getBoolValue())
             //    drawGlassRound(g, x1+1, y1+1, width-2, Colour(255,255,55), 1);
@@ -80,9 +74,7 @@ protected:
         }
         void handleMouseWheel(InputEvent & ev)   { parent->handleMouseWheel(ev); }
 
-        void handleMouseDown(InputEvent & ev)   { 
-                                                        SelectorBox::handleMouseDown(ev); 
-                                                   }
+        void handleMouseDown(InputEvent & ev)   { SelectorBox::handleMouseDown(ev); }
 };
 
 
@@ -142,7 +134,7 @@ Eff::Eff(Device36* dev)
 
     device = dev;
     addObject(guiButt = new EffGuiButton());
-    //addObject(enableButt = new EffEnableButton(device->enabled));
+    addObject(enableButt = new EffEnableButton(device->enabled));
     addObject(device);
 
     device->placeControls2(FxMaxEffWidth);
@@ -169,7 +161,7 @@ void Eff::showDevice(bool show)
         device->setEnable(true);
         device->setVis(true);
 
-        setWH(device->getW(), device->getH() + 4);
+        setWH(device->getW(), device->getH() + 8);
     }
     else
     {
@@ -183,8 +175,8 @@ void Eff::remap()
 {
     if (MixViewSingle && device->isON())
     {
-        //enableButt->setCoords1(width - 24, 0, 24, 12);
-        device->setCoords1(0, 4, device->getW(), device->getH());
+        enableButt->setCoords1(width - 16, 0, 16, 10);
+        device->setCoords1(0, 8, device->getW(), device->getH());
     }
     else
     {
@@ -220,7 +212,7 @@ void Eff::drawSelf(Graphics& g)
     }
 
     setc(g, .8f);
-    txt(g, FontVis, device->getObjName(), 0, gGetTextHeight(FontVis) - 2);
+    txt(g, FontBold, device->getObjName(), 2, gGetTextHeight(FontBold));
 
 /*
     if (MixViewSingle)
