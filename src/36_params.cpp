@@ -47,6 +47,7 @@ Parameter::Parameter(std::string name, ParamType param_type)
     prmName = name;
     index = -1;
     autoPlaced = true;
+    module = NULL;
 
     if (type == Param_Selector || type == Param_Toggle || type == Param_Radio)
     {
@@ -76,6 +77,7 @@ Parameter::Parameter(std::string param_name, bool def_val)
     type = Param_Toggle;
     index = -1;
     autoPlaced = true;
+    module = NULL;
 
     currentOption = def_val ? 1 : 0;
 
@@ -780,7 +782,10 @@ void  Parameter::setCurrentOption(int curr)
 
     setValString(options[currentOption]); 
 
-    module->handleParamUpdate(this);
+    if (module)
+    {
+        module->handleParamUpdate(this);
+    }
 }
 
 // Selector
@@ -789,7 +794,10 @@ void  Parameter::setOptionVal(int optnum, bool new_val)
 {
     optValues[optnum] = new_val; 
 
-    module->handleParamUpdate(this);
+    if (module)
+    {
+        module->handleParamUpdate(this);
+    }
 }
 
 bool   Parameter::getOptionVal(int optnum)
@@ -801,7 +809,10 @@ void  Parameter::toggleOption(int optnum)
 { 
     optValues[optnum] = !optValues[optnum]; 
 
-    module->handleParamUpdate(this);
+    if (module)
+    {
+        module->handleParamUpdate(this);
+    }
 }
 
 

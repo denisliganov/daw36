@@ -187,7 +187,6 @@
     <ClCompile Include="src\36_note.cpp" />
     <ClCompile Include="src\36_numbox.cpp" />
     <ClCompile Include="src\36_objects.cpp" />
-    <ClCompile Include="src\36_parambox.cpp" />
     <ClCompile Include="src\36_paramobject.cpp" />
     <ClCompile Include="src\36_params.cpp" />
     <ClCompile Include="src\36_pattern.cpp" />
@@ -371,7 +370,6 @@
     <ClInclude Include="src\36_note.h" />
     <ClInclude Include="src\36_numbox.h" />
     <ClInclude Include="src\36_objects.h" />
-    <ClInclude Include="src\36_parambox.h" />
     <ClInclude Include="src\36_paramobject.h" />
     <ClInclude Include="src\36_params.h" />
     <ClInclude Include="src\36_pattern.h" />
