@@ -295,7 +295,10 @@ MixChannel::MixChannel(Instr* i)
 
 MixChannel::~MixChannel()
 {
-    //
+    if (instr)
+    {
+        instr->setMixChannel(NULL);
+    }
 }
 
 void MixChannel::addSendToChannel(MixChannel* mchan)

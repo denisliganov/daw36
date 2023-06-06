@@ -55,6 +55,7 @@ public:
             void                setIndex(int idx);
     virtual void                save(XmlElement* instrNode);
             void                setAlias(std::string alias);
+            void                setMixChannel(MixChannel* mchan);
 
 private:
             Device36*           device;

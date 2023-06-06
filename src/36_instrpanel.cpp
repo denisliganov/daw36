@@ -568,9 +568,9 @@ void InstrPanel::deleteInstrument(Instr* i)
 
     deleteObject(i);
 
-    remapAndRedraw();
+    MEdit->remapAndRedraw();
 
-    MGrid->redraw(true, true);
+    //MGrid->redraw(true, true);
 
     ReleaseMutex(MixerMutex);
     ReleaseMutex(AudioMutex);
@@ -754,13 +754,10 @@ void InstrPanel::placeBefore(Instr* i, Instr* before)
 
     instrs.insert(it, instr);
 
-    //it--;
-
     curr = instr;
 
     ReleaseMutex(AudioMutex);
 
-    //adjustOffset();
     ReIndexInstruments();
     colorizeInstruments();
 }
@@ -802,7 +799,7 @@ void InstrPanel::handleObjDrop(Gobj * obj, int mx, int my, unsigned int flags)
 
         MGrid->redraw(true, true);
 
-        remapAndRedraw();
+        MEdit->remapAndRedraw();
     }
 
     /*

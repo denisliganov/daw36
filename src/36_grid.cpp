@@ -1188,7 +1188,8 @@ void Grid::drawElements(Graphics& g)
 
 void Grid::drawSelf(Graphics& g)
 {
-    fill(g, 0.0f);
+//    fill(g, 0.0f);
+    
     if(mainimg != NULL)
     {
         g.drawImageAt(mainimg, x1, y1);

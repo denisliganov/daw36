@@ -230,7 +230,8 @@ Instr::~Instr()
         //delete device;
     }
 
-    MInstrPanel->removeMixChannel(this);
+    if (mixChannel)
+        MInstrPanel->removeMixChannel(this);
 
     ReleaseMutex(MixerMutex);
 }
@@ -292,6 +293,16 @@ void Instr::addMixChannel()
 {
     mixChannel = MInstrPanel->addMixChannel(this);
 }
+
+void Instr::setMixChannel(MixChannel* mchan)
+{
+    WaitForSingleObject(MixerMutex, INFINITE);
+
+    mixChannel = mchan;
+
+    ReleaseMutex(MixerMutex);
+}
+
 
 ContextMenu* Instr::createContextMenu()
 {

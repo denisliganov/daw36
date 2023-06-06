@@ -123,7 +123,7 @@ MainEdit::MainEdit()
 
 void MainEdit::drawSelf(Graphics& g)
 {
-    //fill(g, 0.0f);
+    fill(g, 0.0f);
 
     //setc(g, 0.2f);
     //fillx(g, 0, 0, LineNumWidth, height);
@@ -177,10 +177,10 @@ void MainEdit::remap()
 
     if (1)
     {
-        int kH = height - (MainLineHeight + gridHeight) - 6;
+        int kH = height - (MainLineHeight + gridHeight) - 2;
 
-        if (kH > 50)
-            kH = 50;
+        if (kH > 100)
+            kH = 100;
         keys->setCoords2(0, height - kH, width - 1, height - 1);
     }
 
