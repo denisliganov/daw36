@@ -175,7 +175,7 @@ void MainEdit::remap()
 
     grid->setCoords2(0, MainLineHeight + 1, width - 1, MainLineHeight + gridHeight);
 
-    if (0)
+    if (1)
     {
         int kH = height - (MainLineHeight + gridHeight) - 6;
 
