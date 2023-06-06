@@ -2350,7 +2350,7 @@ void Grid::updFillerImage()
 
     imageContext.fillAll();
 
-    float tick = .16f;
+    float tick = .18f;
     float beat = 0.f; // .28f;
     float bar = 0.f; // .28f; //.36f;
 
