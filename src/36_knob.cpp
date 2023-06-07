@@ -282,7 +282,7 @@ void Knob::handleMouseUp(InputEvent & ev)
 
     if (ev.mouseX > x1 + width*widthDiv)
     {
-        parent->handleMouseUp(ev);
+        //parent->handleMouseUp(ev);
     }
 }
 
@@ -588,15 +588,22 @@ void SelectorBox::handleMouseDown(InputEvent & ev)
     }
     else
     {
-        if (x <= (width*widthDiv))
+        if (x < (width*widthDiv))
         {
+            int option = x / itemWidth;
+
+            if (option >= param->getNumOptions())
+            {
+                option = param->getNumOptions() - 1;
+            }
+
             if (radioMode)
             {
-                param->setCurrentOption(x / itemWidth);
+                param->setCurrentOption(option);
             }
             else
             {
-                param->toggleOption(x / itemWidth);
+                param->toggleOption(option);
             }
 
             redraw();

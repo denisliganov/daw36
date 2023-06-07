@@ -26,27 +26,18 @@ private:
         Parameter*          bufferSize;
         Parameter*          interpolationSelect;
 
-        ListBoxx*           interpolation;
+        Knob*               bufferSizeBox;
+        SelectorBox*        interpolationChooserBox;
+
         ListBoxx*           midiOutDevices;
         ListBoxx*           midiInDevices;
         ListBoxx*           outputDevices;
         ListBoxx*           inputDevices;
 
-        /*
-        ParamBox*           buffSizeBox;
-        ParamBox*           pbox2;
-        ParamBox*           pbox3;
-        ParamBox*           pbox4;
-        ParamBox*           pbox5;
-        ParamBox*           pbox6;*/
-
         Knob*               knob1;
         Knob*               knob2;
         Knob*               knob3;
         Knob*               knob4;
-
-        SelectorBox*        chooserBox;
-        SelectorBox*        rb2;
 
         Button36*           showASIOPanel;
 

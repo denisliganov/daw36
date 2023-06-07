@@ -385,7 +385,7 @@ void Instr::drawSelf(Graphics& g)
 
         //setc(g, 1.f);
         Gobj::setMyColor(g, 1.f, .4f);
-        txtfit(g, FontSmall, getObjName(), guiButton->getW() + 4, 10, width - 4);
+        txtfit(g, FontSmall, getObjName(), guiButton->getW() + 4, 12, width - 4);
 
 
         //Colour clr = Colour(100, 110, 110);
@@ -598,7 +598,7 @@ void Instr::remap()
             }
 
             //volKnob->setCoords1(width - 80 - bw - bw - 2, (h - kH)/2, 80, int(kH));
-            volKnob->setCoords1(width - 80 - bw - bw - 1, h - h/2+1, 80, h/2);
+            volKnob->setCoords1(width - 80 - bw - bw - 1, h - h/3, 80, h/3);
 
             //panKnob->setCoords1(width - 57, 0, int(kH-2), int(kH-2));
 

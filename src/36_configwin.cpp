@@ -18,7 +18,6 @@ ConfigWinObject::ConfigWinObject()
     //Gobj::addObject(pbox2 = new Slider36(false), 10, 72, 120, 20);
     //Gobj::addObject(pbox3 = new Slider36(false), 10, 94, 120, 20);
     //Gobj::addObject(midiDevices = new ListBoxx("List1"), 200, 50, 120, 100);
-
     //Gobj::addObject(knob1 = new Knob(new Parameter(0.5f)), 140, 190, 40, 40);
     //Gobj::addObject(knob2 = new Knob(new Parameter(0.5f)), 180, 190, 20, 20);
 
@@ -28,15 +27,14 @@ ConfigWinObject::ConfigWinObject()
     addParam(hue = new Parameter("Hue", globalHue, 0, 1));
     addParam(saturation = new Parameter("Sat", 0, 1, 0.2f));
     addParam(brightness = new Parameter("Brightness", -1.f, .9f, 0));
-    addParam(bufferSize = new Parameter("Audio buffer size", 512, 16384, 2048, Units_Integer));
-
-    bufferSize->setUnitString("samples");
-
     WinObject::addObject(knob1 = new Knob(hue));
     WinObject::addObject(knob2 = new Knob(saturation));
     WinObject::addObject(knob3 = new Knob(brightness));
 
-    //WinObject::addObject(buffSizeBox = new ParamBox(bufferSize));
+    addParam(bufferSize = new Parameter("Buffer size", 512, 16384, 2048, Units_Integer));
+    bufferSize->setUnitString("samples");
+    WinObject::addObject(bufferSizeBox = new Knob(bufferSize, false));
+
 
     interpolationSelect = new Parameter("Interpolation (sample playback)", Param_Radio);
     interpolationSelect->addOption("Linear");
@@ -45,7 +43,7 @@ ConfigWinObject::ConfigWinObject()
     interpolationSelect->addOption("Sinc depth 64");
     interpolationSelect->setCurrentOption(0);
 
-    WinObject::addObject(chooserBox = new SelectorBox(interpolationSelect));
+    WinObject::addObject(interpolationChooserBox = new SelectorBox(interpolationSelect));
 
     WinObject::addObject(outputDevices = new ListBoxx("Output devices"));
 //                outputDevices->addEntry("Output Device 1");
@@ -65,20 +63,21 @@ ConfigWinObject::ConfigWinObject()
                 midiOutDevices->addEntry("Entry3");
 
     WinObject::addObject(midiInDevices = new ListBoxx("MIDI IN devices"));
-                midiInDevices->addEntry("Entry4Entry4Entry4Entry4Entry4");
+                midiInDevices->addEntry("Entry1");
+                midiInDevices->addEntry("Entry2");
+                midiInDevices->addEntry("Entry3");
+                midiInDevices->addEntry("Entry4");
                 midiInDevices->addEntry("Entry5");
-                midiInDevices->addEntry("Entry6Entry4Entry4");
-                midiInDevices->addEntry("Entry7Entry4Entry4Entry4Entry4Entry4");
-                midiInDevices->addEntry("Entry8Entry4");
-                midiInDevices->addEntry("Entry9");
-                midiInDevices->addEntry("Entry10");
-                midiInDevices->addEntry("Entry11");
+                midiInDevices->addEntry("Entry6");
+                midiInDevices->addEntry("Entry7");
+                midiInDevices->addEntry("Entry8");
 
 
     // Position all controls
 
     putRight(outputDevices, 180, 120);
-    putBelow(chooserBox, 180, 16);
+    putBelow(interpolationChooserBox, 180, 16);
+    putBelow(bufferSizeBox, 180, 16);
     returnUp();
     spaceRight();
     putRight(inputDevices, 180, 120);

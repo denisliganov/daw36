@@ -1117,7 +1117,7 @@ Hintbox::Hintbox(WinObject* wobj) : DocumentWindow(T("Hint"), Colours::white, Do
 
     blocked = false;
 
-    font = FontProject;
+    font = FontArial;
 
     setAlwaysOnTop(true);
 }
