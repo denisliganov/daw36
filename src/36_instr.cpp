@@ -598,7 +598,7 @@ void Instr::remap()
             }
 
             //volKnob->setCoords1(width - 80 - bw - bw - 2, (h - kH)/2, 80, int(kH));
-            volKnob->setCoords1(width - 80 - bw - bw - 1, h - h/3, 80, h/3);
+            volKnob->setCoords1(width - 80 - bw - bw - 1, h - h/3 + 1, 80, h/3);
 
             //panKnob->setCoords1(width - 57, 0, int(kH-2), int(kH-2));
 

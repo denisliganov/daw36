@@ -73,18 +73,20 @@ ConfigWinObject::ConfigWinObject()
                 midiInDevices->addEntry("Entry8");
 
 
+    int colWidth = 220;
+
     // Position all controls
 
-    putRight(outputDevices, 180, 120);
-    putBelow(interpolationChooserBox, 180, 16);
-    putBelow(bufferSizeBox, 180, 16);
+    putRight(outputDevices, colWidth, 120);
+    putBelow(interpolationChooserBox, colWidth, 16);
+    putBelow(bufferSizeBox, colWidth, 16);
     returnUp();
     spaceRight();
-    putRight(inputDevices, 180, 120);
+    putRight(inputDevices, colWidth, 120);
     spaceRight();
-    putRight(midiOutDevices, 180, 120);
+    putRight(midiOutDevices, colWidth, 120);
     spaceRight();
-    putRight(midiInDevices, 180, 120);
+    putRight(midiInDevices, colWidth, 120);
     //spaceRight();
     returnLeft();
 
