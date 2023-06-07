@@ -527,11 +527,11 @@ ContextMenu* Knob::createContextMenu()
 
 
 
-SelectorBox::SelectorBox(Parameter* param_sel, bool radio)
+SelectorBox::SelectorBox(Parameter* param_sel)
 {
     setParam(param_sel);
 
-    radioMode = radio;
+    radioMode = (param_sel->getType() == Param_Radio);
 
     setFontId(FontSmall);
 

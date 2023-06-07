@@ -71,7 +71,7 @@ protected:
 class SelectorBox : public ParamBox
 {
 public:
-            SelectorBox(Parameter* param_sel, bool radio = false);
+            SelectorBox(Parameter* param_sel);
 
 protected:
 
