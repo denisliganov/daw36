@@ -49,18 +49,20 @@ protected:
 
         void drawSelf(Graphics& g)
         {
-            fill(g, 0xffFFFF40, .6f);
+            fill(g, 0xffFFFF40, .4f);
 
             if (param->getBoolValue())
             {
+                setc(g, 0xffFFFF40, .8f, 1.f);
+                fillx(g, 1, 1, width - 2, height - 2);
                 setc(g, 0xffFFFF40);
+                fillx(g, 2, 2, width - 4, height - 4);
             }
             else
             {
-                setc(g, 0xffFFFF40, .1f);
+                setc(g, 0xffFFFF40, .2f, 1.f);
+                fillx(g, 1, 1, width - 2, height - 2);
             }
-
-            fillx(g, 1, 1, width-2, height-2);
 
             //if (param->getBoolValue())
             //    drawGlassRound(g, x1+1, y1+1, width-2, Colour(255,255,55), 1);

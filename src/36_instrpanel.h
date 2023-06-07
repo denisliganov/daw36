@@ -59,7 +59,7 @@ public:
             void                showFX();
             void                setInstrFromNewBrowser(BrwListEntry* ble, Instr* instr);
             void                updateWaves();
-            void                ReIndexInstruments();
+            void                reIndexInstruments();
 
 // Mix
             MixChannel*         addMixChannel(Instr* instr);

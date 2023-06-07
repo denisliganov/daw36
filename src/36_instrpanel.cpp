@@ -422,7 +422,7 @@ Instr* InstrPanel::addInstrument(Device36 * dev, bool master)
 
     instrs.insert(it, i);
 
-    ReIndexInstruments();
+    reIndexInstruments();
 
     if (master)
     {
@@ -562,7 +562,7 @@ void InstrPanel::deleteInstrument(Instr* i)
         ins->getMixChannel()->delSend(i->getMixChannel());
     }
 
-    ReIndexInstruments();
+    reIndexInstruments();
 
     colorizeInstruments();
 
@@ -757,9 +757,6 @@ void InstrPanel::placeBefore(Instr* i, Instr* before)
     curr = instr;
 
     ReleaseMutex(AudioMutex);
-
-    ReIndexInstruments();
-    colorizeInstruments();
 }
 
 void InstrPanel::handleObjDrop(Gobj * obj, int mx, int my, unsigned int flags)
@@ -779,13 +776,11 @@ void InstrPanel::handleObjDrop(Gobj * obj, int mx, int my, unsigned int flags)
         addInstrFromNewBrowser(ble);
     } 
 
-    {
-        i = getCurrInstr();
+    i = getCurrInstr();
 
-        if (i == dropObj)
-        {
-            i = NULL;
-        }
+    if (i == dropObj)
+    {
+        i = NULL;
     }
 
 
@@ -795,9 +790,10 @@ void InstrPanel::handleObjDrop(Gobj * obj, int mx, int my, unsigned int flags)
 
         dropObj = NULL;
 
-        ReIndexInstruments();
+        reIndexInstruments();
+        colorizeInstruments();
 
-        MGrid->redraw(true, true);
+        remapAndRedraw();
 
         MEdit->remapAndRedraw();
     }
@@ -904,7 +900,7 @@ void InstrPanel::hideFX()
     remapAndRedraw();
 }
 
-void InstrPanel::ReIndexInstruments()
+void InstrPanel::reIndexInstruments()
 {
     int idx = 0;
 

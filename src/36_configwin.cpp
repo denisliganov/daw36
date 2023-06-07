@@ -77,29 +77,23 @@ ConfigWinObject::ConfigWinObject()
 
     // Position all controls
 
-    putBelow(outputDevices, 280, 120);
+    putBelow(outputDevices, 180, 120);
     spaceBelow();
-    putBelow(inputDevices, 280, 120);
+    putBelow(inputDevices, 180, 120);
     returnUp();
     spaceRight();
-    spaceBelow();
+    //spaceBelow();
     //putRight(buffSizeBox, 120, 30);
     //putBelow(showASIOPanel, 120, 20);
+    //spaceBelow();
+    //putBelow(chooserBox, 120, chooserBox->getH());
+    //spaceRight();
+    //returnUp();
+    putBelow(midiOutDevices, 180, 120);
     spaceBelow();
-    putBelow(chooserBox, 120, chooserBox->getH());
-    spaceRight();
-    returnUp();
-    putBelow(midiOutDevices, 280, 120);
-    spaceBelow();
-    putBelow(midiInDevices, 280, 120);
+    putBelow(midiInDevices, 180, 120);
     spaceBelow(4);
 
-
-/*
-    putBelow(knob1, 55, 70);
-    putBelow(knob2, 55, 70);
-    putBelow(knob3, 55, 70);
-*/
     finalizePuts();
 
     setWidthHeight(Gobj::getW(), Gobj::getH());

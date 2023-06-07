@@ -434,8 +434,8 @@ void MixChannel::remap()
         int ySendControls = height - FxPanelBottomHeight;
         int yControls = height - FxPanelBottomHeight + sendPanelHeight;
 
-        volKnob->setCoords1(0, yControls + 3, 112, 18);
-        panKnob->setCoords1(0, yControls + 23, 112, 18);
+        volKnob->setCoords1(0, yControls + 2, 112, 18);
+        panKnob->setCoords1(0, yControls + 22, 112, 18);
         vu->setCoords1(0, height - 26, width - 80, 20);
 
         for (Gobj* o : objs)
@@ -490,7 +490,6 @@ void MixChannel::remap()
         for(Eff* eff : effs)
         {
             eff->showDevice(false);
-
             eff->setCoords1(xeff, 1, 32, height - 2);
 
             xeff += eff->getW() + 1;
