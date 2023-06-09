@@ -1475,9 +1475,7 @@ void Grid::handleMouseDown(InputEvent& ev)
                         selReset(true);
 
                         if (MInstrPanel)
-                        {
                             MInstrPanel->setCurrInstr(MInstrPanel->getInstrFromLine(alignLine));
-                        }
 
                         actnote = putNote(alignTick, alignLine, -1);
                         actnote->recalc();
@@ -1520,7 +1518,9 @@ void Grid::handleMouseDown(InputEvent& ev)
 
                             actnote->preview(-1, true);
 
-                            //MInstrPanel->setCurrInstr(actnote->getInstr());
+                            if (MInstrPanel)
+                                MInstrPanel->setCurrInstr(MInstrPanel->getInstrFromLine(alignLine));
+
 
                             if (dispmode == GridDisplayMode_Steps)
                             {

@@ -90,7 +90,8 @@ ConfigWinObject::ConfigWinObject()
     //spaceRight();
     returnLeft();
 
-    //spaceBelow();
+    spaceBelow(6);
+    
     //putRight(buffSizeBox, 120, 30);
     //putBelow(showASIOPanel, 120, 20);
     //spaceBelow();
