@@ -89,7 +89,7 @@ void DevParamObject::placeControls()
 */
 
                 Knob* k = new Knob(prm);
-                k->setHasText(true, true);
+                k->setTextParams(true, true);
                 obj = k;
                 obj->setWH(100, 30);
             }

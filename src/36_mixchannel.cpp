@@ -386,10 +386,10 @@ void MixChannel::init(Instr* ins)
     addBasicParamSet();
 
     addObject(volKnob = new Knob(vol));
-    volKnob->setHasText(false);
+    volKnob->setTextParams(false);
     volKnob->setHint("Channel Volume");
     addObject(panKnob = new Knob(pan));
-    panKnob->setHasText(false);
+    panKnob->setTextParams(false);
     panKnob->setHint("Channel Panning");
 
     addObject(vu = new ChanVU(false), ObjGroup_VU);

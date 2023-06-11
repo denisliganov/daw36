@@ -59,8 +59,8 @@ ControlPanel::ControlPanel()
 
     addObject(btConfig = new Button36(true), "bt.cfg");
     btConfig->setLedType(true);
-    addObject(btRender = new Button36(true), "bt.render");
-    btConfig->setLedType(true);
+    //addObject(btRender = new Button36(true), "bt.render");
+    //btConfig->setLedType(true);
 
     addObject(btBrowser = new Button36(true), "bt.browser");
     addObject(btBarMode = new GroupButton(2), "bt.bars");
@@ -96,7 +96,7 @@ ControlPanel::ControlPanel()
 
     spaceRight(2);
     putRight(btConfig, buttonWidth, buttonHeight);
-    putRight(btRender, buttonWidth, buttonHeight);
+    //putRight(btRender, buttonWidth, buttonHeight);
     spaceRight();
     putRight(btBrowser, buttonWidth * 2, buttonHeight);
     putRight(btBarMode, buttonWidth, buttonHeight);

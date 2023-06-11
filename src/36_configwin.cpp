@@ -31,21 +31,25 @@ ConfigWinObject::ConfigWinObject()
     WinObject::addObject(knob2 = new Knob(saturation));
     WinObject::addObject(knob3 = new Knob(brightness));
 
-    addParam(bufferSize = new Parameter("Buffer size", 512, 16384, 2048, Units_Integer));
+    addParam(bufferSize = new Parameter("BUFFER SIZE", 512, 16384, 2048, Units_Integer));
     bufferSize->setUnitString("samples");
     WinObject::addObject(bufferSizeBox = new Knob(bufferSize, false));
 
+    bufferSizeBox->setTextParams(true, false, true, .5f);
 
-    interpolationSelect = new Parameter("Interpolation (sample playback)", Param_Radio);
+    interpolationSelect = new Parameter("INTERPOLATION", Param_Radio);
     interpolationSelect->addOption("Linear");
     interpolationSelect->addOption("3-point Hermire");
     interpolationSelect->addOption("6-point Polinomial");
     interpolationSelect->addOption("Sinc depth 64");
     interpolationSelect->setCurrentOption(0);
 
+
     WinObject::addObject(interpolationChooserBox = new SelectorBox(interpolationSelect));
 
-    WinObject::addObject(outputDevices = new ListBoxx("Output devices"));
+    interpolationChooserBox->setTextParams(true, false, true, .5f);
+
+    WinObject::addObject(outputDevices = new ListBoxx("OUTPUT devices"));
 //                outputDevices->addEntry("Output Device 1");
 //                outputDevices->addEntry("Output Device 2");
 
@@ -53,24 +57,14 @@ ConfigWinObject::ConfigWinObject()
 
     showASIOPanel = new Button36(false, "Show ASIO panel");
 
-    WinObject::addObject(inputDevices = new ListBoxx("Input devices"));
-                inputDevices->addEntry("IN Device1");
-                inputDevices->addEntry("IN Device2");
+    WinObject::addObject(inputDevices = new ListBoxx("INPUT devices"));
+    inputDevices->addEntry("IN Device1");
+    inputDevices->addEntry("IN Device2");
 
     WinObject::addObject(midiOutDevices = new ListBoxx("MIDI OUT devices"));
-                midiOutDevices->addEntry("Entry1");
-                midiOutDevices->addEntry("Entry2");
-                midiOutDevices->addEntry("Entry3");
 
     WinObject::addObject(midiInDevices = new ListBoxx("MIDI IN devices"));
-                midiInDevices->addEntry("Entry1");
-                midiInDevices->addEntry("Entry2");
-                midiInDevices->addEntry("Entry3");
-                midiInDevices->addEntry("Entry4");
-                midiInDevices->addEntry("Entry5");
-                midiInDevices->addEntry("Entry6");
-                midiInDevices->addEntry("Entry7");
-                midiInDevices->addEntry("Entry8");
+
 
 
     int colWidth = 220;
@@ -78,6 +72,7 @@ ConfigWinObject::ConfigWinObject()
     // Position all controls
 
     putRight(outputDevices, colWidth, 120);
+    spaceBelow();
     putBelow(interpolationChooserBox, colWidth, 16);
     putBelow(bufferSizeBox, colWidth, 16);
     returnUp();
@@ -85,8 +80,10 @@ ConfigWinObject::ConfigWinObject()
     putRight(inputDevices, colWidth, 120);
     spaceRight();
     putRight(midiOutDevices, colWidth, 120);
-    spaceRight();
-    putRight(midiInDevices, colWidth, 120);
+    //spaceRight();
+    
+    
+    //putRight(midiInDevices, colWidth, 120);
     //spaceRight();
     returnLeft();
 

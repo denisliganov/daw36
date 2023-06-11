@@ -13,16 +13,19 @@ class ParamBox : public Control
 {
 public:
             ParamBox();
-            void                setHasText(bool txt, bool inside=false);
+            void                setTextParams(bool txt, bool inside=false, bool value_replace=false, float width_divider = 0.45f);
 
 protected:
 
             void                drawText(Graphics& g);
             void                remap();
+            void                handleMouseEnter(InputEvent& ev) { redraw(); }
+            void                handleMouseLeave(InputEvent& ev) { redraw(); }
 
             bool                hasText;
             bool                textInside;
-            float               widthDiv;
+            bool                valueReplace;
+            float               widthDivider;
 
             Instr*              instr;
             Eff*                eff;
@@ -78,11 +81,13 @@ protected:
             void                drawSelf(Graphics& g);
     virtual void                handleMouseDown(InputEvent & ev);
             void                handleMouseDrag(InputEvent& ev);
+            void                handleMouseMove(InputEvent& ev);
             void                remap();
             ContextMenu*        createContextMenu();
 
             int                 itemWidth;
             bool                radioMode;
+            int                 hoverOption;
 };
 
 class ToggleBox : public SelectorBox

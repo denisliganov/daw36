@@ -200,7 +200,7 @@ Instr::Instr(Device36* dev)
     //panBox = volBox = NULL;
 
     addObject(volKnob = new Knob(device->vol, false));
-    volKnob->setHasText(false);
+    volKnob->setTextParams(false);
     volKnob->setHint("Channel Pre-Volume");
 
     addObject(panKnob = new Knob(device->pan, true));

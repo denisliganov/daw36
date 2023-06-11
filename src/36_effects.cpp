@@ -354,7 +354,7 @@ Filter1::Filter1()
     filterType->addOption("BAND.PASS");
     filterType->setCurrentOption(0);
 
-    addParam(x2toggle = new Parameter("X2", false));
+    addParam(x2toggle = new Parameter("x2 MODE", false));
 
 /*
     // Create radiobuttons set
