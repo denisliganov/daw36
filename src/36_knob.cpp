@@ -21,6 +21,7 @@ ParamBox::ParamBox()
     textInside = true;
     valueReplace = false;
     widthDivider = 1;
+    hoverOption = -1;
 }
 
 void ParamBox::setTextParams(bool txt, bool inside, bool value_replace, float width_divider)
@@ -28,6 +29,7 @@ void ParamBox::setTextParams(bool txt, bool inside, bool value_replace, float wi
     hasText = txt;
 
     textInside = inside;
+
     valueReplace = value_replace;
 
     widthDivider = (hasText && !textInside ? width_divider : 1);
@@ -57,8 +59,22 @@ void ParamBox::drawText(Graphics& g)
         {
             if (isUnderMouse())
             {
-                setc(g, .8f);
-                txt(g, fontId, param->getValString() + " " + param->getUnitString(), textX, textY);
+                setc(g, .9f);
+                std::string str = param->getValString() + " " + param->getUnitString();
+
+                if (hoverOption >= 0 && (param->getType() == Param_Selector || param->getType() == Param_Radio))
+                {
+                    setc(g, .6f);
+
+                    str = param->getOptionStr(hoverOption);
+
+                    if (hoverOption == param->getCurrentOption())
+                    {
+                        setc(g, .9f);
+                    }
+                }
+
+                txt(g, fontId, str, textX, textY);
             }
             else
             {
@@ -143,6 +159,7 @@ Knob::Knob(Parameter* par, bool knob)
     angleOffset = float(2*PI - angleRange)*.5f;
     defaultPos = 0;
     savedHeight = 0;
+    hoverOption = 0;
     dim = false;
     dimOnZero = false;
     instr = NULL;
@@ -551,8 +568,6 @@ SelectorBox::SelectorBox(Parameter* param_sel)
 
     setFontId(FontSmall);
 
-    hoverOption = 0;
-
     setTextParams(true, false);
 }
 
@@ -651,13 +666,20 @@ void SelectorBox::handleMouseDrag(InputEvent& ev)
     }
 }
 
+
 void SelectorBox::handleMouseMove(InputEvent & ev)
 {
-    int x = ev.mouseX - x1;
+    hoverOption = -1;
 
-    if (x < (width*widthDivider))
+    if ((param->getType() == Param_Selector || param->getType() == Param_Radio) && widthDivider < 1)
     {
-        hoverOption = x / itemWidth;
+        int x = ev.mouseX - x1;
+
+        if (x < (width*widthDivider))
+        {
+            hoverOption = x / itemWidth;
+            redraw();
+        }
     }
 }
 

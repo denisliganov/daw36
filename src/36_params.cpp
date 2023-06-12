@@ -805,6 +805,11 @@ bool   Parameter::getOptionVal(int optnum)
     return optValues[optnum]; 
 }
 
+std::string   Parameter::getOptionStr(int optnum)
+{ 
+    return options[optnum]; 
+}
+
 void  Parameter::toggleOption(int optnum)
 { 
     optValues[optnum] = !optValues[optnum]; 

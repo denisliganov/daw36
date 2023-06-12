@@ -18,14 +18,15 @@ public:
 protected:
 
             void                drawText(Graphics& g);
-            void                remap();
             void                handleMouseEnter(InputEvent& ev) { redraw(); }
             void                handleMouseLeave(InputEvent& ev) { redraw(); }
+            void                remap();
 
             bool                hasText;
             bool                textInside;
             bool                valueReplace;
             float               widthDivider;
+            int                 hoverOption;
 
             Instr*              instr;
             Eff*                eff;
@@ -81,13 +82,12 @@ protected:
             void                drawSelf(Graphics& g);
     virtual void                handleMouseDown(InputEvent & ev);
             void                handleMouseDrag(InputEvent& ev);
-            void                handleMouseMove(InputEvent& ev);
             void                remap();
             ContextMenu*        createContextMenu();
+            void                handleMouseMove(InputEvent& ev);
 
             int                 itemWidth;
             bool                radioMode;
-            int                 hoverOption;
 };
 
 class ToggleBox : public SelectorBox

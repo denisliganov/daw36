@@ -139,6 +139,7 @@ public:
 // Selector
             void                setOptionVal(int optnum, bool new_val);
             bool                getOptionVal(int optnum);
+            std::string         getOptionStr(int optnum);
             void                toggleOption(int optnum);
 
 private:

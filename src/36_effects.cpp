@@ -135,8 +135,8 @@ Eff::Eff(Device36* dev)
     addObject(enableButt = new EffEnableButton(device->enabled));
     addObject(device);
 
-    device->placeControls2(FxMaxEffWidth);
-    device->setWH(FxMaxEffWidth, device->getH());
+    device->placeControls2(FxMaxEffWidth - 10);
+    device->setWH(FxMaxEffWidth - 16, device->getH());
     device->setContainer(this);
 
     setObjName(dev->getObjName());
@@ -159,7 +159,7 @@ void Eff::showDevice(bool show)
         device->setEnable(true);
         device->setVis(true);
 
-        setWH(device->getW(), device->getH() + 8);
+        setWH(device->getW() + 16, device->getH() + 8);
     }
     else
     {
@@ -212,6 +212,11 @@ void Eff::drawSelf(Graphics& g)
     setc(g, .8f);
     txt(g, FontBold, device->getObjName(), 2, gGetTextHeight(FontBold));
 
+    setc(g, .2f);
+    for (int c = 0; c < height; c += 2)
+    {
+        rectx(g, width - 16, c, 16, 1);
+    }
 /*
     if (MixViewSingle)
         txt(g, FontBold, device->getObjName(), width - gGetTextWidth(FontBold, device->getObjName()) - 8, height/2 + gGetTextHeight(FontBold)/2);
