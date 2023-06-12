@@ -353,6 +353,7 @@ Instr* Instr::clone()
 
 void Instr::drawSelf(Graphics& g)
 {
+    int bw = 16;
     int h = height - 1;
     float incr = 0.f;
 
@@ -395,7 +396,7 @@ void Instr::drawSelf(Graphics& g)
         //Gobj::setMyColor(g, 1.f, .4f);
         setc(g, 1.f);
         
-        txtfit(g, FontSmall, getObjName(), guiButton->getW() + 4, 12, width - 4);
+        txtfit(g, FontSmall, getObjName(), guiButton->getW() + 7, 13, width - 6 - bw*2);
 
 
         //Colour clr = Colour(100, 110, 110);
@@ -574,32 +575,18 @@ void Instr::preview(int note)
 void Instr::remap()
 {
     int h = height - 1;
+    int bw = 16;
 
     if (!isMaster())
     {
         //guiButton->setCoords1(0, 0, h/1.5f, h);
 
-        int bw = 16;
 
         if (device != devDummy)
         {
             //guiButton->setTouchable(true);
 
-            /*
-            int slH = 4;
-
-            if (panBox)
-            {
-                panBox->setCoords1(width - 190, h - slH, 70, slH);
-                panBox->setVis(false);
-            }
-
-            if (volBox)
-            {
-                volBox->setCoords1(width - 110, h - slH, 80, slH);
-                volBox->setVis(false);
-            }
-            */
+            int slH = 16;
 
             int kH = h/1.5f;
             if (kH % 2)
@@ -610,7 +597,7 @@ void Instr::remap()
             //volKnob->setCoords1(width - 80 - bw - bw - 2, (h - kH)/2, 80, int(kH));
             //volKnob->setCoords1(width - 80 - bw - bw - 1, h - h/3 + 1, 80, h/3);
 
-            volKnob->setCoords1(0, h - h/3 + 1, width/2 + 10, h/3);
+            volKnob->setCoords1(0, h - slH + 1, width/2 + 10, slH);
 
             //panKnob->setCoords1(width - 57, 0, int(kH-2), int(kH-2));
 

@@ -807,7 +807,9 @@ bool   Parameter::getOptionVal(int optnum)
 
 std::string   Parameter::getOptionStr(int optnum)
 { 
-    return options[optnum]; 
+    int opt = optnum >= options.size() ? options.size() - 1 : optnum;
+    
+    return options[opt]; 
 }
 
 void  Parameter::toggleOption(int optnum)

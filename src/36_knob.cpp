@@ -368,9 +368,9 @@ void Knob::drawSlider(Graphics& g)
     rectx(g, 0, 0, wSl, height);
 
     if (0 && instr)
-        instr->setMyColor(g, .3f);
+        instr->setMyColor(g, .2f);
     else
-        setc(g, .3f);
+        setc(g, .2f);
 
     fillx(g, 0, 0, wSl, height);
 
@@ -597,7 +597,7 @@ void SelectorBox::remap()
 {
     ParamBox::remap();
 
-    itemWidth = RoundFloat(float(width*widthDivider)/param->getNumOptions());
+    itemWidth = int(float(width*widthDivider)/param->getNumOptions());
 }
 
 void SelectorBox::handleMouseDown(InputEvent & ev)
