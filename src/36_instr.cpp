@@ -105,21 +105,25 @@ protected:
         void drawSelf(Graphics& g)
         {
             Instr* instr = (Instr*)parent;
+            //instr->setMyColor(g, .4f);
 
-            instr->setMyColor(g, .4f);
+            setc(g, .3f);
+
             fillx(g, 0, 0, width, height);
 
             if(param->getBoolValue())
             {
-                instr->setMyColor(g, 1.f);
+                //instr->setMyColor(g, 1.f);
+                setc(g, 1.f);
             }
             else
             {
-                instr->setMyColor(g, .6f);
+                //instr->setMyColor(g, .6f);
+                setc(g, .6f);
             }
 
-            //txt(g, FontVis, "#", width/2 - 2, height/2 + gGetTextHeight(FontVis)/2 - 1);
-            txt(g, FontVis, instr->getAlias(), width / 2 - 2, height / 2 + gGetTextHeight(FontVis) / 2 - 1);
+            txt(g, FontVis, "#", width/2 - 2, height/2 + gGetTextHeight(FontVis)/2 - 1);
+            //txt(g, FontVis, instr->getAlias(), width / 2 - 2, height / 2 + gGetTextHeight(FontVis) / 2 - 1);
         }
 
         void handleMouseDrag(InputEvent & ev)   { parent->handleMouseDrag(ev); }
@@ -270,7 +274,9 @@ void Instr::setDevice(Device36* dev)
             panKnob->setParam(device->pan);
             muteButt->setParam(device->enabled);
 
-            setObjName(device->getObjName());
+            setObjName(ToUpperCase(device->getObjName()));
+
+            //setObjName(device->getObjName());
         }
     }
 
@@ -359,18 +365,19 @@ void Instr::drawSelf(Graphics& g)
         rect(g, .3f + incr);
 
         setc(g, .7f + incr);
+
         txt(g, FontInst, "Master", 18, height/2 + 3);
     }
     else
     {
         if(device != devDummy)
         {
-            Gobj::setMyColor(g, .54f + incr);
-            //setc(g, .54f + incr);
+            //Gobj::setMyColor(g, .54f + incr);
+            setc(g, .44f + incr);
             fillx(g, 0, 0, width, h);
 
-            Gobj::setMyColor(g, .5f + incr);
-            //setc(g, .5f + incr);
+            //Gobj::setMyColor(g, .5f + incr);
+            setc(g, .4f + incr);
             fillx(g, 0, 0, width, h/2);
         }
         else
@@ -385,9 +392,8 @@ void Instr::drawSelf(Graphics& g)
         //Gobj::setMyColor(g, 1.f, 1.f);
         //txt(g, FontVis, instrAlias, 2, height - 3);
 
-        //setc(g, 1.f);
-        Gobj::setMyColor(g, 1.f, .4f);
-        //setc(g, 1.f, .4f);
+        //Gobj::setMyColor(g, 1.f, .4f);
+        setc(g, 1.f);
         
         txtfit(g, FontSmall, getObjName(), guiButton->getW() + 4, 12, width - 4);
 
@@ -604,7 +610,7 @@ void Instr::remap()
             //volKnob->setCoords1(width - 80 - bw - bw - 2, (h - kH)/2, 80, int(kH));
             //volKnob->setCoords1(width - 80 - bw - bw - 1, h - h/3 + 1, 80, h/3);
 
-            volKnob->setCoords1(0, h - h/3 + 1, width/2, h/3);
+            volKnob->setCoords1(0, h - h/3 + 1, width/2 + 10, h/3);
 
             //panKnob->setCoords1(width - 57, 0, int(kH-2), int(kH-2));
 

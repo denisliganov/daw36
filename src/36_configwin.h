@@ -33,6 +33,7 @@ private:
         ListBoxx*           midiInDevices;
         ListBoxx*           outputDevices;
         ListBoxx*           inputDevices;
+        ListBoxx*           renderBox;
 
         Knob*               knob1;
         Knob*               knob2;

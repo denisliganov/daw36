@@ -57,32 +57,36 @@ ConfigWinObject::ConfigWinObject()
 
     showASIOPanel = new Button36(false, "Show ASIO panel");
 
-    WinObject::addObject(inputDevices = new ListBoxx("INPUT devices"));
+    WinObject::addObject(inputDevices = new ListBoxx("INPUT devices:"));
     inputDevices->addEntry("IN Device1");
     inputDevices->addEntry("IN Device2");
 
-    WinObject::addObject(midiOutDevices = new ListBoxx("MIDI OUT devices"));
-
-    WinObject::addObject(midiInDevices = new ListBoxx("MIDI IN devices"));
-
-
+    WinObject::addObject(midiOutDevices = new ListBoxx("MIDI OUT Devices:"));
+    WinObject::addObject(midiInDevices = new ListBoxx("MIDI IN Devices:"));
+    WinObject::addObject(renderBox = new ListBoxx("RENDER:"));
+    renderBox->addEntry("Render to MP3");
+    renderBox->addEntry("Render to OGG");
+    renderBox->addEntry("Render to WAV");
+    renderBox->addEntry("Render to FLAC");
 
     int colWidth = 220;
 
     // Position all controls
 
-    putRight(outputDevices, colWidth, 120);
+    putRight(outputDevices, colWidth, colWidth);
     spaceBelow();
     putBelow(interpolationChooserBox, colWidth, 16);
     putBelow(bufferSizeBox, colWidth, 16);
     returnUp();
     spaceRight();
-    putRight(inputDevices, colWidth, 120);
+    putRight(inputDevices, colWidth, colWidth);
     spaceRight();
-    putRight(midiOutDevices, colWidth, 120);
-    //spaceRight();
-    
-    
+    putRight(midiOutDevices, colWidth, colWidth);
+    spaceRight();
+    putRight(renderBox, colWidth, colWidth/1.5);
+    spaceRight();
+
+
     //putRight(midiInDevices, colWidth, 120);
     //spaceRight();
     returnLeft();

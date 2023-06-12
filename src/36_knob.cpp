@@ -360,29 +360,30 @@ void Knob::drawSlider(Graphics& g)
     //setc(g, 0.f);
     //fillx(g, defPos, height - sh, 1, sh);
 
-    if (instr)
+    if (0 && instr)
         instr->setMyColor(g, .1f);
     else
-        setc(g, .0f);
+        setc(g, .1f);
 
     rectx(g, 0, 0, wSl, height);
 
-    if (instr)
-    {
+    if (0 && instr)
         instr->setMyColor(g, .3f);
-    }
     else
-        setc(g, .18f);
+        setc(g, .2f);
 
     fillx(g, 0, 0, wSl, height);
 
-    if (instr)
+    if (0 && instr)
         if (MInstrPanel->getCurrInstr() == instr)
             instr->setMyColor(g, .72f, .42f);
         else
             instr->setMyColor(g, .6f, .42f);
     else
-        setc(g, .4f);
+        if (MInstrPanel->getCurrInstr() == instr)
+            setc(g, .7f);
+        else
+            setc(g, .6f);
 
     fillx(g, xstart, ysl+1, wsl, sh-2);
 
@@ -394,10 +395,10 @@ void Knob::drawSlider(Graphics& g)
 
     //drawGlassRect(g, x1 + (float)xstart, y1 + (float)(height - sh+1), wSl, sh-1, Colour(180, 120, 120), 0, 0, true, true, true, true);
 
-    if (instr)
+    if (0 && instr)
         instr->setMyColor(g, .34f);
     else
-        setc(g, .6f);
+        setc(g, .34f);
 
     fillx(g, xoffs, ysl+1, 1, sh-2);
 
@@ -526,7 +527,7 @@ void Knob::drawSelf(Graphics& g)
 
     if (!knobMode)
     {
-        //fill(g, .18f);
+        fill(g, .18f);
 
         drawSlider(g);
 
