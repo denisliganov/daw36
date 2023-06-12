@@ -583,7 +583,7 @@ void SelectorBox::drawSelf(Graphics& g)
 
         if (radioMode && param->getCurrentOption() == opt || !radioMode && param->getOptionVal(opt))
         {
-            setc(g, 0.6f);
+            setc(g, 0.8f);
         }
 
         fillx(g, x + 1, 1, itemWidth - 2, height - 2);

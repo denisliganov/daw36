@@ -525,6 +525,44 @@ void MixChannel::drawSelf(Graphics& g)
 
         setc(g, .46f);
         rectx(g, xeff, height - FxPanelBottomHeight, w, FxPanelBottomHeight - 32);
+
+        /*
+        setc(g, .8f);
+        for (Instr* i : MInstrPanel->getInstrs())
+        {
+            gFillRect(g, 0, i->getY1() + i->getH() / 2, 65, 1);
+        }
+        */
+    
+        setc(g, .6f);
+        for (Gobj* o : objs)
+        {
+            if (o->getObjId() == "snd")
+            {
+                SendKnob* sk = dynamic_cast<SendKnob*>(o);
+
+                Instr* ins = sk->getOutChannel()->getInstr();
+
+                int w = sk->getW();
+                int x = sk->getX1() + w / 2;
+                int y = sk->getY1() + w / 2;
+
+                for (SendKnob* sa : sendsActive)
+                {
+                    if (sa == sk)
+                    {
+                        gLine(g, FxPanelScrollerWidth, height / 2, x, y);
+                        break;
+                    }
+                }
+
+                if (ins != instr)
+                {
+                    gLine(g, x, y, x + w, y);
+                }
+            }
+        }
+
     }
     else
     {

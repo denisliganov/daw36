@@ -173,7 +173,7 @@ void Eff::remap()
 {
     if (MixViewSingle && device->isON())
     {
-        enableButt->setCoords1(width - 16, 0, 16, 10);
+        enableButt->setCoords1(width - 16, 0, 16, 16);
         device->setCoords1(0, 8, device->getW(), device->getH());
     }
     else

@@ -366,15 +366,17 @@ void Instr::drawSelf(Graphics& g)
         if(device != devDummy)
         {
             Gobj::setMyColor(g, .54f + incr);
-            //setc(g, 1.f);
+            //setc(g, .54f + incr);
             fillx(g, 0, 0, width, h);
 
             Gobj::setMyColor(g, .5f + incr);
+            //setc(g, .5f + incr);
             fillx(g, 0, 0, width, h/2);
         }
         else
         {
-            Gobj::setMyColor(g, .4f + incr);
+            //Gobj::setMyColor(g, .4f + incr);
+            setc(g, .4f + incr);
 
             fillx(g, 0, 0, width, h);
         }
@@ -385,6 +387,8 @@ void Instr::drawSelf(Graphics& g)
 
         //setc(g, 1.f);
         Gobj::setMyColor(g, 1.f, .4f);
+        //setc(g, 1.f, .4f);
+        
         txtfit(g, FontSmall, getObjName(), guiButton->getW() + 4, 12, width - 4);
 
 
