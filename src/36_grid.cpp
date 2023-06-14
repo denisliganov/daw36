@@ -2351,9 +2351,9 @@ void Grid::updFillerImage()
 
     imageContext.fillAll();
 
-    float tick = .2f;
-    float beat = 0.f; // .28f;
-    float bar = 0.f; // .28f; //.36f;
+    float tick = .36f;
+    float beat = 0.4f; // .28f;
+    float bar = .44f; // .28f; //.36f;
 
     float divClr = .05f;
 

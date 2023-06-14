@@ -72,7 +72,7 @@ ControlPanel::ControlPanel()
     addObject(btRec = new Button36(false), "bt.rec");
     addObject(btHome = new Button36(false), "bt.home");
     addObject(btEnd = new Button36(false), "bt.end");
-    addObject(bpmBox = new BpmBox(120));
+    addObject(bpmBox = new BpmBox(MTransp->getBeatsPerMinute()));
     addObject(meterBox = new MeterBox(4, 4));
     addObject(octaveBox = new OctaveBox(5));
     addObject(snapMenu = new SnapMenu());

@@ -368,7 +368,7 @@ void Instr::drawSelf(Graphics& g)
 
         setc(g, .7f + incr);
 
-        txt(g, FontInst, "Master", 18, height/2 + 3);
+        txt(g, FontSmall, "MASTER", 18, height/2 + 3);
     }
     else
     {

@@ -513,7 +513,7 @@ void MixChannel::drawSelf(Graphics& g)
 
     fill(g, .1f);
 
-    int w = width - 80; //width - 64;
+    int wPanel = width - 80; //width - 64;
     int xeff = 0; //FxPanelScrollerWidth + 1;
 
     if (MixViewSingle)
@@ -521,10 +521,10 @@ void MixChannel::drawSelf(Graphics& g)
         int sendPanelHeight = 0;
 
         setc(g, .4f);
-        fillx(g, xeff , height - FxPanelBottomHeight, w, FxPanelBottomHeight - 32);
+        fillx(g, xeff , height - FxPanelBottomHeight, wPanel, FxPanelBottomHeight - 32);
 
         setc(g, .46f);
-        rectx(g, xeff, height - FxPanelBottomHeight, w, FxPanelBottomHeight - 32);
+        rectx(g, xeff, height - FxPanelBottomHeight, wPanel, FxPanelBottomHeight - 32);
 
         /*
         setc(g, .8f);
@@ -534,7 +534,7 @@ void MixChannel::drawSelf(Graphics& g)
         }
         */
     
-        setc(g, .6f);
+        setc(g, .3f);
         for (Gobj* o : objs)
         {
             if (o->getObjId() == "snd")
@@ -551,7 +551,7 @@ void MixChannel::drawSelf(Graphics& g)
                 {
                     if (sa == sk)
                     {
-                        gLine(g, FxPanelScrollerWidth, height / 2, x, y);
+                        gLine(g, xeff , height / 2, x, y);
                         break;
                     }
                 }
@@ -567,7 +567,7 @@ void MixChannel::drawSelf(Graphics& g)
     else
     {
         setc(g, .2f);
-        fillx(g, 0, 0, w, height);
+        fillx(g, 0, 0, wPanel, height);
     }
 }
 

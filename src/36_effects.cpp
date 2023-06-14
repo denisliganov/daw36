@@ -56,8 +56,9 @@ protected:
 
             if (param->getBoolValue())
             {
-                setc(g, 0xffFFFF40, .6f, 1.f);
+                setc(g, 0xffFFFF40, .5f, 1.f);
                 fillx(g, 4, 4, width - 8, height - 8);
+                
                 setc(g, 0xffFFFF40);
                 fillx(g, 5, 5, width - 10, height - 10);
             }
