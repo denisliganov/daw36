@@ -51,17 +51,18 @@ protected:
         {
             fill(g, 0xffFFFF40, .4f);
 
+            setc(g, 0xffFFFF40, .2f, 1.f);
+            fillx(g, 1, 1, width - 2, height - 2);
+
             if (param->getBoolValue())
             {
-                setc(g, 0xffFFFF40, .8f, 1.f);
-                fillx(g, 1, 1, width - 2, height - 2);
+                setc(g, 0xffFFFF40, .6f, 1.f);
+                fillx(g, 4, 4, width - 8, height - 8);
                 setc(g, 0xffFFFF40);
-                fillx(g, 2, 2, width - 4, height - 4);
+                fillx(g, 5, 5, width - 10, height - 10);
             }
             else
             {
-                setc(g, 0xffFFFF40, .2f, 1.f);
-                fillx(g, 1, 1, width - 2, height - 2);
             }
 
             //if (param->getBoolValue())

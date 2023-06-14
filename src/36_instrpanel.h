@@ -79,7 +79,6 @@ private:
             InstrHighlight*     instrHighlight;
             DropHighlight*      dropHighlight;
             bool                fxShowing;
-            Slider36*           masterVolSlider;
             Knob*               masterVolKnob;
             Parameter*          masterVolume;
 

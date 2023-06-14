@@ -17,6 +17,7 @@ protected:
         void                drawSelf(Graphics& g);
         void                handleChildEvent(Gobj * obj,InputEvent & ev);
         void                handleParamUpdate(Parameter * param = NULL);
+        void                handleClose() { ParamObject::handleClose();  }
 
 private:
 

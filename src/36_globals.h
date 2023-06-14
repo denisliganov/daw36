@@ -69,7 +69,6 @@ class Sample;
 class ScanThread;
 class SampleNote;
 class ScrollTimer;
-class Slider36;
 class SubWindow;
 class TextInput;
 class Timeline;

@@ -29,7 +29,7 @@ void ListBoxx::drawSelf(Graphics& g)
     fillx(g, 0, 0, width, headerHeight - 2);
 
     setc(g, 1.f);
-    txtfit(g, FontBold, getObjName(), 3, headerHeight - 5, width);
+    txtfit(g, FontSmall, getObjName(), 3, headerHeight - 5, width);
 
     g.saveState();
     g.reduceClipRegion(x1 + 1, y1 + headerHeight + 1, width - 2, height - headerHeight - 2);

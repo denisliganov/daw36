@@ -107,7 +107,7 @@ protected:
             Instr* instr = (Instr*)parent;
             //instr->setMyColor(g, .4f);
 
-            setc(g, .3f);
+            setc(g, .22f);
 
             fillx(g, 0, 0, width, height);
 
@@ -356,8 +356,9 @@ void Instr::drawSelf(Graphics& g)
     int bw = 16;
     int h = height - 1;
     float incr = 0.f;
+    bool isCurr = (this == MInstrPanel->getCurrInstr());
 
-    if (this == MInstrPanel->getCurrInstr())
+    if (isCurr)
         incr = 0.2f;
 
     if (isMaster())
@@ -374,11 +375,11 @@ void Instr::drawSelf(Graphics& g)
         if(device != devDummy)
         {
             //Gobj::setMyColor(g, .54f + incr);
-            setc(g, .44f + incr);
+            setc(g, .34f + incr);
             fillx(g, 0, 0, width, h);
 
             //Gobj::setMyColor(g, .5f + incr);
-            setc(g, .4f + incr);
+            setc(g, .3f + incr);
             fillx(g, 0, 0, width, h/2);
         }
         else
@@ -394,7 +395,11 @@ void Instr::drawSelf(Graphics& g)
         //txt(g, FontVis, instrAlias, 2, height - 3);
 
         //Gobj::setMyColor(g, 1.f, .4f);
-        setc(g, 1.f);
+
+        if (!isCurr)
+            setc(g, .6f);
+        else
+            setc(g, 1.f);
         
         txtfit(g, FontSmall, getObjName(), guiButton->getW() + 7, 13, width - 6 - bw*2);
 
@@ -587,6 +592,9 @@ void Instr::remap()
             //guiButton->setTouchable(true);
 
             int slH = 16;
+
+            if (slH < h / 2)
+                slH = h / 2;
 
             int kH = h/1.5f;
             if (kH % 2)

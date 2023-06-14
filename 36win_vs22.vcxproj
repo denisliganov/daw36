@@ -197,7 +197,6 @@
     <ClCompile Include="src\36_sampleinstr.cpp" />
     <ClCompile Include="src\36_samplewin.cpp" />
     <ClCompile Include="src\36_scroller.cpp" />
-    <ClCompile Include="src\36_slider.cpp" />
     <ClCompile Include="src\36_snapmenu.cpp" />
     <ClCompile Include="src\36_system.cpp" />
     <ClCompile Include="src\36_template.cpp" />
@@ -380,7 +379,6 @@
     <ClInclude Include="src\36_sampleinstr.h" />
     <ClInclude Include="src\36_samplewin.h" />
     <ClInclude Include="src\36_scroller.h" />
-    <ClInclude Include="src\36_slider.h" />
     <ClInclude Include="src\36_snapmenu.h" />
     <ClInclude Include="src\36_system.h" />
     <ClInclude Include="src\36_template.h" />

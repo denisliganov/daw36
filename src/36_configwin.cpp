@@ -2,7 +2,6 @@
 
 #include "36_audiomanager.h"
 #include "36_configwin.h"
-#include "36_slider.h"
 #include "36_knob.h"
 #include "36_draw.h"
 #include "36.h"

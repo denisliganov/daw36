@@ -381,9 +381,9 @@ void Knob::drawSlider(Graphics& g)
             instr->setMyColor(g, .6f, .42f);
     else
         if (MInstrPanel->getCurrInstr() == instr)
-            setc(g, .6f);
+            setc(g, .4f);
         else
-            setc(g, .5f);
+            setc(g, .4f);
 
     fillx(g, xstart, ysl+1, wsl, sh-2);
 
