@@ -2422,7 +2422,10 @@ long Vst2Host::onAudioMasterCallback(AEffect *aeff, long opcode, long index, lon
         }
         case audioMasterIdle :
         {
-            for(Vst2Plugin* plug : plugins) plug->aeffEditIdle();
+            for(Vst2Plugin* plug : plugins) 
+            {
+                plug->aeffEditIdle();
+            }
 
             return 0;
         }

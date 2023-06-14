@@ -227,7 +227,7 @@ void Audio36::generalCallBack(const void* inputBuffer, void* outputBuffer, long 
     long nextFrames;
 
 
-    // Pre-calc initial framecount for processing
+    // Pre-calc minimal processing frame-count
 
     for(Pattern* pl : players)
     {
@@ -235,7 +235,7 @@ void Audio36::generalCallBack(const void* inputBuffer, void* outputBuffer, long 
     }
 
 
-    // Now fully process triggers and instruments
+    // Now fully process all triggers and instruments
 
     while(offset < totalFrames)
     {
@@ -256,11 +256,9 @@ void Audio36::generalCallBack(const void* inputBuffer, void* outputBuffer, long 
     }
 
 
-
     // Post-process metronome
 
     handleMetronome(totalFrames, false);
-
 
 
     // Cleanup active triggers

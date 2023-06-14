@@ -80,27 +80,33 @@ void InitializeAndStartProgram()
 
     InitWavetables();
 
+    // Keyboard handler
     MKeys = new KeyHandler();
 
+    // Transport system
     MTransp = new Transport(80, 4, 4);
 
+    // Audio engine
     MAudio = new Audio36(DEFAULT_SAMPLE_RATE);
 
+    // Main graphic object
     MObject = new MainWinObject();
 
+    // Main window
     MWindow = new MainWindow(MObject);
 
+    // Window handler for OS Windows purposes
     WinHWND = (HWND)MWindow->getWindowHandle();
 
+    // VST2 host
     VstHost = new Vst2Host(WinHWND);
 
+    // Propagate current transport settings
     MTransp->propagateChanges();
 
+    // All inited
     InitComplete = true;
 
-    //MObject->resized();
-
-    //MObject->addHighlight(MDragDrop = new DragAndDrop());
 
     MInstrPanel->showFX();
 
@@ -395,11 +401,5 @@ void LoadCursorImages()
     VSCursor    = LoadCursor(NULL, IDC_SIZENS);
     HSCursor    = LoadCursor(NULL, IDC_SIZEWE);
     ArrowCursor = LoadCursor(NULL, IDC_ARROW);
-}
-
-
-void ToggleConfigWindow()
-{
-    
 }
 

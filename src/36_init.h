@@ -19,7 +19,6 @@ extern MouseCursor*        cursSelect;
     void    HandleCommandLine(const String str);
     void    HandleAnotherInstance(const String& command_line);
     void    HandleSystremQuitRequest();
-    void    ToggleConfigWindow();
 
 
 
