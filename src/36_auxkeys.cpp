@@ -182,7 +182,7 @@ void AuxKeys::drawHorizontalKeys(Graphics& g, int x, int y, int w, int h)
             }
             else
             {
-                setc(g, .6f);
+                setc(g, .4f);
             }
 
             gFillRect(g, xKey, y, xKey + bkKeyWidth, int(y + h*0.618f - 1));
@@ -191,7 +191,7 @@ void AuxKeys::drawHorizontalKeys(Graphics& g, int x, int y, int w, int h)
         }
         else
         {
-            setc(g, .6f);
+            //setc(g, .4f);
 
             if(pianoKey == 0)
             {
