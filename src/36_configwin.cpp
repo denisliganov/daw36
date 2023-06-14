@@ -22,16 +22,19 @@ ConfigWinObject::ConfigWinObject()
 
 
     // Init params and controls
-
+/*
     addParam(hue = new Parameter("Hue", globalHue, 0, 1));
     addParam(saturation = new Parameter("Sat", 0, 1, 0.2f));
     addParam(brightness = new Parameter("Brightness", -1.f, .9f, 0));
     WinObject::addObject(knob1 = new Knob(hue));
     WinObject::addObject(knob2 = new Knob(saturation));
     WinObject::addObject(knob3 = new Knob(brightness));
+*/
 
     addParam(bufferSize = new Parameter("BUFFER SIZE", 512, 16384, 2048, Units_Integer));
+
     bufferSize->setUnitString("samples");
+
     WinObject::addObject(bufferSizeBox = new Knob(bufferSize, false));
 
     bufferSizeBox->setTextParams(true, false, true, .5f);
@@ -43,7 +46,6 @@ ConfigWinObject::ConfigWinObject()
     interpolationSelect->addOption("Sinc depth 64");
     interpolationSelect->setCurrentOption(0);
 
-
     WinObject::addObject(interpolationChooserBox = new SelectorBox(interpolationSelect));
 
     interpolationChooserBox->setTextParams(true, false, true, .5f);
@@ -52,7 +54,7 @@ ConfigWinObject::ConfigWinObject()
 //                outputDevices->addEntry("Output Device 1");
 //                outputDevices->addEntry("Output Device 2");
 
-    JAudManager->addDeviceNamesToListBox(*outputDevices);
+    JAudioManager->addDeviceNamesToListBox(*outputDevices);
 
     showASIOPanel = new Button36(false, "Show ASIO panel");
 
@@ -63,6 +65,7 @@ ConfigWinObject::ConfigWinObject()
     WinObject::addObject(midiOutDevices = new ListBoxx("MIDI OUT Devices:"));
     WinObject::addObject(midiInDevices = new ListBoxx("MIDI IN Devices:"));
     WinObject::addObject(renderBox = new ListBoxx("RENDER:"));
+
     renderBox->addEntry("Render to MP3");
     renderBox->addEntry("Render to OGG");
     renderBox->addEntry("Render to WAV");

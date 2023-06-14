@@ -33,7 +33,7 @@ void AuxKeys::drawVerticalKey(Graphics& g, bool vert, int coord1, int coord2, in
     {
         // black key
 
-        setc(g, .2f);
+        setc(g, .0f);
 
         if(pressed)
         {
@@ -57,7 +57,7 @@ void AuxKeys::drawVerticalKey(Graphics& g, bool vert, int coord1, int coord2, in
     {
         // white key
 
-        setc(g, .8f);
+        setc(g, .6f);
 
         if(pressed)
             setc(g, .8f);
@@ -178,11 +178,11 @@ void AuxKeys::drawHorizontalKeys(Graphics& g, int x, int y, int w, int h)
         {
             if(key == playNote)
             {
-                setc(g, .91f);
+                setc(g, 1.f);
             }
             else
             {
-                setc(g, .4f);
+                setc(g, .6f);
             }
 
             gFillRect(g, xKey, y, xKey + bkKeyWidth, int(y + h*0.618f - 1));
@@ -191,22 +191,19 @@ void AuxKeys::drawHorizontalKeys(Graphics& g, int x, int y, int w, int h)
         }
         else
         {
+            setc(g, .6f);
+
             if(pianoKey == 0)
             {
                 xKey = xCoord + keyWidth - int(bkKeyWidth*0.7f);
 
                 if(key == 60)
                 {
-                    setc(g, .95f);
-                }
-                else
-                {
-                    setc(g, .81f);
+                    setc(g, 1.f);
+                    gFillRect(g, xCoord + 1, y, xCoord + keyWidth - 1, y + h - 1);
                 }
 
-                gFillRect(g, xCoord + 1, y, xCoord + keyWidth - 1, y + h - 1);
-
-                setc(g, .4f);
+                setc(g, .0f);
 
                 gNoteString(g, xCoord + 5, y + h - 4, key, false);
             }
@@ -233,17 +230,18 @@ void AuxKeys::drawHorizontalKeys(Graphics& g, int x, int y, int w, int h)
 
             if(key == playNote)
             {
-                setc(g, .91f);
+                setc(g, 1.f);
 
                 gFillRect(g, xCoord + 1, y, xCoord + keyWidth - 1, y + h - 1);
             }
 
+/*
             if(pianoKey == 0)
             {
-                setc(g, .4f);
+                setc(g, .0f);
 
                 gNoteString(g, xCoord + 5, y + h - 4, key, false);
-            }
+            }*/
 
             xCoord += keyWidth;
         }

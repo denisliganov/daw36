@@ -516,7 +516,7 @@ bool Handle_RenderStart()
         {
             MTransp->goToHome();
 
-            JAudManager->removeAudioCallback((AudioIODeviceCallback*)JAudCallBack);
+            JAudioManager->removeAudioCallback((AudioIODeviceCallback*)JAudioCallBack);
 
             MTransp->togglePlayback();
 
@@ -550,7 +550,7 @@ void Handle_RenderStop()
         Render_.Stop();
         Render_.Close();
 
-        JAudManager->addAudioCallback((AudioIODeviceCallback*)JAudCallBack);
+        JAudioManager->addAudioCallback((AudioIODeviceCallback*)JAudioCallBack);
     }
 
     MTransp->stopPlayback();

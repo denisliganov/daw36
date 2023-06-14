@@ -1258,13 +1258,13 @@ ConfigComponent::ConfigComponent()      //: quitButton(0)
     juceAudioDeviceDropDown = new AComboBox ("device");
 
 
-    JAudManager->addDeviceNamesToComboBox(*juceAudioDeviceDropDown);
+    JAudioManager->addDeviceNamesToComboBox(*juceAudioDeviceDropDown);
 
     juceAudioDeviceDropDown->setSelectedId(-1, true);
 
     JuceAudioDeviceManager::AudioDeviceSetup setup;
 
-    JAudManager->getAudioDeviceSetup(setup);
+    JAudioManager->getAudioDeviceSetup(setup);
 
     if(setup.outputDeviceName.isNotEmpty())
     {
@@ -1279,7 +1279,7 @@ ConfigComponent::ConfigComponent()      //: quitButton(0)
 
     //MidiInput::getDevices();
 
-    addAndMakeVisible (midiInputsList = new AMidiInputSelectorComponentListBox (*JAudManager, TRANS("(no midi inputs available)"), 0, 0));
+    addAndMakeVisible (midiInputsList = new AMidiInputSelectorComponentListBox (*JAudioManager, TRANS("(no midi inputs available)"), 0, 0));
 
     midiInputsList->setBounds(xsl + 245 + 25, 25, 215, 128);
 
@@ -1356,19 +1356,19 @@ void ConfigComponent::comboBoxChanged (AComboBox* comboBoxThatHasChanged)
         {
             //audioDeviceManager->setAudioDevice (String::empty, 0, 0, 0, 0, true);
 
-            JAudManager->closeAudioDevice();
+            JAudioManager->closeAudioDevice();
         }
         else
         {
             JuceAudioDeviceManager::AudioDeviceSetup oldSetup;
             JuceAudioDeviceManager::AudioDeviceSetup setup;
-            JAudManager->getAudioDeviceSetup(setup);
+            JAudioManager->getAudioDeviceSetup(setup);
             oldSetup = setup;
             setup.outputDeviceName = juceAudioDeviceDropDown->getText();
             setup.bufferSize = DEFAULT_BUFFER_SIZE;
-            AudioIODeviceType* type = JAudManager->getDeviceTypeObjectByDeviceName(setup.outputDeviceName);
+            AudioIODeviceType* type = JAudioManager->getDeviceTypeObjectByDeviceName(setup.outputDeviceName);
 
-            String error (JAudManager->setAudioDeviceSetup(setup, true));
+            String error (JAudioManager->setAudioDeviceSetup(setup, true));
 
             //String error (audioDeviceManager->setAudioDevice (juceAudioDeviceDropDown->getText(),
             //                                            0, 0, 0, 0, true));
@@ -1384,7 +1384,7 @@ void ConfigComponent::comboBoxChanged (AComboBox* comboBoxThatHasChanged)
                     // device, so this is a workaround that doesn't fail in that case.
                     BitArray noInputs;
                     setup.inputChannels = noInputs;
-                    error = JAudManager->setAudioDeviceSetup(setup, true);
+                    error = JAudioManager->setAudioDeviceSetup(setup, true);
                 }
 #endif
                 if (error.isNotEmpty())
@@ -1392,10 +1392,10 @@ void ConfigComponent::comboBoxChanged (AComboBox* comboBoxThatHasChanged)
             }
         }
 
-        if(JAudManager->getCurrentAudioDevice() != NULL)
+        if(JAudioManager->getCurrentAudioDevice() != NULL)
         {
 	        JuceAudioDeviceManager::AudioDeviceSetup setup;
-            JAudManager->getAudioDeviceSetup(setup);
+            JAudioManager->getAudioDeviceSetup(setup);
             juceAudioDeviceDropDown->setText(setup.outputDeviceName, true);
         }
         else
@@ -1480,7 +1480,7 @@ void ConfigComponent::buttonClicked(Button* buttonThatWasClicked)
     }
     else if(EdButt == buttonThatWasClicked)
     {
-        JAudManager->getCurrentAudioDevice()->showControlPanel();
+        JAudioManager->getCurrentAudioDevice()->showControlPanel();
     }
 }
 
@@ -1492,11 +1492,11 @@ void ConfigComponent::mouseDown(const MouseEvent& e)
 void ConfigComponent::UpdateComponentsVisibility()
 {
     JuceAudioDeviceManager::AudioDeviceSetup setup;
-    JAudManager->getAudioDeviceSetup(setup);
+    JAudioManager->getAudioDeviceSetup(setup);
 
-	if(JAudManager->getCurrentAudioDevice() != NULL)
+	if(JAudioManager->getCurrentAudioDevice() != NULL)
     {
-        if(JAudManager->getCurrentAudioDevice()->hasControlPanel())
+        if(JAudioManager->getCurrentAudioDevice()->hasControlPanel())
         {
             EdButt->setVisible(true);
         }
@@ -1505,7 +1505,7 @@ void ConfigComponent::UpdateComponentsVisibility()
             EdButt->setVisible(false);
         }
 
-        String tname = JAudManager->getCurrentAudioDevice()->getTypeName();
+        String tname = JAudioManager->getCurrentAudioDevice()->getTypeName();
         if(tname == T("ASIO"))
         {
             pBufferSlider->setVisible(false);
@@ -1516,7 +1516,7 @@ void ConfigComponent::UpdateComponentsVisibility()
             pBufferSlider->setVisible(true);
             buffLabel->setVisible(true);
 
-            pBufferSlider->setValue(JAudManager->getCurrentAudioDevice()->getCurrentBufferSizeSamples(), true, true);
+            pBufferSlider->setValue(JAudioManager->getCurrentAudioDevice()->getCurrentBufferSizeSamples(), true, true);
         }
     }
     else

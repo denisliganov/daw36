@@ -729,7 +729,7 @@ void Project36::saveSettings()
 
 #ifdef USE_JUCE_AUDIO
 
-    XmlElement* xmlAudioSettings = JAudManager->createStateXml();
+    XmlElement* xmlAudioSettings = JAudioManager->createStateXml();
 
     if(xmlAudioSettings != NULL)
     {

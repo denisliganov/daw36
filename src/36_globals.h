@@ -43,8 +43,6 @@ class InstrPanel;
 class InstrVU;
 class Knob;
 class KeyHandler;
-class LanePanel;
-class Lane;
 class ListBoxx;
 class MixChannel;
 class MainWinObject;
@@ -140,7 +138,6 @@ extern KeyHandler*      MKeys;
 extern Project36        MProject;
 extern MainWinObject*   MObject;
 extern Audio36*         MAudio;
-extern LanePanel*       MLanePanel;
 extern MainEdit*        MEdit;
 extern Grid*            MGrid;
 extern InstrPanel*      MInstrPanel;
@@ -152,10 +149,9 @@ extern Pattern*         MPattern;
 extern TextCursor*      MCursor;
 extern DragAndDrop*     MDragDrop;
 
-extern JuceAudioDeviceManager*     JAudManager;
 
 extern MixChannel*      SoloMixChannel;
-extern Instr*      SoloInstr;
+extern Instr*           SoloInstr;
 extern bool             GPlaying;
 extern bool             GRecOn;
 extern bool             MixViewSingle;
@@ -172,8 +168,8 @@ extern unsigned int     Config_DefaultInterpolation;
 
 extern MainWindow*                  MWindow;
 extern juce::XmlElement*            xmlAudioSettings;
-extern JuceAudioDeviceManager*      JAudManager;
-extern JuceAudioCallback*           JAudCallBack;
+extern JuceAudioDeviceManager*      JAudioManager;
+extern JuceAudioCallback*           JAudioCallBack;
 extern JuceMidiInputCallback*       JMidiCallBack;
 
 

@@ -62,6 +62,7 @@ typedef float   Tdata;
 #define USE_OLD_JUCE
 #define VST_EXT_PATH_1                          "C:\\Program Files\\Steinberg\\VstPlugins\\"
 #define VST_EXT_PATH_2                          "C:\\Program Files\\VstPlugins\\"
+
 #define WAVETABLE_SIZE                          32768
 
 
@@ -76,7 +77,10 @@ class ConfigData
 {
 public:
 
-        ConfigData();
+            ConfigData();
+
+            void                saveSettings();
+            void                loadSettings();
 
 protected:
 

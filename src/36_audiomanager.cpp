@@ -654,6 +654,7 @@ void JuceAudioDeviceManager::restartLastAudioDevice()
 void JuceAudioDeviceManager::updateXml()
 {
     delete lastExplicitSettings;
+
     lastExplicitSettings = new XmlElement (T("DEVICESETUP"));
 
     lastExplicitSettings->setAttribute (T("deviceType"), currentDeviceType);

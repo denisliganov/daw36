@@ -69,6 +69,12 @@ public:
             virtual ~Parameter();
 
 
+private:
+
+            virtual float       calcOutputValue(float val);
+            void                paramInit(std::string name, ParamType ptype, float def_val, float offs, float rng, UnitsType vt);
+
+public:
             void                addControl(Control* ct);
             void                adjustFromControl(Control* ctrl, int step, float nval = -1, float min_step = 0.1f);
     virtual float               adjustForEditor(float val);
@@ -141,11 +147,6 @@ public:
             bool                getOptionVal(int optnum);
             std::string         getOptionStr(int optnum);
             void                toggleOption(int optnum);
-
-private:
-
-            virtual float       calcOutputValue(float val);
-            void                paramInit(std::string name, ParamType ptype, float def_val, float offs, float rng, UnitsType vt);
 
             Envelope*           autoenv;
             bool                autoPlaced;

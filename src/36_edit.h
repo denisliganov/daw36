@@ -9,7 +9,6 @@ class MainEdit : public Gobj
 {
 friend  ControlPanel;
 friend  MainWinObject;
-friend  Lane;
 friend  Transport;
 friend  InstrPanel;
 

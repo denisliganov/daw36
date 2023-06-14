@@ -26,21 +26,15 @@ private:
         Parameter*          saturation;
         Parameter*          bufferSize;
         Parameter*          interpolationSelect;
-
         Knob*               bufferSizeBox;
         SelectorBox*        interpolationChooserBox;
-
         ListBoxx*           midiOutDevices;
         ListBoxx*           midiInDevices;
         ListBoxx*           outputDevices;
         ListBoxx*           inputDevices;
         ListBoxx*           renderBox;
-
-        Knob*               knob1;
-        Knob*               knob2;
-        Knob*               knob3;
-        Knob*               knob4;
-
+        SelectorBox*        renderFormat;
+        SelectorBox*        renderQuality;
         Button36*           showASIOPanel;
 
 };

@@ -32,8 +32,8 @@
 
 
 
-JuceAudioDeviceManager*     JAudManager = NULL;
-JuceAudioCallback*          JAudCallBack = NULL;
+JuceAudioDeviceManager*     JAudioManager = NULL;
+JuceAudioCallback*          JAudioCallBack = NULL;
 JuceMidiInputCallback*      JMidiCallBack = NULL;
 
 HANDLE                      AudioMutex;
@@ -60,27 +60,24 @@ Audio36::Audio36(float smpRate)
 
     // Configure and start audio device
 
-    JAudManager = new JuceAudioDeviceManager;
-    JAudManager->initialise(0, 2, xmlAudioSettings, true);
+    JAudioManager = new JuceAudioDeviceManager;
+    JAudioManager->initialise(0, 2, xmlAudioSettings, true);
 
-    JAudCallBack = new JuceAudioCallback;
+    JAudioCallBack = new JuceAudioCallback;
 
-    JAudManager->addAudioCallback(JAudCallBack);
-    JAudManager->addMidiInputCallback("", JMidiCallBack);
+    JAudioManager->addAudioCallback(JAudioCallBack);
+    JAudioManager->addMidiInputCallback("", JMidiCallBack);
 
     if(xmlAudioSettings == NULL)
     {
         JuceAudioDeviceManager::AudioDeviceSetup setup;
 
-        JAudManager->getAudioDeviceSetup(setup);
+        JAudioManager->getAudioDeviceSetup(setup);
 
         setup.bufferSize = bufferSize;
 
-        JAudManager->setAudioDeviceSetup(setup, false);
+        JAudioManager->setAudioDeviceSetup(setup, false);
     }
-
-    MasterVol = new Parameter("Master volume", Param_Vol);
-    MasterVol->setEnvDirect(false);
 
     globalMute = mixMute = false;
 
@@ -101,10 +98,10 @@ Audio36::Audio36(float smpRate)
 
 Audio36::~Audio36()
 {
-    JAudManager->removeAudioCallback(JAudCallBack);
+    JAudioManager->removeAudioCallback(JAudioCallBack);
 
-    delete JAudManager;
-    delete JAudCallBack;
+    delete JAudioManager;
+    delete JAudioCallBack;
 
     ReleaseMutex(AudioMutex);
     ReleaseMutex(MixerMutex);
@@ -138,10 +135,10 @@ void Audio36::setBufferSize(unsigned bufSize)
     //audioDeviceManager->stopDevice();
 
     JuceAudioDeviceManager::AudioDeviceSetup setup;
-    JAudManager->getAudioDeviceSetup(setup);
+    JAudioManager->getAudioDeviceSetup(setup);
 
     setup.bufferSize = int(bufSize);
-    JAudManager->setAudioDeviceSetup(setup, true);
+    JAudioManager->setAudioDeviceSetup(setup, true);
 }
 
 int Audio36::getBufferSize()

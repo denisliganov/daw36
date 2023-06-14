@@ -9,7 +9,6 @@
 class Note : public Element
 {
 friend  Grid;
-friend  Lane;
 friend  Device36;
 friend  Pattern;
 

@@ -69,7 +69,6 @@ class NoteHighlight;
 class Grid : public Gobj
 {
 friend  Selection;
-friend  Lane;
 friend  Timeline;
 friend  MainEdit;
 friend  AuxKeys;

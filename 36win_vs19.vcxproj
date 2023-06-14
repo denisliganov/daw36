@@ -151,6 +151,7 @@
     <ClCompile Include="src\36_audio_dev.cpp" />
     <ClCompile Include="src\36_auxkeys.cpp" />
     <ClCompile Include="src\36_browserlist.cpp" />
+    <ClCompile Include="src\36_config.cpp" />
     <ClCompile Include="src\36_dropbox.cpp" />
     <ClCompile Include="src\36_edit.cpp" />
     <ClCompile Include="src\36_devwin.cpp" />
@@ -177,7 +178,6 @@
     <ClCompile Include="src\36_instrpanel.cpp" />
     <ClCompile Include="src\36_keyboard.cpp" />
     <ClCompile Include="src\36_knob.cpp" />
-    <ClCompile Include="src\36_lane.cpp" />
     <ClCompile Include="src\36_listbox.cpp" />
     <ClCompile Include="src\36_logger.cpp" />
     <ClCompile Include="src\36_makeup.cpp" />
@@ -197,7 +197,6 @@
     <ClCompile Include="src\36_sampleinstr.cpp" />
     <ClCompile Include="src\36_samplewin.cpp" />
     <ClCompile Include="src\36_scroller.cpp" />
-    <ClCompile Include="src\36_slider.cpp" />
     <ClCompile Include="src\36_snapmenu.cpp" />
     <ClCompile Include="src\36_system.cpp" />
     <ClCompile Include="src\36_text.cpp" />
@@ -357,7 +356,6 @@
     <ClInclude Include="src\36_instrpanel.h" />
     <ClInclude Include="src\36_keyboard.h" />
     <ClInclude Include="src\36_knob.h" />
-    <ClInclude Include="src\36_lane.h" />
     <ClInclude Include="src\36_listbox.h" />
     <ClInclude Include="src\36_logger.h" />
     <ClInclude Include="src\36_macros.h" />
@@ -379,7 +377,6 @@
     <ClInclude Include="src\36_sampleinstr.h" />
     <ClInclude Include="src\36_samplewin.h" />
     <ClInclude Include="src\36_scroller.h" />
-    <ClInclude Include="src\36_slider.h" />
     <ClInclude Include="src\36_snapmenu.h" />
     <ClInclude Include="src\36_system.h" />
     <ClInclude Include="src\36_text.h" />

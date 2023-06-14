@@ -19,7 +19,6 @@
 #include "36_browser.h"
 #include "36_history.h"
 #include "36_transport.h"
-#include "36_lane.h"
 #include "36_keyboard.h"
 #include "36_project.h"
 #include "36_config.h"
@@ -80,7 +79,6 @@ MixChannel*         SoloMixChannel;
 
 Pattern*            MPattern;
 ControlPanel*       MCtrllPanel;
-LanePanel*          MLanePanel;
 InstrPanel*         MInstrPanel;
 Browser*            MBrowser;
 MainEdit*           MEdit;
@@ -99,8 +97,8 @@ bool                InitComplete = false;
 
 MainWinObject::MainWinObject()
 {
-    width = DAW_DEFAULT_WINDOW_WIDTH;
-    height = DAW_DEFAULT_WINDOW_HEIGHT;
+    //width = DAW_DEFAULT_WINDOW_WIDTH;
+    //height = DAW_DEFAULT_WINDOW_HEIGHT;
 
     SoloInstr = NULL;
     SoloMixChannel = NULL;
@@ -137,7 +135,6 @@ MainWinObject::MainWinObject()
     addObject(MCtrllPanel = new ControlPanel);
     addObject(MEdit = new MainEdit);
     addObject(MHelperPanel = new HelperPanel);
-    addObject(MLanePanel = new LanePanel(MEdit->grid));
     addObject(MInstrPanel = new InstrPanel());
     addObject(MBrowser = new Browser(WorkDirectory));
 
@@ -151,10 +148,6 @@ MainWinObject::MainWinObject()
     MEdit->setEnable(true);
 
     MGrid->grabTextCursor(100, 10);
-
-    MLanePanel->setCoords1(mainX1, height - AuxHeight, mainX2 - mainX1 + 1, AuxHeight);
-
-    MLanePanel->setEnable(false);
 
     currAuxPanel = NULL;
 
@@ -196,11 +189,6 @@ void MainWinObject::remap()
     }
 
     MCtrllPanel->setCoords2(0, mainY1 - MainLineHeight - CtrlPanelHeight - 1, mainX2, mainY1 - MainLineHeight - 1);
-
-    if(MLanePanel->isON())
-    {
-        MLanePanel->setCoords2(mainX1 + 1, mainY2, mainX2, height - 1);
-    }
 
     MInstrPanel->setCoords2(0, mainY1 - MainLineHeight + PanelGap, mainX1 - 1, mainY2 - 1);
 
