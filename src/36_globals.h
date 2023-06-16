@@ -8,7 +8,7 @@
 #include "juce_amalgamated.h"
 
 
-//namespace M {
+
 
 class Audio36;
 class AuxKeys;
@@ -52,12 +52,10 @@ class Note;
 class OctaveBox;
 class ParamObject;
 class Parameter;
-class Parameter;
 class Project36;
 class Pattern;
 class Playhead;
 class Pattern;
-class Parameter;
 class Renderer;
 class SelectorBox;
 class Scroller;
@@ -92,7 +90,7 @@ class JuceMidiInputCallback;
 class JuceMidiWrapper;
 class SampleWindow;
 class RenderWindow;
-class ParamWindow;
+
 class SampleWave;
 class AButton;
 class RenderComponent;
@@ -106,7 +104,7 @@ class MainWindow;
 typedef long tframe;
 
 
-extern HWND             WinHWND;                //-windep
+extern HWND             WinHWND;
 
 extern int              AuxCtrlWidth;
 extern int              AuxHeight;
@@ -150,7 +148,6 @@ extern TextCursor*      MCursor;
 extern DragAndDrop*     MDragDrop;
 
 
-extern MixChannel*      SoloMixChannel;
 extern Instr*           SoloInstr;
 extern bool             GPlaying;
 extern bool             GRecOn;

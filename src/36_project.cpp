@@ -178,8 +178,6 @@ void Project36::deleteProject()
 
     SoloInstr = NULL;
 
-    SoloMixChannel = NULL;
-
     Octave = 5;
 
     MTransp->reset();

@@ -75,7 +75,6 @@ int                 PanelGap;
 
 
 Instr*              SoloInstr;
-MixChannel*         SoloMixChannel;
 
 Pattern*            MPattern;
 ControlPanel*       MCtrllPanel;
@@ -101,7 +100,6 @@ MainWinObject::MainWinObject()
     //height = DAW_DEFAULT_WINDOW_HEIGHT;
 
     SoloInstr = NULL;
-    SoloMixChannel = NULL;
 
     AuxCtrlWidth =          0;
     AuxHeight =             40;
@@ -127,7 +125,7 @@ MainWinObject::MainWinObject()
 
     mainX1 = InstrControlWidth;
     mainX2 = width - 1;
-    mainY1 = MainLineHeight + CtrlPanelHeight + 1;    // _MGrid upper coordinate
+    mainY1 = MainLineHeight + CtrlPanelHeight + 1;    // MGrid upper coordinate
     mainY2 = height - AuxHeight;
 
     // Main GUI panels
