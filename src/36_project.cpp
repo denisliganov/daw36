@@ -85,92 +85,38 @@ void LoadDefaultInstruments()
     MInstrPanel->addSample("Samples\\SBA4.wav");
     MInstrPanel->addSample("Samples\\test.wav");
 
-    // todo: dummy instrument
-
-
-    /*
-    MInstrPanel->addInstrument(NULL, NULL);
-    MInstrPanel->addInstrument(NULL, NULL);
-    MInstrPanel->addInstrument(NULL, NULL);
-    MInstrPanel->addInstrument(NULL, NULL);
-    MInstrPanel->addInstrument(NULL, NULL);
-    MInstrPanel->addInstrument(NULL, NULL);
-    MInstrPanel->addInstrument(NULL, NULL);
-    MInstrPanel->addInstrument(NULL, NULL);
-    MInstrPanel->addInstrument(NULL, NULL);
-    MInstrPanel->addInstrument(NULL, NULL);
-    MInstrPanel->addInstrument(NULL, NULL);
-    MInstrPanel->addInstrument(NULL, NULL);
-    MInstrPanel->addInstrument(NULL, NULL);
-    MInstrPanel->addInstrument(NULL, NULL);
-    MInstrPanel->addInstrument(NULL, NULL);
-
-    MInstrPanel->addInstrument(NULL, NULL);*/
-
     /*
     MInstrPanel->addSample("Samples\\Clap.wav");
     MInstrPanel->addSample("Samples\\Rasta.wav");
     MInstrPanel->addSample("Samples\\Pipa_66.wav");
-    MInstrPanel->addSample("Samples\\SarodC5.wav");
     MInstrPanel->addSample("Samples\\Gtr Hi Chuck.wav");
     MInstrPanel->addSample("Samples\\starpad.wav");
     MInstrPanel->addSample("Samples\\Long OpnClsd Hat.wav");
     MInstrPanel->addSample("Samples\\Nother Rim.wav");
     MInstrPanel->addSample("Samples\\Rim 2.wav");
-    MInstrPanel->addSample("Samples\\Kicked.wav");
     MInstrPanel->addSample("Samples\\SBAF.wav");
     MInstrPanel->addSample("Samples\\Blockhead.wav");
     MInstrPanel->addSample("Samples\\Horn Hit.wav");
-    MInstrPanel->addSample("Samples\\Timbale 2.wav");
-    MInstrPanel->addSample("Samples\\Closed Hat.wav");
-    MInstrPanel->addSample("Samples\\Dark Hat.wav");*/
 
-    /*
-    MInstrPanel->addInstrument(NULL);
-    MInstrPanel->addInstrument(NULL);
-    MInstrPanel->addInstrument(NULL);*/
+    */
+
     MInstrPanel->addInstrument(NULL, true);
 
     MInstrPanel->setCurrInstr(0);
 
+//     MInstrPanel->addSample("Samples\\CircleBrsh 2.wav");
+ //     MInstrPanel->addSample("Samples\\DABACLOS.wav");
+ //     MInstrPanel->addSample("Samples\\Pipa_66.wav");
+ //     MInstrPanel->addSample("Samples\\SBA4.wav");
+//      MInstrPanel->addSample("Samples\\SBACLOS.wav");
+//      MInstrPanel->addSample("Samples\\SBAF.wav");
+//      MInstrPanel->addSample("Samples\\SBALUN.wav");
+//      MInstrPanel->addSample("Samples\\SBAP.wav");
 
-   // MInstrPanel->setCurrInstr(MInstrPanel->getInstrs()[0]);
-
-    //MInstrPanel->addSample("Samples\\Cymatics - Light Free Sample Pack\\Bonus Samples\\Drum Loops\\Cymatics - San Holo Free Full Drum Loop 2 - 120 BPM.wav");
-
-/*
-    MInstrPanel->addSample("Samples\\Jazzy Hat.wav");
-    MInstrPanel->addSample("Samples\\snar_04m1.wav");
-    MInstrPanel->addSample("Samples\\Crash 2.wav");
-    MInstrPanel->addSample("Samples\\Rim 2.wav");
-    MInstrPanel->addSample("Samples\\Kicked.wav");
-    MInstrPanel->addSample("Samples\\808.wav");
-    MInstrPanel->addSample("Samples\\Kik 2.wav");
-*/
-//    _MInstrPanel->addSample("Samples\\Snare Tail.wav");
-//    _MInstrPanel->addSample("Samples\\CircleBrsh 2.wav");
- //   _MInstrPanel->addSample("Samples\\DABACLOS.wav");
- //   _MInstrPanel->addSample("Samples\\Pipa_66.wav");
- //   _MInstrPanel->addSample("Samples\\SBA4.wav");
-//    _MInstrPanel->addSample("Samples\\SBACLOS.wav");
-//    _MInstrPanel->addSample("Samples\\SBAF.wav");
-//    _MInstrPanel->addSample("Samples\\SBALUN.wav");
-//    _MInstrPanel->addSample("Samples\\SBAP.wav");
-
-    //_MInstrPanel->addSample("Samples\\Zheng_64.wav");
-    //_MInstrPanel->addSample("Samples\\Zheng_76.wav");
-    //_MInstrPanel->addSample("Samples\\DABA.wav");
-    //_MInstrPanel->addSample("Samples\\Horn Hit.wav");
-    //_MInstrPanel->addSample("Samples\\Siren Loop.wav");
-
-    // Set first as current
-
-    //if (MInstrPanel->instrs.size() > 0)
-    //{
-    //    MInstrPanel->setCurrInstr(MInstrPanel->instrs.front());
-    //}
-
-    //MInstrPanel->setCurrInstr(NULL);
+//      MInstrPanel->addSample("Samples\\Zheng_76.wav");
+//      MInstrPanel->addSample("Samples\\DABA.wav");
+//      MInstrPanel->addSample("Samples\\Horn Hit.wav");
+//      MInstrPanel->addSample("Samples\\Siren Loop.wav");    
 }
 
 void Project36::init()
@@ -182,9 +128,7 @@ void Project36::init()
     Render_isWorking = false;
     GRecOn = false;
 
-
     LoadDefaultInstruments();
-
 
     newProj = true;
 
