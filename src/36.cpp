@@ -96,8 +96,8 @@ bool                InitComplete = false;
 
 MainWinObject::MainWinObject()
 {
-    //width = DAW_DEFAULT_WINDOW_WIDTH;
-    //height = DAW_DEFAULT_WINDOW_HEIGHT;
+    width = DAW_DEFAULT_WINDOW_WIDTH;
+    height = DAW_DEFAULT_WINDOW_HEIGHT;
 
     SoloInstr = NULL;
 
@@ -138,12 +138,11 @@ MainWinObject::MainWinObject()
 
     addHighlight(MDragDrop = new DragAndDrop());
 
-    
-    MHelperPanel->setEnable(true);
-    MInstrPanel->setEnable(true);
-    MBrowser->setEnable(false);
-    MCtrllPanel->setEnable(true);
-    MEdit->setEnable(true);
+    //MHelperPanel->setEnable(true);
+    //MInstrPanel->setEnable(true);
+    //MBrowser->setEnable(false);
+    //MCtrllPanel->setEnable(true);
+    //MEdit->setEnable(true);
 
     MGrid->grabTextCursor(100, 10);
 
@@ -174,7 +173,7 @@ void MainWinObject::remap()
 {
     if (!InitComplete)
     {
-        return;
+        //return;
     }
 
     if(currAuxPanel != NULL)

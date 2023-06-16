@@ -1,7 +1,7 @@
 
 
 #include "36_config.h"
-
+#include "36_audiomanager.h"
 
 
 
@@ -28,15 +28,12 @@ void ConfigData::saveSettings()
 
     xmlSettings.addChildElement(xmlRenderSettings);
 
-#ifdef USE_JUCE_AUDIO
-
     XmlElement* xmlAudio = JAudioManager->createStateXml();
 
     if(xmlAudio != NULL)
     {
         xmlSettings.addChildElement(xmlAudio);
     }
-#endif
 
     String  filePath(".\\settings.xml");
     File    file(filePath);

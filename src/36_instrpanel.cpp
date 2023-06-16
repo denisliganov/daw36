@@ -210,7 +210,7 @@ extern Sample*  prevSample;
 
 InstrPanel::InstrPanel()
 {
-    fxShowing = false;
+    fxShowing = true;
 
     curr = NULL;
     dropObj = NULL;

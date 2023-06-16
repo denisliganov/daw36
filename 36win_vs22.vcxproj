@@ -151,6 +151,7 @@
     <ClCompile Include="src\36_audio_dev.cpp" />
     <ClCompile Include="src\36_auxkeys.cpp" />
     <ClCompile Include="src\36_browserlist.cpp" />
+    <ClCompile Include="src\36_config.cpp" />
     <ClCompile Include="src\36_devwin.cpp" />
     <ClCompile Include="src\36_dropbox.cpp" />
     <ClCompile Include="src\36_edit.cpp" />
