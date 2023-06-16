@@ -177,7 +177,6 @@
     <ClCompile Include="src\36_instrpanel.cpp" />
     <ClCompile Include="src\36_keyboard.cpp" />
     <ClCompile Include="src\36_knob.cpp" />
-    <ClCompile Include="src\36_lane.cpp" />
     <ClCompile Include="src\36_listbox.cpp" />
     <ClCompile Include="src\36_logger.cpp" />
     <ClCompile Include="src\36_makeup.cpp" />
@@ -357,7 +356,6 @@
     <ClInclude Include="src\36_instrpanel.h" />
     <ClInclude Include="src\36_keyboard.h" />
     <ClInclude Include="src\36_knob.h" />
-    <ClInclude Include="src\36_lane.h" />
     <ClInclude Include="src\36_listbox.h" />
     <ClInclude Include="src\36_logger.h" />
     <ClInclude Include="src\36_macros.h" />
