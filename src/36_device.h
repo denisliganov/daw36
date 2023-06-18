@@ -9,7 +9,7 @@
 #include "36_objects.h"
 #include "36_params.h"
 #include "36_paramobject.h"
-#include "36_config.h"
+#include "36_project.h"
 #include "36_vu.h"
 
 

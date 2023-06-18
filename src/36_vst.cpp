@@ -10,7 +10,7 @@
 #include "36.h"
 #include "36_vst.h"
 #include "36_utils.h"
-#include "36_config.h"
+#include "36_project.h"
 #include "36_audio_dev.h"
 #include "36_transport.h"
 #include "36_params.h"

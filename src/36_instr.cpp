@@ -105,24 +105,26 @@ protected:
         void drawSelf(Graphics& g)
         {
             Instr* instr = (Instr*)parent;
-            //instr->setMyColor(g, .4f);
 
-            setc(g, .22f);
+            instr->setMyColor(g, .3f, 1.f);
+            //setc(g, .22f);
 
             fillx(g, 0, 0, width, height);
 
             if(param->getBoolValue())
             {
-                //instr->setMyColor(g, 1.f);
-                setc(g, 1.f);
+                instr->setMyColor(g, 1.f, 1.f);
+                //setc(g, 1.f);
             }
             else
             {
-                //instr->setMyColor(g, .6f);
-                setc(g, .6f);
+                instr->setMyColor(g, .4f, 1.f);
+                //setc(g, .6f);
             }
 
-            txt(g, FontVis, "#", width/2 - 2, height/2 + gGetTextHeight(FontVis)/2 - 1);
+            fillx(g, 6, 6, width-12, height-12);
+
+            //txt(g, FontVis, "#", width/2 - 2, height/2 + gGetTextHeight(FontVis)/2 - 1);
             //txt(g, FontVis, instr->getAlias(), width / 2 - 2, height / 2 + gGetTextHeight(FontVis) / 2 - 1);
         }
 
@@ -593,7 +595,7 @@ void Instr::remap()
 
             int slH = 16;
 
-            if (slH < h / 2)
+            if (slH > h / 2)
                 slH = h / 2;
 
             int kH = h/1.5f;

@@ -9,7 +9,6 @@
 #include "36_params.h"
 #include "36_project.h"
 #include "36_button.h"
-#include "36_config.h"
 #include "36_browser.h"
 #include "36_mixchannel.h"
 #include "36_instrpanel.h"

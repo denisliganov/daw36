@@ -40,3 +40,37 @@ protected:
 };
 
 
+
+
+class ListBoxS : public Control
+{
+public:
+            ListBoxS(std::string name);
+
+            void                addEntry(String entry, bool set_current=false);
+            void                setList(std::vector<String>&  entries_list)     { entries = entries_list;  remap(); }
+            void                setCurrent(int curr)                            { curr = curr; }
+            int                 getCurrent()                                    { return curr; }
+            String              getCurrentName()                                { return entries[curr]; }
+            bool                isEntryHeading(int entry);
+
+protected:
+
+            void                drawSelf(Graphics& g);
+    virtual void                handleChildEvent(Gobj * obj,InputEvent & ev);
+    virtual void                handleMouseDown(InputEvent& ev);
+    virtual void                handleMouseUp(InputEvent& ev);
+    virtual void                handleMouseDrag(InputEvent& ev);
+    virtual void                handleMouseWheel(InputEvent& ev);
+    virtual void                remap();
+
+            Scroller*           vscr;
+            Scroller*           hscr;
+
+            int                 curr;
+            int                 scrWidth;
+            int                 entryHeight;
+
+            std::vector<String>     entries;
+};
+

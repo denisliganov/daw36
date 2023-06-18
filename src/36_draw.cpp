@@ -6,7 +6,7 @@
 #include "36_utils.h"
 #include "36_draw.h"
 #include "36_text.h"
-#include "36_config.h"
+#include "36_project.h"
 
 #include "Binarysrc/images.h"
 

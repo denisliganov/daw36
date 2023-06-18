@@ -2,7 +2,7 @@
 #include "36_audiomanager.h"
 #include "36_audio_dev.h"
 #include "36_listbox.h"
-#include "36_config.h"
+#include "36_project.h"
 #include "36_utils.h"
 
 
@@ -365,7 +365,7 @@ void JuceAudioDeviceManager::addDeviceNamesToComboBox (AComboBox& combo) const
 }
 */
 
-void JuceAudioDeviceManager::addDeviceNamesToListBox (ListBoxx& lb) const
+void JuceAudioDeviceManager::addDeviceNamesToListBox (ListBoxS& box) const
 {
     int n = 0;
 
@@ -373,32 +373,27 @@ void JuceAudioDeviceManager::addDeviceNamesToListBox (ListBoxx& lb) const
     {
         AudioIODeviceType* const type = availableDeviceTypes[i];
 
-        //if (availableDeviceTypes.size() > 1)
-        //    combo.addSectionHeading (type->getTypeName() + T(" devices:"));
+        if (availableDeviceTypes.size() > 1)
+            box.addEntry(T("--==") + type->getTypeName() + T(" devices:"));
+            //    combo.addSectionHeading (type->getTypeName() + T(" devices:"));
 
         const StringArray names (type->getDeviceNames (useInputNames));
 
         for (int j = 0; j < names.size(); ++j)
         {
+            box.addEntry(names[j], (getCurrentAudioDevice()->getName() == names[j]));
+
+            /*
             int l = names[j].length();
-
-            //char lenStr[100];
-            //Num2String(l, lenStr);
-
             char* nameString = (char*)malloc(l + 1);
-
             nameString[l] = 0;
-
             String s = names[j];
-
             names[j].copyToBuffer((char*)nameString, l);
-
             lb.addEntry(nameString);
-
-           // free(nameString);
+            */
         }
 
-        lb.addEntry("---");
+        //box.addEntry(String("---"));
     }
 
     //lb.addItem (TRANS("<< no audio device >>"), -1);

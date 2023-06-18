@@ -50,7 +50,7 @@ ConfigWinObject::ConfigWinObject()
 
     interpolationChooserBox->setTextParams(true, false, true, .5f);
 
-    WinObject::addObject(outputDevices = new ListBoxx("OUTPUT devices"));
+    WinObject::addObject(outputDevices = new ListBoxS("OUTPUT devices"));
 //                outputDevices->addEntry("Output Device 1");
 //                outputDevices->addEntry("Output Device 2");
 

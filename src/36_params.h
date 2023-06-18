@@ -2,7 +2,7 @@
 #pragma once
 
 #include "36_globals.h"
-#include "36_config.h"
+#include "36_project.h"
 
 #include <list>
 #include <vector>

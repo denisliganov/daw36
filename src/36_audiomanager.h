@@ -340,7 +340,7 @@ public:
     */
  //   void addDeviceNamesToComboBox (AComboBox& combo) const;
 
-    void addDeviceNamesToListBox(ListBoxx& lb) const;
+    void addDeviceNamesToListBox(ListBoxS& lb) const;
 
     /** Returns a list of the types of device supported.
     */

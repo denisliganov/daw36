@@ -2,7 +2,7 @@
 #include "36.h"
 #include "36_audio_dev.h"
 #include "36_browserlist.h"
-#include "36_config.h"
+#include "36_project.h"
 #include "36_instr.h"
 #include "36_instrpanel.h"
 #include "36_note.h"

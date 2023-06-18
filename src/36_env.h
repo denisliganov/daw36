@@ -5,7 +5,7 @@
 #include "36_globals.h"
 #include "36_objects.h"
 #include "36_element.h"
-#include "36_config.h"
+#include "36_project.h"
 
 #include <list>
 

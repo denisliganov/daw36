@@ -1,12 +1,10 @@
 
 #include "Binarysrc/images.h"
 
-#include "36_config.h"
 #include "36_globals.h"
 #include "36_window.h"
 #include "36_keyboard.h"
 #include "36_project.h"
-#include "36_config.h"
 #include "36_vstwin.h"
 #include "36_dragndrop.h"
 #include "36_vu.h"

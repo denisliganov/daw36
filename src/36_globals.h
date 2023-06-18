@@ -44,6 +44,7 @@ class InstrVU;
 class Knob;
 class KeyHandler;
 class ListBoxx;
+class ListBoxS;
 class MixChannel;
 class MainWinObject;
 class MeterBox;

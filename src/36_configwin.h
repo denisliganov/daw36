@@ -30,7 +30,7 @@ private:
         SelectorBox*        interpolationChooserBox;
         ListBoxx*           midiOutDevices;
         ListBoxx*           midiInDevices;
-        ListBoxx*           outputDevices;
+        ListBoxS*           outputDevices;
         ListBoxx*           inputDevices;
         ListBoxx*           renderBox;
         SelectorBox*        renderFormat;

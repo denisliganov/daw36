@@ -8,7 +8,6 @@
 #include "36_audio_dev.h"
 #include "36_browser.h"
 #include "36_button.h"
-#include "36_config.h"
 #include "36_draw.h"
 #include "36_effects.h"
 #include "36_history.h"

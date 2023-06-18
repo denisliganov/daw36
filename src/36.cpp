@@ -21,7 +21,6 @@
 #include "36_transport.h"
 #include "36_keyboard.h"
 #include "36_project.h"
-#include "36_config.h"
 #include "36_button.h"
 #include "36_auxkeys.h"
 #include "36_audio_dev.h"

@@ -5,7 +5,7 @@
 
 #include "36_globals.h"
 #include "36_controls.h"
-#include "36_config.h"
+#include "36_project.h"
 #include "36_scroller.h"
 
 
