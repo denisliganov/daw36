@@ -578,7 +578,9 @@ void InstrPanel::deleteInstrument(Instr* i)
 void InstrPanel::drawSelf(Graphics& g)
 {
     fill(g, 0.1f);
+
     setc(g, .25f);
+
     fillx(g, 0, 0, width, MainLineHeight);
 }
 

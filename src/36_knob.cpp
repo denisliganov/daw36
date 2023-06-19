@@ -149,11 +149,12 @@ void ParamBox::remap()
 }
 
 
-Knob::Knob(Parameter* par, bool knob)
+Knob::Knob(Parameter* par, bool knob, bool vert)
 {
     setFontId(FontSmall);
     setParam(par);
 
+    vertical = vert;
     knobMode = knob;
     angleRange = PI * 1.5f;
     angleOffset = float(2*PI - angleRange)*.5f;

@@ -509,9 +509,15 @@ void MixChannel::remap()
 
 void MixChannel::drawSelf(Graphics& g)
 {
-    //gSetColorSettings(instr->getColorHue(), .2f);
+    if (!instr->isMaster())
+    {
+        instr->setMyColor(g, .1f, 1.f, 1);
 
-    fill(g, .1f);
+        fillx(g, 0, 0, width, height);
+    }
+    else
+        fill(g, .1f);
+
 
     int wPanel = width - 80; //width - 64;
     int xeff = 0; //FxPanelScrollerWidth + 1;

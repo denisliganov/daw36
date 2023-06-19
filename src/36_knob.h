@@ -36,7 +36,7 @@ class Knob : public ParamBox
 {
 public:
 
-            Knob(Parameter* par, bool knob = false);
+            Knob(Parameter* par, bool knob = false, bool vert = false);
             float               getMinStep()    { return 1.f / width; }
             std::string         getClickHint();
             void                handleMouseWheel(InputEvent& ev);
@@ -68,6 +68,7 @@ protected:
             bool                dim;
             bool                sliding;
             bool                dimOnZero;
+            bool                vertical;
 };
 
 
