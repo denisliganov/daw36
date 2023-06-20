@@ -151,7 +151,6 @@
     <ClCompile Include="src\36_audio_dev.cpp" />
     <ClCompile Include="src\36_auxkeys.cpp" />
     <ClCompile Include="src\36_browserlist.cpp" />
-    <ClCompile Include="src\36_config.cpp" />
     <ClCompile Include="src\36_devwin.cpp" />
     <ClCompile Include="src\36_dropbox.cpp" />
     <ClCompile Include="src\36_edit.cpp" />
@@ -337,7 +336,6 @@
     <ClInclude Include="src\36_helper.h" />
     <ClInclude Include="src\36_browser.h" />
     <ClInclude Include="src\36_button.h" />
-    <ClInclude Include="src\36_config.h" />
     <ClInclude Include="src\36_configwin.h" />
     <ClInclude Include="src\36_controls.h" />
     <ClInclude Include="src\36_ctrlpanel.h" />

@@ -53,7 +53,8 @@ protected:
 
     virtual void                drawKnob(Graphics& g);
             void                drawSelf(Graphics& g);
-            void                drawSlider(Graphics& g);
+            void                drawHorizontalSlider(Graphics& g);
+            void                drawVerticalSlider(Graphics& g);
             ContextMenu*        createContextMenu();
 
 protected:

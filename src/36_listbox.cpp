@@ -205,7 +205,9 @@ void ListBoxS::drawSelf(Graphics& g)
         {
             if (entryNum == curr)
             {
-                setc(g, 0.5f);
+                //setc(g, 0.5f);
+
+                setc(g, 0xffFFFF40, .5f, 1.f);
             }
             else if (isEntryHeading(entryNum))
             {
@@ -218,10 +220,14 @@ void ListBoxS::drawSelf(Graphics& g)
 
             fillx(g, 0, yoffs + y, w, entryHeight - 1);
 
-            //setc(g, 0.2f);
-            //lineH(g, yoffs + y, 0, w);
-
-            setc(g, 1.f);
+            if (entryNum == curr)
+            {
+                setc(g, 0xffFFFF40);
+            }
+            else
+            {
+                setc(g, 1.f);
+            }
 
             String str = isEntryHeading(entryNum) ? T("     ") + e.substring(4) : e;
 
