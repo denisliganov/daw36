@@ -226,10 +226,12 @@ class SendKnob : public Knob
 {
 public:
 
-    SendKnob(MixChannel* chan, MixChannel* out_chan, std::string nm) : Knob(new Parameter(nm, Param_Default), true)
+    SendKnob(MixChannel* chan, MixChannel* out_chan, std::string nm) : Knob(new Parameter(nm, Param_Default), false, true)
     {
         channel = chan;
         outChannel = out_chan;
+
+        setTextParams(false);
 
         param->setModule(channel);
 

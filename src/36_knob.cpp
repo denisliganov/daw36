@@ -455,28 +455,21 @@ void Knob::drawVerticalSlider(Graphics& g)
 
     rectx(g, 0, 0, width, hAll);
 
-    if (0 && instr)
+    if (instr)
         instr->setMyColor(g, .2f);
     else
         setc(g, .2f);
 
     fillx(g, 0, 0, width, hAll);
 
-    if (0 && instr)
-        if (MInstrPanel->getCurrInstr() == instr)
-            instr->setMyColor(g, .72f, .42f);
-        else
-            instr->setMyColor(g, .6f, .42f);
+    if (instr)
+        instr->setMyColor(g, .6f, .42f);
     else
-        if (MInstrPanel->getCurrInstr() == instr)
-            setc(g, .4f);
-        else
-            setc(g, .4f);
+        setc(g, .4f);
 
     fillx(g, xSl+1, ystart, wSl-2, hSl);
 
-
-    if (0 && instr)
+    if (instr)
         instr->setMyColor(g, .7f);
     else
         setc(g, .6f);
@@ -603,6 +596,7 @@ void Knob::drawSelf(Graphics& g)
 
         if (vertical)
         {
+            drawVerticalSlider(g);
         }
         else
         {
