@@ -102,25 +102,9 @@ void ConfigWinObject::drawSelf(Graphics& g)
     Gobj::fill(g, 0.4f);
 }
 
-void ConfigWinObject::handleChildEvent(Gobj * obj,InputEvent & ev)
+void ConfigWinObject::switchAudioDevice()
 {
-    if (obj == bufferSizeBox)
-    {
-        if (!ev.clickDown)
-        {
-            MAudio->setBufferSize(bufferSize->getOutVal());
-        }
-    }
-    else if (obj == outputDevices)
-    {
-        int a = 1;
-
-        
-    }
-}
-
-#if 0
-{
+/*
     if (juceAudioDeviceDropDown->getSelectedId() < 0)
     {
         //audioDeviceManager->setAudioDevice (String::empty, 0, 0, 0, 0, true);
@@ -181,8 +165,26 @@ void ConfigWinObject::handleChildEvent(Gobj * obj,InputEvent & ev)
     }
 
     UpdateComponentsVisibility();
+    */
 }
-#endif
+
+void ConfigWinObject::handleChildEvent(Gobj * obj,InputEvent & ev)
+{
+    if (obj == bufferSizeBox)
+    {
+        if (!ev.clickDown)
+        {
+            MAudio->setBufferSize(bufferSize->getOutVal());
+        }
+    }
+    else if (obj == outputDevices)
+    {
+        int a = 1;
+
+        switchAudioDevice();
+    }
+}
+
 
 
 void ConfigWinObject::handleParamUpdate(Parameter * param)

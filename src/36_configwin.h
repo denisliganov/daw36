@@ -18,12 +18,10 @@ protected:
         void                handleChildEvent(Gobj * obj,InputEvent & ev);
         void                handleParamUpdate(Parameter * param = NULL);
         void                handleClose() { ParamObject::handleClose();  }
+        void                switchAudioDevice();
 
 private:
 
-        Parameter*          brightness;
-        Parameter*          hue;
-        Parameter*          saturation;
         Parameter*          bufferSize;
         Parameter*          interpolationSelect;
         Knob*               bufferSizeBox;

@@ -64,13 +64,13 @@ void ParamBox::drawText(Graphics& g)
 
                 if (hoverOption >= 0 && (param->getType() == Param_Selector || param->getType() == Param_Radio))
                 {
-                    setc(g, .6f);
+                    setc(g, .8f);
 
                     str = param->getOptionStr(hoverOption);
 
                     if (hoverOption == param->getCurrentOption())
                     {
-                        setc(g, .9f);
+                        setc(g, 1.f);
                     }
                 }
 
@@ -78,16 +78,16 @@ void ParamBox::drawText(Graphics& g)
             }
             else
             {
-                setc(g, .6f);
+                setc(g, .8f);
                 txt(g, fontId, param->getName(), textX, textY);
             }
         }
         else
         {
-            setc(g, .6f);
+            setc(g, .8f);
             txt(g, fontId, param->getName(), textX, textY);
         
-            setc(g, .8f);
+            setc(g, 1.f);
             txt(g, fontId, param->getValString() + " " + param->getUnitString(), textX + txtAreaWidth*0.6, textY);
         }
     }

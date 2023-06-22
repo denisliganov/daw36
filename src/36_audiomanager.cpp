@@ -382,19 +382,8 @@ void JuceAudioDeviceManager::addDeviceNamesToListBox (ListBoxS& box) const
         for (int j = 0; j < names.size(); ++j)
         {
             box.addEntry(names[j], (getCurrentAudioDevice()->getName() == names[j]));
-
-            /*
-            int l = names[j].length();
-            char* nameString = (char*)malloc(l + 1);
-            nameString[l] = 0;
-            String s = names[j];
-            names[j].copyToBuffer((char*)nameString, l);
-            lb.addEntry(nameString);
-            */
         }
-
-        //box.addEntry(String("---"));
-    }
+     }
 
     //lb.addItem (TRANS("<< no audio device >>"), -1);
 }
