@@ -41,8 +41,9 @@ public:
             void                handleMouseWheel(InputEvent& ev);
             void                handleMouseDrag(InputEvent& ev);
             void                handleChildEvent(Gobj * obj, InputEvent& ev);
-    virtual void                load(XmlElement* instrNode);
             bool                isMaster()  { return master; }
+            bool                isCurrent();
+    virtual void                load(XmlElement* instrNode);
             void                preview(int note = BaseNote);
             void                remap();
             void                setDevice(Device36* dev);

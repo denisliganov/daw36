@@ -348,16 +348,17 @@ void Knob::remap()
 
 void Knob::drawHorizontalSlider(Graphics& g)
 {
-    int wAll = width*widthDivider;
+    int w = width*widthDivider;
+    int h = height;
     float offs = param->getOffset();
     float range = param->getRange();
     float val = param->getValue();
     float def = param->getDefaultValue();
     float baseVal = (offs <= 0 ? 0 : offs);
 
-    int xoffs = int(float(wAll-1)*((baseVal - offs)/range));
-    int xval = int(float(wAll-1)*((val - offs)/range));
-    int xdef = int(float(wAll-1)*((def - offs)/range));
+    int xoffs = int(float(w-1)*((baseVal - offs)/range));
+    int xval = int(float(w-1)*((val - offs)/range));
+    int xdef = int(float(w-1)*((def - offs)/range));
     int xstart = xoffs;
     int xend = xval;
 
@@ -367,40 +368,34 @@ void Knob::drawHorizontalSlider(Graphics& g)
         xend = xoffs;
     }
 
-    int wSl = xend - xstart;
-    int sh = height;     //height - (textHeight + 1);
-    int ysl = height - sh;
+    int ws = xend - xstart;
+    int hs = h;
+    int ys = h - hs;
 
     // Black notch for default (initial) value
     //setc(g, 0.f);
-    //fillx(g, defPos, height - sh, 1, sh);
+    //fillx(g, defPos, height - hs, 1, hs);
 
     if (0 && instr)
         instr->setMyColor(g, .1f);
     else
         setc(g, .1f);
 
-    rectx(g, 0, 0, wAll, height);
+    rectx(g, 0, 0, w, h);
 
     if (0 && instr)
         instr->setMyColor(g, .2f);
     else
         setc(g, .2f);
 
-    fillx(g, 0, 0, wAll, height);
+    fillx(g, 0, 0, w, h);
 
     if (0 && instr)
-        if (MInstrPanel->getCurrInstr() == instr)
-            instr->setMyColor(g, .72f, .42f);
-        else
-            instr->setMyColor(g, .6f, .42f);
+        instr->setMyColor(g, .6f, .42f);
     else
-        if (MInstrPanel->getCurrInstr() == instr)
-            setc(g, .4f);
-        else
-            setc(g, .4f);
+        setc(g, .4f);
 
-    fillx(g, xstart, ysl+1, wSl, sh-2);
+    fillx(g, xstart, ys + 1, ws, hs - 2);
 
 
     if (0 && instr)
@@ -408,31 +403,22 @@ void Knob::drawHorizontalSlider(Graphics& g)
     else
         setc(g, .6f);
 
-    fillx(g, xoffs, ysl+1, 1, sh-2);
-
-    if (xdef != xoffs)
-    {
-        //setc(g, .0f);
-        //fillx(g, xdef, ysl+1, 1, sh-2);
-    }
-
-    //setc(g, 1.f);
-    //fillx(g, xval, height - sh + 1, 1, sh - 2);
+    fillx(g, xoffs, ys + 1, 1, hs - 2);
 }
 
 void Knob::drawVerticalSlider(Graphics& g)
 {
-    int hAll = height;
-
+    int h = height;
+    int w = width;
     float offs = param->getOffset();
     float range = param->getRange();
     float val = param->getValue();
     float def = param->getDefaultValue();
     float baseVal = (offs <= 0 ? 0 : offs);
 
-    int yoffs = int(float(hAll-1)*((baseVal - offs)/range));
-    int yval = int(float(hAll-1)*((val - offs)/range));
-    int ydef = int(float(hAll-1)*((def - offs)/range));
+    int yoffs = int(float(h-1)*((baseVal - offs)/range));
+    int yval = int(float(h-1)*((val - offs)/range));
+    int ydef = int(float(h-1)*((def - offs)/range));
 
     int ystart = yoffs;
     int yend = yval;
@@ -443,38 +429,37 @@ void Knob::drawVerticalSlider(Graphics& g)
         yend = yoffs;
     }
 
-    int hSl = yend - ystart;
-    int wSl = width;
-    int xSl = width - wSl;
-
+    int slen = yend - ystart;
+    int ws = w;
+    int xs = w - ws;
 
     if (0 && instr)
         instr->setMyColor(g, .1f);
     else
         setc(g, .1f);
 
-    rectx(g, 0, 0, width, hAll);
+    rectx(g, 0, 0, w, h);
 
     if (instr)
         instr->setMyColor(g, .2f);
     else
         setc(g, .2f);
 
-    fillx(g, 0, 0, width, hAll);
+    fillx(g, 0, 0, w, h);
 
     if (instr)
         instr->setMyColor(g, .6f, .42f);
     else
         setc(g, .4f);
 
-    fillx(g, xSl+1, ystart, wSl-2, hSl);
+    fillx(g, xs + 1, h - ystart - slen, ws - 2, slen);
 
     if (instr)
         instr->setMyColor(g, .7f);
     else
         setc(g, .6f);
 
-    fillx(g, xSl+1, yoffs, wSl-2, 1);
+    fillx(g, xs + 1, h - yoffs - 1, ws - 2, 1);
 }
 
 void Knob::drawKnob(Graphics& g)

@@ -537,6 +537,15 @@ void Instr::handleMouseWheel(InputEvent& ev)
     parent->handleMouseWheel(ev);
 }
 
+
+bool Instr::isCurrent()
+{
+    if (MInstrPanel->getCurrInstr() == this)
+        return true;
+    else
+        return false;
+}
+
 void Instr::load(XmlElement * instrNode)
 {
     /*

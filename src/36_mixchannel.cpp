@@ -542,6 +542,7 @@ void MixChannel::drawSelf(Graphics& g)
         }
         */
     
+        /*
         setc(g, .3f);
         for (Gobj* o : objs)
         {
@@ -569,7 +570,7 @@ void MixChannel::drawSelf(Graphics& g)
                     gLine(g, x, y, x + w, y);
                 }
             }
-        }
+        }*/
 
     }
     else
