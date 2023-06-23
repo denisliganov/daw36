@@ -19,6 +19,7 @@ protected:
         void                handleParamUpdate(Parameter * param = NULL);
         void                handleClose() { ParamObject::handleClose();  }
         void                switchAudioDevice();
+        void                updateObjectsVisibility();
 
 private:
 
@@ -33,7 +34,7 @@ private:
         ListBoxx*           renderBox;
         SelectorBox*        renderFormat;
         SelectorBox*        renderQuality;
-        Button36*           showASIOPanel;
+        Button36*           showPanel;
 
 };
 

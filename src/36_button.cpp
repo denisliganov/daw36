@@ -34,6 +34,8 @@ Button36::Button36(bool stick, std::string title)
 
     pressed = false;
     isLedType = false;
+
+    setFontId(FontSmall);
 }
 
 void Button36::process(bool down)
@@ -184,7 +186,7 @@ void Button36::drawSelf(Graphics& g)
     {
         setc(g, .9f);
 
-        gText(g, FontInst, objName, x1 + width / 2 - gGetTextWidth(FontInst, objName) / 2, y1 + height / 2 + gGetTextHeight(FontInst)/2 - 1);
+        gText(g, fontId, objName, x1 + width / 2 - gGetTextWidth(fontId, objName) / 2, y1 + height / 2 + gGetTextHeight(fontId)/2 - 1);
     }
 }
 

@@ -19,13 +19,13 @@ ConfigWinObject::ConfigWinObject()
 {
     // Init params and controls
 
-    addParam(bufferSize = new Parameter("BUFFER SIZE", 512, 16384, 2048, Units_Integer));
+    addParam(bufferSize = new Parameter("BUFFER", 512, 16384, 2048, Units_Integer));
 
     bufferSize->setUnitString("samples");
 
     WinObject::addObject(bufferSizeBox = new Knob(bufferSize, false));
 
-    bufferSizeBox->setTextParams(true, false, true, .5f);
+    bufferSizeBox->setTextParams(true, false, false, .4f);
 
     interpolationSelect = new Parameter("INTERPOLATION", Param_Radio);
     interpolationSelect->addOption("Linear");
@@ -36,15 +36,13 @@ ConfigWinObject::ConfigWinObject()
 
     WinObject::addObject(interpolationChooserBox = new SelectorBox(interpolationSelect));
 
-    interpolationChooserBox->setTextParams(true, false, true, .5f);
+    interpolationChooserBox->setTextParams(true, false, false, .4f);
 
     WinObject::addObject(outputDevices = new ListBoxS("OUTPUT devices"));
-//                outputDevices->addEntry("Output Device 1");
-//                outputDevices->addEntry("Output Device 2");
 
     JAudioManager->addDeviceNamesToListBox(*outputDevices);
 
-    showASIOPanel = new Button36(false, "Show ASIO panel");
+    WinObject::addObject(showPanel = new Button36(false, "SHOW PANEL"));
 
     WinObject::addObject(inputDevices = new ListBoxx("INPUT devices:"));
     inputDevices->addEntry("IN Device1");
@@ -65,8 +63,9 @@ ConfigWinObject::ConfigWinObject()
 
     putRight(outputDevices, colWidth, colWidth);
     spaceBelow();
-    putBelow(interpolationChooserBox, colWidth, 16);
     putBelow(bufferSizeBox, colWidth, 16);
+    putBelow(interpolationChooserBox, colWidth, 16);
+    putBelow(showPanel, colWidth, 24);
     returnUp();
     spaceRight();
     putRight(inputDevices, colWidth, colWidth);
@@ -75,7 +74,6 @@ ConfigWinObject::ConfigWinObject()
     spaceRight();
     putRight(renderBox, colWidth, colWidth/1.5);
     spaceRight();
-
 
     //putRight(midiInDevices, colWidth, 120);
     //spaceRight();
@@ -92,7 +90,11 @@ ConfigWinObject::ConfigWinObject()
 
     finalizePuts();
 
+    //showPanel->setVis(false);
+
     setWidthHeight(Gobj::getW(), Gobj::getH());
+
+    updateObjectsVisibility();
 
     setName("Configuration");
 }
@@ -102,6 +104,47 @@ void ConfigWinObject::drawSelf(Graphics& g)
     Gobj::fill(g, 0.4f);
 }
 
+
+void ConfigWinObject::updateObjectsVisibility()
+{
+    JuceAudioDeviceManager::AudioDeviceSetup setup;
+    JAudioManager->getAudioDeviceSetup(setup);
+
+    if (JAudioManager->getCurrentAudioDevice() != NULL)
+    {
+        if (JAudioManager->getCurrentAudioDevice()->hasControlPanel())
+        {
+            showPanel->setVis(true);
+        }
+        else
+        {
+            showPanel->setVis(false);
+        }
+
+        String tname = JAudioManager->getCurrentAudioDevice()->getTypeName();
+        
+        if (tname == T("ASIO"))
+        {
+            bufferSizeBox->setVis(false);
+        }
+        else
+        {
+            bufferSizeBox->setVis(true);
+
+            bufferSize->setValue(JAudioManager->getCurrentAudioDevice()->getCurrentBufferSizeSamples());
+            //pBufferSlider->setValue(JAudioManager->getCurrentAudioDevice()->getCurrentBufferSizeSamples(), true, true);
+        }
+    }
+    else
+    {
+        showPanel->setVis(false);
+    }
+
+    WinObject::redraw();
+}
+
+
+
 void ConfigWinObject::switchAudioDevice()
 {
 /*
@@ -110,22 +153,22 @@ void ConfigWinObject::switchAudioDevice()
         //audioDeviceManager->setAudioDevice (String::empty, 0, 0, 0, 0, true);
         audioDeviceManager->closeAudioDevice();
     }
-    else
+    else*/
     {
-        CAudioDeviceManager::AudioDeviceSetup oldSetup;
-        CAudioDeviceManager::AudioDeviceSetup setup;
+        JuceAudioDeviceManager::AudioDeviceSetup oldSetup;
+        JuceAudioDeviceManager::AudioDeviceSetup setup;
 
-        audioDeviceManager->getAudioDeviceSetup(setup);
+        JAudioManager->getAudioDeviceSetup(setup);
 
         oldSetup = setup;
 
-        setup.outputDeviceName = juceAudioDeviceDropDown->getText();
+        setup.outputDeviceName = outputDevices->getCurrentName();
 
         setup.bufferSize = DEFAULT_BUFFER_SIZE;
 
-        AudioIODeviceType* type = audioDeviceManager->getDeviceTypeObjectByDeviceName(setup.outputDeviceName);
+        AudioIODeviceType* type = JAudioManager->getDeviceTypeObjectByDeviceName(setup.outputDeviceName);
 
-        String error (audioDeviceManager->setAudioDeviceSetup(setup, true));
+        String error (JAudioManager->setAudioDeviceSetup(setup, true));
 
         //String error (audioDeviceManager->setAudioDevice (juceAudioDeviceDropDown->getText(),
         //                                            0, 0, 0, 0, true));
@@ -141,31 +184,33 @@ void ConfigWinObject::switchAudioDevice()
                 // device, so this is a workaround that doesn't fail in that case.
                 BitArray noInputs;
                 setup.inputChannels = noInputs;
-                error = audioDeviceManager->setAudioDeviceSetup(setup, true);
+                error = JAudioManager->setAudioDeviceSetup(setup, true);
             }
 #endif
             if (error.isNotEmpty())
                 AlertWindow::showMessageBox (AlertWindow::WarningIcon,
                                              T("Error while opening \"")
-                                                + juceAudioDeviceDropDown->getText()
+                                                + outputDevices->getCurrentName()
                                                 + T("\""),
                                              error);
         }
     }
 
-    if(audioDeviceManager->getCurrentAudioDevice() != NULL)
+    updateObjectsVisibility();
+
+    /*
+    if(JAudioManager->getCurrentAudioDevice() != NULL)
     {
-        CAudioDeviceManager::AudioDeviceSetup setup;
-        audioDeviceManager->getAudioDeviceSetup(setup);
-        juceAudioDeviceDropDown->setText(setup.outputDeviceName, true);
+        JuceAudioDeviceManager::AudioDeviceSetup setup;
+        JAudioManager->getAudioDeviceSetup(setup);
+        //juceAudioDeviceDropDown->setText(setup.outputDeviceName, true);
     }
     else
     {
-        juceAudioDeviceDropDown->setSelectedId(-1, true);
-    }
+        //juceAudioDeviceDropDown->setSelectedId(-1, true);
+    }*/
 
-    UpdateComponentsVisibility();
-    */
+    //UpdateComponentsVisibility();
 }
 
 void ConfigWinObject::handleChildEvent(Gobj * obj,InputEvent & ev)
@@ -179,9 +224,11 @@ void ConfigWinObject::handleChildEvent(Gobj * obj,InputEvent & ev)
     }
     else if (obj == outputDevices)
     {
-        int a = 1;
-
         switchAudioDevice();
+    }
+    else if (showPanel == obj)
+    {
+        JAudioManager->getCurrentAudioDevice()->showControlPanel();
     }
 }
 
