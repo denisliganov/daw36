@@ -121,7 +121,7 @@ void ParamBox::remap()
     }
     else if (mchan)
     {
-        //instr = mchan->getInstr();
+        instr = mchan->getInstr();
     }
     else if (dev)
     {
@@ -152,6 +152,7 @@ void ParamBox::remap()
 Knob::Knob(Parameter* par, bool knob, bool vert)
 {
     setFontId(FontSmall);
+    
     setParam(par);
 
     vertical = vert;
@@ -236,7 +237,8 @@ void Knob::handleMouseWheel(InputEvent& ev)
 
 void Knob::handleSliding(InputEvent& ev)
 {
-    int delta = ev.mouseX - x1 + 1;
+    float len = vertical ? float(height) : float(width) * widthDivider;
+    int delta = vertical ? (y2 - ev.mouseY + 1) : (ev.mouseX - x1 + 1);
 
     if (abs(defaultPos - (delta)) < 2)
     {
@@ -244,14 +246,14 @@ void Knob::handleSliding(InputEvent& ev)
     }
     else
     {
-        if (ev.clickDown && (delta <= width*widthDivider))
+        if (ev.clickDown && (delta <= (int)len))
         {
             sliding = true;
         }
 
         if (sliding)
         {
-            param->adjustFromControl(this, 0, float(delta)/(float(width)*widthDivider));
+            param->adjustFromControl(this, 0, float(delta)/len);
         }
     }
 
@@ -340,7 +342,10 @@ void Knob::remap()
 
     if (param)
     {
-        defaultPos = int(float(width*widthDivider)*param->getDefaultValueNormalized());
+        if (!vertical)
+            defaultPos = int(float(width*widthDivider)*param->getDefaultValueNormalized());
+        else
+            defaultPos = int(float(height) * param->getDefaultValueNormalized());
     }
 
     delSnap();
@@ -433,7 +438,7 @@ void Knob::drawVerticalSlider(Graphics& g)
     int ws = w;
     int xs = w - ws;
 
-    if (0 && instr)
+    if (instr)
         instr->setMyColor(g, .1f);
     else
         setc(g, .1f);

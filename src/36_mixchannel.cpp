@@ -382,14 +382,13 @@ void MixChannel::init(Instr* ins)
     vu = NULL;
     outTg = NULL;
 
-    //addParam(volParam = new Parameter("Volume", Param_Vol, 0.f, DAW_VOL_RANGE, 1.f, Units_Percent));
-    //addParam(panParam = new Parameter("Panning", Param_Pan));
 
     addBasicParamSet();
 
     addObject(volKnob = new Knob(vol));
     volKnob->setTextParams(false);
     volKnob->setHint("Channel Volume");
+    
     addObject(panKnob = new Knob(pan));
     panKnob->setTextParams(false);
     panKnob->setHint("Channel Panning");
@@ -454,12 +453,7 @@ void MixChannel::remap()
                     int a = 1;
                 }
 
-                int kH = ins->getH()*0.7f;
-
-                if (kH % 2)
-                    kH--;
-
-                sk->setCoords1(width - kH - 4, ins->getY() - getY() + ins->getH()/2 - kH/2, kH, kH);
+                sk->setCoords1(width - 16, ins->getY() - getY() + 1, 14, ins->getH() - 2);
 
                 if (ins == instr)
                 {

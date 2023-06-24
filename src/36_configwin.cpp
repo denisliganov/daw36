@@ -19,13 +19,13 @@ ConfigWinObject::ConfigWinObject()
 {
     // Init params and controls
 
-    addParam(bufferSize = new Parameter("BUFFER", 512, 16384, 2048, Units_Integer));
+    //addParam(bufferSize = new Parameter("BUFFER", 512, 16384, 2048, Units_Integer));
+    //bufferSize->setUnitString("samples");
 
-    bufferSize->setUnitString("samples");
-
-    WinObject::addObject(bufferSizeBox = new Knob(bufferSize, false));
-
+    WinObject::addObject(bufferSizeBox = new Knob(new Parameter("BUFFER", 512, 16384, 2048, Units_Integer), false));
+    bufferSizeBox->getParam()->setUnitString("samples");
     bufferSizeBox->setTextParams(true, false, false, .4f);
+
 
     interpolationSelect = new Parameter("INTERPOLATION", Param_Radio);
     interpolationSelect->addOption("Linear");
@@ -34,7 +34,9 @@ ConfigWinObject::ConfigWinObject()
     interpolationSelect->addOption("Sinc depth 64");
     interpolationSelect->setCurrentOption(0);
 
+
     WinObject::addObject(interpolationChooserBox = new SelectorBox(interpolationSelect));
+
 
     interpolationChooserBox->setTextParams(true, false, false, .4f);
 
@@ -57,9 +59,12 @@ ConfigWinObject::ConfigWinObject()
     renderBox->addEntry("Render to WAV");
     renderBox->addEntry("Render to FLAC");
 
-    int colWidth = 220;
+
+
 
     // Position all controls
+
+    int colWidth = 220;
 
     putRight(outputDevices, colWidth, colWidth);
     spaceBelow();
@@ -131,8 +136,7 @@ void ConfigWinObject::updateObjectsVisibility()
         {
             bufferSizeBox->setVis(true);
 
-            bufferSize->setValue(JAudioManager->getCurrentAudioDevice()->getCurrentBufferSizeSamples());
-            //pBufferSlider->setValue(JAudioManager->getCurrentAudioDevice()->getCurrentBufferSizeSamples(), true, true);
+            bufferSizeBox->getParam()->setValue(JAudioManager->getCurrentAudioDevice()->getCurrentBufferSizeSamples());
         }
     }
     else
@@ -170,9 +174,6 @@ void ConfigWinObject::switchAudioDevice()
 
         String error (JAudioManager->setAudioDeviceSetup(setup, true));
 
-        //String error (audioDeviceManager->setAudioDevice (juceAudioDeviceDropDown->getText(),
-        //                                            0, 0, 0, 0, true));
-
         if (error.isNotEmpty())
         {
 #if JUCE_WIN32
@@ -197,20 +198,6 @@ void ConfigWinObject::switchAudioDevice()
     }
 
     updateObjectsVisibility();
-
-    /*
-    if(JAudioManager->getCurrentAudioDevice() != NULL)
-    {
-        JuceAudioDeviceManager::AudioDeviceSetup setup;
-        JAudioManager->getAudioDeviceSetup(setup);
-        //juceAudioDeviceDropDown->setText(setup.outputDeviceName, true);
-    }
-    else
-    {
-        //juceAudioDeviceDropDown->setSelectedId(-1, true);
-    }*/
-
-    //UpdateComponentsVisibility();
 }
 
 void ConfigWinObject::handleChildEvent(Gobj * obj,InputEvent & ev)
@@ -219,7 +206,7 @@ void ConfigWinObject::handleChildEvent(Gobj * obj,InputEvent & ev)
     {
         if (!ev.clickDown)
         {
-            MAudio->setBufferSize(bufferSize->getOutVal());
+            MAudio->setBufferSize(bufferSizeBox->getParam()->getOutVal());
         }
     }
     else if (obj == outputDevices)
@@ -236,7 +223,7 @@ void ConfigWinObject::handleChildEvent(Gobj * obj,InputEvent & ev)
 
 void ConfigWinObject::handleParamUpdate(Parameter * param)
 {
-    if (param == bufferSize)
+    //if (param == bufferSize)
     {
         //MAudio->setBufferSize(param->getOutVal());
     }
