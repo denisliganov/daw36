@@ -453,7 +453,7 @@ void MixChannel::remap()
                     int a = 1;
                 }
 
-                sk->setCoords1(width - 16, ins->getY() - getY() + 1, 14, ins->getH() - 2);
+                sk->setCoords1(width - 22, ins->getY() - getY() + 1, 20, ins->getH() - 2);
 
                 if (ins == instr)
                 {
@@ -507,7 +507,7 @@ void MixChannel::drawSelf(Graphics& g)
 {
     if (!instr->isMaster())
     {
-        instr->setMyColor(g, .1f, 1.f, 1);
+        instr->setMyColor(g, .12f, 1.f, 1);
 
         fillx(g, 0, 0, width, height);
     }
@@ -522,10 +522,17 @@ void MixChannel::drawSelf(Graphics& g)
     {
         int sendPanelHeight = 0;
 
-        setc(g, .4f);
+        if (!instr->isMaster())
+            instr->setMyColor(g, .6f, .6f, 1);
+        else
+            setc(g, .4f);
         fillx(g, xeff , height - FxPanelBottomHeight, wPanel, FxPanelBottomHeight - 32);
 
-        setc(g, .46f);
+        if (!instr->isMaster())
+            instr->setMyColor(g, .7f, .6f, 1);
+        else
+            setc(g, .46f);
+
         rectx(g, xeff, height - FxPanelBottomHeight, wPanel, FxPanelBottomHeight - 32);
 
         /*

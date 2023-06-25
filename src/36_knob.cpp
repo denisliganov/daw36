@@ -446,23 +446,23 @@ void Knob::drawVerticalSlider(Graphics& g)
     rectx(g, 0, 0, w, h);
 
     if (instr)
-        instr->setMyColor(g, .2f);
+        instr->setMyColor(g, .34f);
     else
-        setc(g, .2f);
+        setc(g, .34f);
 
     fillx(g, 0, 0, w, h);
 
     if (instr)
-        instr->setMyColor(g, .6f, .42f);
+        instr->setMyColor(g, .8f, .42f);
     else
         setc(g, .4f);
 
     fillx(g, xs + 1, h - ystart - slen, ws - 2, slen);
 
     if (instr)
-        instr->setMyColor(g, .7f);
+        instr->setMyColor(g, .4f);
     else
-        setc(g, .6f);
+        setc(g, .4f);
 
     fillx(g, xs + 1, h - yoffs - 1, ws - 2, 1);
 }
