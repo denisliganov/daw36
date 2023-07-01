@@ -36,8 +36,7 @@ ConfigWinObject::ConfigWinObject()
 
 
     WinObject::addObject(interpolationChooserBox = new SelectorBox(interpolationSelect));
-
-
+    
     interpolationChooserBox->setTextParams(true, false, false, .4f);
 
     WinObject::addObject(outputDevices = new ListBoxS("OUTPUT devices"));
@@ -45,8 +44,8 @@ ConfigWinObject::ConfigWinObject()
     JAudioManager->addDeviceNamesToListBox(*outputDevices);
 
     WinObject::addObject(showPanel = new Button36(false, "SHOW PANEL"));
-
     WinObject::addObject(inputDevices = new ListBoxx("INPUT devices:"));
+    
     inputDevices->addEntry("IN Device1");
     inputDevices->addEntry("IN Device2");
 
@@ -59,7 +58,15 @@ ConfigWinObject::ConfigWinObject()
     renderBox->addEntry("Render to WAV");
     renderBox->addEntry("Render to FLAC");
 
+    Parameter* renderFormat = new Parameter("FORMAT", Param_Radio);
+    renderFormat->addOption("WAV");
+    renderFormat->addOption("OGG");
+    renderFormat->addOption("FLAC");
+    renderFormat->setCurrentOption(0);
 
+    SelectorBox* renderFormatBox = new SelectorBox(renderFormat);
+    
+    WinObject::addObject(renderFormatBox);
 
 
     // Position all controls
@@ -78,6 +85,8 @@ ConfigWinObject::ConfigWinObject()
     putRight(midiOutDevices, colWidth, colWidth);
     spaceRight();
     putRight(renderBox, colWidth, colWidth/1.5);
+    spaceBelow();
+    putBelow(renderFormatBox, colWidth, 24);
     spaceRight();
 
     //putRight(midiInDevices, colWidth, 120);
