@@ -22,7 +22,7 @@ class SubWindow;
 class CommonWindow  : public DocumentWindow
 {
 public:
-            CommonWindow() : DocumentWindow(T(""), Colours::white, 0, true) {}
+            CommonWindow() : DocumentWindow(T(""), Colours::white, 0, true) { juceComp = NULL; }
 
             JuceComponent*      getJuceComp()       { return juceComp; }
             void                closeButtonPressed();

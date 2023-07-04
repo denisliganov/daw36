@@ -432,12 +432,15 @@ void MixChannel::remap()
 
         vscr->setCoords1(0, 0, FxPanelScrollerWidth, visibleHeight);
 
-        int ySendControls = height - FxPanelBottomHeight;
-        int yControls = height - FxPanelBottomHeight + sendPanelHeight;
+        if (FxPanelBottomHeight > 0)
+        {
+            int ySendControls = height - FxPanelBottomHeight;
+            int yControls = height - FxPanelBottomHeight + sendPanelHeight;
 
-        volKnob->setCoords1(0, yControls + 2, 112, 18);
-        panKnob->setCoords1(0, yControls + 22, 112, 18);
-        vu->setCoords1(0, height - 26, width - 80, 20);
+            volKnob->setCoords1(0, yControls + 2, 112, 18);
+            panKnob->setCoords1(0, yControls + 22, 112, 18);
+            vu->setCoords1(0, height - 26, width - 80, 20);
+        }
 
         for (Gobj* o : objs)
         {
@@ -520,20 +523,23 @@ void MixChannel::drawSelf(Graphics& g)
 
     if (MixViewSingle)
     {
-        int sendPanelHeight = 0;
+        if (FxPanelBottomHeight > 0)
+        {
+            int sendPanelHeight = 0;
 
-        if (!instr->isMaster())
-            instr->setMyColor(g, .6f, .6f, 1);
-        else
-            setc(g, .4f);
-        fillx(g, xeff , height - FxPanelBottomHeight, wPanel, FxPanelBottomHeight - 32);
+            if (!instr->isMaster())
+                instr->setMyColor(g, .6f, .6f, 1);
+            else
+                setc(g, .4f);
+            fillx(g, xeff , height - FxPanelBottomHeight, wPanel, FxPanelBottomHeight - 32);
 
-        if (!instr->isMaster())
-            instr->setMyColor(g, .7f, .6f, 1);
-        else
-            setc(g, .46f);
+            if (!instr->isMaster())
+                instr->setMyColor(g, .7f, .6f, 1);
+            else
+                setc(g, .46f);
 
-        rectx(g, xeff, height - FxPanelBottomHeight, wPanel, FxPanelBottomHeight - 32);
+            rectx(g, xeff, height - FxPanelBottomHeight, wPanel, FxPanelBottomHeight - 32);
+        }
 
         /*
         setc(g, .8f);

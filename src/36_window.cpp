@@ -501,6 +501,13 @@ void MainWindow::resized()
         if (titleBarButtons[i] != 0)
             titleBarButtons[i]->setBounds(getWidth() - 126 - 1 + i*50, 1, 25, 12);
     }
+
+    if (juceComp)
+    {
+        //juceComp->setBounds(juceComp->getX(), juceComp->getY(), juceComp->getWidth(), juceComp->getHeight());
+
+        //setBounds(getX(), getY(), juceComp->getWidth() + 2, ycoffs + juceComp->getHeight() + 1);
+    }
 }
 
 
@@ -1062,7 +1069,7 @@ void JuceComponent::resized()
 {
     listen->setBounds(0, 0, getWidth(), getHeight());
 
-    //grObject->setCoords1
+    grObject->setCoords1(0, 0, getWidth(), getHeight());
 
     handleWindowResize(getWidth(), getHeight());
 
@@ -1142,7 +1149,7 @@ void JuceComponent::deleteWindow(SubWindow* sw)
 
 void JuceComponent::showMenu(ContextMenu* m, int x, int y)
 {
-    m->setParent(grObject);
+    //m->setParent(grObject);
 
     if(x + m->getW() > getWidth())
     {

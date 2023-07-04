@@ -517,7 +517,7 @@ SubWindow* Vst2Plugin::createWindow()
     }
     else
     {
-        return MObject->getWindow()->addWindow(new DevParamObject(this));
+        return MWindow->createChildWindowFromWinObject(new DevParamObject(this));
     }
 }
 
