@@ -146,7 +146,7 @@ void ContextMenu::remap()
         itemY += item->getH();
     }
 
-    Component::setBounds(Component::getX(), Component::getY(), width, height);
+    getWindow()->setBounds(getWindow()->getX(), getWindow()->getY(), width, height);
 }
 
 void ContextMenu::activateMenuItem(std::string item)

@@ -91,7 +91,7 @@ void InitializeAndStartProgram()
     MObject = new MainWinObject();
 
     // Main window
-    MWindow = new MainWindow(MObject);
+    MWindow = new MainWindow(new JuceComponent(MObject));
 
     // Window handler for OS Windows purposes
     WinHWND = (HWND)MWindow->getWindowHandle();

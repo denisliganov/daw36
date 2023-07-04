@@ -7,12 +7,12 @@
 
 InfoWin::InfoWin()
 {
-    setWidthHeight(300, 300);
+    setWH(300, 300);
 }
 
 void InfoWin::drawSelf(Graphics& g)
 {
-    Gobj::fill(g, 0.4f);
+    fill(g, 0.4f);
 }
 
 void InfoWin::handleChildEvent(Gobj * obj,InputEvent & ev)

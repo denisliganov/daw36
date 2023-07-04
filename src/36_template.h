@@ -6,7 +6,7 @@
 
 
 
-class TemplateWinObj : public ParamObject, WinObject
+class TemplateWinObj : public ParamObject
 {
 public:
 

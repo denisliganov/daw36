@@ -84,7 +84,7 @@ public:
     virtual std::string         getHint()           { return hint; };
     virtual std::string         getClickHint()       { return ""; };
             Gobj*               getParent()         { return parent; }
-            WinObject*          getWindow()         { return window; };
+            JuceComponent*      getWindow()         { return window; };
             int                 getX()              { return xRel; };
             int                 getY()              { return yRel; };
     virtual int                 getW()              { return width; };
@@ -127,7 +127,7 @@ public:
     virtual void                redraw(bool change = true);
 
             void                setParent(Gobj* parent);
-            void                setWindow(WinObject* w);
+            void                setWindow(JuceComponent* w);
     virtual void                setVis(bool vis);
             void                setTouchable(bool tch);
             void                setObjName(std::string title)      { objName = title; }
@@ -194,7 +194,7 @@ protected:
             bool                touchable;
             bool                undermouse;
             bool                visible;
-            WinObject*          window;
+            JuceComponent*      window;
             int                 width;
             int                 height;
             int                 xRel;

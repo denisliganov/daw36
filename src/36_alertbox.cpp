@@ -47,7 +47,7 @@ AlertBox::AlertBox( std::string msg, std::string bttxt1, std::string bttxt2, std
     addButton(bttxt2);
     addButton(bttxt3);
 
-    setWidthHeight(boxWidth, boxHeight);
+    setWH(boxWidth, boxHeight);
 }
 
 void AlertBox::addButton( std::string buttext )
@@ -77,8 +77,10 @@ void AlertBox::handleChildEvent(Gobj * obj,InputEvent & ev)
 {
     buttPressed = dynamic_cast<Button36*>(obj);
 
-    if(!ev.clickDown)
-        holderWindow->exitModalState(0);
+    if (!ev.clickDown)
+    {
+        getWindow()->exitModalState(0);
+    }
 }
 
 std::string AlertBox::getChoice()

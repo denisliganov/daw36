@@ -22,36 +22,36 @@ ConfigWinObject::ConfigWinObject()
     //addParam(bufferSize = new Parameter("BUFFER", 512, 16384, 2048, Units_Integer));
     //bufferSize->setUnitString("samples");
 
-    WinObject::addObject(bufferSizeBox = new Knob(new Parameter("BUFFER", 512, 16384, 2048, Units_Integer), false));
+    addObject(bufferSizeBox = new Knob(new Parameter("BUFFER", 512, 16384, 2048, Units_Integer), false));
     bufferSizeBox->getParam()->setUnitString("samples");
     bufferSizeBox->setTextParams(true, false, false, .4f);
 
 
     interpolationSelect = new Parameter("INTERPOLATION", Param_Radio);
     interpolationSelect->addOption("Linear");
-    interpolationSelect->addOption("3-point Hermire");
+    interpolationSelect->addOption("3-point Hermite");
     interpolationSelect->addOption("6-point Polinomial");
     interpolationSelect->addOption("Sinc depth 64");
     interpolationSelect->setCurrentOption(0);
 
 
-    WinObject::addObject(interpolationChooserBox = new SelectorBox(interpolationSelect));
+    addObject(interpolationChooserBox = new SelectorBox(interpolationSelect));
     
     interpolationChooserBox->setTextParams(true, false, false, .4f);
 
-    WinObject::addObject(outputDevices = new ListBoxS("OUTPUT devices"));
+    addObject(outputDevices = new ListBoxS("OUTPUT devices"));
 
     JAudioManager->addDeviceNamesToListBox(*outputDevices);
 
-    WinObject::addObject(showPanel = new Button36(false, "SHOW PANEL"));
-    WinObject::addObject(inputDevices = new ListBoxx("INPUT devices:"));
+    addObject(showPanel = new Button36(false, "SHOW PANEL"));
+    addObject(inputDevices = new ListBoxx("INPUT devices:"));
     
     inputDevices->addEntry("IN Device1");
     inputDevices->addEntry("IN Device2");
 
-    WinObject::addObject(midiOutDevices = new ListBoxx("MIDI OUT Devices:"));
-    WinObject::addObject(midiInDevices = new ListBoxx("MIDI IN Devices:"));
-    WinObject::addObject(renderBox = new ListBoxx("RENDER:"));
+    addObject(midiOutDevices = new ListBoxx("MIDI OUT Devices:"));
+    addObject(midiInDevices = new ListBoxx("MIDI IN Devices:"));
+    addObject(renderBox = new ListBoxx("RENDER:"));
 
     renderBox->addEntry("Render to MP3");
     renderBox->addEntry("Render to OGG");
@@ -66,7 +66,7 @@ ConfigWinObject::ConfigWinObject()
 
     SelectorBox* renderFormatBox = new SelectorBox(renderFormat);
     
-    WinObject::addObject(renderFormatBox);
+    addObject(renderFormatBox);
 
 
     // Position all controls
@@ -106,11 +106,11 @@ ConfigWinObject::ConfigWinObject()
 
     //showPanel->setVis(false);
 
-    setWidthHeight(Gobj::getW(), Gobj::getH());
+    setWH(getW(), getH());
 
     updateObjectsVisibility();
 
-    setName("Configuration");
+    setObjName("Configuration");
 }
 
 void ConfigWinObject::drawSelf(Graphics& g)
@@ -153,7 +153,7 @@ void ConfigWinObject::updateObjectsVisibility()
         showPanel->setVis(false);
     }
 
-    WinObject::redraw();
+    redraw();
 }
 
 
@@ -237,11 +237,11 @@ void ConfigWinObject::handleParamUpdate(Parameter * param)
         //MAudio->setBufferSize(param->getOutVal());
     }
 
-    Gobj::redraw();
+    redraw();
 
-    if(holderWindow)
+    //if(holderWindow)
     {
-        holderWindow->repaint();
+        //holderWindow->repaint();
     }
 }
 

@@ -12,7 +12,7 @@
 
 
 
-class AlertBox : public WinObject
+class AlertBox : public Gobj
 {
 protected:
 

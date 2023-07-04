@@ -36,18 +36,18 @@ BrwWinObject::BrwWinObject(Browser* brw)
 
     browser->setEnable(true);
 
-    WinObject::addObject(browser, 0, 0, 1200, 900);
+    addObject(browser, 0, 0, 1200, 900);
 
     //setWH(browser->getW(), browser->getH());
 
-    setWidthHeight(1200, 800);
+    setWH(1200, 800);
 
     //setResiz
 }
 
 void BrwWinObject::drawSelf(Graphics& g)
 {
-    WinObject::fill(g, 0.f);
+    fill(g, 0.f);
 }
 
 void BrwWinObject::remap()

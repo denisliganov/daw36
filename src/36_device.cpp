@@ -1112,12 +1112,12 @@ void Device36::setLastParams(float last_length,float last_vol,float last_pan, in
 
 SubWindow* Device36::createWindow()
 {
-    SubWindow* win =  MObject->addWindow((WinObject*)new DevParamObject(this));
+    SubWindow* win =  MObject->getWindow()->addWindow(new DevParamObject(this));
 
     //int xb = window->getLastEvent().mouseX + 20;
     //int yb = window->getLastEvent().mouseY - guiWindow->getHeight()/2;
 
-    win->setBounds(MObject->getLastEvent().mouseX + 40, win->getY(), win->getWidth(), win->getHeight());
+    win->setBounds(MObject->getWindow()->getLastEvent().mouseX + 40, win->getY(), win->getWidth(), win->getHeight());
 
     return win;
 }

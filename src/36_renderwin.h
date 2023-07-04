@@ -7,7 +7,7 @@
 
 
 
-class RenderWinObject : public ParamObject, WinObject
+class RenderWinObject : public ParamObject
 {
 public:
 

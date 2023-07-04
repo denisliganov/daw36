@@ -7,7 +7,7 @@
 
 
 
-class SampleObject : public ParamObject, WinObject
+class SampleObject : public ParamObject
 {
 public:
 

@@ -227,28 +227,28 @@ void ScrollTimer::timerCallback()
         bool moved = false;
 
         //if(abs(_MainObject->lastEvent.mouseX - grid->getX1()) <= range)
-        if(MObject->lastEvent.mouseX <= grid->getX1())
+        if(MObject->getWindow()->lastEvent.mouseX <= grid->getX1())
         {
             grid->hscr->setOffset(grid->hscr->getOffset() - xDelta);
             moved = true;
         }
 
         //if(abs(_MainObject->lastEvent.mouseX - grid->getX2()) <= range)
-        if(MObject->lastEvent.mouseX >= grid->getX2())
+        if(MObject->getWindow()->lastEvent.mouseX >= grid->getX2())
         {
             grid->hscr->setOffset(grid->hscr->getOffset() + xDelta);
             moved = true;
         }
 
         // if(abs(_MainObject->lastEvent.mouseY - grid->getY1()) <= range)
-        if(MObject->lastEvent.mouseY <= grid->getY1())
+        if(MObject->getWindow()->lastEvent.mouseY <= grid->getY1())
         {
             grid->vscr->setOffset(grid->vscr->getOffset() - yDelta);
             moved = true;
         }
 
         //if(abs(_MainObject->lastEvent.mouseY - grid->getY2()) <= range)
-        if(MObject->lastEvent.mouseY >= grid->getY2())
+        if(MObject->getWindow()->lastEvent.mouseY >= grid->getY2())
         {
            // grid->setVertOffset(grid->vertOffset + yDelta);
            // moved = true;
@@ -268,7 +268,7 @@ void ScrollTimer::timerCallback()
 
         if(moved)
         {
-            grid->handleMouseDrag(MObject->lastEvent);
+            grid->handleMouseDrag(MObject->getWindow()->lastEvent);
         }
     }
 

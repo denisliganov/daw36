@@ -48,10 +48,10 @@ void NumBox::handleMouseDrag(InputEvent& ev)
 
     if(ev.mouseY < 0)
     {
-        ev.mouseY = window->getH() - 1;
+        ev.mouseY = parent->getH() - 1;
         window->setMousePosition(ev.mouseX, ev.mouseY);
     }
-    else if(ev.mouseY >= window->getH())
+    else if(ev.mouseY >= parent->getH())
     {
         ev.mouseY = 0;
         window->setMousePosition(ev.mouseX, ev.mouseY);

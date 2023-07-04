@@ -513,11 +513,11 @@ SubWindow* Vst2Plugin::createWindow()
 {
     if(hasGui())
     {
-        return MObject->addWindow(new VstComponent(this));
+        return MWindow->createChildWindowFromComponent(new VstComponent(this));
     }
     else
     {
-        return MObject->addWindow((WinObject*)new DevParamObject(this));
+        return MObject->getWindow()->addWindow(new DevParamObject(this));
     }
 }
 

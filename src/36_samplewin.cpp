@@ -14,7 +14,7 @@ SampleObject::SampleObject()
 //    slider2->addParam(new Parameter());
 //    slider3->addParam(new Parameter());
 
-    setWidthHeight(300, 300);
+    setWH(300, 300);
 }
 
 void SampleObject::drawSelf(Graphics& g)

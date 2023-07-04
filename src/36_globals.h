@@ -76,7 +76,6 @@ class TextString;
 class TextCursor;
 class Vst2Plugin;
 class Vst2Host;
-class WinObject;
 
 
 struct RenderConfig;

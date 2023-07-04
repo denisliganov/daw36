@@ -237,7 +237,7 @@ bool Sample::checkBounds(SampleNote* samplent, Trigger* tg, long num_frames)
 
 SubWindow* Sample::createWindow()
 {
-    SubWindow* sw = MObject->addWindow((WinObject*)new SampleObject());
+    SubWindow* sw = MObject->getWindow()->addWindow(new SampleObject());
 
     return sw;
 }

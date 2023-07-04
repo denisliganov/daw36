@@ -83,7 +83,7 @@ void Gobj::deleteObject(Gobj* obj)
     delete obj;
 }
 
-void Gobj::setWindow(WinObject* w)
+void Gobj::setWindow(JuceComponent* w)
 {
     if(window)
     {
@@ -450,7 +450,7 @@ void Gobj::redraw(bool change)
 {
     changed = change;
 
-    if(change && window && window != this)
+    if(change && window)
     {
         if(objGroup == ObjGroup_Highlight)
         {
@@ -460,7 +460,6 @@ void Gobj::redraw(bool change)
         {
             if (window->addChangedObject(this))
             {
-
                 window->addRepaint(dx1, dy1, dwidth, dheight);
             }
         }

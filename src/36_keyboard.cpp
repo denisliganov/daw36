@@ -488,7 +488,7 @@ void TextCursor::handleKeyOrCharPressed(unsigned key, char character, unsigned f
             
                 case key_f2:
                 {
-                    SubWindow* wc = MObject->addWindow((WinObject*)new ConfigWinObject());
+                    SubWindow* wc = MObject->getWindow()->addWindow(new ConfigWinObject());
             
                     wc->setOpen(true);
             
@@ -517,7 +517,7 @@ void TextCursor::handleKeyOrCharPressed(unsigned key, char character, unsigned f
 
                 case key_f8:
                 {
-                    SubWindow* wc = MObject->addWindow((WinObject*)new MakeUpObject());
+                    SubWindow* wc = MObject->getWindow()->addWindow(new MakeUpObject());
             
                     wc->setOpen(true);
                 }

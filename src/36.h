@@ -8,7 +8,7 @@
 
 
 
-class MainWinObject : public WinObject
+class MainWinObject : public Gobj
 {
 friend  ControlPanel;
 friend  Browser;

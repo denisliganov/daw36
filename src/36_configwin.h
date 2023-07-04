@@ -6,7 +6,7 @@
 
 
 
-class ConfigWinObject : public ParamObject, WinObject
+class ConfigWinObject : public ParamObject
 {
 public:
 

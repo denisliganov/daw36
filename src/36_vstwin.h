@@ -11,7 +11,7 @@
 static Array <VstComponent*> ActiveVstWindows;
 
 class VstComponent   : //public AudioProcessorEditor,
-                            public WinObject,
+                            public Component,
                             public Timer
 {
 public:

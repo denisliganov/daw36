@@ -14,7 +14,7 @@
 
 
 
-class BrwWinObject : public ParamObject, WinObject
+class BrwWinObject : public ParamObject
 {
 public:
 

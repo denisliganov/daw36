@@ -9,12 +9,12 @@
 
 MakeUpObject::MakeUpObject()
 {
-    WinObject::setWidthHeight(500, 400);
+    setWH(500, 400);
 }
 
 void MakeUpObject::drawSelf(Graphics& g)
 {
-    WinObject::fill(g, 0.2f);
+    fill(g, 0.2f);
 
     Colour clr;
 

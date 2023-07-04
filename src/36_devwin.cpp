@@ -98,7 +98,7 @@ void DevParamObject::placeControls()
 
         if (obj)
         {
-            WinObject::addObject(obj);
+            addObject(obj);
 
             putBelow(obj, obj->getW(), obj->getH());
 
@@ -111,7 +111,7 @@ void DevParamObject::placeControls()
         }
     }
 
-    WinObject::addObject(presetBox = new ListBoxx("Presets"));
+    addObject(presetBox = new ListBoxx("Presets"));
 
     returnUp();
 
@@ -127,14 +127,14 @@ void DevParamObject::placeControls()
 
     finalizePuts();
 
-    setWidthHeight(wndW + border, wndH + border);
+    setWH(wndW + border, wndH + border);
 
-    WinObject::setName(String(device->getObjName().data()));
+    setObjName(device->getObjName());
 }
 
 void DevParamObject::drawSelf(Graphics& g)
 {
-    WinObject::fill(g, 0.3f);
+    fill(g, 0.3f);
 }
 
 void DevParamObject::handleChildEvent(Gobj * obj,InputEvent & ev)
@@ -143,7 +143,7 @@ void DevParamObject::handleChildEvent(Gobj * obj,InputEvent & ev)
     {
         device->setPreset(presetBox->getCurrentName());
 
-        WinObject::redraw();
+        redraw();
     }
 }
 

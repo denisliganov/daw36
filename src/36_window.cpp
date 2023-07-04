@@ -58,19 +58,17 @@ void WinButton::paintButton(Graphics& g, bool isMouseOverButton, bool isButtonDo
     }
 }
 
+
 void  CommonWindow::closeButtonPressed() 
-{
-    winObject->handleClose(); 
-}
-
-WinObject* CommonWindow::getWinObject() 
 { 
-    return winObject; 
+    juceComp->handleClose(); 
 }
 
-MainWindow::MainWindow(JuceComponent* winComp)
+
+
+MainWindow::MainWindow(JuceComponent* juce_comp)
 {
-    setContentComponent(winComp, true, true);
+    setContentComponent(juce_comp, true, true);
 
     setTitleBarHeight(DAW_MAINWINDOW_TITLEBAR_HEIGHT);
 
@@ -82,8 +80,8 @@ MainWindow::MainWindow(JuceComponent* winComp)
 
     xMouseDrag = yMouseDrag = 0;
 
-    winObject = (WinObject*)winComp;
-    winObject->holderWindow = this;
+    juceComp = (JuceComponent*)juce_comp;
+    juceComp->holderWindow = this;
 
     //setWantsKeyboardFocus(true);
     //setTitleBarHeight(0);
@@ -303,7 +301,7 @@ void MainWindow::deleteContextMenu()
     {
         MenuWindow->setOpen(false);
 
-        ContextMenu* menu = static_cast<ContextMenu*>(MenuWindow->getWinObject());
+        ContextMenu* menu = static_cast<ContextMenu*>(MenuWindow->getJuceComp()->getGrObject());
 
         menu->handleClose();
 
@@ -321,7 +319,7 @@ void MainWindow::focusGained(FocusChangeType)
     //maximizeChilds();
 }
 
-void MainWindow::showMenuWindow(WinObject* comp, int x, int y)
+void MainWindow::showMenuWindow(Gobj* gobj, int x, int y)
 {
     if(MenuWindow != NULL)
     {
@@ -330,11 +328,11 @@ void MainWindow::showMenuWindow(WinObject* comp, int x, int y)
         MenuWindow = NULL;
     }
 
-    MenuWindow = new SubWindow(comp, false);
+    MenuWindow = new SubWindow(gobj, false);
 
     MenuWindow->setColor(0xff000000);
     MenuWindow->parentWindow = this;
-    MenuWindow->setBounds(getX() + x, getY() + y + 20, comp->getWidth(), comp->getHeight());
+    MenuWindow->setBounds(getX() + x, getY() + y + 20, gobj->getW(), gobj->getH());
     MenuWindow->setOpen(true);
 }
 
@@ -353,7 +351,7 @@ std::string MainWindow::showAlertBox(std::string message, std::string bt1, std::
 
     MsgBox->setColor(MenuColor);
     MsgBox->parentWindow = this;
-    MsgBox->setBounds(getX() + getWidth()/2 - ab->getWidth()/2, getY() + getHeight()/2 - ab->getHeight()/2, ab->getWidth(), ab->getHeight());
+    MsgBox->setBounds(getX() + getWidth()/2 - ab->getW()/2, getY() + getHeight()/2 - ab->getW()/2, ab->getW(), ab->getH());
     MsgBox->setOpen(true);
     MsgBox->runModalLoop();
     MsgBox->setOpen(false);
@@ -365,6 +363,26 @@ std::string MainWindow::showAlertBox(std::string message, std::string bt1, std::
     MsgBox = NULL;
 
     return choice;
+}
+
+SubWindow* MainWindow::createChildWindowFromWinObject(Gobj* gobj, int x, int y, bool title_bar)
+{
+    SubWindow* sw = new SubWindow(gobj, title_bar);
+
+    sw->parentWindow = this;
+
+    childs.push_back(sw);
+
+    if(x == -1 || y == -1)
+    {
+        sw->setBounds(getWidth()/2 - gobj->getW()/2, getHeight()/2 - gobj->getH()/2, gobj->getW(), gobj->getH());
+    }
+    else
+    {
+        sw->setBounds(x, y, gobj->getW(), gobj->getH());
+    }
+
+    return sw;
 }
 
 SubWindow* MainWindow::createChildWindowFromComponent(Component* comp, int x, int y)
@@ -382,26 +400,6 @@ SubWindow* MainWindow::createChildWindowFromComponent(Component* comp, int x, in
     else
     {
         sw->setBounds(x, y, comp->getWidth(), comp->getHeight());
-    }
-
-    return sw;
-}
-
-SubWindow* MainWindow::createChildWindowFromWinObject(WinObject* wobj, int x, int y, bool title_bar)
-{
-    SubWindow* sw = new SubWindow(wobj, title_bar);
-
-    sw->parentWindow = this;
-
-    childs.push_back(sw);
-
-    if(x == -1 || y == -1)
-    {
-        sw->setBounds(getWidth()/2 - wobj->getWidth()/2, getHeight()/2 - wobj->getHeight()/2, wobj->getWidth(), wobj->getHeight());
-    }
-    else
-    {
-        sw->setBounds(x, y, wobj->getWidth(), wobj->getHeight());
     }
 
     return sw;
@@ -505,58 +503,29 @@ void MainWindow::resized()
     }
 }
 
-SubWindow::SubWindow(bool title_bar)
+
+
+SubWindow::SubWindow(Gobj* go, bool title_bar)
 {
+    juceComp = new JuceComponent(go);
+    juceComp->holderWindow = this;
+
+    Component::addAndMakeVisible(juceComp);
+
     cc = NULL;
-    parentWindow = NULL;
-    winObject = NULL;
-    color = 0x0;
 
-    if(title_bar)
-    {
-        //setTitleBarButtonsRequired(allButtons, false);
-
-        buttonListener.owner = this;
-
-        Component::addAndMakeVisible(closeButton = new WinButton("close"));
-
-        titleBarButtons[2] = closeButton;
-
-        closeButton->addShortcut(KeyPress (KeyPress::F4Key, ModifierKeys::altModifier, 0));
-        closeButton->addButtonListener (&buttonListener);
-        closeButton->setWantsKeyboardFocus (false);
-    }
-
-    xcoffs = 1;
-    ycoffs = title_bar? 24 : 1;
-
-    setDropShadowEnabled(false);
-
-    setResizable(true, false);
-
-    setOpen(false);
-
-    updFocus = true;
+    init(title_bar);
 }
 
-SubWindow::SubWindow(WinObject* comp, bool title_bar)  : SubWindow(title_bar)
+SubWindow::SubWindow(Component* comp, bool title_bar)
 {
     cc = (Component*)comp;
 
-    winObject = comp;
-
-    winObject->holderWindow = this;
+    juceComp = NULL;
 
     Component::addAndMakeVisible(comp);
 
-    setOpen(false);
-}
-
-SubWindow::SubWindow(Component* comp, bool title_bar)  : SubWindow(title_bar)
-{
-    cc = (Component*)comp;
-
-    Component::addAndMakeVisible(comp);
+    init(title_bar);
 }
 
 SubWindow::~SubWindow()
@@ -564,14 +533,39 @@ SubWindow::~SubWindow()
     //removeChildComponent(cc);
     //removeChildComponent(closeButton);
 
-    if (winObject)
-    {
-        delete winObject;
-    }
-    else if (cc)
+    if (cc)
     {
         delete cc;
     }
+    else if (juceComp)
+    {
+        delete juceComp;
+    }
+}
+
+void SubWindow::init(bool title_bar)
+{
+    if(title_bar)
+    {
+        //setTitleBarButtonsRequired(allButtons, false);
+        buttonListener.owner = this;
+        Component::addAndMakeVisible(closeButton = new WinButton("close"));
+        titleBarButtons[2] = closeButton;
+        closeButton->addShortcut(KeyPress (KeyPress::F4Key, ModifierKeys::altModifier, 0));
+        closeButton->addButtonListener (&buttonListener);
+        closeButton->setWantsKeyboardFocus (false);
+    }
+
+    parentWindow = NULL;
+    color = 0x0;
+    xcoffs = 1;
+    ycoffs = title_bar? 24 : 1;
+    setDropShadowEnabled(false);
+    setResizable(true, false);
+    setOpen(false);
+    updFocus = true;
+
+    setOpen(false);
 }
 
 void SubWindow::broughtToFront()
@@ -594,13 +588,19 @@ void SubWindow::resized()
         cc->setBounds(xcoffs, ycoffs, cc->getWidth(), cc->getHeight());
 
         setBounds(getX(), getY(), cc->getWidth() + 2, ycoffs + cc->getHeight() + 1);
+    }
+    else if (juceComp)
+    {
+        juceComp->setBounds(xcoffs, ycoffs, juceComp->getWidth(), juceComp->getHeight());
 
-        int btSize = 20;
-
-        if(titleBarButtons[2])
-        {
-            titleBarButtons[2]->setBounds(getWidth() - 22, 2, btSize, btSize);
-        }
+        setBounds(getX(), getY(), juceComp->getWidth() + 2, ycoffs + juceComp->getHeight() + 1);
+    }
+    
+    int btSize = 20;
+    
+    if(titleBarButtons[2])
+    {
+        titleBarButtons[2]->setBounds(getWidth() - 22, 2, btSize, btSize);
     }
 }
 
@@ -619,10 +619,8 @@ void SubWindow::closeButtonPressed()
 
     setOpen(false);
 
-    if(winObject)
-    {
-        winObject->handleClose();
-    }
+    if (juceComp)
+        juceComp->handleClose();
 }
 
 void SubWindow::paint(Graphics& g)
@@ -639,7 +637,7 @@ void SubWindow::paint(Graphics& g)
 
     gSetMonoColor(g, 1.f);
     g.setFont(*bld);
-    g.drawSingleLineText(winObject->getName(), 7, 16);
+    //g.drawSingleLineText(juceComp->getName(), 7, 16);
 }
 
 void SubWindow::lookAndFeelChanged()
@@ -690,7 +688,7 @@ JuceListener::JuceListener(JuceComponent* main_comp)
 {
     mainComp = main_comp;
 
-    winObject = mainComp->winObject;
+    mainComp->grObject;
 
     setMouseCursor(MouseCursor(MouseCursor::NormalCursor));
 }
@@ -719,44 +717,44 @@ void JuceListener::modifierKeysChanged (const ModifierKeys& modifiers)
 
 void JuceListener::timerCallback()
 {
-    WaitForSingleObject(mainComp->getWinObject().guiMutex, INFINITE);
+    WaitForSingleObject(mainComp->guiMutex, INFINITE);
 
-    for(auto vuObj : mainComp->getWinObject().vus)
+    for(auto vuObj : mainComp->vus)
     {
         ChanVU* vu = dynamic_cast<ChanVU*>(vuObj);
 
         vu->tick();
     }
 
-    ReleaseMutex(mainComp->getWinObject().guiMutex);
+    ReleaseMutex(mainComp->guiMutex);
 
     redrawPerAction();
 }
 
 void JuceListener::redrawPerAction()
 {
-    WaitForSingleObject(mainComp->getWinObject().guiMutex, INFINITE);
+    WaitForSingleObject(mainComp->guiMutex, INFINITE);
 
-    if(mainComp->getWinObject().isChanged())
+    if(mainComp->getGrObject()->isChanged())
     {
         // Repaint whole
 
         mainComp->repaint();
 
-        mainComp->getWinObject().redraw(false);
+        mainComp->getGrObject()->redraw(false);
     }
     else if (mainComp->bufferedImage != NULL)
     {
         // Repaint only changed objects
 
-        for (Rect* r : mainComp->getWinObject().repaints)
+        for (Rect* r : mainComp->repaints)
         {
             repaint(r->x, r->y, r->w, r->h);
         }
 
         Graphics imG(*mainComp->bufferedImage);
 
-        std::list<Gobj*>  co = mainComp->getWinObject().changedObjects;
+        std::list<Gobj*>  co = mainComp->changedObjects;
 
         for(Gobj* obj : co)
         {
@@ -771,26 +769,26 @@ void JuceListener::redrawPerAction()
     }
 
     // Empty changed objects list
-    mainComp->getWinObject().changedObjects.clear();
+    mainComp->changedObjects.clear();
 
     // Empty repaint rectangles list
-    while(mainComp->getWinObject().repaints.size() > 0)
+    while(mainComp->repaints.size() > 0)
     {
-        Rect* rect = mainComp->getWinObject().repaints.front();
+        Rect* rect = mainComp->repaints.front();
 
-        mainComp->getWinObject().repaints.pop_front();
+        mainComp->repaints.pop_front();
 
         delete rect;
     }
 
-    ReleaseMutex(mainComp->getWinObject().guiMutex);
+    ReleaseMutex(mainComp->guiMutex);
 }
 
 void JuceListener::paint(Graphics& g)
 {
     // Draw highlights here
 
-    for (Gobj* obj : mainComp->getWinObject().highlights)
+    for (Gobj* obj : mainComp->highlights)
     {
         if (obj->isShown())
         {
@@ -823,7 +821,7 @@ void JuceListener::mouseWheelMove(const MouseEvent& e, float wheelIncrementX, fl
     inputEvent.keyFlags = getFlags(e);
     inputEvent.wheelDelta = int(wheelIncrementY * 256.0f) / 90;
 
-    mainComp->getWinObject().handleMouseWheel(inputEvent);
+    mainComp->handleMouseWheel(inputEvent);
 
     redrawPerAction();
 }
@@ -851,7 +849,7 @@ void JuceListener::mouseMove(const MouseEvent &e)
 
     if (changed)
     {
-        mainComp->getWinObject().handleMouseMove(inputEvent);
+        mainComp->handleMouseMove(inputEvent);
 
         redrawPerAction();
     }
@@ -868,7 +866,7 @@ void JuceListener::mouseDrag(const MouseEvent &e)
     inputEvent.leftClick = e.mods.isLeftButtonDown();
     inputEvent.rightClick = e.mods.isRightButtonDown();
 
-    mainComp->getWinObject().handleMouseDrag(inputEvent);
+    mainComp->handleMouseDrag(inputEvent);
 
     redrawPerAction();
 }
@@ -889,12 +887,12 @@ void JuceListener::mouseDown(const MouseEvent& e)
 
     if(!iamOnMenu() && MWindow->isContextMenuActive())
     {
-        mainComp->getWinObject().updActiveObject(inputEvent);
+        mainComp->updActiveObject(inputEvent);
 
         MWindow->deleteContextMenu();
     }
 
-    mainComp->getWinObject().handleMouseDown(inputEvent);
+    mainComp->handleMouseDown(inputEvent);
 
     if(iamOnMenu())
     {
@@ -917,7 +915,7 @@ void JuceListener::mouseUp(const MouseEvent& e)
     inputEvent.doubleClick = e.getNumberOfClicks() == 2;
     inputEvent.clickDown = false;
 
-    mainComp->getWinObject().handleMouseUp(inputEvent);
+    mainComp->handleMouseUp(inputEvent);
 
     redrawPerAction();
 }
@@ -934,7 +932,7 @@ void JuceListener::mouseExit(const MouseEvent &e)
     inputEvent.mouseY = e.getMouseDownY();
     inputEvent.keyFlags = getFlags(e);
 
-    mainComp->getWinObject().handleMouseLeave(inputEvent);
+    mainComp->handleMouseLeave(inputEvent);
 
     redrawPerAction();
 }
@@ -951,7 +949,7 @@ void JuceListener::mouseEnter(const MouseEvent &e)
     inputEvent.mouseY = e.getMouseDownY();
     inputEvent.keyFlags = getFlags(e);
 
-    mainComp->getWinObject().handleMouseEnter(inputEvent);
+    mainComp->handleMouseEnter(inputEvent);
 
     redrawPerAction();
 
@@ -960,14 +958,27 @@ void JuceListener::mouseEnter(const MouseEvent &e)
 
 bool JuceListener::iamOnMenu()
 {
-    return (mainComp->getWinObject().holderWindow == MenuWindow);
+    return (mainComp->holderWindow == MenuWindow);
 }
 
-JuceComponent::JuceComponent(WinObject* win)
+JuceComponent::JuceComponent(Gobj* gobj)
 {
     addAndMakeVisible(listen = new JuceListener(this));
 
-    winObject = win;
+    grObject = gobj;
+    grObject->setWindow(this);
+    grObject->setEnable(true);
+
+    setWidthHeight(gobj->getW(), gobj->getH());
+
+    activeObj = NULL;
+    holderWindow = NULL;
+    hintObj = NULL;
+    dragDistance = 0;
+
+    hintBox = new Hintbox(this);
+
+    guiMutex = CreateMutex(NULL, FALSE, NULL);
 
     listen->startTimer(10);
 
@@ -975,19 +986,27 @@ JuceComponent::JuceComponent(WinObject* win)
 
     setBufferedToImage(true);
 
-    setSize(100, 100);
+    //setSize(100, 100);
 }
 
 JuceComponent::~JuceComponent()
 {
     listen->stopTimer();
 
+    deleteAndZero(hintBox);
+
     deleteAndZero(listen);
+
+    // Delete child objects here, to prevent issue when ~Gobj destructor unregisters
+    // objects being deleted and catches an error, since the internal lists won't be valid after this
+    // destructor
+
+    grObject->deleteAllObjects();
 }
 
 void JuceComponent::paint(Graphics& g)
 {
-    winObject->drawloop(g);
+    grObject->drawloop(g);
 }
 
 void JuceComponent::repaintObject(Gobj* obj)
@@ -997,18 +1016,18 @@ void JuceComponent::repaintObject(Gobj* obj)
 
 void JuceComponent::addRepaint(int x,int y,int w,int h)
 {
-    WaitForSingleObject(winObject->guiMutex, INFINITE);
+    WaitForSingleObject(guiMutex, INFINITE);
 
-    winObject->repaints.push_back(new Rect(x, y, w, h));
+    repaints.push_back(new Rect(x, y, w, h));
 
-    ReleaseMutex(winObject->guiMutex);
+    ReleaseMutex(guiMutex);
 }
 
 bool JuceComponent::addChangedObject(Gobj* obj)
 {
-    WaitForSingleObject(winObject->guiMutex, INFINITE);
+    WaitForSingleObject(guiMutex, INFINITE);
 
-    std::list<Gobj*>  co = winObject->changedObjects;
+    std::list<Gobj*>  co = changedObjects;
 
     bool add = true;
 
@@ -1027,12 +1046,14 @@ restart:
         }
     }
 
-    winObject->changedObjects = co;
+    changedObjects = co;
 
     if (add)
-        winObject->changedObjects.push_back(obj);
+    {
+        changedObjects.push_back(obj);
+    }
 
-    ReleaseMutex(winObject->guiMutex);
+    ReleaseMutex(guiMutex);
 
     return add;
 }
@@ -1040,6 +1061,8 @@ restart:
 void JuceComponent::resized()
 {
     listen->setBounds(0, 0, getWidth(), getHeight());
+
+    //grObject->setCoords1
 
     handleWindowResize(getWidth(), getHeight());
 
@@ -1107,164 +1130,26 @@ void JuceComponent::setCursor(CursorType cur_type)
 }
 
 
-Hintbox::Hintbox(WinObject* wobj) : DocumentWindow(T("Hint"), Colours::white, DocumentWindow::closeButton, true)
-{
-    winObject = wobj;
-
-    text = "Default";
-
-    blocked = false;
-
-    font = FontArial;
-
-    setAlwaysOnTop(true);
-}
-
-void Hintbox::timerCallback()
-{
-    if(blocked)
-    {
-        blocked = false;
-
-        return;
-    }
-
-    if (MenuWindow != NULL && MenuWindow->isVisible())
-    {
-        return;
-    }
-
-    WaitForSingleObject(winObject->guiMutex, INFINITE);
-
-    if (winObject->getActiveObj() != NULL && winObject->getActiveObj()->getHint() != "")
-    {
-        text = String(winObject->getActiveObj()->getHint().data());
-
-        if(text.length() > 0)
-        {
-            setText(text, x, y);
-
-            // Block redraw for 100 ms, to w/a occasional glitch
-            //blocked = true;
-            //startTimer(100);
-        }
-    }
-    else
-    {
-        setVisible(false);
-    }
-
-    ReleaseMutex(winObject->guiMutex);
-}
-
-void Hintbox::setText(std::string new_text, int xc, int yc)
-{
-    text = new_text;
-
-    int gap = 10;
-    
-    int tw = gGetTextWidth(font, (std::string)text);
-    int th = gGetTextHeight(font);
-    
-    int w = tw + int(gap*1.5f);
-    int h = th + gap;
-
-    tx = w/2 - tw/2;
-    ty = int(h/2 + th/2) - 2;
-
-    setBounds(xc, yc, w, h);
-
-    setVisible(true);
-
-    repaint();
-}
-
-void Hintbox::restart(Gobj* obj, int xc, int yc)
-{
-    x = xc;
-    y = yc;
-
-    startTimer(1);
-}
-
-void Hintbox::stop()
-{
-    blocked = false;
-
-    setVisible(false);
-    stopTimer();
-}
-
-void Hintbox::paint(Graphics& g)
-{
-    gSetColor2(g, 0xffFFE080, .4f, 1);
-    gFillRect(g, 0, 0, getWidth() - 1, getHeight() - 1);
-
-    //gSetColor2(g, 0xffFFE080, .6f, 1);
-    //gDrawRect(g, 0, 0, getWidth() - 1, getHeight() - 1);
-
-    gSetColor2(g, 0xffFFE080, 1.f, 1);
-    gText(g, font, text, tx, ty);
-}
-
-void Hintbox::mouseEnter(const MouseEvent &e)
-{
-    setVisible(false); // Avoid setting mouse on hint
-}
-
-int Hintbox::getDesktopWindowStyleFlags() const
-{
-    int flags = 0;
-
-    flags |= ComponentPeer::windowIsSemiTransparent;
-
-    return flags;
-}
 
 
 /////////////////////////////////////
 
-WinObject::WinObject() : JuceComponent(this)
-{
-    activeObj = NULL;
-    holderWindow = NULL;
-    hintObj = NULL;
-    dragDistance = 0;
 
-    hintBox = new Hintbox(this);
-
-    Gobj::window = this; 
-
-    setEnable(true);
-
-    guiMutex = CreateMutex(NULL, FALSE, NULL);
-}
-
-WinObject::~WinObject()
-{
-    // Delete child objects here, to prevent issue when ~Gobj destructor unregisters
-    // objects being deleted and catches an error, since the internal lists won't be valid after this
-    // destructor
-    Gobj::deleteAllObjects();
-
-    deleteAndZero(hintBox);
-}
-
-void WinObject::deleteWindow(SubWindow* sw)
+void JuceComponent::deleteWindow(SubWindow* sw)
 {
     MWindow->deleteChildWindow(sw);
 }
 
-void WinObject::showMenu(ContextMenu* m, int x, int y)
+void JuceComponent::showMenu(ContextMenu* m, int x, int y)
 {
-    m->parent = (Gobj*)this;
+    m->setParent(grObject);
 
-    if(x + m->getW() > getW())
+    if(x + m->getW() > getWidth())
     {
         x = x - m->getW();
     }
 
-    if(y + m->getH() > getH())
+    if(y + m->getH() > getHeight())
     {
         y = y - m->getH();
     }
@@ -1272,32 +1157,21 @@ void WinObject::showMenu(ContextMenu* m, int x, int y)
     MWindow->showMenuWindow(m, x, y);
 }
 
-SubWindow* WinObject::addWindow(WinObject* wobj)
+SubWindow* JuceComponent::addWindow(Gobj* gobj)
 {
-    wobj->hint = hint;
-    wobj->parent = (Gobj*)this;
+    gobj->setParent(grObject);
 
-    return MWindow->createChildWindowFromWinObject(wobj);
+    return MWindow->createChildWindowFromWinObject(gobj);
 }
 
-SubWindow* WinObject::addLegacyWindow(Component* comp)
+void JuceComponent::setWidthHeight(int wnew,int hnew)
 {
-    return MWindow->createChildWindowFromComponent(comp);
-}
-
-void WinObject::setWidthHeight(int wnew,int hnew)
-{
-    Gobj::setCoords1(0, 0, wnew, hnew);
+    grObject->setCoords1(0, 0, wnew, hnew);
 
     setSize(wnew, hnew);
 }
 
-void WinObject::setCursor(CursorType cur_type)
-{
-    JuceComponent::setCursor(cur_type);
-}
-
-void WinObject::updateHint(InputEvent& ev)
+void JuceComponent::updateHint(InputEvent& ev)
 {
     if (hintBox == NULL || getParentComponent() == NULL)
     {
@@ -1362,15 +1236,15 @@ void WinObject::updateHint(InputEvent& ev)
     }*/
 }
 
-void WinObject::updActiveObject(InputEvent& ev)
+void JuceComponent::updActiveObject(InputEvent& ev)
 {
     Gobj* lastActiveObj = activeObj;
 
-    activeObj = getLastTouchedObject(ev);
+    activeObj = grObject->getLastTouchedObject(ev);
 
     if (activeObj != lastActiveObj)
     {
-        if (lastActiveObj != NULL && lastActiveObj != this)
+        if (lastActiveObj != NULL && lastActiveObj != grObject)
         {
             lastActiveObj->setUnderMouse(false);
 
@@ -1378,18 +1252,18 @@ void WinObject::updActiveObject(InputEvent& ev)
         }
     }
 
-    if (activeObj == this)
+    if (activeObj == grObject)
     {
         activeObj = NULL;
     }
 }
 
-void WinObject::refreshActiveObject()
+void JuceComponent::refreshActiveObject()
 {
     updActiveObject(lastEvent);
 }
 
-void WinObject::handleMouseEnter(InputEvent& ev)
+void JuceComponent::handleMouseEnter(InputEvent& ev)
 {
     if (MDragDrop && MDragDrop->isActive())
     {
@@ -1401,7 +1275,7 @@ void WinObject::handleMouseEnter(InputEvent& ev)
     lastEvent = ev;
 }
 
-void WinObject::handleMouseLeave(InputEvent& ev)
+void JuceComponent::handleMouseLeave(InputEvent& ev)
 {
     if (MDragDrop && MDragDrop->isActive())
     {
@@ -1415,7 +1289,7 @@ void WinObject::handleMouseLeave(InputEvent& ev)
     lastEvent = ev;
 }
 
-void WinObject::handleMouseMove(InputEvent& ev)
+void JuceComponent::handleMouseMove(InputEvent& ev)
 {
     updActiveObject(ev);
 
@@ -1431,7 +1305,7 @@ void WinObject::handleMouseMove(InputEvent& ev)
     lastEvent = ev;
 }
 
-void WinObject::handleMouseWheel(InputEvent& ev)
+void JuceComponent::handleMouseWheel(InputEvent& ev)
 {
     if (activeObj != NULL)
     {
@@ -1443,7 +1317,7 @@ void WinObject::handleMouseWheel(InputEvent& ev)
     lastEvent = ev;
 }
 
-void WinObject::handleMouseUp(InputEvent& ev)
+void JuceComponent::handleMouseUp(InputEvent& ev)
 {
     if (MDragDrop && MDragDrop->isActive())
     {
@@ -1471,11 +1345,11 @@ void WinObject::handleMouseUp(InputEvent& ev)
     //jassert(GPlaying == MCtrllPanel->btPlay->isPressed());
 }
 
-void WinObject::handleMouseDrag(InputEvent& ev)
+void JuceComponent::handleMouseDrag(InputEvent& ev)
 {
     if (MDragDrop && MDragDrop->isActive())
     {
-        Gobj* dropObj = getLastTouchedObject(ev);
+        Gobj* dropObj = grObject->getLastTouchedObject(ev);
 
         //int x, y;
         //Desktop::getMousePosition(x, y);
@@ -1494,7 +1368,7 @@ void WinObject::handleMouseDrag(InputEvent& ev)
     lastEvent = ev;
 }
 
-void WinObject::handleMouseDown(InputEvent& ev)
+void JuceComponent::handleMouseDown(InputEvent& ev)
 {
     dragDistance = 0;
 
@@ -1508,7 +1382,7 @@ void WinObject::handleMouseDown(InputEvent& ev)
     lastEvent = ev;
 }
 
-void WinObject::setMousePosition(int x, int y)
+void JuceComponent::setMousePosition(int x, int y)
 {
     int cx = JuceComponent::getX();
     int cy = JuceComponent::getY();
@@ -1518,7 +1392,7 @@ void WinObject::setMousePosition(int x, int y)
     Desktop::setMousePosition(wx + cx + x, wy + cy + y);
 }
 
-Image* WinObject::createSnapshot(int x, int y, int w, int h)
+Image* JuceComponent::createSnapshot(int x, int y, int w, int h)
 {
     Image* image = NULL;
 
@@ -1534,7 +1408,7 @@ Image* WinObject::createSnapshot(int x, int y, int w, int h)
     return image;
 }
 
-void WinObject::registerObject(Gobj * obj)
+void JuceComponent::registerObject(Gobj * obj)
 {
     WaitForSingleObject(guiMutex, INFINITE);
     
@@ -1548,10 +1422,10 @@ void WinObject::registerObject(Gobj * obj)
         vus.push_back(obj);
     }
     
-    ReleaseMutex(getWinObject().guiMutex);
+    ReleaseMutex(guiMutex);
 }
 
-void WinObject::unregisterObject(Gobj * obj)
+void JuceComponent::unregisterObject(Gobj * obj)
 {
     WaitForSingleObject(guiMutex, INFINITE);
 
@@ -1581,6 +1455,121 @@ void WinObject::unregisterObject(Gobj * obj)
         activeObj = NULL;
     }
     
-    ReleaseMutex(getWinObject().guiMutex);
+    ReleaseMutex(guiMutex);
+}
+
+
+Hintbox::Hintbox(JuceComponent* jcomp) : DocumentWindow(T("Hint"), Colours::white, DocumentWindow::closeButton, true)
+{
+    juceComp = jcomp;
+
+    text = "Default";
+
+    blocked = false;
+
+    font = FontArial;
+
+    setAlwaysOnTop(true);
+}
+
+void Hintbox::timerCallback()
+{
+    if(blocked)
+    {
+        blocked = false;
+
+        return;
+    }
+
+    if (MenuWindow != NULL && MenuWindow->isVisible())
+    {
+        return;
+    }
+
+    WaitForSingleObject(juceComp->guiMutex, INFINITE);
+
+    if (juceComp->getActiveObj() != NULL && juceComp->getActiveObj()->getHint() != "")
+    {
+        text = String(juceComp->getActiveObj()->getHint().data());
+
+        if(text.length() > 0)
+        {
+            setText(text, x, y);
+
+            // Block redraw for 100 ms, to w/a occasional glitch
+            //blocked = true;
+            //startTimer(100);
+        }
+    }
+    else
+    {
+        setVisible(false);
+    }
+
+    ReleaseMutex(juceComp->guiMutex);
+}
+
+void Hintbox::setText(std::string new_text, int xc, int yc)
+{
+    text = new_text;
+
+    int gap = 10;
+    
+    int tw = gGetTextWidth(font, (std::string)text);
+    int th = gGetTextHeight(font);
+    
+    int w = tw + int(gap*1.5f);
+    int h = th + gap;
+
+    tx = w/2 - tw/2;
+    ty = int(h/2 + th/2) - 2;
+
+    setBounds(xc, yc, w, h);
+
+    setVisible(true);
+
+    repaint();
+}
+
+void Hintbox::restart(Gobj* obj, int xc, int yc)
+{
+    x = xc;
+    y = yc;
+
+    startTimer(1);
+}
+
+void Hintbox::stop()
+{
+    blocked = false;
+
+    setVisible(false);
+    stopTimer();
+}
+
+void Hintbox::paint(Graphics& g)
+{
+    gSetColor2(g, 0xffFFE080, .4f, 1);
+    gFillRect(g, 0, 0, getWidth() - 1, getHeight() - 1);
+
+    //gSetColor2(g, 0xffFFE080, .6f, 1);
+    //gDrawRect(g, 0, 0, getWidth() - 1, getHeight() - 1);
+
+    gSetColor2(g, 0xffFFE080, 1.f, 1);
+    gText(g, font, text, tx, ty);
+}
+
+void Hintbox::mouseEnter(const MouseEvent &e)
+{
+    setVisible(false); // Avoid setting mouse on hint
+}
+
+int Hintbox::getDesktopWindowStyleFlags() const
+{
+    int flags = 0;
+
+    flags |= ComponentPeer::windowIsSemiTransparent;
+
+    return flags;
 }
 

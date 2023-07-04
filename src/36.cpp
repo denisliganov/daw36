@@ -253,15 +253,15 @@ void MainWinObject::updCursorImage(unsigned flags)
 {
     if (getMode() == DragMode_DragX0 || getMode() == DragMode_DragX1 || getMode() == DragMode_DragX2)
     {
-        setCursor(Cursor_LeftRight);
+        getWindow()->setCursor(Cursor_LeftRight);
     }
     else if (getMode() == DragMode_DragY1 || getMode() == DragMode_DragY2)
     {
-        setCursor(Cursor_UpDown);
+        getWindow()->setCursor(Cursor_UpDown);
     }
     else
     {
-        setCursor(Cursor_Arrow);
+        getWindow()->setCursor(Cursor_Arrow);
     }
 }
 
@@ -269,7 +269,7 @@ void MainWinObject::updActiveObject(InputEvent& ev)
 {
     // check objects
 
-    WinObject::updActiveObject(ev);
+    getWindow()->updActiveObject(ev);
 
     if (ev.mouseX <= mainX1 + 5 && ev.mouseX >= mainX1 - 5 && ev.mouseY >= mainY1 - MainLineHeight && ev.mouseY <= mainY1)
     {
@@ -300,7 +300,7 @@ void MainWinObject::updActiveObject(InputEvent& ev)
 
     if(mode != DragMode_Default)
     {
-        activeObj = NULL;
+       // getWindow()->activeObj = NULL;
     }
 
     updCursorImage(ev.keyFlags);
@@ -308,7 +308,7 @@ void MainWinObject::updActiveObject(InputEvent& ev)
 
 void MainWinObject::handleMouseUp(InputEvent& ev)
 {
-    WinObject::handleMouseUp(ev);
+    getWindow()->handleMouseUp(ev);
 
     MAudio->releaseAllPreviews();
 
@@ -317,7 +317,7 @@ void MainWinObject::handleMouseUp(InputEvent& ev)
 
 void MainWinObject::handleMouseDrag(InputEvent& ev)
 {
-    WinObject::handleMouseDrag(ev);
+    getWindow()->handleMouseDrag(ev);
 
     //if(MDragDrop && !MDragDrop->isActive())
     {

@@ -26,7 +26,7 @@ RenderWinObject::RenderWinObject()
 
 void RenderWinObject::drawSelf(Graphics& g)
 {
-    WinObject::fill(g, 0.4f);
+    fill(g, 0.4f);
 }
 
 void RenderWinObject::handleChildEvent(Gobj * obj,InputEvent & ev)

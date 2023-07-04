@@ -12,7 +12,7 @@
 
 class ContextMenuItem;
 
-class ContextMenu : public WinObject
+class ContextMenu : public Gobj
 {
 friend MainWindow;
 friend DropBox;
