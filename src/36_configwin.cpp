@@ -76,7 +76,9 @@ ConfigWinObject::ConfigWinObject()
     putRight(outputDevices, colWidth, colWidth);
     spaceBelow();
     putBelow(bufferSizeBox, colWidth, 16);
+    spaceBelow();
     putBelow(interpolationChooserBox, colWidth, 16);
+    spaceBelow();
     putBelow(showPanel, colWidth, 24);
     returnUp();
     spaceRight();
@@ -115,7 +117,7 @@ ConfigWinObject::ConfigWinObject()
 
 void ConfigWinObject::drawSelf(Graphics& g)
 {
-    Gobj::fill(g, 0.4f);
+    fill(g, 0.36f);
 }
 
 

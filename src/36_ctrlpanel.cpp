@@ -84,15 +84,17 @@ ControlPanel::ControlPanel()
     int buttonHeight = 30;
 
     setObjSpacing(2);
-    putStart(0, 0);
+    putStart(0, 6);
 
     putRight(fileMenu);
     putRight(editMenu);
     putRight(helpMenu);
     
     setBorder(4);
+    
     setObjSpacing(4);
-    putStart(xstart1, 0);
+    
+    putStart(xstart1, 6);
 
     spaceRight(2);
     putRight(btConfig, buttonWidth, buttonHeight);
@@ -136,7 +138,7 @@ bool ControlPanel::wavesAreVisible()
 void ControlPanel::remap()
 {
     int buttonWidth = 30;
-    int yTop = 0;
+    int yTop = 6;
     int navHeight = height - 16;
     int xStartCoord = xButtons + MenuGroupsSpacing;
 
