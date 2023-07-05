@@ -20,6 +20,7 @@ protected:
         void                handleClose() { ParamObject::handleClose();  }
         void                switchAudioDevice();
         void                updateObjectsVisibility();
+//        void                remap();
 
 private:
 

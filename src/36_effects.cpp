@@ -210,8 +210,16 @@ void Eff::drawSelf(Graphics& g)
         }
     }
 
-    setc(g, .8f);
-    txt(g, FontBold, device->getObjName(), 2, gGetTextHeight(FontBold));
+    FontId fid = FontInst;
+
+    int tw = gGetTextWidth(fid, device->getObjName());
+    int th = gGetTextHeight(fid);
+
+    //setc(g, .2f);
+    //fillx(g, width/2 - tw/2 - 1, 0, tw + 2, th + 1);
+
+    setc(g, 1.f);
+    txt(g, fid, device->getObjName(), width/2 - tw/2, th - 1);
 
     setc(g, .2f);
     for (int c = 0; c < height; c += 2)
@@ -336,7 +344,7 @@ void Eff::handleMouseWheel(InputEvent & ev)
 Filter1::Filter1()
 {
     objId = "eff.filter1";
-    objName = "Filter";
+    objName = "FILTER";
     //uniqueId = MAKE_FOURCC('C','F','L','T');
 
     //dspCoreCFilter3.useTwoStages(false);
@@ -484,7 +492,7 @@ void Filter1::processDSP(float* in_buff, float* out_buff, int num_frames)
 EQ1::EQ1()
 {
     objId = "eff.eq1";
-    objName = "1-Band EQ";
+    objName = "1-BAND EQ";
     //uniqueId = MAKE_FOURCC('E','Q','0','1');
 
     //frequency = new Parameter(1000.0f, 20.0f, 19980.0f, Param_Default);
@@ -992,7 +1000,7 @@ void CWahWah::processDSP(float* in_buff, float* out_buff, int num_frames)
 CDistort::CDistort()
 {
     objId = "eff.dist";
-    objName = "Distortion";
+    objName = "DISTORTION";
     //uniqueId = MAKE_FOURCC('D','I','S','T');
 
     addParam(drive = new Parameter("DRIVE", 0.0f, 48.f, 32.0f, Units_dB));

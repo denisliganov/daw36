@@ -75,9 +75,8 @@ ConfigWinObject::ConfigWinObject()
 
     putRight(outputDevices, colWidth, colWidth);
     spaceBelow();
-    putBelow(bufferSizeBox, colWidth, 16);
-    spaceBelow();
-    putBelow(interpolationChooserBox, colWidth, 16);
+    putBelow(bufferSizeBox, colWidth, 14);
+    putBelow(interpolationChooserBox, colWidth, 14);
     spaceBelow();
     putBelow(showPanel, colWidth, 24);
     returnUp();
@@ -88,7 +87,7 @@ ConfigWinObject::ConfigWinObject()
     spaceRight();
     putRight(renderBox, colWidth, colWidth/1.5);
     spaceBelow();
-    putBelow(renderFormatBox, colWidth, 24);
+    putBelow(renderFormatBox, colWidth, 14);
     spaceRight();
 
     //putRight(midiInDevices, colWidth, 120);
@@ -120,39 +119,34 @@ void ConfigWinObject::drawSelf(Graphics& g)
     fill(g, 0.36f);
 }
 
+/*
+void ConfigWinObject::remap()
+{
+    updateObjectsVisibility();
+}*/
 
 void ConfigWinObject::updateObjectsVisibility()
 {
     JuceAudioDeviceManager::AudioDeviceSetup setup;
     JAudioManager->getAudioDeviceSetup(setup);
 
+    showPanel->setEnable(false);
+    bufferSizeBox->setEnable(false);
+
     if (JAudioManager->getCurrentAudioDevice() != NULL)
     {
         if (JAudioManager->getCurrentAudioDevice()->hasControlPanel())
         {
-            showPanel->setVis(true);
-        }
-        else
-        {
-            showPanel->setVis(false);
+            showPanel->setEnable(true);
         }
 
         String tname = JAudioManager->getCurrentAudioDevice()->getTypeName();
         
-        if (tname == T("ASIO"))
+        if (tname != T("ASIO"))
         {
-            bufferSizeBox->setVis(false);
-        }
-        else
-        {
-            bufferSizeBox->setVis(true);
-
+            bufferSizeBox->setEnable(true);
             bufferSizeBox->getParam()->setValue(JAudioManager->getCurrentAudioDevice()->getCurrentBufferSizeSamples());
         }
-    }
-    else
-    {
-        showPanel->setVis(false);
     }
 
     redraw();

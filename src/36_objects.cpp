@@ -11,7 +11,7 @@
 
 Gobj::Gobj()
 {
-    enabled = false;
+    enabled = true;
     visible = false;
     changed = false;
     undermouse = false;
@@ -203,7 +203,7 @@ void Gobj::setEnable(bool en)
 
     for(Gobj* obj : objs)
     {
-        obj->setEnable(en);
+     //   obj->setEnable(en);
     }
 }
 

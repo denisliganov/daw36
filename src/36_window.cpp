@@ -1451,12 +1451,6 @@ void JuceComponent::unregisterObject(Gobj * obj)
         vus.remove(obj);
     }
 
-    /*
-    if(lastActiveObj == obj)
-    {
-        lastActiveObj = NULL;
-    }*/
-    
     if(activeObj == obj)
     {
         activeObj = NULL;

@@ -200,7 +200,6 @@ public:
             void                deleteWindow(SubWindow* sw);
             Gobj*               getActiveObj() { return activeObj; }
             InputEvent&         getLastEvent() { return lastEvent; }
-            const MouseEvent*   getLastEvent1() { return listen->lastMouseEvent; }
     virtual void                handleClose() {}
             void                handleMouseEnter(InputEvent& ev);
             void                handleMouseLeave(InputEvent& ev);
