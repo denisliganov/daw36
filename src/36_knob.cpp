@@ -84,7 +84,7 @@ void ParamBox::drawText(Graphics& g)
         }
         else
         {
-            setc(g, .8f);
+            setc(g, .6f);
             txt(g, fontId, param->getName(), textX, textY);
         
             setc(g, 1.f);

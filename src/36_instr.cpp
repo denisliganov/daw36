@@ -55,7 +55,15 @@ protected:
         fill(g, .2f);
 
         //setc(g, 0xffFFB040);
-        setc(g, .4f);
+        if (i)
+        {
+            i->setMyColor(g, .4f);
+        }
+        else
+        {
+            setc(g, .4f);
+        }
+
 
         int yc = 0;
 
@@ -66,7 +74,15 @@ protected:
         }
 
         yc = 0;
-        setc(g, .8f);
+
+        if (i)
+        {
+            i->setMyColor(g, 1.f);
+        }
+        else
+        {
+            setc(g, 1.f);
+        }
 
         while(yc < height)
         {
@@ -113,7 +129,7 @@ protected:
 
             if(param->getBoolValue())
             {
-                instr->setMyColor(g, 1.f, .6f);
+                instr->setMyColor(g, .8f, .6f);
                 //setc(g, 1.f);
             }
             else
@@ -616,9 +632,9 @@ void Instr::remap()
             //volKnob->setCoords1(width - 80 - bw - bw - 2, (h - kH)/2, 80, int(kH));
             //volKnob->setCoords1(width - 80 - bw - bw - 1, h - h/3 + 1, 80, h/3);
 
-            volKnob->setCoords1(0, h - slH + 1, width/2 + 10, slH);
+                        //panKnob->setCoords1(width - 57, 0, int(kH-2), int(kH-2));
 
-            //panKnob->setCoords1(width - 57, 0, int(kH-2), int(kH-2));
+            volKnob->setCoords1(0, h - slH + 1, width/2 + 10, slH);
 
             muteButt->setCoords1(width - bw - bw, 0, bw, h);
         }
