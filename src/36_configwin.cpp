@@ -57,11 +57,19 @@ ConfigWinObject::ConfigWinObject()
     renderBox->addEntry("Render to OGG");
     renderBox->addEntry("Render to WAV");
     renderBox->addEntry("Render to FLAC");
+    renderBox->setCurrent(0);
 
-    Parameter* renderFormat = new Parameter("FORMAT", Param_Radio);
-    renderFormat->addOption("WAV");
-    renderFormat->addOption("OGG");
-    renderFormat->addOption("FLAC");
+    Parameter* renderFormat = new Parameter("QUALITY", Param_Radio);
+    renderFormat->addOption("8 bit");
+    renderFormat->addOption("16 bit");
+    renderFormat->addOption("24 bit");
+    renderFormat->addOption("32 bit");
+    renderFormat->addOption("5");
+    renderFormat->addOption("6");
+    renderFormat->addOption("7");
+    renderFormat->addOption("8");
+    renderFormat->addOption("9");
+    renderFormat->addOption("10");
     renderFormat->setCurrentOption(0);
 
     SelectorBox* renderFormatBox = new SelectorBox(renderFormat);
@@ -74,10 +82,10 @@ ConfigWinObject::ConfigWinObject()
     int colWidth = 220;
 
     putRight(outputDevices, colWidth, colWidth);
-    spaceBelow();
-    putBelow(bufferSizeBox, colWidth, 14);
     putBelow(interpolationChooserBox, colWidth, 14);
-    spaceBelow();
+ //   spaceBelow();
+    putBelow(bufferSizeBox, colWidth, 14);
+  //  spaceBelow();
     putBelow(showPanel, colWidth, 24);
     returnUp();
     spaceRight();
@@ -86,7 +94,7 @@ ConfigWinObject::ConfigWinObject()
     putRight(midiOutDevices, colWidth, colWidth);
     spaceRight();
     putRight(renderBox, colWidth, colWidth/1.5);
-    spaceBelow();
+//    spaceBelow();
     putBelow(renderFormatBox, colWidth, 14);
     spaceRight();
 

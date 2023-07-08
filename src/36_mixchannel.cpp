@@ -456,7 +456,9 @@ void MixChannel::remap()
                     int a = 1;
                 }
 
-                sk->setCoords1(width - 22, ins->getY() - getY() + 1, 20, ins->getH() - 2);
+                int sW = 12;
+
+                sk->setCoords1(width - sW - 2, ins->getY() - getY() + 1, sW, ins->getH() - 2);
 
                 if (ins == instr)
                 {

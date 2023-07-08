@@ -16,6 +16,9 @@ static float    AudioBuffer[MAX_BUFF_SIZE*2];
 void JuceAudioCallback::audioDeviceIOCallback(const float** inputChannelData, int totalNumInputChannels, float** outputChannelData, int totalNumOutputChannels, int numSamples)
 {
     //Random rnd(1);
+//
+    //if (inputChannelData[0][0] != 0)
+    //    int a = 1;
 
     if(totalNumOutputChannels == 2)
     {
@@ -25,6 +28,12 @@ void JuceAudioCallback::audioDeviceIOCallback(const float** inputChannelData, in
         {
             outputChannelData[0][fc] = AudioBuffer[fc*2];
             outputChannelData[1][fc] = AudioBuffer[fc*2 + 1];
+
+            if (totalNumInputChannels > 0)
+                outputChannelData[0][fc] += inputChannelData[0][fc];
+
+            if (totalNumInputChannels > 1)
+                outputChannelData[1][fc] += inputChannelData[1][fc];
         }
     }
 }
@@ -367,7 +376,7 @@ void JuceAudioDeviceManager::addDeviceNamesToComboBox (AComboBox& combo) const
 
 void JuceAudioDeviceManager::addDeviceNamesToListBox (ListBoxS& box) const
 {
-    int n = 0;
+    int n = availableDeviceTypes.size();
 
     for (int i = 0; i < availableDeviceTypes.size(); ++i)
     {

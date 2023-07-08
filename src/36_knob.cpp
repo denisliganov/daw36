@@ -86,9 +86,10 @@ void ParamBox::drawText(Graphics& g)
         {
             setc(g, .6f);
             txt(g, fontId, param->getName(), textX, textY);
-        
+            
             setc(g, 1.f);
-            txt(g, fontId, param->getValString() + " " + param->getUnitString(), textX + txtAreaWidth*0.6, textY);
+            //txt(g, fontId, param->getValString() + " " + param->getUnitString(), textX + txtAreaWidth*0.6, textY);
+            txt(g, fontId, param->getValString() + " " + param->getUnitString(), textX + txtAreaWidth - valstrLen - unitstrLen - (unitstrLen ? 6 : 4), textY);
         }
     }
     else
@@ -446,9 +447,9 @@ void Knob::drawVerticalSlider(Graphics& g)
     rectx(g, 0, 0, w, h);
 
     if (instr)
-        instr->setMyColor(g, .34f);
+        instr->setMyColor(g, .26f);
     else
-        setc(g, .34f);
+        setc(g, .26f);
 
     fillx(g, 0, 0, w, h);
 

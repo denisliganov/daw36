@@ -138,7 +138,9 @@ protected:
                 //setc(g, .6f);
             }
 
-            fillx(g, 6, 6, width-12, height-12);
+            int gap = 2;
+
+            fillx(g, gap, gap, width-2*gap, height-2*gap);
 
             //txt(g, FontVis, "#", width/2 - 2, height/2 + gGetTextHeight(FontVis)/2 - 1);
             //txt(g, FontVis, instr->getAlias(), width / 2 - 2, height / 2 + gGetTextHeight(FontVis) / 2 - 1);
