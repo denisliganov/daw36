@@ -177,11 +177,15 @@ void MainEdit::remap()
 
     if (1)
     {
-        int kH = height - (MainLineHeight + gridHeight) - 2;
+        int kH = height - (MainLineHeight + gridHeight) - 10;
 
         if (kH > 100)
             kH = 100;
-        keys->setCoords2(0, height - kH, width - 1, height - 1);
+
+        if (kH >= 16)
+            keys->setCoords2(0, height - kH, width - 1, height - 1);
+        else
+            keys->setEnable(false);
     }
 
     confine(0, 0, width - 1, height - 1);
