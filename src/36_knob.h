@@ -26,6 +26,11 @@ protected:
             bool                textInside;
             bool                valueReplace;
             float               widthDivider;
+            int                 controlWidth;
+            int                 txtAreaX;
+            int                 txtAreaWidth;
+            int                 txtX;
+            int                 txtY;
             int                 hoverOption;
 
             Instr*              instr;

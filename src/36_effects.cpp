@@ -136,7 +136,7 @@ Eff::Eff(Device36* dev)
     addObject(enableButt = new EffEnableButton(device->enabled));
     addObject(device);
 
-    device->placeControls2(FxMaxEffWidth - 10);
+    device->placeControls2(FxMaxEffWidth - 16);
     device->setWH(FxMaxEffWidth - 16, device->getH());
     device->setContainer(this);
 

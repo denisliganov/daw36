@@ -39,20 +39,13 @@ void ParamBox::setTextParams(bool txt, bool inside, bool value_replace, float wi
 
 void ParamBox::drawText(Graphics& g)
 {
-    int txtAreaX = width*widthDivider;
-    int txtAreaWidth = textInside ? width : width - width*widthDivider - 6;
-
-    int textX = textInside ? 4 : txtAreaX + 6;
-    int textY = 10;
-
     int namestrLen = gGetTextWidth(fontId, param->getName());
     int unitstrLen = gGetTextWidth(fontId, param->getUnitString());
     int valstrLen = gGetTextWidth(fontId, param->getValString());
 
-
     if (!textInside)
     {
-        setc(g, .3f);
+        setc(g, .24f);
         fillx(g, txtAreaX, 0, width - txtAreaX, height);
 
         if (valueReplace )
@@ -74,34 +67,34 @@ void ParamBox::drawText(Graphics& g)
                     }
                 }
 
-                txt(g, fontId, str, textX, textY);
+                txt(g, fontId, str, txtX, txtY);
             }
             else
             {
                 setc(g, .8f);
-                txt(g, fontId, param->getName(), textX, textY);
+                txt(g, fontId, param->getName(), txtX, txtY);
             }
         }
         else
         {
             setc(g, .6f);
-            txt(g, fontId, param->getName(), textX, textY);
+            txt(g, fontId, param->getName(), txtX, txtY);
             
             setc(g, 1.f);
             //txt(g, fontId, param->getValString() + " " + param->getUnitString(), textX + txtAreaWidth*0.6, textY);
-            txt(g, fontId, param->getValString() + " " + param->getUnitString(), textX + txtAreaWidth - valstrLen - unitstrLen - (unitstrLen ? 6 : 4), textY);
+            txt(g, fontId, param->getValString() + " " + param->getUnitString(), txtX + txtAreaWidth - valstrLen - unitstrLen - (unitstrLen ? 6 : 4), txtY);
         }
     }
     else
     {
         setc(g, .8f);
-        txt(g, fontId, param->getName(), textX, textY);
+        txt(g, fontId, param->getName(), txtX, txtY);
 
         setc(g, .9f);
-        txt(g, fontId, param->getValString(), textX + txtAreaWidth - valstrLen - 2, textY);
+        txt(g, fontId, param->getValString(), txtAreaX + txtAreaWidth - valstrLen, txtY);
 
         setc(g, .52f);
-        txt(g, fontId, param->getUnitString(), textX + txtAreaWidth - unitstrLen - 2, textY);
+        txt(g, fontId, param->getUnitString(), txtAreaX + txtAreaWidth - unitstrLen, txtY);
     }
 }
 
@@ -145,8 +138,15 @@ void ParamBox::remap()
         }
     }
 
-
     //instr = NULL;
+
+    controlWidth = width*widthDivider;
+
+    txtAreaX = textInside ? 0: controlWidth + 1;
+    txtAreaWidth = textInside ? width : width - controlWidth - 2;
+
+    txtX = textInside ? 4 : txtAreaX + 4;
+    txtY = 10;
 }
 
 
@@ -238,7 +238,7 @@ void Knob::handleMouseWheel(InputEvent& ev)
 
 void Knob::handleSliding(InputEvent& ev)
 {
-    float len = vertical ? float(height) : float(width) * widthDivider;
+    float len = vertical ? float(height) : float(controlWidth);
     int delta = vertical ? (y2 - ev.mouseY + 1) : (ev.mouseX - x1 + 1);
 
     if (abs(defaultPos - (delta)) < 2)
@@ -326,7 +326,7 @@ void Knob::handleMouseUp(InputEvent & ev)
 {
     sliding = false;
 
-    if (ev.mouseX > x1 + width*widthDivider)
+    if (ev.mouseX > x1 + controlWidth)
     {
         //parent->handleMouseUp(ev);
     }
@@ -344,7 +344,7 @@ void Knob::remap()
     if (param)
     {
         if (!vertical)
-            defaultPos = int(float(width*widthDivider)*param->getDefaultValueNormalized());
+            defaultPos = int(float(controlWidth)*param->getDefaultValueNormalized());
         else
             defaultPos = int(float(height) * param->getDefaultValueNormalized());
     }
@@ -354,7 +354,7 @@ void Knob::remap()
 
 void Knob::drawHorizontalSlider(Graphics& g)
 {
-    int w = width*widthDivider;
+    int w = controlWidth;
     int h = height;
     float offs = param->getOffset();
     float range = param->getRange();
@@ -383,16 +383,16 @@ void Knob::drawHorizontalSlider(Graphics& g)
     //fillx(g, defPos, height - hs, 1, hs);
 
     if (0 && instr)
-        instr->setMyColor(g, .1f);
+        instr->setMyColor(g, .2f);
     else
-        setc(g, .1f);
+        setc(g, .2f);
 
     rectx(g, 0, 0, w, h);
 
     if (0 && instr)
-        instr->setMyColor(g, .2f);
+        instr->setMyColor(g, .3f);
     else
-        setc(g, .2f);
+        setc(g, .22f);
 
     fillx(g, 0, 0, w, h);
 
@@ -454,7 +454,7 @@ void Knob::drawVerticalSlider(Graphics& g)
     fillx(g, 0, 0, w, h);
 
     if (instr)
-        instr->setMyColor(g, .8f, .42f);
+        instr->setMyColor(g, .8f, .6f);
     else
         setc(g, .4f);
 
@@ -578,12 +578,12 @@ void Knob::drawKnob(Graphics& g)
 void Knob::drawSelf(Graphics& g)
 {
     //fill(g, .32f);
-    setc(g, .1f);
-    txt(g, fontId, param->getName(), 0, 12);
+    //setc(g, .1f);
+    //txt(g, fontId, param->getName(), 0, 12);
 
     if (!knobMode)
     {
-        fill(g, .18f);
+        //fill(g, .18f);
 
         if (vertical)
         {
@@ -612,7 +612,7 @@ ContextMenu* Knob::createContextMenu()
 {
     int x = window->getLastEvent().mouseX - x1;
 
-    if (x > (width*widthDivider))
+    if (x > (controlWidth))
         return parent->createContextMenu();
     else
         return NULL;
@@ -643,16 +643,16 @@ void SelectorBox::drawSelf(Graphics& g)
     for (std::string str : param->getAllOptions())
     {
         setc(g, 0.2f);
-        fillx(g, x, 0, itemWidth, height);
+        fillx(g, x, 0, itemWidth - 1, height);
 
         if (radioMode && param->getCurrentOption() == opt || !radioMode && param->getOptionVal(opt))
         {
             setc(g, 0.8f);
         }
 
-        fillx(g, x + 1, 1, itemWidth - 2, height - 2);
+        fillx(g, x + 1, 1, itemWidth - 3, height - 2);
 
-        x += itemWidth + 1;
+        x += itemWidth;
 
         opt++;
     }
@@ -667,7 +667,15 @@ void SelectorBox::remap()
 {
     ParamBox::remap();
 
-    itemWidth = int(float(width*widthDivider)/param->getNumOptions());
+    itemWidth = height; // int(float(width * widthDivider) / param->getNumOptions());
+
+    controlWidth = itemWidth * param->getNumOptions();
+
+    txtAreaX = controlWidth + 1;
+    txtAreaWidth = textInside ? width : width - controlWidth - 2;
+
+    txtX = textInside ? 4 : txtAreaX + 4;
+    txtY = 10;
 }
 
 void SelectorBox::handleMouseDown(InputEvent & ev)
@@ -685,11 +693,11 @@ void SelectorBox::handleMouseDown(InputEvent & ev)
     }
     else
     {
-        if (x < (width*widthDivider))
+        if (x < controlWidth)
         {
             int option = x / itemWidth;
 
-            if (option >= param->getNumOptions())
+            if (option >= controlWidth)
             {
                 option = param->getNumOptions() - 1;
             }
@@ -713,7 +721,7 @@ ContextMenu* SelectorBox::createContextMenu()
 {
     int x = window->getLastEvent().mouseX - x1;
 
-    if (x > (width*widthDivider))
+    if (x > controlWidth)
         return parent->createContextMenu();
     else
         return NULL;
@@ -739,7 +747,7 @@ void SelectorBox::handleMouseMove(InputEvent & ev)
     {
         int x = ev.mouseX - x1;
 
-        if (x < (width*widthDivider))
+        if (x < controlWidth)
         {
             hoverOption = x / itemWidth;
             redraw();

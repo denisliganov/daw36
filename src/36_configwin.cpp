@@ -82,9 +82,9 @@ ConfigWinObject::ConfigWinObject()
     int colWidth = 220;
 
     putRight(outputDevices, colWidth, colWidth);
-    putBelow(interpolationChooserBox, colWidth, 14);
+    putBelow(interpolationChooserBox, colWidth, 20);
  //   spaceBelow();
-    putBelow(bufferSizeBox, colWidth, 14);
+    putBelow(bufferSizeBox, colWidth, 20);
   //  spaceBelow();
     putBelow(showPanel, colWidth, 24);
     returnUp();
@@ -95,7 +95,7 @@ ConfigWinObject::ConfigWinObject()
     spaceRight();
     putRight(renderBox, colWidth, colWidth/1.5);
 //    spaceBelow();
-    putBelow(renderFormatBox, colWidth, 14);
+    putBelow(renderFormatBox, colWidth, 20);
     spaceRight();
 
     //putRight(midiInDevices, colWidth, 120);
