@@ -567,12 +567,13 @@ void SubWindow::init(bool title_bar)
     color = 0x0;
     xcoffs = 1;
     ycoffs = title_bar? 24 : 1;
+
+    updFocus = true;
+
     setDropShadowEnabled(false);
     setResizable(true, false);
     setOpen(false);
-    updFocus = true;
-
-    setOpen(false);
+    resized();
 }
 
 void SubWindow::broughtToFront()

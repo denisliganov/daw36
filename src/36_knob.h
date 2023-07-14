@@ -18,6 +18,7 @@ public:
 protected:
 
             void                drawText(Graphics& g);
+            int                 getMaxTextWidth();
             void                handleMouseEnter(InputEvent& ev) { redraw(); }
             void                handleMouseLeave(InputEvent& ev) { redraw(); }
             void                remap();

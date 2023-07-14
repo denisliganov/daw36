@@ -29,9 +29,9 @@ ConfigWinObject::ConfigWinObject()
 
     interpolationSelect = new Parameter("INTERPOLATION", Param_Radio);
     interpolationSelect->addOption("Linear");
-    interpolationSelect->addOption("3-point Hermite");
-    interpolationSelect->addOption("6-point Polinomial");
-    interpolationSelect->addOption("Sinc depth 64");
+    interpolationSelect->addOption("3-point");  // 3-point hermite
+    interpolationSelect->addOption("6-point");  // polinomial
+    interpolationSelect->addOption("Sinc 64");  // sinc depth 64
     interpolationSelect->setCurrentOption(0);
 
 

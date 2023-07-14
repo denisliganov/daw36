@@ -37,15 +37,35 @@ void ParamBox::setTextParams(bool txt, bool inside, bool value_replace, float wi
     remap();
 }
 
+int ParamBox::getMaxTextWidth()
+{
+    int namestrLen = gGetTextWidth(fontId, param->getName());
+    int unitstrLen = gGetTextWidth(fontId, param->getUnitString());
+    int valstrLen = gGetTextWidth(fontId, param->getValString());
+
+    return namestrLen + unitstrLen + valstrLen + 6;
+}
+
 void ParamBox::drawText(Graphics& g)
 {
     int namestrLen = gGetTextWidth(fontId, param->getName());
     int unitstrLen = gGetTextWidth(fontId, param->getUnitString());
     int valstrLen = gGetTextWidth(fontId, param->getValString());
 
-    if (!textInside)
+    if (textInside)
     {
-        setc(g, .24f);
+        setc(g, .8f);
+        txt(g, fontId, param->getName(), txtX, txtY);
+    
+        setc(g, .9f);
+        txt(g, fontId, param->getValString(), txtAreaX + txtAreaWidth - valstrLen, txtY);
+    
+        setc(g, .52f);
+        txt(g, fontId, param->getUnitString(), txtAreaX + txtAreaWidth - unitstrLen, txtY);
+    }
+    else
+    {
+        setc(g, .28f);
         fillx(g, txtAreaX, 0, width - txtAreaX, height);
 
         if (valueReplace )
@@ -82,19 +102,8 @@ void ParamBox::drawText(Graphics& g)
             
             setc(g, 1.f);
             //txt(g, fontId, param->getValString() + " " + param->getUnitString(), textX + txtAreaWidth*0.6, textY);
-            txt(g, fontId, param->getValString() + " " + param->getUnitString(), txtX + txtAreaWidth - valstrLen - unitstrLen - (unitstrLen ? 6 : 4), txtY);
+            txt(g, fontId, param->getValString() + " " + param->getUnitString(), txtAreaX + txtAreaWidth - valstrLen - unitstrLen - (unitstrLen ? 4 : 2), txtY);
         }
-    }
-    else
-    {
-        setc(g, .8f);
-        txt(g, fontId, param->getName(), txtX, txtY);
-
-        setc(g, .9f);
-        txt(g, fontId, param->getValString(), txtAreaX + txtAreaWidth - valstrLen, txtY);
-
-        setc(g, .52f);
-        txt(g, fontId, param->getUnitString(), txtAreaX + txtAreaWidth - unitstrLen, txtY);
     }
 }
 
@@ -142,8 +151,8 @@ void ParamBox::remap()
 
     controlWidth = width*widthDivider;
 
-    txtAreaX = textInside ? 0: controlWidth + 1;
     txtAreaWidth = textInside ? width : width - controlWidth - 2;
+    txtAreaX = textInside ? 0: controlWidth + 2;
 
     txtX = textInside ? 4 : txtAreaX + 4;
     txtY = 10;
@@ -667,15 +676,31 @@ void SelectorBox::remap()
 {
     ParamBox::remap();
 
-    itemWidth = height; // int(float(width * widthDivider) / param->getNumOptions());
+    itemWidth = controlWidth / param->getNumOptions();
 
     controlWidth = itemWidth * param->getNumOptions();
 
-    txtAreaX = controlWidth + 1;
     txtAreaWidth = textInside ? width : width - controlWidth - 2;
-
+    txtAreaX = textInside ? 0: controlWidth + 2;
     txtX = textInside ? 4 : txtAreaX + 4;
     txtY = 10;
+
+    //itemWidth = int(float(width * widthDivider) / param->getNumOptions());
+/*
+    controlWidth = itemWidth * param->getNumOptions();
+
+    if (width - controlWidth < txtAreaWidth)
+    {
+        controlWidth = width - txtAreaWidth;
+
+        itemWidth = controlWidth/param->getNumOptions();
+    }
+
+    txtAreaWidth = textInside ? width : width - controlWidth - 2;
+    txtAreaX = textInside ? 0: controlWidth + 1;
+    txtX = textInside ? 4 : txtAreaX + 4;
+    txtY = 10;
+    */
 }
 
 void SelectorBox::handleMouseDown(InputEvent & ev)
