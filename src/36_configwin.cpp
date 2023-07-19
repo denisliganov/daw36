@@ -53,28 +53,19 @@ ConfigWinObject::ConfigWinObject()
     addObject(midiInDevices = new ListBoxx("MIDI IN Devices:"));
     addObject(renderBox = new ListBoxx("RENDER:"));
 
-    renderBox->addEntry("Render to MP3");
-    renderBox->addEntry("Render to OGG");
-    renderBox->addEntry("Render to WAV");
-    renderBox->addEntry("Render to FLAC");
+    renderBox->addEntry("Render to WAV 16 bit");
+    renderBox->addEntry("Render to WAV 24 bit");
+    renderBox->addEntry("Render to WAV 32 bit");
+    renderBox->addEntry("Render to FLAC 16 bit");
+    renderBox->addEntry("Render to FLAC 24 bit");
+    renderBox->addEntry("Render to FLAC 32 bit");
+    renderBox->addEntry("Render to MP3 128 Kbps");
+    renderBox->addEntry("Render to MP3 256 Kbps");
+    renderBox->addEntry("Render to MP3 312 Kbps");
+    renderBox->addEntry("Render to OGG 6");
+    renderBox->addEntry("Render to OGG 8");
+    renderBox->addEntry("Render to OGG 10");
     renderBox->setCurrent(0);
-
-    Parameter* renderFormat = new Parameter("QUALITY", Param_Radio);
-    renderFormat->addOption("8 bit");
-    renderFormat->addOption("16 bit");
-    renderFormat->addOption("24 bit");
-    renderFormat->addOption("32 bit");
-    renderFormat->addOption("5");
-    renderFormat->addOption("6");
-    renderFormat->addOption("7");
-    renderFormat->addOption("8");
-    renderFormat->addOption("9");
-    renderFormat->addOption("10");
-    renderFormat->setCurrentOption(0);
-
-    SelectorBox* renderFormatBox = new SelectorBox(renderFormat);
-    
-    addObject(renderFormatBox);
 
 
     // Position all controls
@@ -95,7 +86,7 @@ ConfigWinObject::ConfigWinObject()
     spaceRight();
     putRight(renderBox, colWidth, colWidth/1.5);
 //    spaceBelow();
-    putBelow(renderFormatBox, colWidth, 20);
+    //putBelow(renderFormatBox, colWidth, 20);
     spaceRight();
 
     //putRight(midiInDevices, colWidth, 120);
