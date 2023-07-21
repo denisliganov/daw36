@@ -71,7 +71,7 @@ void Device36::addBasicParamSet()
     //addParam(vol = new Parameter("VOL", Param_Vol));
     //addParam(pan = new Parameter("PAN", Param_Pan));
 
-    addParam(vol = new Parameter("Volume", Param_Vol, 0.f, DAW_VOL_RANGE, 1.f, Units_Percent));
+    addParam(vol = new Parameter("Volume", Param_Vol, 0.f, DAW_VOL_RANGE, 1.f));
     addParam(pan = new Parameter("Panning", Param_Pan));
 
     vol->setAutoPlaced(false);

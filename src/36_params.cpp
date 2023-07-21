@@ -64,11 +64,11 @@ Parameter::Parameter(std::string name, ParamType param_type)
     }
     else if (type == Param_Pan)
     {
-        paramInit(name, Param_Pan, -1.f, 1.f, 0.f, Units_Percent);
+        paramInit(name, Param_Pan, -1.f, 1.f, 0.f, Units_Default);
     }
     else if (type == Param_Default)
     {
-        paramInit(name, Param_Default, 0.f, 1.f, 0.f, Units_PercentNormalized);
+        paramInit(name, Param_Default, 0.f, 1.f, 0.f, Units_Default);
     }
 }
 
@@ -171,14 +171,9 @@ std::string Parameter::getUnitString()
     {
         case Units_Hz:
         case Units_Hz1:
-        case Units_Hz2:
             return "Hz";
             break;
-        case Units_kHz:
-            return "kHz";
-            break;
         case Units_Percent:
-        case Units_PercentNormalized:
         {
             return "%";
         } break;
@@ -199,9 +194,6 @@ std::string Parameter::getUnitString()
             break;
         case Units_Semitones:
             return "st";
-            break;
-        case Units_Beats:
-            return "beats";
             break;
         case Units_Ticks:
             return "ticks";
@@ -236,11 +228,11 @@ std::string Parameter::calcValStr(float val)
         int pval = abs(int(absVal * 100));
         std::string valStr = String(pval);
 
-        if (value < 0)
+        if (val < 0)
         {
             valStr = "<" + valStr;
         }
-        else if (value > 0)
+        else if (val > 0)
         {
             valStr = valStr + ">";
         }
@@ -252,7 +244,7 @@ std::string Parameter::calcValStr(float val)
         std::string valStr;
         char str[100] = {};
 
-        if (unitsType == Units_dB)
+        //if (unitsType == Units_dB)
         {
             if (outVal == 0)
             {
@@ -265,11 +257,13 @@ std::string Parameter::calcValStr(float val)
                 valStr = str;
             }
         }
+        /*
         else
         {
-            sprintf(str, ("%d"), int(value*100));
+            sprintf(str, ("%d"), int(val*100));
             valStr = str;
         }
+        */
 
         return valStr;
     }
@@ -290,23 +284,9 @@ std::string Parameter::calcValStr(float val)
             case Units_Hz1:
                 sprintf(str, "%.1f", absVal);
                 break;
-            case Units_Hz2:
-                sprintf(str, "%.2f", absVal);
-                break;
-            case Units_kHz:
-                sprintf(str, "%.2f", absVal);
-                break;
-            case Units_Integer:
+            case Units_Percent:
                 sprintf(str, "%.0f", absVal);
                 break;
-            case Units_Percent:
-            {
-                sprintf(str, ("%.0f"), absVal);
-            } break;
-            case Units_PercentNormalized:
-            {
-                sprintf(str, ("%.0f"), absVal*100);
-            } break;
             case Units_dB:
             {
                 sprintf(str, ("%.1f"), absVal);
@@ -336,9 +316,6 @@ std::string Parameter::calcValStr(float val)
                 break;
             case Units_Semitones:
                 sprintf(str, "%.2f", absVal);
-                break;
-            case Units_Beats:
-                sprintf(str, "%.1f", absVal);
                 break;
             case Units_DryWet:
                 sprintf(str, "%.0f/%.0f", (1 - absVal) * 100, absVal * 100);

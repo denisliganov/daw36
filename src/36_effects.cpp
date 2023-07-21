@@ -1058,7 +1058,7 @@ CBitCrusher::CBitCrusher()
     objName = "BitCrusher";
     //uniqueId = MAKE_FOURCC('B','I','T','C');
 
-    addParam(decimation = new Parameter("DECIMATION", 1.0f, 128.f, 1.0f, Units_Integer));
+    addParam(decimation = new Parameter("DECIMATION", 1.0f, 128.f, 1.0f));
     addParam(quantization = new Parameter("QUANTIZATION", 0.0f, 1.f, 0.0f));
 
     dspCoreBC.setAmount(1);
@@ -1105,7 +1105,7 @@ CStereo::CStereo()
     objName = "Stereo X";
     //uniqueId = MAKE_FOURCC('S','T','E','R');
 
-    addParam(offset = new Parameter("OFFSET", 1.0f, 100.f, 10.0f, Units_Integer));
+    addParam(offset = new Parameter("OFFSET", 1.0f, 100.f, 10.0f));
 
     handleParamUpdate(offset);
 }
@@ -1253,7 +1253,7 @@ CReverb::CReverb() : dspCoreReverb()
     //uniqueId = MAKE_FOURCC('R','E','V','R');
 
     addParam(preDelay  = new Parameter("PREDELAY", 0.0f, 200.0f, 0.0f, Units_ms));
-    addParam(roomsize = new Parameter("ROOM", 4.0f, 100.0f, 100.0f, Units_Integer));
+    addParam(roomsize = new Parameter("ROOM", 4.0f, 100.0f, 100.0f));
     addParam(decay = new Parameter("DECAY", 1.0f, 15.f, 6.f, Units_Seconds));
     addParam(highCut = new Parameter("HIGHCUT", Param_Freq, 0.f, 1.f, 0.2f, Units_Hz));
     addParam(lowCut = new Parameter("LOWCUT", Param_Freq, 0.f, 1.f, 1.0f, Units_Hz));
@@ -1332,7 +1332,7 @@ CChorus::CChorus()
     dspCoreChorus->setTempoSync(false);
 
     addParam(delay = new Parameter("DELAY", 1.f, 50.0f, 5.f, Units_ms));
-    addParam(freq = new Parameter("MODFREQ", 0.1f, 4.9f, 2.f, Units_Hz2));
+    addParam(freq = new Parameter("MODFREQ", 0.1f, 4.9f, 2.f, Units_Hz));
     addParam(depth = new Parameter("DEPTH", 0, 1.5f, 0.25f, Units_Semitones));
     addParam(drywet = new Parameter("DRY/WET", 0.0f, 1.f, 0.5f, Units_DryWet));
 }
@@ -1477,7 +1477,7 @@ CPhaser::CPhaser()
     addParam(modfreq = new Parameter("MODFREQ", 0.1f, 10.f, 3.f, Units_Seconds));
     addParam(feedback = new Parameter("FEEDBACK", -1.f, 1.f, 0));
     addParam(depth = new Parameter("DEPTH", 2.f, 48.f, 24.f, Units_Semitones));
-    addParam(numstages = new Parameter("STAGES", 1, 24, 4, Units_Integer));
+    addParam(numstages = new Parameter("STAGES", 1, 24, 4));
     numstages->setInterval(1);
     addParam(stereo = new Parameter("STEREO", 0, 180, 0));
     stereo->setInterval(1);

@@ -13,13 +13,25 @@
 typedef enum ParamType
 {
     Param_Default,
+    Param_dB,
+    Param_dBGain,
+    Param_DryWet,
+    Param_Hz,
+    Param_Hz1,
     Param_Vol,
     Param_Pan,
+    Param_Percent,
     Param_Freq,
+    Param_Freq_Reversed,
     Param_Log,
-    Param_Toggle,
+    Param_ms,
+    Param_Octave,
+    Param_Radio,
+    Param_Seconds,
     Param_Selector,
-    Param_Radio
+    Param_Semitones,
+    Param_Ticks,
+    Param_Toggle
 }ParamType;
 
 
@@ -28,21 +40,15 @@ typedef enum UnitsType
     Units_Ticks,
     Units_Hz,
     Units_Hz1,
-    Units_Hz2,
-    Units_kHz,
     Units_ms,
     Units_ms2,
     Units_Seconds,
     Units_Percent,
-    Units_PercentNormalized,
-    Units_Integer,
-    Units_Beats,
     Units_Octave,
     Units_dB,
     Units_dBGain,
     Units_Semitones,
     Units_DryWet,
-    Units_String,
     Units_Default
 }UnitsType;
 

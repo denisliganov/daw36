@@ -22,7 +22,7 @@ ConfigWinObject::ConfigWinObject()
     //addParam(bufferSize = new Parameter("BUFFER", 512, 16384, 2048, Units_Integer));
     //bufferSize->setUnitString("samples");
 
-    addObject(bufferSizeBox = new Knob(new Parameter("BUFFER", 512, 16384, 2048, Units_Integer), false));
+    addObject(bufferSizeBox = new Knob(new Parameter("BUFFER", 512, 16384, 2048), false));
     bufferSizeBox->getParam()->setUnitString("samples");
     bufferSizeBox->setTextParams(true, false, false, .4f);
 
